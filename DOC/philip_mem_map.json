@@ -1,0 +1,1294 @@
+[
+    {
+        "access": 0,
+        "bit_offset": 0,
+        "bits": 8,
+        "default": 0,
+        "description": "Unique ID of the device",
+        "is_bitfield": false,
+        "name": [
+            "sys",
+            "sn",
+            "12"
+        ],
+        "offset": 0,
+        "size": 1,
+        "total_size": 12,
+        "type": "uint8_t"
+    },
+    {
+        "access": 0,
+        "bit_offset": 0,
+        "bits": 32,
+        "default": 0,
+        "description": "Firmware revision",
+        "is_bitfield": false,
+        "name": [
+            "sys",
+            "fw_rev"
+        ],
+        "offset": 12,
+        "size": 4,
+        "total_size": 4,
+        "type": "uint32_t"
+    },
+    {
+        "access": 0,
+        "bit_offset": 0,
+        "bits": 8,
+        "default": 0,
+        "description": "The seconds in decimal",
+        "is_bitfield": false,
+        "name": [
+            "sys",
+            "build_time",
+            "second"
+        ],
+        "offset": 16,
+        "size": 1,
+        "total_size": 1,
+        "type": "uint8_t"
+    },
+    {
+        "access": 0,
+        "bit_offset": 0,
+        "bits": 8,
+        "default": 0,
+        "description": "The minutes in decimal",
+        "is_bitfield": false,
+        "name": [
+            "sys",
+            "build_time",
+            "minute"
+        ],
+        "offset": 17,
+        "size": 1,
+        "total_size": 1,
+        "type": "uint8_t"
+    },
+    {
+        "access": 0,
+        "bit_offset": 0,
+        "bits": 8,
+        "default": 0,
+        "description": "The hours in decimal",
+        "is_bitfield": false,
+        "name": [
+            "sys",
+            "build_time",
+            "hour"
+        ],
+        "offset": 18,
+        "size": 1,
+        "total_size": 1,
+        "type": "uint8_t"
+    },
+    {
+        "access": 0,
+        "bit_offset": 0,
+        "bits": 8,
+        "default": 0,
+        "description": "The months in decimal",
+        "is_bitfield": false,
+        "name": [
+            "sys",
+            "build_time",
+            "day_of_month"
+        ],
+        "offset": 19,
+        "size": 1,
+        "total_size": 1,
+        "type": "uint8_t"
+    },
+    {
+        "access": 0,
+        "bit_offset": 0,
+        "bits": 8,
+        "default": 0,
+        "description": "The week in decimal",
+        "is_bitfield": false,
+        "name": [
+            "sys",
+            "build_time",
+            "day_of_week"
+        ],
+        "offset": 20,
+        "size": 1,
+        "total_size": 1,
+        "type": "uint8_t"
+    },
+    {
+        "access": 0,
+        "bit_offset": 0,
+        "bits": 8,
+        "default": 0,
+        "description": "The month in decimal",
+        "is_bitfield": false,
+        "name": [
+            "sys",
+            "build_time",
+            "month"
+        ],
+        "offset": 21,
+        "size": 1,
+        "total_size": 1,
+        "type": "uint8_t"
+    },
+    {
+        "access": 0,
+        "bit_offset": 0,
+        "bits": 8,
+        "default": 0,
+        "description": "The last two digits of the year in decimal (20xx)",
+        "is_bitfield": false,
+        "name": [
+            "sys",
+            "build_time",
+            "year"
+        ],
+        "offset": 22,
+        "size": 1,
+        "total_size": 1,
+        "type": "uint8_t"
+    },
+    {
+        "access": 0,
+        "bit_offset": 0,
+        "bits": 8,
+        "default": 0,
+        "description": "Reserved bytes",
+        "is_bitfield": false,
+        "name": [
+            "sys",
+            "build_time",
+            "res",
+            "1"
+        ],
+        "offset": 23,
+        "size": 1,
+        "total_size": 1,
+        "type": "uint8_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 0,
+        "bits": 32,
+        "default": 0,
+        "description": "A constant number that should always be the same",
+        "is_bitfield": false,
+        "name": [
+            "sys",
+            "device_num"
+        ],
+        "offset": 24,
+        "size": 4,
+        "total_size": 4,
+        "type": "uint32_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 0,
+        "bits": 8,
+        "default": 0,
+        "description": "Specific modes for I2C",
+        "is_bitfield": false,
+        "name": [
+            "sys",
+            "cr"
+        ],
+        "offset": 28,
+        "size": 1,
+        "total_size": 1,
+        "type": "sys_cr_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 1,
+        "bits": 1,
+        "default": 0,
+        "description": "resets the DUT",
+        "is_bitfield": true,
+        "name": [
+            "sys",
+            "cr",
+            "dut_rst"
+        ],
+        "offset": 28,
+        "size": 1,
+        "total_size": 1,
+        "type": "uint8_t"
+    },
+    {
+        "access": 0,
+        "bit_offset": 0,
+        "bits": 8,
+        "default": 0,
+        "description": "Reserved bytes",
+        "is_bitfield": false,
+        "name": [
+            "sys",
+            "res",
+            "3"
+        ],
+        "offset": 29,
+        "size": 1,
+        "total_size": 3,
+        "type": "uint8_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 0,
+        "bits": 8,
+        "default": 0,
+        "description": "Specific modes for I2C",
+        "is_bitfield": false,
+        "name": [
+            "i2c",
+            "mode"
+        ],
+        "offset": 32,
+        "size": 1,
+        "total_size": 1,
+        "type": "i2c_mode_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 1,
+        "bits": 1,
+        "default": 0,
+        "description": "10 bit address enable",
+        "is_bitfield": true,
+        "name": [
+            "i2c",
+            "mode",
+            "addr_10_bit"
+        ],
+        "offset": 32,
+        "size": 1,
+        "total_size": 1,
+        "type": "uint8_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 2,
+        "bits": 1,
+        "default": 0,
+        "description": "general call enable",
+        "is_bitfield": true,
+        "name": [
+            "i2c",
+            "mode",
+            "general_call"
+        ],
+        "offset": 32,
+        "size": 1,
+        "total_size": 1,
+        "type": "uint8_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 3,
+        "bits": 1,
+        "default": 0,
+        "description": "disable for clk stretch",
+        "is_bitfield": true,
+        "name": [
+            "i2c",
+            "mode",
+            "no_clk_stretch"
+        ],
+        "offset": 32,
+        "size": 1,
+        "total_size": 1,
+        "type": "uint8_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 4,
+        "bits": 1,
+        "default": 0,
+        "description": "16 bit register access mode",
+        "is_bitfield": true,
+        "name": [
+            "i2c",
+            "mode",
+            "reg_16_bit"
+        ],
+        "offset": 32,
+        "size": 1,
+        "total_size": 1,
+        "type": "uint8_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 5,
+        "bits": 1,
+        "default": 0,
+        "description": "Forces a data nack",
+        "is_bitfield": true,
+        "name": [
+            "i2c",
+            "mode",
+            "nack_data"
+        ],
+        "offset": 32,
+        "size": 1,
+        "total_size": 1,
+        "type": "uint8_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 0,
+        "bits": 8,
+        "default": 0,
+        "description": "Specific modes for I2C",
+        "is_bitfield": false,
+        "name": [
+            "i2c",
+            "status"
+        ],
+        "offset": 33,
+        "size": 1,
+        "total_size": 1,
+        "type": "i2c_status_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 1,
+        "bits": 1,
+        "default": 0,
+        "description": "Overrun/Underrun: Request for new byte when not ready",
+        "is_bitfield": true,
+        "name": [
+            "i2c",
+            "status",
+            "OVR"
+        ],
+        "offset": 33,
+        "size": 1,
+        "total_size": 1,
+        "type": "uint8_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 2,
+        "bits": 1,
+        "default": 0,
+        "description": "Acknowledge failure",
+        "is_bitfield": true,
+        "name": [
+            "i2c",
+            "status",
+            "AF"
+        ],
+        "offset": 33,
+        "size": 1,
+        "total_size": 1,
+        "type": "uint8_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 3,
+        "bits": 1,
+        "default": 0,
+        "description": "Bus error:  Non-valid position during a byte transfer",
+        "is_bitfield": true,
+        "name": [
+            "i2c",
+            "status",
+            "BERR"
+        ],
+        "offset": 33,
+        "size": 1,
+        "total_size": 1,
+        "type": "uint8_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 4,
+        "bits": 1,
+        "default": 0,
+        "description": "General call address recieved",
+        "is_bitfield": true,
+        "name": [
+            "i2c",
+            "status",
+            "GENCALL"
+        ],
+        "offset": 33,
+        "size": 1,
+        "total_size": 1,
+        "type": "uint8_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 5,
+        "bits": 1,
+        "default": 0,
+        "description": "Forces a data nack",
+        "is_bitfield": true,
+        "name": [
+            "i2c",
+            "status",
+            "BUSY"
+        ],
+        "offset": 33,
+        "size": 1,
+        "total_size": 1,
+        "type": "uint8_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 6,
+        "bits": 1,
+        "default": 0,
+        "description": "Repeated start detected",
+        "is_bitfield": true,
+        "name": [
+            "i2c",
+            "status",
+            "RSR"
+        ],
+        "offset": 33,
+        "size": 1,
+        "total_size": 1,
+        "type": "uint8_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 0,
+        "bits": 16,
+        "default": 0,
+        "description": "delay in us for clock stretch",
+        "is_bitfield": false,
+        "name": [
+            "i2c",
+            "clk_stretch_delay"
+        ],
+        "offset": 34,
+        "size": 2,
+        "total_size": 2,
+        "type": "uint16_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 0,
+        "bits": 16,
+        "default": 85,
+        "description": "Primary slave address",
+        "is_bitfield": false,
+        "name": [
+            "i2c",
+            "slave_addr_1"
+        ],
+        "offset": 36,
+        "size": 2,
+        "total_size": 2,
+        "type": "uint16_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 0,
+        "bits": 16,
+        "default": 64,
+        "description": "Secondary slave address",
+        "is_bitfield": false,
+        "name": [
+            "i2c",
+            "slave_addr_2"
+        ],
+        "offset": 38,
+        "size": 2,
+        "total_size": 2,
+        "type": "uint16_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 0,
+        "bits": 8,
+        "default": 0,
+        "description": "last read frame byte count",
+        "is_bitfield": false,
+        "name": [
+            "i2c",
+            "r_count"
+        ],
+        "offset": 40,
+        "size": 1,
+        "total_size": 1,
+        "type": "uint8_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 0,
+        "bits": 8,
+        "default": 0,
+        "description": "last write frame byte count",
+        "is_bitfield": false,
+        "name": [
+            "i2c",
+            "w_count"
+        ],
+        "offset": 41,
+        "size": 1,
+        "total_size": 1,
+        "type": "uint8_t"
+    },
+    {
+        "access": 0,
+        "bit_offset": 0,
+        "bits": 8,
+        "default": 0,
+        "description": "Reserved bytes",
+        "is_bitfield": false,
+        "name": [
+            "i2c",
+            "res",
+            "6"
+        ],
+        "offset": 42,
+        "size": 1,
+        "total_size": 6,
+        "type": "uint8_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 0,
+        "bits": 8,
+        "default": 0,
+        "description": "",
+        "is_bitfield": false,
+        "name": [
+            "spi",
+            "mode"
+        ],
+        "offset": 48,
+        "size": 1,
+        "total_size": 1,
+        "type": "uint8_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 0,
+        "bits": 32,
+        "default": 0,
+        "description": "",
+        "is_bitfield": false,
+        "name": [
+            "spi",
+            "error_code"
+        ],
+        "offset": 49,
+        "size": 4,
+        "total_size": 4,
+        "type": "uint32_t"
+    },
+    {
+        "access": 0,
+        "bit_offset": 0,
+        "bits": 8,
+        "default": 0,
+        "description": "Reserved bytes",
+        "is_bitfield": false,
+        "name": [
+            "spi",
+            "res",
+            "11"
+        ],
+        "offset": 53,
+        "size": 1,
+        "total_size": 11,
+        "type": "uint8_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 0,
+        "bits": 8,
+        "default": 0,
+        "description": "Test mode",
+        "is_bitfield": false,
+        "name": [
+            "uart",
+            "mode"
+        ],
+        "offset": 64,
+        "size": 1,
+        "total_size": 1,
+        "type": "uint8_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 0,
+        "bits": 32,
+        "default": 0,
+        "description": "Baudrate",
+        "is_bitfield": false,
+        "name": [
+            "uart",
+            "baud"
+        ],
+        "offset": 65,
+        "size": 4,
+        "total_size": 4,
+        "type": "uint32_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 0,
+        "bits": 16,
+        "default": 0,
+        "description": "Number of received bytes",
+        "is_bitfield": false,
+        "name": [
+            "uart",
+            "rx_count"
+        ],
+        "offset": 69,
+        "size": 2,
+        "total_size": 2,
+        "type": "uint16_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 0,
+        "bits": 16,
+        "default": 0,
+        "description": "Number of transmitted bytes",
+        "is_bitfield": false,
+        "name": [
+            "uart",
+            "tx_count"
+        ],
+        "offset": 71,
+        "size": 2,
+        "total_size": 2,
+        "type": "uint16_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 0,
+        "bits": 8,
+        "default": 0,
+        "description": "UART control register",
+        "is_bitfield": false,
+        "name": [
+            "uart",
+            "ctrl"
+        ],
+        "offset": 73,
+        "size": 1,
+        "total_size": 1,
+        "type": "uart_ctrl_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 1,
+        "bits": 1,
+        "default": 0,
+        "description": "Number of stop bits",
+        "is_bitfield": true,
+        "name": [
+            "uart",
+            "ctrl",
+            "stop_bits"
+        ],
+        "offset": 73,
+        "size": 1,
+        "total_size": 1,
+        "type": "uint8_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 3,
+        "bits": 2,
+        "default": 0,
+        "description": "Parity",
+        "is_bitfield": true,
+        "name": [
+            "uart",
+            "ctrl",
+            "parity"
+        ],
+        "offset": 73,
+        "size": 1,
+        "total_size": 1,
+        "type": "uint8_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 4,
+        "bits": 1,
+        "default": 0,
+        "description": "RTS pin state",
+        "is_bitfield": true,
+        "name": [
+            "uart",
+            "ctrl",
+            "rts"
+        ],
+        "offset": 73,
+        "size": 1,
+        "total_size": 1,
+        "type": "uint8_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 0,
+        "bits": 8,
+        "default": 0,
+        "description": "UART status register",
+        "is_bitfield": false,
+        "name": [
+            "uart",
+            "status"
+        ],
+        "offset": 74,
+        "size": 1,
+        "total_size": 1,
+        "type": "uart_status_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 1,
+        "bits": 1,
+        "default": 0,
+        "description": "CTS pin state",
+        "is_bitfield": true,
+        "name": [
+            "uart",
+            "status",
+            "cts"
+        ],
+        "offset": 74,
+        "size": 1,
+        "total_size": 1,
+        "type": "uint8_t"
+    },
+    {
+        "access": 0,
+        "bit_offset": 0,
+        "bits": 8,
+        "default": 0,
+        "description": "Reserved bytes",
+        "is_bitfield": false,
+        "name": [
+            "uart",
+            "res",
+            "5"
+        ],
+        "offset": 75,
+        "size": 1,
+        "total_size": 5,
+        "type": "uint8_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 0,
+        "bits": 8,
+        "default": 0,
+        "description": "The seconds in decimal",
+        "is_bitfield": false,
+        "name": [
+            "rtc",
+            "second"
+        ],
+        "offset": 80,
+        "size": 1,
+        "total_size": 1,
+        "type": "uint8_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 0,
+        "bits": 8,
+        "default": 0,
+        "description": "The minutes in decimal",
+        "is_bitfield": false,
+        "name": [
+            "rtc",
+            "minute"
+        ],
+        "offset": 81,
+        "size": 1,
+        "total_size": 1,
+        "type": "uint8_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 0,
+        "bits": 8,
+        "default": 0,
+        "description": "The hours in decimal",
+        "is_bitfield": false,
+        "name": [
+            "rtc",
+            "hour"
+        ],
+        "offset": 82,
+        "size": 1,
+        "total_size": 1,
+        "type": "uint8_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 0,
+        "bits": 8,
+        "default": 0,
+        "description": "The months in decimal",
+        "is_bitfield": false,
+        "name": [
+            "rtc",
+            "day_of_month"
+        ],
+        "offset": 83,
+        "size": 1,
+        "total_size": 1,
+        "type": "uint8_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 0,
+        "bits": 8,
+        "default": 0,
+        "description": "The week in decimal",
+        "is_bitfield": false,
+        "name": [
+            "rtc",
+            "day_of_week"
+        ],
+        "offset": 84,
+        "size": 1,
+        "total_size": 1,
+        "type": "uint8_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 0,
+        "bits": 8,
+        "default": 0,
+        "description": "The month in decimal",
+        "is_bitfield": false,
+        "name": [
+            "rtc",
+            "month"
+        ],
+        "offset": 85,
+        "size": 1,
+        "total_size": 1,
+        "type": "uint8_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 0,
+        "bits": 8,
+        "default": 0,
+        "description": "The last two digits of the year in decimal (20xx)",
+        "is_bitfield": false,
+        "name": [
+            "rtc",
+            "year"
+        ],
+        "offset": 86,
+        "size": 1,
+        "total_size": 1,
+        "type": "uint8_t"
+    },
+    {
+        "access": 0,
+        "bit_offset": 0,
+        "bits": 8,
+        "default": 0,
+        "description": "Reserved bytes",
+        "is_bitfield": false,
+        "name": [
+            "rtc",
+            "res",
+            "1"
+        ],
+        "offset": 87,
+        "size": 1,
+        "total_size": 1,
+        "type": "uint8_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 0,
+        "bits": 8,
+        "default": 0,
+        "description": "",
+        "is_bitfield": false,
+        "name": [
+            "adc",
+            "0",
+            "mode"
+        ],
+        "offset": 88,
+        "size": 1,
+        "total_size": 1,
+        "type": "uint8_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 0,
+        "bits": 16,
+        "default": 0,
+        "description": "",
+        "is_bitfield": false,
+        "name": [
+            "adc",
+            "0",
+            "error_code"
+        ],
+        "offset": 89,
+        "size": 2,
+        "total_size": 2,
+        "type": "uint16_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 0,
+        "bits": 8,
+        "default": 0,
+        "description": "",
+        "is_bitfield": false,
+        "name": [
+            "adc",
+            "0",
+            "sample_rate"
+        ],
+        "offset": 91,
+        "size": 1,
+        "total_size": 1,
+        "type": "uint8_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 0,
+        "bits": 32,
+        "default": 0,
+        "description": "",
+        "is_bitfield": false,
+        "name": [
+            "adc",
+            "0",
+            "value"
+        ],
+        "offset": 92,
+        "size": 4,
+        "total_size": 4,
+        "type": "uint32_t"
+    },
+    {
+        "access": 0,
+        "bit_offset": 0,
+        "bits": 8,
+        "default": 0,
+        "description": "Reserved bytes",
+        "is_bitfield": false,
+        "name": [
+            "adc",
+            "0",
+            "res",
+            "8"
+        ],
+        "offset": 96,
+        "size": 1,
+        "total_size": 8,
+        "type": "uint8_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 0,
+        "bits": 8,
+        "default": 0,
+        "description": "",
+        "is_bitfield": false,
+        "name": [
+            "adc",
+            "1",
+            "mode"
+        ],
+        "offset": 104,
+        "size": 1,
+        "total_size": 1,
+        "type": "uint8_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 0,
+        "bits": 16,
+        "default": 0,
+        "description": "",
+        "is_bitfield": false,
+        "name": [
+            "adc",
+            "1",
+            "error_code"
+        ],
+        "offset": 105,
+        "size": 2,
+        "total_size": 2,
+        "type": "uint16_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 0,
+        "bits": 8,
+        "default": 0,
+        "description": "",
+        "is_bitfield": false,
+        "name": [
+            "adc",
+            "1",
+            "sample_rate"
+        ],
+        "offset": 107,
+        "size": 1,
+        "total_size": 1,
+        "type": "uint8_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 0,
+        "bits": 32,
+        "default": 0,
+        "description": "",
+        "is_bitfield": false,
+        "name": [
+            "adc",
+            "1",
+            "value"
+        ],
+        "offset": 108,
+        "size": 4,
+        "total_size": 4,
+        "type": "uint32_t"
+    },
+    {
+        "access": 0,
+        "bit_offset": 0,
+        "bits": 8,
+        "default": 0,
+        "description": "Reserved bytes",
+        "is_bitfield": false,
+        "name": [
+            "adc",
+            "1",
+            "res",
+            "8"
+        ],
+        "offset": 112,
+        "size": 1,
+        "total_size": 8,
+        "type": "uint8_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 0,
+        "bits": 8,
+        "default": 0,
+        "description": "",
+        "is_bitfield": false,
+        "name": [
+            "pwm",
+            "mode"
+        ],
+        "offset": 120,
+        "size": 1,
+        "total_size": 1,
+        "type": "uint8_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 0,
+        "bits": 16,
+        "default": 0,
+        "description": "",
+        "is_bitfield": false,
+        "name": [
+            "pwm",
+            "error_code"
+        ],
+        "offset": 121,
+        "size": 2,
+        "total_size": 2,
+        "type": "uint16_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 0,
+        "bits": 8,
+        "default": 0,
+        "description": "",
+        "is_bitfield": false,
+        "name": [
+            "pwm",
+            "duty"
+        ],
+        "offset": 123,
+        "size": 1,
+        "total_size": 1,
+        "type": "uint8_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 0,
+        "bits": 32,
+        "default": 0,
+        "description": "",
+        "is_bitfield": false,
+        "name": [
+            "pwm",
+            "freq"
+        ],
+        "offset": 124,
+        "size": 4,
+        "total_size": 4,
+        "type": "uint32_t"
+    },
+    {
+        "access": 0,
+        "bit_offset": 0,
+        "bits": 8,
+        "default": 0,
+        "description": "Reserved bytes",
+        "is_bitfield": false,
+        "name": [
+            "pwm",
+            "res",
+            "8"
+        ],
+        "offset": 128,
+        "size": 1,
+        "total_size": 8,
+        "type": "uint8_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 0,
+        "bits": 8,
+        "default": 0,
+        "description": "",
+        "is_bitfield": false,
+        "name": [
+            "tmr",
+            "mode"
+        ],
+        "offset": 136,
+        "size": 1,
+        "total_size": 1,
+        "type": "uint8_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 0,
+        "bits": 16,
+        "default": 0,
+        "description": "",
+        "is_bitfield": false,
+        "name": [
+            "tmr",
+            "error_code"
+        ],
+        "offset": 137,
+        "size": 2,
+        "total_size": 2,
+        "type": "uint16_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 0,
+        "bits": 8,
+        "default": 0,
+        "description": "",
+        "is_bitfield": false,
+        "name": [
+            "tmr",
+            "duty"
+        ],
+        "offset": 139,
+        "size": 1,
+        "total_size": 1,
+        "type": "uint8_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 0,
+        "bits": 32,
+        "default": 0,
+        "description": "",
+        "is_bitfield": false,
+        "name": [
+            "tmr",
+            "freq"
+        ],
+        "offset": 140,
+        "size": 4,
+        "total_size": 4,
+        "type": "uint32_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 0,
+        "bits": 32,
+        "default": 0,
+        "description": "",
+        "is_bitfield": false,
+        "name": [
+            "tmr",
+            "hi_us"
+        ],
+        "offset": 144,
+        "size": 4,
+        "total_size": 4,
+        "type": "uint32_t"
+    },
+    {
+        "access": 1,
+        "bit_offset": 0,
+        "bits": 32,
+        "default": 0,
+        "description": "",
+        "is_bitfield": false,
+        "name": [
+            "tmr",
+            "lo_us"
+        ],
+        "offset": 148,
+        "size": 4,
+        "total_size": 4,
+        "type": "uint32_t"
+    },
+    {
+        "access": 3,
+        "bit_offset": 0,
+        "bits": 8,
+        "default": 0,
+        "description": "Writeable registers for user testing",
+        "is_bitfield": false,
+        "name": [
+            "user_reg",
+            "64"
+        ],
+        "offset": 152,
+        "size": 1,
+        "total_size": 64,
+        "type": "uint8_t"
+    },
+    {
+        "access": 0,
+        "bit_offset": 0,
+        "bits": 8,
+        "default": 0,
+        "description": "Reserved bytes",
+        "is_bitfield": false,
+        "name": [
+            "res",
+            "40"
+        ],
+        "offset": 216,
+        "size": 1,
+        "total_size": 40,
+        "type": "uint8_t"
+    }
+]

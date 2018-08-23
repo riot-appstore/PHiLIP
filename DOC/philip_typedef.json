@@ -1,0 +1,419 @@
+{
+  "metadata" : {
+    "name": "philip_mem_map",
+    "author": "Kevin Weiss",
+    "revision": "1.00.03"
+  },
+  "typedefs" :[
+    {
+      "name" : "timestamp_t",
+      "size" : 8,
+      "description" : "Time and date",
+      "elements" : [
+        {
+          "name" : "second",
+          "type" : "uint8_t",
+          "description" : "The seconds in decimal"
+        },
+        {
+          "name" : "minute",
+          "type" : "uint8_t",
+          "description" : "The minutes in decimal"
+        },
+        {
+          "name" : "hour",
+          "type" : "uint8_t",
+          "description" : "The hours in decimal"
+        },
+        {
+          "name" : "day_of_month",
+          "type" : "uint8_t",
+          "description" : "The months in decimal"
+        },
+        {
+          "name" : "day_of_week",
+          "type" : "uint8_t",
+          "description" : "The week in decimal"
+        },
+        {
+          "name" : "month",
+          "type" : "uint8_t",
+          "description" : "The month in decimal"
+        },
+        {
+          "name" : "year",
+          "type" : "uint8_t",
+          "description" : "The last two digits of the year in decimal (20xx)"
+        }
+      ]
+    },
+    {
+      "name" : "sys_t",
+      "size" : 32,
+      "description" : "System settings for the bpt",
+      "elements" : [
+        {
+          "name" : "sn",
+          "type" : "uint8_t",
+          "array_size" : 12,
+          "description" : "Unique ID of the device"
+        },
+        {
+          "name" : "fw_rev",
+          "type" : "uint32_t",
+          "description" : "Firmware revision"
+        },
+        {
+          "name" : "build_time",
+          "type" : "timestamp_t",
+          "description" : "time of build"
+        },
+        {
+          "name" : "device_num",
+          "type" : "uint32_t",
+          "description" : "A constant number that should always be the same"
+        },
+        {
+          "name" : "cr",
+          "bit_type" : "uint8_t",
+          "type" : "sys_cr_t",
+          "bitfield" : [
+          {
+            "name" : "dut_rst",
+            "bits" : 1,
+            "description" : "resets the DUT"
+          }
+          ],
+          "description" : "Control register for device"
+        }
+      ]
+    },
+    {
+      "name" : "i2c_t",
+      "size" :16,
+      "description" : "System settings for the device",
+      "elements" : [
+        {
+          "name" : "mode",
+          "bit_type" : "uint8_t",
+          "type" : "i2c_mode_t",
+          "bitfield" : [
+          {
+            "name" : "addr_10_bit",
+            "bits" : 1,
+            "description" : "10 bit address enable"
+          },
+          {
+            "name" : "general_call",
+            "bits" : 1,
+            "description" : "General call enable"
+          },
+          {
+            "name" : "no_clk_stretch",
+            "bits" : 1,
+            "description" : "Disable for clk stretch"
+          },
+          {
+            "name" : "reg_16_bit",
+            "bits" : 1,
+            "description" : "16 bit register access mode"
+          },
+          {
+            "name" : "nack_data",
+            "bits" : 1,
+            "description" : "Forces a data nack"
+          }
+          ],
+          "description" : "Specific modes for I2C"
+        },
+        {
+          "name" : "status",
+          "bit_type" : "uint8_t",
+          "type" : "i2c_status_t",
+          "description" : "Specific modes for I2C",
+          "bitfield" : [
+          {
+            "name" : "OVR",
+            "bits" : 1,
+            "description" : "Overrun/Underrun: Request for new byte when not ready"
+          },
+          {
+            "name" : "AF",
+            "bits" : 1,
+            "description" : "Acknowledge failure"
+          },
+          {
+            "name" : "BERR",
+            "bits" : 1,
+            "description" : "Bus error:  Non-valid position during a byte transfer"
+          },
+          {
+            "name" : "GENCALL",
+            "bits" : 1,
+            "description" : "General call address recieved"
+          },
+          {
+            "name" : "BUSY",
+            "bits" : 1,
+            "description" : "Forces a data nack"
+          },
+          {
+            "name" : "RSR",
+            "bits" : 1,
+            "description" : "Repeated start detected"
+          }
+          ],
+          "description" : "Specific modes for I2C"
+        },
+        {
+          "name" : "clk_stretch_delay",
+          "type" : "uint16_t",
+          "description" : "Delay in us for clock stretch"
+        },
+        {
+          "name" : "slave_addr_1",
+          "type" : "uint16_t",
+          "description" : "Primary slave address"
+        },
+        {
+          "name" : "slave_addr_2",
+          "type" : "uint16_t",
+          "description" : "Secondary slave address"
+        },
+        {
+          "name" : "r_count",
+          "type" : "uint8_t",
+          "description" : "Last read frame byte count"
+        },
+        {
+          "name" : "w_count",
+          "type" : "uint8_t",
+          "description" : "Last write frame byte count"
+        }
+      ]
+    },
+    {
+      "name" : "spi_t",
+      "size" : 16,
+      "elements" : [
+        {
+          "name" : "mode",
+          "type" : "uint8_t"
+        },
+        {
+          "name" : "error_code",
+          "type" : "uint32_t"
+        }
+      ]
+    },
+    {
+      "name" : "uart_t",
+      "size" : 16,
+      "description" : "",
+      "elements" : [
+        {
+          "name" : "mode",
+          "type" : "uint8_t",
+          "description" : "Test mode"
+        },
+        {
+          "name" : "baud",
+          "type" : "uint32_t",
+          "description" : "Baudrate"
+        },
+        {
+          "name" : "rx_count",
+          "type" : "uint16_t",
+          "description" : "Number of received bytes"
+        },
+        {
+          "name" : "tx_count",
+          "type" : "uint16_t",
+          "description" : "Number of transmitted bytes"
+        },
+        {
+          "name" : "ctrl",
+          "bit_type" : "uint8_t",
+          "type" : "uart_ctrl_t",
+          "bitfield" : [
+          {
+            "name" : "stop_bits",
+            "bits" : 1,
+            "description" : "Number of stop bits"
+          },
+          {
+            "name" : "parity",
+            "bits" : 2,
+            "description" : "Parity"
+          },
+          {
+            "name" : "rts",
+            "bits" : 1,
+            "description" : "RTS pin state"
+          }
+          ],
+          "description" : "UART control register"
+        },
+        {
+          "name" : "status",
+          "bit_type" : "uint8_t",
+          "type" : "uart_status_t",
+          "bitfield" : [
+          {
+            "name" : "cts",
+            "bits" : 1,
+            "description" : "CTS pin state"
+          }
+          ],
+          "description" : "UART status register"
+        }
+      ]
+    },
+    {
+      "name" : "adc_t",
+      "size" : 16,
+      "description" : "",
+      "elements" : [
+        {
+          "name" : "mode",
+          "type" : "uint8_t",
+          "description" : ""
+        },
+        {
+          "name" : "error_code",
+          "type" : "uint16_t",
+          "description" : ""
+        },
+        {
+          "name" : "sample_rate",
+          "type" : "uint8_t",
+          "description" : ""
+        },
+        {
+          "name" : "value",
+          "type" : "uint32_t",
+          "description" : ""
+        }
+      ]
+    },
+    {
+      "name" : "pwm_t",
+      "size" : 16,
+      "description" : "",
+      "elements" : [
+        {
+          "name" : "mode",
+          "type" : "uint8_t",
+          "description" : ""
+        },
+        {
+          "name" : "error_code",
+          "type" : "uint16_t",
+          "description" : ""
+        },
+        {
+          "name" : "duty",
+          "type" : "uint8_t",
+          "description" : ""
+        },
+        {
+          "name" : "freq",
+          "type" : "uint32_t",
+          "description" : ""
+        }
+      ]
+    },
+    {
+      "name" : "tmr_t",
+      "size" : 16,
+      "description" : "",
+      "elements" : [
+        {
+          "name" : "mode",
+          "type" : "uint8_t",
+          "description" : ""
+        },
+        {
+          "name" : "error_code",
+          "type" : "uint16_t",
+          "description" : ""
+        },
+        {
+          "name" : "duty",
+          "type" : "uint8_t",
+          "description" : ""
+        },
+        {
+          "name" : "freq",
+          "type" : "uint32_t",
+          "description" : ""
+        },
+        {
+          "name" : "hi_us",
+          "type" : "uint32_t",
+          "description" : ""
+        },
+        {
+          "name" : "lo_us",
+          "type" : "uint32_t",
+          "description" : ""
+        }
+      ]
+    },
+    {
+      "name" : "map_t",
+      "size" : 256,
+      "description" : "The memory map",
+      "elements" : [
+        {
+          "name" : "sys",
+          "type" : "sys_t",
+          "description" : "system configuration (protected)"
+        },
+        {
+          "name" : "i2c",
+          "type" : "i2c_t",
+          "description" : "I2C configuration"
+        },
+        {
+          "name" : "spi",
+          "type" : "spi_t",
+          "description" : ""
+        },
+        {
+          "name" : "uart",
+          "type" : "uart_t",
+          "description" : ""
+        },
+        {
+          "name" : "rtc",
+          "type" : "timestamp_t",
+          "description" : ""
+        },
+        {
+          "name" : "adc",
+          "type" : "adc_t",
+          "array_size" : 2,
+          "description" : ""
+        },
+        {
+          "name" : "pwm",
+          "type" : "pwm_t",
+          "description" : ""
+        },
+        {
+          "name" : "tmr",
+          "type" : "tmr_t",
+          "description" : ""
+        },
+	{
+          "name" : "user_reg",
+          "type" : "uint8_t",
+          "array_size" : 64,
+          "access" : 3,
+          "description" : "Writable registers for user testing"
+        }
+      ]
+    }
+  ]
+}

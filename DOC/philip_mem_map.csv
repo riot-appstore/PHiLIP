@@ -1,0 +1,62 @@
+Name,Size,Offset,Description
+sys.sn[12],12,0,Unique ID of the device
+sys.fw_rev,4,12,Firmware revision
+sys.build_time.second,1,16,The seconds in decimal
+sys.build_time.minute,1,17,The minutes in decimal
+sys.build_time.hour,1,18,The hours in decimal
+sys.build_time.day_of_month,1,19,The months in decimal
+sys.build_time.day_of_week,1,20,The week in decimal
+sys.build_time.month,1,21,The month in decimal
+sys.build_time.year,1,22,The last two digits of the year in decimal (20xx)
+sys.build_time.res[1],1,23,Reserved bytes
+sys.device_num,4,24,A constant number that should always be the same
+sys.cr,1,28,Specific modes for I2C
+sys.res[3],3,29,Reserved bytes
+i2c.mode,1,32,Specific modes for I2C
+i2c.error_code,2,33,Error code for I2C
+i2c.clk_stretch_delay,2,35,delay in us for clock stretch
+i2c.inject_failure_mode,1,37,Injects failures for the bus
+i2c.slave_addr_1,2,38,Primary slave address
+i2c.slave_addr_2,2,40,Secondary slave address
+i2c.r_count,1,42,last read frame byte count
+i2c.w_count,1,43,last write frame byte count
+i2c.res[4],4,44,Reserved bytes
+spi.mode,1,48,
+spi.error_code,4,49,
+spi.res[11],11,53,Reserved bytes
+uart.mode,1,64,
+uart.error_code,2,65,
+uart.baud,4,67,
+uart.reg_output,1,71,
+uart.size,1,72,
+uart.res[7],7,73,Reserved bytes
+rtc.second,1,80,The seconds in decimal
+rtc.minute,1,81,The minutes in decimal
+rtc.hour,1,82,The hours in decimal
+rtc.day_of_month,1,83,The months in decimal
+rtc.day_of_week,1,84,The week in decimal
+rtc.month,1,85,The month in decimal
+rtc.year,1,86,The last two digits of the year in decimal (20xx)
+rtc.res[1],1,87,Reserved bytes
+adc[0].mode,1,88,
+adc[0].error_code,2,89,
+adc[0].sample_rate,1,91,
+adc[0].value,4,92,
+adc[0].res[8],8,96,Reserved bytes
+adc[1].mode,1,104,
+adc[1].error_code,2,105,
+adc[1].sample_rate,1,107,
+adc[1].value,4,108,
+adc[1].res[8],8,112,Reserved bytes
+pwm.mode,1,120,
+pwm.error_code,2,121,
+pwm.duty,1,123,
+pwm.freq,4,124,
+pwm.res[8],8,128,Reserved bytes
+tmr.mode,1,136,
+tmr.error_code,2,137,
+tmr.duty,1,139,
+tmr.freq,4,140,
+tmr.hi_us,4,144,
+tmr.lo_us,4,148,
+res[104],104,152,Reserved bytes
