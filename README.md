@@ -13,7 +13,7 @@ This is intended to provide tools for embedded testing.
 
 ## Flashing bluepill
 1. Solder pins on the bluepill and secure the USB connector of not already done.
-2. Download [firmware](QUALIFIED_FW) from the QUALIFIED_FW folder.
+2. Download [firmware](QUALIFICATION/FW/) from the QUALIFICATION/FW folder.
 3. Flash using an [SWD or JTAG interface](https://satoshinm.github.io/blog/171212_stm32_blue_pill_arm_development_board_first_look_bare_metal_programming.html).  (I usually like using the Nucleo debugger/flasher since it is cheap, has USB to Serial and support drag and drop binary).
 4. If custom implementation is desired open source firmware is available in the [PHiLIP](FW/) folder.
 
