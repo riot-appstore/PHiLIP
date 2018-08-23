@@ -1,0 +1,12 @@
+DEBUG_BLUEPILL/
+DEBUG_NUCLEO-F103RB/
+RELEASE_BLUEPILL/
+RELEASE_NUCLEO-F103RB/
+BLUEPILL/
+NUCLEOF103RB/
+
+# Eclipse workspace files
+.project
+.cproject
+.settings
+.idea
