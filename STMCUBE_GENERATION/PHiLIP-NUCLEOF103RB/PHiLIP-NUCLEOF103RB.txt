@@ -1,0 +1,103 @@
+Configuration	PHiLIP-NUCLEOF103RB
+STM32CubeMX 	4.26.0
+Date	08/23/2018
+MCU	STM32F103RBTx
+
+
+
+PERIPHERALS	MODES	FUNCTIONS	PINS
+ADC1	IN10	ADC1_IN10	PC0
+ADC1	IN11	ADC1_IN11	PC1
+ADC1	IN12	ADC1_IN12	PC2
+ADC2	IN8	ADC2_IN8	PB0
+I2C1	I2C	I2C1_SCL	PB8
+I2C1	I2C	I2C1_SDA	PB9
+RCC	BYPASS Clock Source	RCC_OSC_IN	PD0-OSC_IN
+RCC	BYPASS Clock Source	RCC_OSC_OUT	PD1-OSC_OUT
+RCC	Crystal/Ceramic Resonator	RCC_OSC32_IN	PC14-OSC32_IN
+RCC	Crystal/Ceramic Resonator	RCC_OSC32_OUT	PC15-OSC32_OUT
+RTC	Activate Clock Source	RTC_VS_RTC_Activate	VP_RTC_VS_RTC_Activate
+RTC	Activate Calendar	RTC_VS_RTC_Calendar	VP_RTC_VS_RTC_Calendar
+RTC	No RTC Output	RTC_No_RTC_Output	VP_RTC_No_RTC_Output
+SPI2	Full-Duplex Slave	SPI2_MISO	PB14
+SPI2	Full-Duplex Slave	SPI2_MOSI	PB15
+SPI2	Full-Duplex Slave	SPI2_SCK	PB13
+SPI2	Hardware NSS Input Signal	SPI2_NSS	PB12
+SYS	Serial Wire	SYS_JTCK-SWCLK	PA14
+SYS	Serial Wire	SYS_JTMS-SWDIO	PA13
+SYS	SysTick	SYS_VS_Systick	VP_SYS_VS_Systick
+TIM1	Internal Clock	TIM1_VS_ClockSourceINT	VP_TIM1_VS_ClockSourceINT
+TIM1	Input Capture direct mode	TIM1_CH1	PA8
+TIM3	Internal Clock	TIM3_VS_ClockSourceINT	VP_TIM3_VS_ClockSourceINT
+TIM3	PWM Generation CH3	TIM3_CH3	PC8
+TIM3	PWM Generation CH4	TIM3_CH4	PC9
+USART1	Asynchronous	USART1_RX	PA10
+USART1	Asynchronous	USART1_TX	PA9
+USART2	Asynchronous	USART2_RX	PA3
+USART2	Asynchronous	USART2_TX	PA2
+
+
+
+Pin Nb	PINs	FUNCTIONs	LABELs
+2	PC13-TAMPER-RTC	GPIO_Input	USER_BTN
+3	PC14-OSC32_IN	RCC_OSC32_IN	
+4	PC15-OSC32_OUT	RCC_OSC32_OUT	
+5	PD0-OSC_IN	RCC_OSC_IN	
+6	PD1-OSC_OUT	RCC_OSC_OUT	
+8	PC0	ADC1_IN10	PM_V_ADC
+9	PC1	ADC1_IN11	PM_LO_ADC
+10	PC2	ADC1_IN12	PM_HI_ADC
+14	PA0-WKUP	GPIO_Output	TEST_WARN
+15	PA1	GPIO_Output	TEST_FAIL
+16	PA2	USART2_TX	IF_TX
+17	PA3	USART2_RX	IF_RX
+20	PA4	GPIO_Output	TEST_PASS
+21	PA5	GPIO_Output	LED0
+26	PB0	ADC2_IN8	DUT_ADC
+28	PB2	GPIO_Output	DUT_RST
+33	PB12	SPI2_NSS	DUT_NSS
+34	PB13	SPI2_SCK	DUT_SCK
+35	PB14	SPI2_MISO	DUT_MISO
+36	PB15	SPI2_MOSI	DUT_MOSI
+39	PC8	TIM3_CH3	DUT_PWM
+40	PC9	TIM3_CH4	DUT_DAC
+41	PA8	TIM1_CH1	DUT_IC
+42	PA9	USART1_TX	DUT_TX
+43	PA10	USART1_RX	DUT_RX
+44	PA11	GPIO_EXTI11	DUT_CTS
+45	PA12	GPIO_Output	DUT_RTS
+46	PA13	SYS_JTMS-SWDIO	TMS
+49	PA14	SYS_JTCK-SWCLK	TCK
+55	PB3	GPIO_Output	DEBUG0
+56	PB4	GPIO_Output	DEBUG1
+57	PB5	GPIO_Output	DEBUG2
+61	PB8	I2C1_SCL	DUT_SCL
+62	PB9	I2C1_SDA	DUT_SDA
+
+
+
+SOFTWARE PROJECT
+
+Project Settings : 
+Project Name : PHiLIP-NUCLEOF103RB
+Project Folder : /home/kevinweiss/WorkingDirectory/PHiLIP/STMCUBE_GENERATION/PHiLIP-NUCLEOF103RB
+Toolchain / IDE : SW4STM32
+Firmware Package Name and Version : STM32Cube FW_F1 V1.6.1
+
+
+Code Generation Settings : 
+STM32Cube Firmware Library Package : Copy only the necessary library files
+Generate peripheral initialization as a pair of '.c/.h' files per peripheral : No
+Backup previously generated files when re-generating : No
+Delete previously generated files when not re-generated : Yes
+Set all free pins as analog (to optimize the power consumption) : No
+
+
+Toolchains Settings : 
+Compiler Optimizations : Balanced Size/Speed
+
+
+
+
+
+
