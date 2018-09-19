@@ -2,10 +2,10 @@
 This is intended to provide tools for embedded testing.
 
 
-# Setting up the BPT (bluepill tester)
+# Setting up the PHiLIP (Primitive Hardware In the Loop Integration Product)
 
 ## Tools
-- SWD or JTAG flasher
+- SWD flasher
 - Soldering iron and solder
 
 ## Materials
@@ -20,28 +20,6 @@ This is intended to provide tools for embedded testing.
 ## Flashing nucleo-f103rb
 1. Download PHiLIP-nucleo103rb* [firmware](QUALIFIED_FW) from the QUALIFIED_FW folder.
 2. Drag and drop the .bin file to flash
-
-# Using the bluepill
-## Tools
-- USB to UART converter
-
-## Materials
-- PHiLIP with qualified firmware
-- breadboard
-- DUT (device under test)
-- Jumper wires
-
-## Running Test
-(examples will use periph_i2c test)
-1. Connect DUT to the testing computer.
-2. Connect the BPT to the USB to UART converter.  
-(IF_RX of BPT <-> TX of USB to UART)  
-(IF_TX of BPT <-> RX of USB to UART)
-3. Connect specific pins required for testing the DUT to the BPT  
-(DUT_SCL of BPT <-> SCL0 of DUT)  
-(DUT_SDA of BPT <-> SDA0 of DUT)
-4. Flash DUT with test firmware
-5. Run python script in the test folder
 
 # bluepill Pinout
 <a href="RESOURCES/PHiLIP-BLUEPILL-PINOUT.jpg">
