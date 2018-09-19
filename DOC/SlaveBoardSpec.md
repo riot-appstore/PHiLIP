@@ -3,13 +3,13 @@
 The purpose of this specification is to identify an easily acquirable or reproducible, certified slave device (the BPT or bluepill tester) that can be used to automate regression testing of basic peripherals such as UART, I2C, SPI, etc.  The slave board shall be usable offline by developers and/or within a HiL (hardware in the loop) CI (continuous integration) framework.
 
 # Abbreviations
-**BPT** - Bluepill Tester  
-**CI** - Continuous Integration   
-**DUT** - Device Under Tests  
-**HiL** - Hardware In The Loop  
-**FW** - Firmware  
-**SN** - Serial Number  
-**RPi** - Raspberry Pi 3  
+**PHiLIP** - PHiLIP Tester</br>
+**CI** - Continuous Integration</br>
+**DUT** - Device Under Tests</br>
+**HiL** - Hardware In The Loop</br>
+**FW** - Firmware</br>
+**SN** - Serial Number</br>
+**RPi** - Raspberry Pi 3</br>
 
 
 # Technical Requirements Of Slave Device Hardware
@@ -81,12 +81,12 @@ _[5] only works up to 3.3V_
 - The bluepill board is very simple to recreate (mcu, crystals, button, leds, connectors)
 - The nucleo-f103rb can also be used with a change in pinout if usb is not used
 
-### Why program the BPT bare metal (or using STMCube)?
+### Why program the PHiLIP bare metal (or using STMCube)?
 - STMCube provides a standard reference to start so boilerplate code doesn't need to be implemented, tested, and debugged
 - Bare metal is used since the application features are generally simple and an RTOS is not needed
 - If alterations are made in the future it is not necessary to update or bring in a new RTOS
 
-### How dependant is the bpt on the library (STMCube and CMSIS)?
+### How dependent is the PHiLIP on the library (STMCube and CMSIS)?
 - ...Very, many features use the HAL of the STMCube, this allows for quicker development time
 - Application code will try to remain modular allowing for porting
 - Since the HAL is used for much of the development, porting to other boards that support it should be quick (ie STM based boards)
@@ -97,7 +97,7 @@ _[5] only works up to 3.3V_
 
 # Shell Communication Protocol
 ## Introduction
-The BPT will have a register based protocol, see [memory map](bpt_mem_map.csv) for information on the registers.  All interfaces (UART, USB, I2C, SPI) will access the registers (with different access levels).
+The PHiLIP will have a register based protocol, see [memory map](philip_mem_map.csv) for information on the registers.  All interfaces (UART, USB, I2C, SPI) will access the registers (with different access levels).
 
 ## Shell Interface Description
 The shell interface can be accessed either through UART1 or the devices USB, both have the same protocol.
@@ -115,7 +115,7 @@ The shell interface can be accessed either through UART1 or the devices USB, bot
 - Basic UART IF Protocol
 - I2C slave mode with configuration
 - First prototype of code generators for memory map management
-- First prototype of python IFs for the bpt
+- First prototype of python IFs for the PHiLIP
 - First prototype of RIOT i2c_periph tests
 - Basic support of FW and SN
 - Basic support of flashing LED0
@@ -125,8 +125,8 @@ The shell interface can be accessed either through UART1 or the devices USB, bot
 - UART IF and USB IF function and are standardized
 - DUT_UART implemented
 - Code generator standardized and tested
-- Standardized python IF to BPT, periph_i2c, periph_uart
-- Basic qualification test for BPT firmware
+- Standardized python IF to PHiLIP, periph_i2c, periph_uart
+- Basic qualification test for PHiLIP firmware
 - Usable UART test
 
 ## Phase C (Add remaining peripherals)
