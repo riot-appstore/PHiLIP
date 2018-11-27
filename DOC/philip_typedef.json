@@ -263,6 +263,26 @@
             "name" : "cts",
             "bits" : 1,
             "description" : "CTS pin state"
+          },
+          {
+            "name" : "pe",
+            "bits" : 1,
+            "description" : "Parity error"
+          },
+          {
+            "name" : "fe",
+            "bits" : 1,
+            "description" : "Framing error"
+          },
+          {
+            "name" : "nf",
+            "bits" : 1,
+            "description" : "Noise detected flag"
+          },
+          {
+            "name" : "ore",
+            "bits" : 1,
+            "description" : "Overrun error"
           }
           ],
           "description" : "UART status register"

@@ -1,11 +1,11 @@
 /*
- * Filename: bpt_mem_map.g
+ * Filename: app_typedef.h
  * Author: Kevin Weiss
- * Revision: 1.00.02
+ * Revision: 1.00.03
  */
 
-#ifndef BPT_MEM_MAP_H_
-#define BPT_MEM_MAP_H_
+#ifndef APP_TYPEDEF_H_
+#define APP_TYPEDEF_H_
 
 #include <stdint.h>
 
@@ -138,6 +138,14 @@ typedef struct uart_ctrl_t_TAG {
 typedef struct uart_status_t_TAG {
 	/* CTS pin state */
 	uint8_t cts : 1;
+	/* Parity error */
+	uint8_t pe : 1;
+	/* Framing error */
+	uint8_t fe : 1;
+	/* Noise detected flag */
+	uint8_t nf : 1;
+	/* Overrun error */
+	uint8_t ore : 1;
 } uart_status_t;
 
 /* @brief  */
