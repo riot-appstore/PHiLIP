@@ -41,6 +41,7 @@
 #include "app_i2c.h"
 #include "app.h"
 #include "app_access.h"
+#include "port_dut_uart.h"
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
@@ -394,13 +395,22 @@ void SPI2_IRQHandler(void) {
  */
 void USART3_IRQHandler(void) {
 	/* USER CODE BEGIN USART3_IRQn 0 */
-
+	uint8_t status;
 	/* USER CODE END USART3_IRQn 0 */
 #ifdef BLUEPILL
 	HAL_UART_IRQHandler(&huart_dut);
 #endif
 	/* USER CODE BEGIN USART3_IRQn 1 */
-
+	read_regs(offsetof(map_t, uart.status), (uint8_t *)&status, sizeof(((uart_t *)0)->status));
+	if (huart_dut.ErrorCode & HAL_UART_ERROR_PE)
+		status |= BPT_SR_PE;
+	if (huart_dut.ErrorCode & HAL_UART_ERROR_FE)
+		status |= BPT_SR_FE;
+	if (huart_dut.ErrorCode & HAL_UART_ERROR_NE)
+		status |= BPT_SR_NF;
+	if (huart_dut.ErrorCode & HAL_UART_ERROR_ORE)
+		status |= BPT_SR_ORE;
+	write_regs(offsetof(map_t, uart.status), (uint8_t *)&status,  sizeof(((uart_t *)0)->status), IF_ACCESS);
 	/* USER CODE END USART3_IRQn 1 */
 }
 
