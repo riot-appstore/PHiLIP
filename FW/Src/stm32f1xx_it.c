@@ -36,7 +36,7 @@
 #include "stm32f1xx_it.h"
 
 /* USER CODE BEGIN 0 */
-#include "app_typedef.h"
+#include "PHiLIP_typedef.h"
 
 #include "app_i2c.h"
 #include "app.h"
