@@ -57,7 +57,7 @@
 
 #include "port_uart.h"
 #include "app_access.h"
-#include "app_typedef.h"
+#include "PHiLIP_typedef.h"
 #include "app_common.h"
 #include "app_defaults.h"
 

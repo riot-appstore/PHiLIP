@@ -13,7 +13,7 @@
 
 #include "app_access.h"
 #include "app_errno.h"
-#include "app_typedef.h"
+#include "PHiLIP_typedef.h"
 #include "app_common.h"
 #include "build_defs.h"
 #include "app_defaults.h"
@@ -223,7 +223,7 @@ error_t write_regs(uint32_t index, uint8_t *data, uint16_t size, uint8_t access)
 		return EOVERFLOW;
 	}
     for (int i = 0; i < size; i++) {
-    	if (!(REG_ACCESS[index + i] & access)) {
+    	if (!(MAP_T_ACCESS[index + i] & access)) {
     		return EACCES;
     	}
     }

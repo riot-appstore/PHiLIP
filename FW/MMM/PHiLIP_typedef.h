@@ -1,15 +1,76 @@
 /*
- * Filename: app_typedef.h
+ * Filename: PHiLIP_typedef.h
+ * App Name: PHiLIP
  * Author: Kevin Weiss
- * Revision: 1.00.03
+ * Version: 0.00.00
  */
 
-#ifndef APP_TYPEDEF_H_
-#define APP_TYPEDEF_H_
+#ifndef PHILIP_TYPEDEF_H
+#define PHILIP_TYPEDEF_H
 
 #include <stdint.h>
 
 #pragma pack(1)
+/* @brief  */
+typedef struct sys_cr_t_TAG {
+	/* resets the DUT */
+	uint8_t dut_rst : 1;
+} sys_cr_t;
+
+/* @brief  */
+typedef struct i2c_mode_t_TAG {
+	/* 10 bit address enable */
+	uint8_t addr_10_bit : 1;
+	/* General call enable */
+	uint8_t general_call : 1;
+	/* Disable for clk stretch */
+	uint8_t no_clk_stretch : 1;
+	/* 16 bit register access mode */
+	uint8_t reg_16_bit : 1;
+	/* Forces a data nack */
+	uint8_t nack_data : 1;
+} i2c_mode_t;
+
+/* @brief  */
+typedef struct i2c_status_t_TAG {
+	/* Overrun/Underrun: Request for new byte when not ready */
+	uint8_t OVR : 1;
+	/* Acknowledge failure */
+	uint8_t AF : 1;
+	/* Bus error:  Non-valid position during a byte transfer */
+	uint8_t BERR : 1;
+	/* General call address received */
+	uint8_t GENCALL : 1;
+	/* i2c bus is BUSY */
+	uint8_t BUSY : 1;
+	/* Repeated start detected */
+	uint8_t RSR : 1;
+} i2c_status_t;
+
+/* @brief  */
+typedef struct uart_ctrl_t_TAG {
+	/* Number of stop bits */
+	uint8_t stop_bits : 1;
+	/* Parity */
+	uint8_t parity : 2;
+	/* RTS pin state */
+	uint8_t rts : 1;
+} uart_ctrl_t;
+
+/* @brief  */
+typedef struct uart_status_t_TAG {
+	/* CTS pin state */
+	uint8_t cts : 1;
+	/* Parity error */
+	uint8_t pe : 1;
+	/* Framing error */
+	uint8_t fe : 1;
+	/* Noise detected flag */
+	uint8_t nf : 1;
+	/* Overrun error */
+	uint8_t ore : 1;
+} uart_status_t;
+
 /* @brief Time and date */
 typedef union timestamp_t_TAG {
 	struct {
@@ -33,12 +94,6 @@ typedef union timestamp_t_TAG {
 	uint8_t data8[8];
 } timestamp_t;
 
-/* @brief Control register for device */
-typedef struct sys_cr_t_TAG {
-	/* resets the DUT */
-	uint8_t dut_rst : 1;
-} sys_cr_t;
-
 /* @brief System settings for the bpt */
 typedef union sys_t_TAG {
 	struct {
@@ -57,36 +112,6 @@ typedef union sys_t_TAG {
 	};
 	uint8_t data8[32];
 } sys_t;
-
-/* @brief Specific modes for I2C */
-typedef struct i2c_mode_t_TAG {
-	/* 10 bit address enable */
-	uint8_t addr_10_bit : 1;
-	/* General call enable */
-	uint8_t general_call : 1;
-	/* Disable for clk stretch */
-	uint8_t no_clk_stretch : 1;
-	/* 16 bit register access mode */
-	uint8_t reg_16_bit : 1;
-	/* Forces a data nack */
-	uint8_t nack_data : 1;
-} i2c_mode_t;
-
-/* @brief Specific modes for I2C */
-typedef struct i2c_status_t_TAG {
-	/* Overrun/Underrun: Request for new byte when not ready */
-	uint8_t OVR : 1;
-	/* Acknowledge failure */
-	uint8_t AF : 1;
-	/* Bus error:  Non-valid position during a byte transfer */
-	uint8_t BERR : 1;
-	/* General call address recieved */
-	uint8_t GENCALL : 1;
-	/* Forces a data nack */
-	uint8_t BUSY : 1;
-	/* Repeated start detected */
-	uint8_t RSR : 1;
-} i2c_status_t;
 
 /* @brief System settings for the device */
 typedef union i2c_t_TAG {
@@ -124,31 +149,7 @@ typedef union spi_t_TAG {
 	uint8_t data8[16];
 } spi_t;
 
-/* @brief UART control register */
-typedef struct uart_ctrl_t_TAG {
-	/* Number of stop bits */
-	uint8_t stop_bits : 1;
-	/* Parity */
-	uint8_t parity : 2;
-	/* RTS pin state */
-	uint8_t rts : 1;
-} uart_ctrl_t;
-
-/* @brief UART status register */
-typedef struct uart_status_t_TAG {
-	/* CTS pin state */
-	uint8_t cts : 1;
-	/* Parity error */
-	uint8_t pe : 1;
-	/* Framing error */
-	uint8_t fe : 1;
-	/* Noise detected flag */
-	uint8_t nf : 1;
-	/* Overrun error */
-	uint8_t ore : 1;
-} uart_status_t;
-
-/* @brief  */
+/* @brief Controls and provides information for the uart */
 typedef union uart_t_TAG {
 	struct {
 		/* Test mode */

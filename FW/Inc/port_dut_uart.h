@@ -9,7 +9,7 @@
 #define PORT_DUT_UART_H_
 
 #include <errno.h>
-#include "app_typedef.h"
+#include "PHiLIP_typedef.h"
 #include "port_uart.h"
 
 #define BPT_PARITY_NONE	0x00

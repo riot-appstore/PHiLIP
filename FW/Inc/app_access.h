@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-extern const uint8_t REG_ACCESS[];
+extern const uint8_t MAP_T_ACCESS[];
 
 #define PERIPH_ACCESS	0x02
 #define IF_ACCESS		0x01
