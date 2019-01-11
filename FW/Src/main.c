@@ -79,7 +79,7 @@ extern IWDG_HandleTypeDef hiwdg;
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
 
-#define UART_BUF_SIZE	512
+#define UART_BUF_SIZE	1024
 /* USER CODE END PV */
 
 
