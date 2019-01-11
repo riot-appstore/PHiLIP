@@ -257,13 +257,13 @@ static error_t _valid_args(char *str, uint32_t *arg_count, uint16_t buf_size) {
 			val = _fast_atou(&arg_str, RX_END_CHAR);
 			if (val == ATOU_ERROR) {
 				return EINVAL;
-			} else if (val > BYTE_MAX) {
+			} else if (val > get_reg_size()) {
 				return EOVERFLOW;
 			} else {
 				(*arg_count)++;
 				return EOK;
 			}
-		} else if (val > BYTE_MAX) {
+		} else if (val > get_reg_size()) {
 			return EOVERFLOW;
 		} else {
 			arg_str = end_check_str;
