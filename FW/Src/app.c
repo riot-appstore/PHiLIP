@@ -34,6 +34,7 @@ error_t _init_reg(map_t *reg_to_init) {
 
 	HAL_GetUID((uint32_t*) &reg_to_init->sys.sn[0]);
 	reg.sys.fw_rev = FW_REV;
+	reg.sys.if_rev = IF_REV;
 
 	reg_to_init->sys.build_time.second = BUILD_SEC;
 	reg_to_init->sys.build_time.minute = BUILD_MIN;
