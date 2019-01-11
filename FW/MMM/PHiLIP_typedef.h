@@ -2,7 +2,7 @@
  * Filename: PHiLIP_typedef.h
  * App Name: PHiLIP
  * Author: Kevin Weiss
- * Version: 0.00.00
+ * Version: 0.00.01
  */
 
 #ifndef PHILIP_TYPEDEF_H
@@ -16,6 +16,12 @@ typedef struct sys_cr_t_TAG {
 	/* resets the DUT */
 	uint8_t dut_rst : 1;
 } sys_cr_t;
+
+/* @brief  */
+typedef struct sys_sr_t_TAG {
+	/* Update available execute needed */
+	uint8_t update : 1;
+} sys_sr_t;
 
 /* @brief  */
 typedef struct i2c_mode_t_TAG {
@@ -94,23 +100,29 @@ typedef union timestamp_t_TAG {
 	uint8_t data8[8];
 } timestamp_t;
 
-/* @brief System settings for the bpt */
+/* @brief System settings for PHiLIP */
 typedef union sys_t_TAG {
 	struct {
 		/* Unique ID of the device */
 		uint8_t sn[12];
 		/* Firmware revision */
 		uint32_t fw_rev;
+		/* Interface revision */
+		uint32_t if_rev;
+		/* Tick in ms */
+		uint64_t tick;
 		/* time of build */
 		timestamp_t build_time;
 		/* A constant number that should always be the same */
 		uint32_t device_num;
+		/* Status of system */
+		sys_sr_t status;
 		/* Control register for device */
 		sys_cr_t cr;
 		/* Reserved bytes */
-		uint8_t res[3];
+		uint8_t res[22];
 	};
-	uint8_t data8[32];
+	uint8_t data8[64];
 } sys_t;
 
 /* @brief System settings for the device */
@@ -118,7 +130,7 @@ typedef union i2c_t_TAG {
 	struct {
 		/* Specific modes for I2C */
 		i2c_mode_t mode;
-		/* Specific modes for I2C */
+		/* Specific status for I2C */
 		i2c_status_t status;
 		/* Delay in us for clock stretch */
 		uint16_t clk_stretch_delay;
@@ -130,10 +142,18 @@ typedef union i2c_t_TAG {
 		uint8_t r_count;
 		/* Last write frame byte count */
 		uint8_t w_count;
+		/* Ticks for read byte */
+		uint32_t r_ticks;
+		/* Ticks for write byte */
+		uint32_t w_ticks;
+		/* Ticks for start and address */
+		uint32_t s_ticks;
+		/* Ticks for full frame */
+		uint32_t f_ticks;
 		/* Reserved bytes */
 		uint8_t res[6];
 	};
-	uint8_t data8[16];
+	uint8_t data8[32];
 } i2c_t;
 
 /* @brief  */
@@ -226,7 +246,9 @@ typedef union tmr_t_TAG {
 /* @brief The memory map */
 typedef union map_t_TAG {
 	struct {
-		/* system configuration (protected) */
+		/* Writable registers for user testing */
+		uint8_t user_reg[256];
+		/* System configuration (protected) */
 		sys_t sys;
 		/* I2C configuration */
 		i2c_t i2c;
@@ -242,12 +264,10 @@ typedef union map_t_TAG {
 		pwm_t pwm;
 		/*  */
 		tmr_t tmr;
-		/* Writable registers for user testing */
-		uint8_t user_reg[64];
 		/* Reserved bytes */
-		uint8_t res[40];
+		uint8_t res[568];
 	};
-	uint8_t data8[256];
+	uint8_t data8[1024];
 } map_t;
 
 #pragma pack()

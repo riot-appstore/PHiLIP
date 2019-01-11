@@ -15,6 +15,17 @@
             "elements": [
                 {
                     "bits": 1,
+                    "description": "Update available execute needed",
+                    "name": "update"
+                }
+            ],
+            "type": "uint8_t",
+            "type_name": "sys_sr_t"
+        },
+        {
+            "elements": [
+                {
+                    "bits": 1,
                     "description": "10 bit address enable",
                     "name": "addr_10_bit"
                 },
@@ -136,6 +147,18 @@
             "name": "map_t",
             "records": [
                 {
+                    "access": 3,
+                    "array_size": 256,
+                    "description": "Writable registers for user testing",
+                    "name": [
+                        "user_reg"
+                    ],
+                    "offset": 0,
+                    "total_size": 256,
+                    "type": "uint8_t",
+                    "type_size": 1
+                },
+                {
                     "access": 0,
                     "array_size": 12,
                     "description": "Unique ID of the device",
@@ -144,7 +167,7 @@
                         "sys",
                         "sn"
                     ],
-                    "offset": 0,
+                    "offset": 256,
                     "total_size": 12,
                     "type": "uint8_t",
                     "type_size": 1
@@ -157,91 +180,120 @@
                         "sys",
                         "fw_rev"
                     ],
-                    "offset": 12,
+                    "offset": 268,
                     "type": "uint32_t",
                     "type_size": 4
                 },
                 {
-                    "access": 1,
+                    "access": 0,
+                    "description": "Interface revision",
+                    "name": [
+                        "sys",
+                        "if_rev"
+                    ],
+                    "offset": 272,
+                    "type": "uint32_t",
+                    "type_size": 4
+                },
+                {
+                    "access": 0,
+                    "description": "Tick in ms",
+                    "name": [
+                        "sys",
+                        "tick"
+                    ],
+                    "offset": 276,
+                    "type": "uint64_t",
+                    "type_size": 8
+                },
+                {
+                    "access": 0,
                     "description": "The seconds in decimal",
+                    "flag": "DEVICE_SPECIFIC",
                     "name": [
                         "sys",
                         "build_time",
                         "second"
                     ],
-                    "offset": 16,
+                    "offset": 284,
                     "type": "uint8_t",
                     "type_size": 1
                 },
                 {
-                    "access": 1,
+                    "access": 0,
                     "description": "The minutes in decimal",
+                    "flag": "DEVICE_SPECIFIC",
                     "name": [
                         "sys",
                         "build_time",
                         "minute"
                     ],
-                    "offset": 17,
+                    "offset": 285,
                     "type": "uint8_t",
                     "type_size": 1
                 },
                 {
-                    "access": 1,
+                    "access": 0,
                     "description": "The hours in decimal",
+                    "flag": "DEVICE_SPECIFIC",
                     "name": [
                         "sys",
                         "build_time",
                         "hour"
                     ],
-                    "offset": 18,
+                    "offset": 286,
                     "type": "uint8_t",
                     "type_size": 1
                 },
                 {
-                    "access": 1,
+                    "access": 0,
                     "description": "The months in decimal",
+                    "flag": "DEVICE_SPECIFIC",
                     "name": [
                         "sys",
                         "build_time",
                         "day_of_month"
                     ],
-                    "offset": 19,
+                    "offset": 287,
                     "type": "uint8_t",
                     "type_size": 1
                 },
                 {
-                    "access": 1,
+                    "access": 0,
                     "description": "The week in decimal",
+                    "flag": "DEVICE_SPECIFIC",
                     "name": [
                         "sys",
                         "build_time",
                         "day_of_week"
                     ],
-                    "offset": 20,
+                    "offset": 288,
                     "type": "uint8_t",
                     "type_size": 1
                 },
                 {
-                    "access": 1,
+                    "access": 0,
                     "description": "The month in decimal",
+                    "flag": "DEVICE_SPECIFIC",
                     "name": [
                         "sys",
                         "build_time",
                         "month"
                     ],
-                    "offset": 21,
+                    "offset": 289,
                     "type": "uint8_t",
                     "type_size": 1
                 },
                 {
-                    "access": 1,
+                    "access": 0,
                     "description": "The last two digits of the year in decimal (20xx)",
+                    "flag": "DEVICE_SPECIFIC",
                     "name": [
                         "sys",
                         "build_time",
                         "year"
                     ],
-                    "offset": 22,
+                    "offset": 290,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -254,7 +306,7 @@
                         "build_time",
                         "res"
                     ],
-                    "offset": 23,
+                    "offset": 291,
                     "total_size": 1,
                     "type": "uint8_t",
                     "type_size": 1
@@ -267,9 +319,33 @@
                         "sys",
                         "device_num"
                     ],
-                    "offset": 24,
+                    "offset": 292,
                     "type": "uint32_t",
                     "type_size": 4
+                },
+                {
+                    "access": 0,
+                    "description": "Status of system",
+                    "name": [
+                        "sys",
+                        "status"
+                    ],
+                    "offset": 296,
+                    "type": "sys_sr_t",
+                    "type_size": 1
+                },
+                {
+                    "access": 0,
+                    "bit_offset": 0,
+                    "bits": 1,
+                    "description": "Update available execute needed",
+                    "name": [
+                        "sys",
+                        "status",
+                        "update"
+                    ],
+                    "offset": 296,
+                    "type_size": 1
                 },
                 {
                     "access": 1,
@@ -278,7 +354,7 @@
                         "sys",
                         "cr"
                     ],
-                    "offset": 28,
+                    "offset": 297,
                     "type": "sys_cr_t",
                     "type_size": 1
                 },
@@ -292,18 +368,19 @@
                         "cr",
                         "dut_rst"
                     ],
-                    "offset": 28
+                    "offset": 297,
+                    "type_size": 1
                 },
                 {
                     "access": 0,
-                    "array_size": 3,
+                    "array_size": 22,
                     "description": "Reserved bytes",
                     "name": [
                         "sys",
                         "res"
                     ],
-                    "offset": 29,
-                    "total_size": 3,
+                    "offset": 298,
+                    "total_size": 22,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -314,7 +391,7 @@
                         "i2c",
                         "mode"
                     ],
-                    "offset": 32,
+                    "offset": 320,
                     "type": "i2c_mode_t",
                     "type_size": 1
                 },
@@ -328,7 +405,8 @@
                         "mode",
                         "addr_10_bit"
                     ],
-                    "offset": 32
+                    "offset": 320,
+                    "type_size": 1
                 },
                 {
                     "access": 1,
@@ -340,7 +418,8 @@
                         "mode",
                         "general_call"
                     ],
-                    "offset": 32
+                    "offset": 320,
+                    "type_size": 1
                 },
                 {
                     "access": 1,
@@ -352,7 +431,8 @@
                         "mode",
                         "no_clk_stretch"
                     ],
-                    "offset": 32
+                    "offset": 320,
+                    "type_size": 1
                 },
                 {
                     "access": 1,
@@ -364,7 +444,8 @@
                         "mode",
                         "reg_16_bit"
                     ],
-                    "offset": 32
+                    "offset": 320,
+                    "type_size": 1
                 },
                 {
                     "access": 1,
@@ -376,21 +457,22 @@
                         "mode",
                         "nack_data"
                     ],
-                    "offset": 32
+                    "offset": 320,
+                    "type_size": 1
                 },
                 {
-                    "access": 1,
+                    "access": 0,
                     "description": "Specific modes for I2C",
                     "name": [
                         "i2c",
                         "status"
                     ],
-                    "offset": 33,
+                    "offset": 321,
                     "type": "i2c_status_t",
                     "type_size": 1
                 },
                 {
-                    "access": 1,
+                    "access": 0,
                     "bit_offset": 0,
                     "bits": 1,
                     "description": "Overrun/Underrun: Request for new byte when not ready",
@@ -399,10 +481,11 @@
                         "status",
                         "OVR"
                     ],
-                    "offset": 33
+                    "offset": 321,
+                    "type_size": 1
                 },
                 {
-                    "access": 1,
+                    "access": 0,
                     "bit_offset": 1,
                     "bits": 1,
                     "description": "Acknowledge failure",
@@ -411,10 +494,11 @@
                         "status",
                         "AF"
                     ],
-                    "offset": 33
+                    "offset": 321,
+                    "type_size": 1
                 },
                 {
-                    "access": 1,
+                    "access": 0,
                     "bit_offset": 2,
                     "bits": 1,
                     "description": "Bus error:  Non-valid position during a byte transfer",
@@ -423,10 +507,11 @@
                         "status",
                         "BERR"
                     ],
-                    "offset": 33
+                    "offset": 321,
+                    "type_size": 1
                 },
                 {
-                    "access": 1,
+                    "access": 0,
                     "bit_offset": 3,
                     "bits": 1,
                     "description": "General call address received",
@@ -435,10 +520,11 @@
                         "status",
                         "GENCALL"
                     ],
-                    "offset": 33
+                    "offset": 321,
+                    "type_size": 1
                 },
                 {
-                    "access": 1,
+                    "access": 0,
                     "bit_offset": 4,
                     "bits": 1,
                     "description": "i2c bus is BUSY",
@@ -447,10 +533,11 @@
                         "status",
                         "BUSY"
                     ],
-                    "offset": 33
+                    "offset": 321,
+                    "type_size": 1
                 },
                 {
-                    "access": 1,
+                    "access": 0,
                     "bit_offset": 5,
                     "bits": 1,
                     "description": "Repeated start detected",
@@ -459,7 +546,8 @@
                         "status",
                         "RSR"
                     ],
-                    "offset": 33
+                    "offset": 321,
+                    "type_size": 1
                 },
                 {
                     "access": 1,
@@ -468,7 +556,7 @@
                         "i2c",
                         "clk_stretch_delay"
                     ],
-                    "offset": 34,
+                    "offset": 322,
                     "type": "uint16_t",
                     "type_size": 2
                 },
@@ -483,7 +571,7 @@
                         "i2c",
                         "slave_addr_1"
                     ],
-                    "offset": 36,
+                    "offset": 324,
                     "type": "uint16_t",
                     "type_size": 2
                 },
@@ -498,7 +586,7 @@
                         "i2c",
                         "slave_addr_2"
                     ],
-                    "offset": 38,
+                    "offset": 326,
                     "type": "uint16_t",
                     "type_size": 2
                 },
@@ -509,7 +597,7 @@
                         "i2c",
                         "r_count"
                     ],
-                    "offset": 40,
+                    "offset": 328,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -520,9 +608,53 @@
                         "i2c",
                         "w_count"
                     ],
-                    "offset": 41,
+                    "offset": 329,
                     "type": "uint8_t",
                     "type_size": 1
+                },
+                {
+                    "access": 0,
+                    "description": "Ticks for read byte",
+                    "name": [
+                        "i2c",
+                        "r_ticks"
+                    ],
+                    "offset": 330,
+                    "type": "uint32_t",
+                    "type_size": 4
+                },
+                {
+                    "access": 0,
+                    "description": "Ticks for write byte",
+                    "name": [
+                        "i2c",
+                        "w_ticks"
+                    ],
+                    "offset": 334,
+                    "type": "uint32_t",
+                    "type_size": 4
+                },
+                {
+                    "access": 0,
+                    "description": "Ticks for start and address",
+                    "name": [
+                        "i2c",
+                        "s_ticks"
+                    ],
+                    "offset": 338,
+                    "type": "uint32_t",
+                    "type_size": 4
+                },
+                {
+                    "access": 0,
+                    "description": "Ticks for full frame",
+                    "name": [
+                        "i2c",
+                        "f_ticks"
+                    ],
+                    "offset": 342,
+                    "type": "uint32_t",
+                    "type_size": 4
                 },
                 {
                     "access": 0,
@@ -532,7 +664,7 @@
                         "i2c",
                         "res"
                     ],
-                    "offset": 42,
+                    "offset": 346,
                     "total_size": 6,
                     "type": "uint8_t",
                     "type_size": 1
@@ -543,7 +675,7 @@
                         "spi",
                         "mode"
                     ],
-                    "offset": 48,
+                    "offset": 352,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -553,7 +685,7 @@
                         "spi",
                         "error_code"
                     ],
-                    "offset": 49,
+                    "offset": 353,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -565,7 +697,7 @@
                         "spi",
                         "res"
                     ],
-                    "offset": 53,
+                    "offset": 357,
                     "total_size": 11,
                     "type": "uint8_t",
                     "type_size": 1
@@ -577,7 +709,7 @@
                         "uart",
                         "mode"
                     ],
-                    "offset": 64,
+                    "offset": 368,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -588,29 +720,29 @@
                         "uart",
                         "baud"
                     ],
-                    "offset": 65,
+                    "offset": 369,
                     "type": "uint32_t",
                     "type_size": 4
                 },
                 {
-                    "access": 1,
+                    "access": 0,
                     "description": "Number of received bytes",
                     "name": [
                         "uart",
                         "rx_count"
                     ],
-                    "offset": 69,
+                    "offset": 373,
                     "type": "uint16_t",
                     "type_size": 2
                 },
                 {
-                    "access": 1,
+                    "access": 0,
                     "description": "Number of transmitted bytes",
                     "name": [
                         "uart",
                         "tx_count"
                     ],
-                    "offset": 71,
+                    "offset": 375,
                     "type": "uint16_t",
                     "type_size": 2
                 },
@@ -621,7 +753,7 @@
                         "uart",
                         "ctrl"
                     ],
-                    "offset": 73,
+                    "offset": 377,
                     "type": "uart_ctrl_t",
                     "type_size": 1
                 },
@@ -635,7 +767,8 @@
                         "ctrl",
                         "stop_bits"
                     ],
-                    "offset": 73
+                    "offset": 377,
+                    "type_size": 1
                 },
                 {
                     "access": 1,
@@ -647,7 +780,8 @@
                         "ctrl",
                         "parity"
                     ],
-                    "offset": 73
+                    "offset": 377,
+                    "type_size": 1
                 },
                 {
                     "access": 1,
@@ -659,21 +793,22 @@
                         "ctrl",
                         "rts"
                     ],
-                    "offset": 73
+                    "offset": 377,
+                    "type_size": 1
                 },
                 {
-                    "access": 1,
+                    "access": 0,
                     "description": "UART status register",
                     "name": [
                         "uart",
                         "status"
                     ],
-                    "offset": 74,
+                    "offset": 378,
                     "type": "uart_status_t",
                     "type_size": 1
                 },
                 {
-                    "access": 1,
+                    "access": 0,
                     "bit_offset": 0,
                     "bits": 1,
                     "description": "CTS pin state",
@@ -682,10 +817,11 @@
                         "status",
                         "cts"
                     ],
-                    "offset": 74
+                    "offset": 378,
+                    "type_size": 1
                 },
                 {
-                    "access": 1,
+                    "access": 0,
                     "bit_offset": 1,
                     "bits": 1,
                     "description": "Parity error",
@@ -694,10 +830,11 @@
                         "status",
                         "pe"
                     ],
-                    "offset": 74
+                    "offset": 378,
+                    "type_size": 1
                 },
                 {
-                    "access": 1,
+                    "access": 0,
                     "bit_offset": 2,
                     "bits": 1,
                     "description": "Framing error",
@@ -706,10 +843,11 @@
                         "status",
                         "fe"
                     ],
-                    "offset": 74
+                    "offset": 378,
+                    "type_size": 1
                 },
                 {
-                    "access": 1,
+                    "access": 0,
                     "bit_offset": 3,
                     "bits": 1,
                     "description": "Noise detected flag",
@@ -718,10 +856,11 @@
                         "status",
                         "nf"
                     ],
-                    "offset": 74
+                    "offset": 378,
+                    "type_size": 1
                 },
                 {
-                    "access": 1,
+                    "access": 0,
                     "bit_offset": 4,
                     "bits": 1,
                     "description": "Overrun error",
@@ -730,7 +869,8 @@
                         "status",
                         "ore"
                     ],
-                    "offset": 74
+                    "offset": 378,
+                    "type_size": 1
                 },
                 {
                     "access": 0,
@@ -740,7 +880,7 @@
                         "uart",
                         "res"
                     ],
-                    "offset": 75,
+                    "offset": 379,
                     "total_size": 5,
                     "type": "uint8_t",
                     "type_size": 1
@@ -752,7 +892,7 @@
                         "rtc",
                         "second"
                     ],
-                    "offset": 80,
+                    "offset": 384,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -763,7 +903,7 @@
                         "rtc",
                         "minute"
                     ],
-                    "offset": 81,
+                    "offset": 385,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -774,7 +914,7 @@
                         "rtc",
                         "hour"
                     ],
-                    "offset": 82,
+                    "offset": 386,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -785,7 +925,7 @@
                         "rtc",
                         "day_of_month"
                     ],
-                    "offset": 83,
+                    "offset": 387,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -796,7 +936,7 @@
                         "rtc",
                         "day_of_week"
                     ],
-                    "offset": 84,
+                    "offset": 388,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -807,7 +947,7 @@
                         "rtc",
                         "month"
                     ],
-                    "offset": 85,
+                    "offset": 389,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -818,7 +958,7 @@
                         "rtc",
                         "year"
                     ],
-                    "offset": 86,
+                    "offset": 390,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -830,7 +970,7 @@
                         "rtc",
                         "res"
                     ],
-                    "offset": 87,
+                    "offset": 391,
                     "total_size": 1,
                     "type": "uint8_t",
                     "type_size": 1
@@ -843,7 +983,7 @@
                         "0",
                         "mode"
                     ],
-                    "offset": 88,
+                    "offset": 392,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -855,7 +995,7 @@
                         "0",
                         "error_code"
                     ],
-                    "offset": 89,
+                    "offset": 393,
                     "type": "uint16_t",
                     "type_size": 2
                 },
@@ -867,7 +1007,7 @@
                         "0",
                         "sample_rate"
                     ],
-                    "offset": 91,
+                    "offset": 395,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -879,7 +1019,7 @@
                         "0",
                         "value"
                     ],
-                    "offset": 92,
+                    "offset": 396,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -892,7 +1032,7 @@
                         "0",
                         "res"
                     ],
-                    "offset": 96,
+                    "offset": 400,
                     "total_size": 8,
                     "type": "uint8_t",
                     "type_size": 1
@@ -905,7 +1045,7 @@
                         "1",
                         "mode"
                     ],
-                    "offset": 104,
+                    "offset": 408,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -917,7 +1057,7 @@
                         "1",
                         "error_code"
                     ],
-                    "offset": 105,
+                    "offset": 409,
                     "type": "uint16_t",
                     "type_size": 2
                 },
@@ -929,7 +1069,7 @@
                         "1",
                         "sample_rate"
                     ],
-                    "offset": 107,
+                    "offset": 411,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -941,7 +1081,7 @@
                         "1",
                         "value"
                     ],
-                    "offset": 108,
+                    "offset": 412,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -954,7 +1094,7 @@
                         "1",
                         "res"
                     ],
-                    "offset": 112,
+                    "offset": 416,
                     "total_size": 8,
                     "type": "uint8_t",
                     "type_size": 1
@@ -966,7 +1106,7 @@
                         "pwm",
                         "mode"
                     ],
-                    "offset": 120,
+                    "offset": 424,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -977,7 +1117,7 @@
                         "pwm",
                         "error_code"
                     ],
-                    "offset": 121,
+                    "offset": 425,
                     "type": "uint16_t",
                     "type_size": 2
                 },
@@ -988,7 +1128,7 @@
                         "pwm",
                         "duty"
                     ],
-                    "offset": 123,
+                    "offset": 427,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -999,7 +1139,7 @@
                         "pwm",
                         "freq"
                     ],
-                    "offset": 124,
+                    "offset": 428,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -1011,7 +1151,7 @@
                         "pwm",
                         "res"
                     ],
-                    "offset": 128,
+                    "offset": 432,
                     "total_size": 8,
                     "type": "uint8_t",
                     "type_size": 1
@@ -1023,7 +1163,7 @@
                         "tmr",
                         "mode"
                     ],
-                    "offset": 136,
+                    "offset": 440,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -1034,7 +1174,7 @@
                         "tmr",
                         "error_code"
                     ],
-                    "offset": 137,
+                    "offset": 441,
                     "type": "uint16_t",
                     "type_size": 2
                 },
@@ -1045,7 +1185,7 @@
                         "tmr",
                         "duty"
                     ],
-                    "offset": 139,
+                    "offset": 443,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -1056,7 +1196,7 @@
                         "tmr",
                         "freq"
                     ],
-                    "offset": 140,
+                    "offset": 444,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -1067,7 +1207,7 @@
                         "tmr",
                         "hi_us"
                     ],
-                    "offset": 144,
+                    "offset": 448,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -1078,31 +1218,19 @@
                         "tmr",
                         "lo_us"
                     ],
-                    "offset": 148,
+                    "offset": 452,
                     "type": "uint32_t",
                     "type_size": 4
                 },
                 {
-                    "access": 3,
-                    "array_size": 64,
-                    "description": "Writable registers for user testing",
-                    "name": [
-                        "user_reg"
-                    ],
-                    "offset": 152,
-                    "total_size": 64,
-                    "type": "uint8_t",
-                    "type_size": 1
-                },
-                {
                     "access": 0,
-                    "array_size": 40,
+                    "array_size": 568,
                     "description": "Reserved bytes",
                     "name": [
                         "res"
                     ],
-                    "offset": 216,
-                    "total_size": 40,
+                    "offset": 456,
+                    "total_size": 568,
                     "type": "uint8_t",
                     "type_size": 1
                 }
@@ -1112,7 +1240,7 @@
     "metadata": {
         "app_name": "PHiLIP",
         "author": "Kevin Weiss",
-        "version": "0.00.00"
+        "version": "0.00.01"
     },
     "typedefs": [
         {
@@ -1158,7 +1286,7 @@
             "type_size": 8
         },
         {
-            "description": "System settings for the bpt",
+            "description": "System settings for PHiLIP",
             "elements": [
                 {
                     "access": 0,
@@ -1175,6 +1303,18 @@
                 },
                 {
                     "access": 0,
+                    "description": "Interface revision",
+                    "name": "if_rev",
+                    "type": "uint32_t"
+                },
+                {
+                    "access": 0,
+                    "description": "Tick in ms",
+                    "name": "tick",
+                    "type": "uint64_t"
+                },
+                {
+                    "access": 0,
                     "description": "time of build",
                     "name": "build_time",
                     "type": "timestamp_t"
@@ -1186,13 +1326,19 @@
                     "type": "uint32_t"
                 },
                 {
+                    "access": 0,
+                    "description": "Status of system",
+                    "name": "status",
+                    "type": "sys_sr_t"
+                },
+                {
                     "description": "Control register for device",
                     "name": "cr",
                     "type": "sys_cr_t"
                 }
             ],
             "type_name": "sys_t",
-            "type_size": 32
+            "type_size": 64
         },
         {
             "description": "System settings for the device",
@@ -1203,7 +1349,8 @@
                     "type": "i2c_mode_t"
                 },
                 {
-                    "description": "Specific modes for I2C",
+                    "access": 0,
+                    "description": "Specific status for I2C",
                     "name": "status",
                     "type": "i2c_status_t"
                 },
@@ -1223,18 +1370,44 @@
                     "type": "uint16_t"
                 },
                 {
+                    "access": 0,
                     "description": "Last read frame byte count",
                     "name": "r_count",
                     "type": "uint8_t"
                 },
                 {
+                    "access": 0,
                     "description": "Last write frame byte count",
                     "name": "w_count",
                     "type": "uint8_t"
+                },
+                {
+                    "access": 0,
+                    "description": "Ticks for read byte",
+                    "name": "r_ticks",
+                    "type": "uint32_t"
+                },
+                {
+                    "access": 0,
+                    "description": "Ticks for write byte",
+                    "name": "w_ticks",
+                    "type": "uint32_t"
+                },
+                {
+                    "access": 0,
+                    "description": "Ticks for start and address",
+                    "name": "s_ticks",
+                    "type": "uint32_t"
+                },
+                {
+                    "access": 0,
+                    "description": "Ticks for full frame",
+                    "name": "f_ticks",
+                    "type": "uint32_t"
                 }
             ],
             "type_name": "i2c_t",
-            "type_size": 16
+            "type_size": 32
         },
         {
             "elements": [
@@ -1264,11 +1437,13 @@
                     "type": "uint32_t"
                 },
                 {
+                    "access": 0,
                     "description": "Number of received bytes",
                     "name": "rx_count",
                     "type": "uint16_t"
                 },
                 {
+                    "access": 0,
                     "description": "Number of transmitted bytes",
                     "name": "tx_count",
                     "type": "uint16_t"
@@ -1279,6 +1454,7 @@
                     "type": "uart_ctrl_t"
                 },
                 {
+                    "access": 0,
                     "description": "UART status register",
                     "name": "status",
                     "type": "uart_status_t"
@@ -1382,7 +1558,14 @@
             "description": "The memory map",
             "elements": [
                 {
-                    "description": "system configuration (protected)",
+                    "access": 3,
+                    "array_size": 256,
+                    "description": "Writable registers for user testing",
+                    "name": "user_reg",
+                    "type": "uint8_t"
+                },
+                {
+                    "description": "System configuration (protected)",
                     "name": "sys",
                     "type": "sys_t"
                 },
@@ -1421,18 +1604,11 @@
                     "description": "",
                     "name": "tmr",
                     "type": "tmr_t"
-                },
-                {
-                    "access": 3,
-                    "array_size": 64,
-                    "description": "Writable registers for user testing",
-                    "name": "user_reg",
-                    "type": "uint8_t"
                 }
             ],
             "generate_mem_map": true,
             "type_name": "map_t",
-            "type_size": 256
+            "type_size": 1024
         }
     ]
 }
