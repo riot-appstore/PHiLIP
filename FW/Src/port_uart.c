@@ -151,6 +151,11 @@ static error_t _rx_str(PORT_UART_t *port_uart) {
 
 	rx_amount = _get_rx_amount(port_uart);
 	if (rx_amount >= 1) {
+		if (port_uart->mask_msb) {
+			for (int i = 0; i < strlen(str); i++) {
+				str[i] &= 0x7f;
+			}
+		}
 		if (str[rx_amount - 1] == RX_END_CHAR
 				&& _get_rx_amount(port_uart) != port_uart->size) {
 			_update_rx_count(port_uart, strlen(str));

@@ -97,20 +97,23 @@ int main(void) {
 	PORT_USB_t usb_if = {.str = if_usb_buf,
 			.size = sizeof(if_usb_buf),
 			.access = IF_ACCESS, .index = 0,
-			.mode = MODE_REG};
+			.mode = MODE_REG,
+			.mask_msb = 0};
 #endif
 	char if_uart_buf[UART_BUF_SIZE] = { 0 };
 	PORT_UART_t uart_if = {.huart = &huart_if,
 			.str = if_uart_buf,
 			.size = sizeof(if_uart_buf),
 			.access = IF_ACCESS,
-			.mode = MODE_REG};
+			.mode = MODE_REG,
+			.mask_msb = 0};
 	char dut_uart_buf[UART_BUF_SIZE] = { 0 };
 	PORT_UART_t uart_dut = {.huart = &huart_dut,
 			.str = dut_uart_buf,
 			.size = sizeof(dut_uart_buf),
 			.access = PERIPH_ACCESS,
-			.mode = MODE_ECHO};
+			.mode = MODE_ECHO,
+			.mask_msb = 0};
 	/* USER CODE END 1 */
 
 	/* MCU Configuration----------------------------------------------------------*/

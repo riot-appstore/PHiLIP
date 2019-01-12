@@ -17,6 +17,7 @@ typedef struct PORT_USB_TAG
 	uint16_t index;
 	uint8_t access;
 	uint8_t mode;
+	uint8_t mask_msb;
 }PORT_USB_t;
 
 error_t port_usb_init(PORT_USB_t *port_usb);

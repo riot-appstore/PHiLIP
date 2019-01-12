@@ -17,6 +17,7 @@ typedef struct PORT_UART_TAG
 	uint16_t size;
 	uint8_t access;
 	uint8_t mode;
+	uint8_t mask_msb;
 }PORT_UART_t;
 
 error_t port_uart_init(PORT_UART_t *port_uart);
