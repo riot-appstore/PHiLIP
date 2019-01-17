@@ -16,6 +16,9 @@
 #define BPT_PARITY_EVEN	0x01
 #define BPT_PARITY_ODD	0x02
 
+#define BPT_DATABITS_8	0x00
+#define BPT_DATABITS_7	0x01
+
 #define BPT_SR_PE		0x02
 #define BPT_SR_FE		0x04
 #define BPT_SR_NF		0x08

@@ -105,6 +105,11 @@
                     "bits": 1,
                     "description": "RTS pin state",
                     "name": "rts"
+                },
+                {
+                    "bits": 1,
+                    "description": "Number of data bits",
+                    "name": "data_bits"
                 }
             ],
             "type": "uint8_t",
@@ -792,6 +797,19 @@
                         "uart",
                         "ctrl",
                         "rts"
+                    ],
+                    "offset": 377,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 4,
+                    "bits": 1,
+                    "description": "Number of data bits",
+                    "name": [
+                        "uart",
+                        "ctrl",
+                        "data_bits"
                     ],
                     "offset": 377,
                     "type_size": 1

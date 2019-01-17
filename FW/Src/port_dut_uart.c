@@ -33,7 +33,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include <string.h>
-#include <stdbool.h>
 #include <stdint.h>
 
 #include "stm32f1xx_hal.h"
@@ -66,23 +65,34 @@ error_t uart_dut_init(PORT_UART_t *uart_inst) {
  * @retval errno defined error code.
  */
 error_t uart_dut_execute(uart_t *uart) {
+
+	if (uart->mode > MODE_TX)
+		return ENOACTION;
+
+	if (uart->ctrl.data_bits == BPT_DATABITS_7 && !uart->ctrl.parity)
+		return ENOACTION;
+
+	uart_dut_inst->mask_msb = 0;
 	uart_dut_inst->mode = uart->mode;
 
 	uart_dut_inst->huart->Init.BaudRate = uart->baud;
 	uart_dut_inst->huart->Init.StopBits = uart->ctrl.stop_bits ? UART_STOPBITS_2 : UART_STOPBITS_1;
-	switch (uart->ctrl.parity) {
-	case BPT_PARITY_NONE:
+
+	if (uart->ctrl.parity) {
+		if (uart->ctrl.data_bits == BPT_DATABITS_7) {
+			uart_dut_inst->huart->Init.WordLength = UART_WORDLENGTH_8B;
+			uart_dut_inst->mask_msb = 1;
+		} else {
+			uart_dut_inst->huart->Init.WordLength = UART_WORDLENGTH_9B;
+		}
+
+		if (uart->ctrl.parity == BPT_PARITY_EVEN)
+			uart_dut_inst->huart->Init.Parity = UART_PARITY_EVEN;
+		else
+			uart_dut_inst->huart->Init.Parity = UART_PARITY_ODD;
+	} else {
 		uart_dut_inst->huart->Init.Parity = UART_PARITY_NONE;
 		uart_dut_inst->huart->Init.WordLength = UART_WORDLENGTH_8B;
-		break;
-	case BPT_PARITY_EVEN:
-		uart_dut_inst->huart->Init.Parity = UART_PARITY_EVEN;
-		uart_dut_inst->huart->Init.WordLength = UART_WORDLENGTH_9B;
-		break;
-	case BPT_PARITY_ODD:
-		uart_dut_inst->huart->Init.Parity = UART_PARITY_ODD;
-		uart_dut_inst->huart->Init.WordLength = UART_WORDLENGTH_9B;
-		break;
 	}
 
 	DIS_INT;
