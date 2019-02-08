@@ -24,60 +24,39 @@
 
 /**
  ******************************************************************************
- * @addtogroup Application
+ * @addtogroup periph
  * @{
- * @file			app_common.h
+ * @file			i2c.h
  * @author			Kevin Weiss
  * @date			13.02.2019
- * @brief			For common application functions.
- * @details			Deals with simple delays and interrupt control, mostly
- *                  wrappers around hardware specific functions.
+ * @brief			Controls the i2c peripheral.
  ******************************************************************************
  */
 
-#ifndef APP_COMMON_H_
-#define APP_COMMON_H_
-
-/* Macros --------------------------------------------------------------------*/
-/** @brief	Disables interrupts. */
-#define DIS_INT disable_interrupt()
-
-/** @brief	Enables interrupts. */
-#define EN_INT enable_interrupt()
-
-/**
- * @brief	Resets device.
- * @note	This is a software reset, if the reset pin is being held the
- * 			device may not complete reset until released.
- */
-#define SOFT_RESET	soft_reset()
+#ifndef I2C_H_
+#define I2C_H_
 
 /* Function prototypes -------------------------------------------------------*/
 /**
- * @brief  		Imprecise blocking delay in microseconds.
+ * @brief		Initializes i2c registers.
  *
- * @param[in]   micros  Number of microseconds to delay
+ * @param[in]	reg			Pointer to live register memory map
+ * @param[in]	saved_reg	Pointer to saved register memory map
+ * @note		Populates i2c defaults registers and assigns i2c register
+ * 				pointers.
  */
-void delay_us(uint16_t micros);
+void init_dut_i2c(map_t *reg, map_t *saved_reg);
 
 /**
- * @brief		Copies and compares data until copied data matches.
+ * @brief		Commits the i2c registers and executes operations.
  *
- * @param[out]	dest	Destination address to copy to
- * @param[in]	src		Source address to copy
- * @param[in]	size	Size of bytes to copy
- * @note		Used for data concurrency issues without blocking interrupts.
+ * @pre			i2c must first be initialized with init_dut_i2c()
+ * @return      EOK if init occurred
+ * @return      ENOACTION if no init was triggered
+ *
+ * @note		Only executes actions if the i2c.mode.init is set.
  */
-void copy_until_same(void *dest, void *src, size_t size);
+error_t commit_dut_i2c();
 
-/** @brief	Wrapper function to disable interrupts. */
-void disable_interrupt();
-
-/** @brief	Wrapper function to enable interrupts. */
-void enable_interrupt();
-
-/** @brief	Wrapper function to provide software reset. */
-void soft_reset();
-
-#endif /* APP_COMMON_H_ */
+#endif /* I2C_H_ */
 /** @} */

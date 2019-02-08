@@ -31,17 +31,14 @@
  ******************************************************************************
  */
 /* Includes ------------------------------------------------------------------*/
+
 #include "stm32f1xx_hal.h"
 #include "stm32f1xx.h"
 #include "stm32f1xx_it.h"
 
 /* USER CODE BEGIN 0 */
 #include "PHiLIP_typedef.h"
-
-#include "app_i2c.h"
-#include "app.h"
 #include "app_access.h"
-#include "port_dut_uart.h"
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
@@ -51,14 +48,8 @@ extern PCD_HandleTypeDef hpcd_USB_FS;
 extern DMA_HandleTypeDef hdma_adc_pm;
 extern ADC_HandleTypeDef hadc_pm;
 extern ADC_HandleTypeDef hadc_dut;
-extern I2C_HandleTypeDef hi2c_dut;
 extern SPI_HandleTypeDef hspi_dut;
 extern TIM_HandleTypeDef htim_ic;
-extern DMA_HandleTypeDef hdma_usart_if_rx;
-extern DMA_HandleTypeDef hdma_usart_if_tx;
-extern DMA_HandleTypeDef hdma_usart_dut_rx;
-extern DMA_HandleTypeDef hdma_usart_dut_tx;
-extern UART_HandleTypeDef huart_dut;
 
 /******************************************************************************/
 /*            Cortex-M3 Processor Interruption and Exception Handlers         */
@@ -210,6 +201,7 @@ void DMA1_Channel1_IRQHandler(void) {
 	/* USER CODE END DMA1_Channel1_IRQn 1 */
 }
 
+#if 0
 /**
  * @brief This function handles DMA1 channel2 global interrupt.
  */
@@ -219,8 +211,9 @@ void DMA1_Channel2_IRQHandler(void) {
 	/* USER CODE END DMA1_Channel2_IRQn 0 */
 #ifdef BLUEPILL
 	HAL_DMA_IRQHandler(&hdma_usart_dut_tx);
-	/* USER CODE BEGIN DMA1_Channel2_IRQn 1 */
 #endif
+	/* USER CODE BEGIN DMA1_Channel2_IRQn 1 */
+
 	/* USER CODE END DMA1_Channel2_IRQn 1 */
 }
 
@@ -305,7 +298,7 @@ void DMA1_Channel7_IRQHandler(void) {
 
 	/* USER CODE END DMA1_Channel7_IRQn 1 */
 }
-
+#endif
 /**
  * @brief This function handles ADC1 and ADC2 global interrupts.
  */
@@ -320,18 +313,6 @@ void ADC1_2_IRQHandler(void) {
 	/* USER CODE END ADC1_2_IRQn 1 */
 }
 
-/**
- * @brief This function handles USB low priority or CAN RX0 interrupts.
- */
-void USB_LP_CAN1_RX0_IRQHandler(void) {
-	/* USER CODE BEGIN USB_LP_CAN1_RX0_IRQn 0 */
-#ifdef BLUEPILL
-	/* USER CODE END USB_LP_CAN1_RX0_IRQn 0 */
-	HAL_PCD_IRQHandler(&hpcd_USB_FS);
-	/* USER CODE BEGIN USB_LP_CAN1_RX0_IRQn 1 */
-#endif
-	/* USER CODE END USB_LP_CAN1_RX0_IRQn 1 */
-}
 
 /**
  * @brief This function handles TIM1 update interrupt.
@@ -345,21 +326,20 @@ void TIM1_UP_IRQHandler(void) {
 
 	/* USER CODE END TIM1_UP_IRQn 1 */
 }
-
+#if 0
 /**
  * @brief This function handles I2C1 event interrupt.
  */
-void I2C1_EV_IRQHandler(void) {
-	i2c_it(&hi2c_dut);
-}
-
+//void I2C1_EV_IRQHandler(void) {
+//	i2c_it(&hi2c_dut);
+//}
 /**
  * @brief This function handles I2C1 error interrupt.
  */
-void I2C1_ER_IRQHandler(void) {
-	i2c_err(&hi2c_dut);
-}
-
+//void I2C1_ER_IRQHandler(void) {
+//	i2c_err(&hi2c_dut);
+//}
+#endif
 /**
  * @brief This function handles SPI1 global interrupt.
  */
@@ -390,6 +370,7 @@ void SPI2_IRQHandler(void) {
 	/* USER CODE END SPI2_IRQn 1 */
 }
 
+#if 0
 /**
  * @brief This function handles USART3 global interrupt.
  */
@@ -403,14 +384,14 @@ void USART3_IRQHandler(void) {
 	/* USER CODE BEGIN USART3_IRQn 1 */
 	read_regs(offsetof(map_t, uart.status), (uint8_t *)&status, sizeof(((uart_t *)0)->status));
 	if (huart_dut.ErrorCode & HAL_UART_ERROR_PE)
-		status |= BPT_SR_PE;
+	status |= BPT_SR_PE;
 	if (huart_dut.ErrorCode & HAL_UART_ERROR_FE)
-		status |= BPT_SR_FE;
+	status |= BPT_SR_FE;
 	if (huart_dut.ErrorCode & HAL_UART_ERROR_NE)
-		status |= BPT_SR_NF;
+	status |= BPT_SR_NF;
 	if (huart_dut.ErrorCode & HAL_UART_ERROR_ORE)
-		status |= BPT_SR_ORE;
-	write_regs(offsetof(map_t, uart.status), (uint8_t *)&status,  sizeof(((uart_t *)0)->status), IF_ACCESS);
+	status |= BPT_SR_ORE;
+	write_regs(offsetof(map_t, uart.status), (uint8_t *)&status, sizeof(((uart_t *)0)->status), IF_ACCESS);
 	/* USER CODE END USART3_IRQn 1 */
 }
 
@@ -430,17 +411,16 @@ void USART1_IRQHandler(void) {
 }
 
 /**
-* @brief This function handles EXTI line[15:10] interrupts.
-*/
+ * @brief This function handles EXTI line[15:10] interrupts.
+ */
 void EXTI15_10_IRQHandler(void)
 {
 	/* USER CODE BEGIN EXTI15_10_IRQn 0 */
 
-
 	uint8_t status;
 	read_regs(offsetof(map_t, uart.status), (uint8_t *)&status, sizeof(((uart_t *)0)->status));
 	status |= 0x01;
-	write_regs(offsetof(map_t, uart.status), (uint8_t *)&status,  sizeof(((uart_t *)0)->status), IF_ACCESS);
+	write_regs(offsetof(map_t, uart.status), (uint8_t *)&status, sizeof(((uart_t *)0)->status), IF_ACCESS);
 #ifdef BLUEPILL
 	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_13);
 #endif
@@ -449,7 +429,7 @@ void EXTI15_10_IRQHandler(void)
 #endif
 	/* USER CODE END EXTI15_10_IRQn 1 */
 }
-
+#endif
 /* USER CODE BEGIN 1 */
 
 /* USER CODE END 1 */

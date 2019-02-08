@@ -24,37 +24,58 @@
 
 /**
  ******************************************************************************
- * @addtogroup Application
+ * @addtogroup periph
  * @{
- * @file			app_shell_if.h
+ * @file			uart.h
  * @author			Kevin Weiss
+ * @author			Yegor Yefremov
  * @date			13.02.2019
- * @brief			Protocol for application communication.
- * @details			This initializes and runs the serial communication
- * 					protocol for interfacing to registers.  It used the STM HAL
- * 					and a UART for the IO.  It also uses DMA.
+ * @brief			Controls the uart peripherals.
  ******************************************************************************
  */
 
-#ifndef APP_SHELL_IF_H_
-#define APP_SHELL_IF_H_
+#ifndef UART_H_
+#define UART_H_
 
 /* Defines -------------------------------------------------------------------*/
-/** @brief   Parse on newline */
-#define RX_END_CHAR		'\n'
-
-/** @brief   Send newline at end of transmission */
-#define TX_END_STR		"\n"
+/** @brief	Size allocated for uart buffers */
+#define UART_BUF_SIZE	256
 
 /* Function prototypes -------------------------------------------------------*/
 /**
- * @brief Parses a string and executes commands.
+ * @brief		Initializes dut uart registers.
  *
- * @param[in]	str			String with the command
- * @param[in]	buf_size	The max size of the string buffer
- * @param[in]	access		The callers access level
+ * @param[in]	reg			Pointer to live register memory map
+ * @param[in]	saved_reg	Pointer to saved register memory map
+ * @note		Populates dut uart defaults registers and assigns uart register
+ * 				pointers.
+ */
+void init_dut_uart(map_t *reg, map_t *saved_reg);
+
+/**
+ * @brief		Initializes interface uart registers.
  *
- * @return 		EOK on success
+ * @note		Populates dut uart defaults registers, uart register are NULL.
+ */
+void init_if_uart();
+
+/**
+ * @brief		Commits the dut uart registers and executes operations.
+ *
+ * @pre			uart must first be initialized with init_dut_uart()
+ * @return      EOK if init occurred
+ * @return      ENOACTION if no init was triggered
+ *
+ * @note		Only executes actions if the uart.mode.init is set.
+ */
+error_t commit_dut_uart();
+
+/**
+ * @brief		Polls for any commands from the dut uart.
+ *
+ * @pre			uart must first be initialized with init_dut_uart()
+ * @return      EOK on success
+ * @return      ENOACTION no action occurred
  * @return 		EPROTONOSUPPORT command not supported
  * @return 		EACCES caller doesn't have access
  * @return 		EMSGSIZE message size too big
@@ -63,10 +84,25 @@
  * @return 		ERANGE invalid number range
  * @return 		ENODATA not enough data
  * @return 		EUNKNOWN
- *
- * @warning		May protect interrupts and cause jitter.
  */
-error_t parse_command(char *str, uint16_t buf_size, uint8_t access);
+error_t poll_dut_uart();
 
-#endif /* APP_SHELL_IF_H_ */
+/**
+ * @brief		Polls for any commands from the interface uart.
+ *
+ * @pre			uart must first be initialized with init_if_uart()
+ * @return      EOK on success
+ * @return      ENOACTION no action occurred
+ * @return 		EPROTONOSUPPORT command not supported
+ * @return 		EACCES caller doesn't have access
+ * @return 		EMSGSIZE message size too big
+ * @return 		EINVAL Invalid value
+ * @return 		EOVERFLOW invalid address
+ * @return 		ERANGE invalid number range
+ * @return 		ENODATA not enough data
+ * @return 		EUNKNOWN
+ */
+error_t poll_if_uart();
+
+#endif /* UART_H_ */
 /** @} */

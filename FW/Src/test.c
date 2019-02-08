@@ -39,7 +39,6 @@ void _reg_increase_test() {
 		index[i] = index[i-1] + sizes[i - 1];
 	}
 
-
 	uint8_t t_data0 = 0;
 	int8_t t_data1 = 0;
 	uint16_t t_data2 = 0;
@@ -125,7 +124,6 @@ void _reg_increase_test() {
 	}
 }
 
-
 void _reg_decrease_test() {
 	uint32_t index[6];
 	uint32_t sizes[6] = {1, 1, 2, 2, 4, 4};
@@ -133,7 +131,6 @@ void _reg_decrease_test() {
 	for (int i = 1; i < 6; i++) {
 		index[i] = index[i-1] + sizes[i - 1];
 	}
-
 
 	uint8_t t_data0 = 0;
 	int8_t t_data1 = 0;
@@ -220,13 +217,12 @@ void _reg_decrease_test() {
 	}
 }
 
-
 void run_test() {
 	_reg_increase_test();
 	_reg_decrease_test();
 }
 #else
-void run_test(void){
+void run_test(void) {
 
 }
 #endif

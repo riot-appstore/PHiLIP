@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright 2018 Kevin Weiss
+ * Copyright 2018 Kevin Weiss for HAW Hamburg
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -22,46 +22,61 @@
  * THE SOFTWARE.
  */
 
-/*
+/**
  ******************************************************************************
- * @file           : serial_com.c
- * @author         : Kevin Weiss
- * @date           : 16.05.2018
- * @brief          : Serial communication handling.
+ * @addtogroup Application
+ * @{
+ * @file			app_shell_if.c
+ * @author			Kevin Weiss
+ * @date			13.02.2019
+ * @brief			Protocol for application communication.
+ * @details			This initializes and runs the serial communication
+ * 					protocol for interfacing to registers.  It used the STM HAL
+ * 					and a UART for the IO.  It also uses DMA.
  ******************************************************************************
- *
- * This initializes and runs the serial communication protocol for interfacing
- * to registers.  It used the STM HAL and a UART for the IO.  It also uses DMA.
  */
 
 /* Includes ------------------------------------------------------------------*/
+#include <errno.h>
 #include <stdio.h>
+#include <stdint.h>
 #include <string.h>
 
-
-
+#include "PHiLIP_typedef.h"
 #include "app_access.h"
 #include "app_errno.h"
 #include "app_common.h"
-#include "app.h"
+#include "app_reg.h"
+
 #include "app_shell_if.h"
 
-/* Defines -------------------------------------------------------------------*/
-
+/* Private defines -----------------------------------------------------------*/
+/** @brief   The command to read application registers */
 #define READ_REG_CMD	"rr "
-#define WRITE_REG_CMD	"wr "
-#define EXECUTE_CMD		"ex\n"
-#define RESET_CMD		"mcu_rst\n"
 
+/** @brief   The command to write application registers */
+#define WRITE_REG_CMD	"wr "
+
+/** @brief   The command to execute and commit changes in the registers */
+#define EXECUTE_CMD		"ex\n"
+
+/** @brief   The command to provide a software reset to the applications */
+#define RESET_CMD		"mcu_rst\n"
+/** @} */
+
+/** @brief   Maximum characters for parsing strings to numbers */
 #define ATOU_MAX_CHAR	5
+
+/** @brief   Error code for parsing strings to numbers */
 #define ATOU_ERROR		0xFFFFFFFF
+
+/** @brief   Macro for max values of a byte */
 #define BYTE_MAX		((uint8_t)0xFF)
 
-
+/** @brief   Is a ascii number */
 #define IS_NUM(x)			(x >= '0' && x <= '9')
 
 /* Private function prototypes -----------------------------------------------*/
-static error_t parse_command(char *str, uint16_t buf_size, uint8_t access);
 static error_t _cmd_read_reg(char *str, uint16_t buf_size);
 static error_t _cmd_write_reg(char *str, uint16_t buf_size, uint8_t access);
 static error_t _cmd_execute(char *str);
@@ -70,33 +85,27 @@ static error_t _cmd_reset();
 static error_t _valid_args(char *str, uint32_t *arg_count, uint16_t buf_size);
 static uint32_t _fast_atou(char **str, char terminator);
 
+/* Functions -----------------------------------------------------------------*/
 /**
- * @brief Private function
+ * @brief Parses a string and executes commands.
  *
- * @retval errno defined error code.
- */
-error_t parse_input(uint8_t mode, char *str, uint16_t buf_size, uint8_t access) {
-	int i;
-	switch(mode) {
-	case MODE_ECHO:
-		return EOK;
-	case MODE_ECHO_EXT:
-		for (i = 0; i < strlen(str) - 1; i++) {
-			str[i]++;
-		}
-		return EOK;
-	case MODE_REG:
-		return parse_command(str, buf_size, access);
-	}
-	return EPROTONOSUPPORT;
-}
-
-/**
- * @brief Private function
+ * @param[in]	str			String with the command
+ * @param[in]	buf_size	The max size of the string buffer
+ * @param[in]	access		The callers access level
  *
- * @retval errno defined error code.
+ * @return 		EOK on success
+ * @return 		EPROTONOSUPPORT command not supported
+ * @return 		EACCES caller doesn't have access
+ * @return 		EMSGSIZE message size too big
+ * @return 		EINVAL Invalid value
+ * @return 		EOVERFLOW invalid address
+ * @return 		ERANGE invalid number range
+ * @return 		ENODATA not enough data
+ * @return 		EUNKNOWN
+ *
+ * @warning		May protect interrupts and cause jitter.
  */
-static error_t parse_command(char *str, uint16_t buf_size, uint8_t access) {
+error_t parse_command(char *str, uint16_t buf_size, uint8_t access) {
 	error_t err = EPROTONOSUPPORT;
 
 	if (memcmp(str, READ_REG_CMD, strlen(READ_REG_CMD)) == 0) {
@@ -116,7 +125,7 @@ static error_t parse_command(char *str, uint16_t buf_size, uint8_t access) {
 			err = _cmd_reset();
 		}
 	}
-	if (str[buf_size - 1] != 0){
+	if (str[buf_size - 1] != 0) {
 		err = EMSGSIZE;
 	}
 
@@ -127,11 +136,6 @@ static error_t parse_command(char *str, uint16_t buf_size, uint8_t access) {
 	return err;
 }
 
-/**
- * @brief Private function
- *
- * @retval errno defined error code.
- */
 static error_t _cmd_read_reg(char *str, uint16_t buf_size) {
 	char *first_str = str;
 	char *arg_str = str + strlen(READ_REG_CMD);
@@ -145,8 +149,8 @@ static error_t _cmd_read_reg(char *str, uint16_t buf_size) {
 		uint32_t size = _fast_atou(&arg_str, RX_END_CHAR);
 		if (size == ATOU_ERROR) {
 			return EINVAL;
-		} else if ((size * 2) + strlen(TX_END_STR)
-				+ strlen("0,0x") >= buf_size) {
+		} else if ((size * 2) + strlen(TX_END_STR) + strlen("0,0x")
+				>= buf_size) {
 			return ERANGE;
 		} else {
 			uint8_t data;
@@ -158,10 +162,8 @@ static error_t _cmd_read_reg(char *str, uint16_t buf_size) {
 			while (size > 0) {
 				index--;
 				size--;
-
-				DIS_INT;
+				/* TODO: Make this a bit better, use helper functions */
 				read_reg(index, &data);
-				EN_INT;
 
 				if (index == 0) {
 					index = get_reg_size();
@@ -179,11 +181,6 @@ static error_t _cmd_read_reg(char *str, uint16_t buf_size) {
 	return EUNKNOWN;
 }
 
-/**
- * @brief Private function
- *
- * @retval errno defined error code.
- */
 static error_t _cmd_write_reg(char *str, uint16_t buf_size, uint8_t access) {
 	uint32_t arg_count = 0;
 	error_t err;
@@ -227,11 +224,6 @@ static error_t _cmd_write_reg(char *str, uint16_t buf_size, uint8_t access) {
 	return err;
 }
 
-/**
- * @brief Private function
- *
- * @retval errno defined error code.
- */
 static error_t _cmd_execute(char *str) {
 	error_t err = execute_reg_change();
 	if (err == EOK) {
@@ -240,11 +232,6 @@ static error_t _cmd_execute(char *str) {
 	return err;
 }
 
-/**
- * @brief Private function
- *
- * @retval errno defined error code.
- */
 static error_t _valid_args(char *str, uint32_t *arg_count, uint16_t buf_size) {
 	char *arg_str = str + strlen(WRITE_REG_CMD);
 	uint32_t val;
@@ -278,11 +265,6 @@ static error_t _cmd_reset() {
 	return EUNKNOWN;
 }
 
-/**
- * @brief Private function, only handles controlled inputs.
- *
- * @retval numerical value from the string.
- */
 uint32_t _fast_atou(char **str, char terminator) {
 	uint32_t val = 0;
 	char *first_str = *str;

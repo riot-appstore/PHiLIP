@@ -38,11 +38,9 @@ BUILD_DIR = $(BOARD)
 ######################################
 # C sources
 C_SOURCES =  \
-$(wildcard Middlewares/ST/STM32_USB_Device_Library/Core/Src/*.c) \
 $(wildcard Src/*.c) \
 $(wildcard MMM/*.c) \
-$(wildcard Drivers/STM32F1xx_HAL_Driver/Src/*.c) \
-Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c
+$(wildcard Drivers/STM32F1xx_HAL_Driver/Src/*.c)
 
 # ASM sources
 ASM_SOURCES =  \
@@ -104,8 +102,6 @@ C_INCLUDES =  \
 -IMMM \
 -IDrivers/STM32F1xx_HAL_Driver/Inc \
 -IDrivers/STM32F1xx_HAL_Driver/Inc/Legacy \
--IMiddlewares/ST/STM32_USB_Device_Library/Core/Inc \
--IMiddlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc \
 -IDrivers/CMSIS/Device/ST/STM32F1xx/Include \
 -IDrivers/CMSIS/Include
 

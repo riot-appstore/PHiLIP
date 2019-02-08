@@ -1,181 +1,89 @@
+/*
+ * MIT License
+ *
+ * Copyright 2018 Kevin Weiss for HAW Hamburg
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
 /**
  ******************************************************************************
- * @file           : main.c
- * @brief          : Main program body
- ******************************************************************************
- * This notice applies to any and all portions of this file
- * that are not between comment pairs USER CODE BEGIN and
- * USER CODE END. Other portions of this file, whether
- * inserted by the user or by software development tools
- * are owned by their respective copyright owners.
- *
- * Copyright (c) 2018 STMicroelectronics International N.V.
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted, provided that the following conditions are met:
- *
- * 1. Redistribution of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- * 3. Neither the name of STMicroelectronics nor the names of other
- *    contributors to this software may be used to endorse or promote products
- *    derived from this software without specific written permission.
- * 4. This software, including modifications and/or derivative works of this
- *    software, must execute solely and exclusively on microcontroller or
- *    microprocessor devices manufactured by or for STMicroelectronics.
- * 5. Redistribution and use of this software other than as permitted under
- *    this license is void and will automatically terminate your rights under
- *    this license.
- *
- * THIS SOFTWARE IS PROVIDED BY STMICROELECTRONICS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS, IMPLIED OR STATUTORY WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
- * PARTICULAR PURPOSE AND NON-INFRINGEMENT OF THIRD PARTY INTELLECTUAL PROPERTY
- * RIGHTS ARE DISCLAIMED TO THE FULLEST EXTENT PERMITTED BY LAW. IN NO EVENT
- * SHALL STMICROELECTRONICS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
- * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
- * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * @file			main.c
+ * @author			Kevin Weiss
+ * @author			Yegor Yefremov
+ * @date			13.02.2019
+ * @brief			Controls the uart peripherals.
  ******************************************************************************
  */
+
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f1xx_hal.h"
 
-/* USER CODE BEGIN Includes */
-#ifdef BLUEPILL
-#include "usb_device.h"
-#include "usbd_cdc.h"
-#include "port_usb.h"
-#endif
-
-#include "port_uart.h"
-#include "app_access.h"
 #include "PHiLIP_typedef.h"
+#include "app_access.h"
 #include "app_common.h"
 #include "app_defaults.h"
 
+#include "app_reg.h"
 #include "app_shell_if.h"
-#include "app_i2c.h"
-#include "port_dut_uart.h"
-#include "app.h"
+#include "i2c.h"
+#include "uart.h"
+#include "sys.h"
 #include "port.h"
 
 #include "test.h"
-/* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
-extern UART_HandleTypeDef huart_if;
-extern UART_HandleTypeDef huart_dut;
-extern I2C_HandleTypeDef hi2c_dut;
+/** @brief  Watchdog timer handle. */
 extern IWDG_HandleTypeDef hiwdg;
 
-/* USER CODE BEGIN PV */
-/* Private variables ---------------------------------------------------------*/
-
-#define UART_BUF_SIZE	1024
-/* USER CODE END PV */
-
-
-/**
- * @brief  The application entry point.
- *
- * @retval None
- */
+/** @brief  The application entry point. */
 int main(void) {
-	/* USER CODE BEGIN 1 */
 	int32_t led_tick = 0;
+	map_t reg = { 0 };
+	map_t saved_reg = { 0 };
 
-#ifdef BLUEPILL
-	char if_usb_buf[UART_BUF_SIZE] = { 0 };
-	PORT_USB_t usb_if = {.str = if_usb_buf,
-			.size = sizeof(if_usb_buf),
-			.access = IF_ACCESS, .index = 0,
-			.mode = MODE_REG,
-			.mask_msb = 0};
-#endif
-	char if_uart_buf[UART_BUF_SIZE] = { 0 };
-	PORT_UART_t uart_if = {.huart = &huart_if,
-			.str = if_uart_buf,
-			.size = sizeof(if_uart_buf),
-			.access = IF_ACCESS,
-			.mode = MODE_REG,
-			.mask_msb = 0};
-	char dut_uart_buf[UART_BUF_SIZE] = { 0 };
-	PORT_UART_t uart_dut = {.huart = &huart_dut,
-			.str = dut_uart_buf,
-			.size = sizeof(dut_uart_buf),
-			.access = PERIPH_ACCESS,
-			.mode = MODE_ECHO,
-			.mask_msb = 0};
-	/* USER CODE END 1 */
-
-	/* MCU Configuration----------------------------------------------------------*/
-
-	/* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+	/* Reset of all peripherals, Initializes the Flash interface and Systick. */
 	HAL_Init();
 
 	/* Configure the system clock */
 	init_clock();
-	run_test();
+
 	/* Initialize all configured peripherals */
 	init_periphs();
 
-	/* USER CODE BEGIN 2 */
-	port_uart_init(&uart_if);
-	uart_dut_init(&uart_dut);
-	app_i2c_init(&hi2c_dut);
-	execute_reg_change();
-	/* USER CODE END 2 */
+	init_app_reg(&reg, &saved_reg);
+	init_dut_uart(&reg, &saved_reg);
+	init_if_uart();
+	init_dut_i2c(&reg, &saved_reg);
+	init_sys(&reg, &saved_reg);
 
-	/* Infinite loop */
-	/* USER CODE BEGIN WHILE */
 	while (1) {
 
 		if (led_tick < HAL_GetTick()) {
-			if ((FW_REV & 0x03) == 0) {
-				led_tick = HAL_GetTick() + 40;
-			}
-			else if ((FW_REV & 0x03) == 1){
-				led_tick = HAL_GetTick() + 200;
-			}
-			else if ((FW_REV & 0x03) == 2){
-				led_tick = HAL_GetTick() + 500;
-			}
-			else if ((FW_REV & 0x03) == 3){
-				led_tick = HAL_GetTick() + 1000;
-			}
+			led_tick = HAL_GetTick() + 500;
 			HAL_GPIO_TogglePin(LED0);
 		}
 
 		if (HAL_IWDG_Refresh(&hiwdg) != HAL_OK) {
 		}
-#ifdef BLUEPILL
-		port_usb_poll(&usb_if);
-#endif
-		port_uart_poll(&uart_if);
-		port_uart_poll(&uart_dut);
-		/* USER CODE END WHILE */
-
-		/* USER CODE BEGIN 3 */
-
+		poll_dut_uart();
+		poll_if_uart();
 	}
-	/* USER CODE END 3 */
-
 }
-
-/**
- * @}
- */
-
-/**
- * @}
- */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
