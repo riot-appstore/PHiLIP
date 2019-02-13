@@ -39,7 +39,6 @@
 #define DUT_RST_GPIO_Port GPIOB
 #define DUT_CTS_Pin GPIO_PIN_13
 #define DUT_CTS_GPIO_Port GPIOB
-#define DUT_CTS_EXTI_IRQn EXTI15_10_IRQn
 #define DUT_RTS_Pin GPIO_PIN_14
 #define DUT_RTS_GPIO_Port GPIOB
 #define USER_BTN_Pin GPIO_PIN_15
@@ -75,11 +74,14 @@
 #define DUT_UART_DMA_RX_INT	DMA1_Channel3_IRQHandler
 #define DUT_UART_DMA_TX_INT	DMA1_Channel2_IRQHandler
 #define DUT_UART_INT		USART3_IRQHandler
-#define DUT_CTS_INT			EXTI15_10_IRQHandler
+#define GPIO_INT			EXTI15_10_IRQHandler
 
 #define IF_UART				USART1
 #define IF_UART_DMA_RX_INT	DMA1_Channel5_IRQHandler
 #define IF_UART_DMA_TX_INT	DMA1_Channel4_IRQHandler
+
+#define DUT_SPI				SPI1
+#define DUT_SPI_INT			SPI1_IRQHandler
 #endif
 
 #ifdef NUCLEOF103RB
@@ -127,7 +129,6 @@
 #define DUT_RX_GPIO_Port GPIOA
 #define DUT_CTS_Pin GPIO_PIN_11
 #define DUT_CTS_GPIO_Port GPIOA
-#define DUT_CTS_EXTI_IRQn EXTI15_10_IRQn
 #define DUT_RTS_Pin GPIO_PIN_12
 #define DUT_RTS_GPIO_Port GPIOA
 #define TMS_Pin GPIO_PIN_13
@@ -153,11 +154,14 @@
 #define DUT_UART_DMA_RX_INT	DMA1_Channel5_IRQHandler
 #define DUT_UART_DMA_TX_INT	DMA1_Channel4_IRQHandler
 #define DUT_UART_INT		USART1_IRQHandler
-#define DUT_CTS_INT			EXTI15_10_IRQHandler
+#define GPIO_INT			EXTI15_10_IRQHandler
 
 #define IF_UART				USART2
 #define IF_UART_DMA_RX_INT	DMA1_Channel6_IRQHandler
 #define IF_UART_DMA_TX_INT	DMA1_Channel7_IRQHandler
+
+#define DUT_SPI				SPI2
+#define DUT_SPI_INT			SPI2_IRQHandler
 #endif
 
 #define USER_BTN USER_BTN_GPIO_Port, USER_BTN_Pin

@@ -1,10 +1,10 @@
 /**
  ******************************************************************************
- * @file       : PHiLIP_typedef.h
- * @author     : Kevin Weiss
- * @version    : 0.00.01
- * @date       : 2019-02-13
- * @addtogroup : PHiLIP_Typedefs
+ * @file       PHiLIP_typedef.h
+ * @author     Kevin Weiss
+ * @version    0.00.01
+ * @date       2019-02-20
+ * @addtogroup PHiLIP_Typedefs
  * @{
  ******************************************************************************
  */
@@ -15,18 +15,18 @@
 #include <stdint.h>
 
 #pragma pack(1)
-/** @brief  :  */
+/** @brief  System mode settings */
 typedef struct {
 	uint8_t init : 1; /**< initialize with new params */
 	uint8_t dut_rst : 1; /**< resets the DUT */
 } sys_mode_t;
 
-/** @brief  :  */
+/** @brief  System status */
 typedef struct {
 	uint8_t update : 1; /**< Update available execute needed */
 } sys_status_t;
 
-/** @brief  :  */
+/** @brief  I2C mode settings */
 typedef struct {
 	uint8_t init : 1; /**< initialize with new params */
 	uint8_t disable : 1; /**< disable i2c functionality */
@@ -38,7 +38,7 @@ typedef struct {
 	uint8_t nack_data : 1; /**< Forces a data nack */
 } i2c_mode_t;
 
-/** @brief  :  */
+/** @brief  I2C status */
 typedef struct {
 	uint8_t ovr : 1; /**< Overrun/Underrun: Request for new byte when not ready */
 	uint8_t af : 1; /**< Acknowledge failure */
@@ -48,7 +48,27 @@ typedef struct {
 	uint8_t rsr : 1; /**< Repeated start detected */
 } i2c_status_t;
 
-/** @brief  :  */
+/** @brief  SPI mode settings */
+typedef struct {
+	uint8_t init : 1; /**< initialize with new params */
+	uint8_t disable : 1; /**< disable spi functionality */
+	uint8_t cpha : 1; /**< Clock phase */
+	uint8_t cpol : 1; /**< Clock polarity */
+	uint8_t if_type : 2; /**< spi interface type */
+	uint8_t reg_16_bit : 1; /**< 16 bit register access mode */
+	uint8_t reg_16_big_endian : 1; /**< sets the endianess of the 16 bit reg */
+} spi_mode_t;
+
+/** @brief  SPI status */
+typedef struct {
+	uint8_t bsy : 1; /**< Busy flag */
+	uint8_t ovr : 1; /**< Overrun flag */
+	uint8_t modf : 1; /**< Mode fault */
+	uint8_t udr : 1; /**< Underrun flag */
+	uint8_t index_err : 1; /**< Register index error */
+} spi_status_t;
+
+/** @brief  UART mode settings */
 typedef struct {
 	uint16_t init : 1; /**< initialize with new params */
 	uint16_t disable : 1; /**< disable uart functionality */
@@ -59,7 +79,7 @@ typedef struct {
 	uint16_t data_bits : 1; /**< Number of data bits */
 } uart_mode_t;
 
-/** @brief  :  */
+/** @brief  UART status */
 typedef struct {
 	uint8_t cts : 1; /**< CTS pin state */
 	uint8_t pe : 1; /**< Parity error */
@@ -68,7 +88,7 @@ typedef struct {
 	uint8_t ore : 1; /**< Overrun error */
 } uart_status_t;
 
-/** @brief  : Time and date */
+/** @brief  Time and date */
 typedef union {
 	struct {
 		uint8_t second; /**< The seconds in decimal */
@@ -83,7 +103,7 @@ typedef union {
 	uint8_t data8[8];/**< array for padding */
 } timestamp_t;
 
-/** @brief  : System settings for PHiLIP */
+/** @brief  System settings for PHiLIP */
 typedef union {
 	struct {
 		uint8_t sn[12]; /**< Unique ID of the device */
@@ -99,7 +119,7 @@ typedef union {
 	uint8_t data8[64];/**< array for padding */
 } sys_t;
 
-/** @brief  : System settings for the device */
+/** @brief  System settings for the device */
 typedef union {
 	struct {
 		i2c_mode_t mode; /**< Specific modes for I2C */
@@ -122,17 +142,25 @@ typedef union {
 	uint8_t data8[64];/**< array for padding */
 } i2c_t;
 
-/** @brief  :  */
+/** @brief  Controls and provides information for the spi */
 typedef union {
 	struct {
-		uint8_t mode; /**<  */
-		uint32_t error_code; /**<  */
-		uint8_t res[11]; /**< Reserved bytes */
+		spi_mode_t mode; /**< Specific spi modes */
+		spi_status_t status; /**< Spi status register */
+		uint16_t state; /**< Current state of the i2c bus */
+		uint16_t reg_index; /**< current index of i2c pointer */
+		uint16_t start_reg_index; /**< start index of i2c pointer */
+		uint8_t r_count; /**< Last read frame byte count */
+		uint8_t w_count; /**< Last write frame byte count */
+		uint8_t transfer_count; /**< The amount of bytes in the last transfer  */
+		uint32_t frame_ticks; /**< Ticks per frame */
+		uint32_t byte_ticks; /**< Ticks per byte */
+		uint8_t res[13]; /**< Reserved bytes */
 	};
-	uint8_t data8[16];/**< array for padding */
+	uint8_t data8[32];/**< array for padding */
 } spi_t;
 
-/** @brief  : Controls and provides information for the uart */
+/** @brief  Controls and provides information for the uart */
 typedef union {
 	struct {
 		uart_mode_t mode; /**< UART control register */
@@ -146,7 +174,7 @@ typedef union {
 	uint8_t data8[16];/**< array for padding */
 } uart_t;
 
-/** @brief  :  */
+/** @brief   */
 typedef union {
 	struct {
 		uint8_t mode; /**<  */
@@ -158,7 +186,7 @@ typedef union {
 	uint8_t data8[16];/**< array for padding */
 } adc_t;
 
-/** @brief  :  */
+/** @brief   */
 typedef union {
 	struct {
 		uint8_t mode; /**<  */
@@ -170,7 +198,7 @@ typedef union {
 	uint8_t data8[16];/**< array for padding */
 } pwm_t;
 
-/** @brief  :  */
+/** @brief   */
 typedef union {
 	struct {
 		uint8_t mode; /**<  */
@@ -183,19 +211,19 @@ typedef union {
 	uint8_t data8[16];/**< array for padding */
 } tmr_t;
 
-/** @brief  : The memory map */
+/** @brief  The memory map */
 typedef union {
 	struct {
 		uint8_t user_reg[256]; /**< Writable registers for user testing */
 		sys_t sys; /**< System configuration (protected) */
 		i2c_t i2c; /**< I2C configuration */
-		spi_t spi; /**<  */
+		spi_t spi; /**< SPI configuration */
 		uart_t uart; /**<  */
 		timestamp_t rtc; /**<  */
 		adc_t adc[2]; /**<  */
 		pwm_t pwm; /**<  */
 		tmr_t tmr; /**<  */
-		uint8_t res[536]; /**< Reserved bytes */
+		uint8_t res[520]; /**< Reserved bytes */
 	};
 	uint8_t data8[1024];/**< array for padding */
 } map_t;

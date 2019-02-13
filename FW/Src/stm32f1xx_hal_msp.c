@@ -49,6 +49,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f1xx_hal.h"
 
+#include "port.h"
+
 extern DMA_HandleTypeDef hdma_adc_pm;
 extern DMA_HandleTypeDef hdma_usart_if_rx;
 extern DMA_HandleTypeDef hdma_usart_if_tx;
@@ -386,7 +388,8 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* hspi) {
 		 PB14     ------> SPI2_MISO
 		 PB15     ------> SPI2_MOSI
 		 */
-		GPIO_InitStruct.Pin = DUT_NSS_Pin | DUT_SCK_Pin | DUT_MOSI_Pin;
+		//GPIO_InitStruct.Pin = DUT_NSS_Pin | DUT_SCK_Pin | DUT_MOSI_Pin;
+		GPIO_InitStruct.Pin = DUT_SCK_Pin | DUT_MOSI_Pin;
 		GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
 		GPIO_InitStruct.Pull = GPIO_NOPULL;
 		HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);

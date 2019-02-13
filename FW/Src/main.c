@@ -42,8 +42,10 @@
 
 #include "app_reg.h"
 #include "app_shell_if.h"
+#include "gpio.h"
 #include "i2c.h"
 #include "uart.h"
+#include "spi.h"
 #include "sys.h"
 #include "port.h"
 
@@ -68,10 +70,12 @@ int main(void) {
 	/* Initialize all configured peripherals */
 	init_periphs();
 
+	init_gpio();
 	init_app_reg(&reg, &saved_reg);
 	init_dut_uart(&reg, &saved_reg);
 	init_if_uart();
 	init_dut_i2c(&reg, &saved_reg);
+	init_dut_spi(&reg, &saved_reg);
 	init_sys(&reg, &saved_reg);
 
 	while (1) {

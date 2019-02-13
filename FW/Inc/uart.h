@@ -104,5 +104,10 @@ error_t poll_dut_uart();
  */
 error_t poll_if_uart();
 
+/**
+ * @brief This function handles dut_cts event interrupt.
+ */
+void dut_cts_int();
+
 #endif /* UART_H_ */
 /** @} */

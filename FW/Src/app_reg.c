@@ -97,6 +97,25 @@ uint32_t get_reg_size() {
 }
 
 /**
+ * @brief		An unprotected read from the register map.
+ *
+ * @param[in]	index 	The index of the register map to start to read
+ * @param[out]	data	Pointer to data that was read
+ *
+ * @return      EOK on success
+ * @return      EOVERFLOW if trying to read out of range
+ *
+ * @details		This is a direct read from the register without any protection,
+ * 				the purpose is for speed.  This should also be used for
+ * 				entering data directly to hardware registers.
+ *
+ * @warning		No interrupt protection or memory protection.
+ */
+void unprotected_read_uint8(uint32_t index, uint8_t *data) {
+	*data = app_reg->data8[index];
+}
+
+/**
  * @brief		Reads a register from the register map.
  *
  * @param[in]	index 	The index of the register map to start to read
