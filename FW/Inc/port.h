@@ -66,6 +66,20 @@
 #define DUT_PWM_GPIO_Port GPIOB
 #define DUT_DAC_Pin GPIO_PIN_9
 #define DUT_DAC_GPIO_Port GPIOB
+
+#define DUT_I2C				I2C1
+#define DUT_I2C_EV_INT		I2C1_EV_IRQHandler
+#define DUT_I2C_ERR_INT		I2C1_ER_IRQHandler
+
+#define DUT_UART			USART3
+#define DUT_UART_DMA_RX_INT	DMA1_Channel3_IRQHandler
+#define DUT_UART_DMA_TX_INT	DMA1_Channel2_IRQHandler
+#define DUT_UART_INT		USART3_IRQHandler
+#define DUT_CTS_INT			EXTI15_10_IRQHandler
+
+#define IF_UART				USART1
+#define IF_UART_DMA_RX_INT	DMA1_Channel5_IRQHandler
+#define IF_UART_DMA_TX_INT	DMA1_Channel4_IRQHandler
 #endif
 
 #ifdef NUCLEOF103RB
@@ -130,6 +144,20 @@
 #define DUT_SCL_GPIO_Port GPIOB
 #define DUT_SDA_Pin GPIO_PIN_9
 #define DUT_SDA_GPIO_Port GPIOB
+
+#define DUT_I2C				I2C1
+#define DUT_I2C_EV_INT		I2C1_EV_IRQHandler
+#define DUT_I2C_ERR_INT		I2C1_ER_IRQHandler
+
+#define DUT_UART			USART1
+#define DUT_UART_DMA_RX_INT	DMA1_Channel5_IRQHandler
+#define DUT_UART_DMA_TX_INT	DMA1_Channel4_IRQHandler
+#define DUT_UART_INT		USART1_IRQHandler
+#define DUT_CTS_INT			EXTI15_10_IRQHandler
+
+#define IF_UART				USART2
+#define IF_UART_DMA_RX_INT	DMA1_Channel6_IRQHandler
+#define IF_UART_DMA_TX_INT	DMA1_Channel7_IRQHandler
 #endif
 
 #define USER_BTN USER_BTN_GPIO_Port, USER_BTN_Pin
@@ -160,7 +188,6 @@
 #define DEBUG2 DEBUG2_GPIO_Port, DEBUG2_Pin
 #define DUT_SCL DUT_SCL_GPIO_Port, DUT_SCL_Pin
 #define DUT_SDA DUT_SDA_GPIO_Port, DUT_SDA_Pin
-
 
 void init_periphs(void);
 void init_clock(void);

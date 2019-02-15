@@ -6,9 +6,6 @@
  */
 #include "port.h"
 #include "stm32f1xx_hal.h"
-#ifdef BLUEPILL
-#include "usb_device.h"
-#endif
 
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 extern void _Error_Handler(char *, int);
@@ -27,13 +24,6 @@ SPI_HandleTypeDef hspi_dut;
 
 TIM_HandleTypeDef htim_ic;
 TIM_HandleTypeDef htim_pwm;
-
-UART_HandleTypeDef huart_if;
-UART_HandleTypeDef huart_dut;
-DMA_HandleTypeDef hdma_usart_if_rx;
-DMA_HandleTypeDef hdma_usart_if_tx;
-DMA_HandleTypeDef hdma_usart_dut_rx;
-DMA_HandleTypeDef hdma_usart_dut_tx;
 
 #ifdef BLUEPILL
 /* ADC1 init function */
@@ -79,7 +69,6 @@ static void MX_ADC1_Init(void) {
 		_Error_Handler(__FILE__, __LINE__);
 	}
 
-
 }
 
 /* ADC2 init function */
@@ -106,24 +95,6 @@ static void MX_ADC2_Init(void) {
 	sConfig.Rank = ADC_REGULAR_RANK_1;
 	sConfig.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
 	if (HAL_ADC_ConfigChannel(&hadc_dut, &sConfig) != HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-}
-
-/* I2C1 init function */
-static void MX_I2C1_Init(void) {
-
-	hi2c_dut.Instance = I2C1;
-	hi2c_dut.Init.ClockSpeed = 400000;
-	hi2c_dut.Init.DutyCycle = I2C_DUTYCYCLE_2;
-	hi2c_dut.Init.OwnAddress1 = 170;
-	hi2c_dut.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
-	hi2c_dut.Init.DualAddressMode = I2C_DUALADDRESS_ENABLE;
-	hi2c_dut.Init.OwnAddress2 = 128;
-	hi2c_dut.Init.GeneralCallMode = I2C_GENERALCALL_ENABLE;
-	hi2c_dut.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
-	if (HAL_I2C_Init(&hi2c_dut) != HAL_OK) {
 		_Error_Handler(__FILE__, __LINE__);
 	}
 
@@ -227,40 +198,6 @@ static void MX_TIM4_Init(void) {
 
 }
 
-/* USART1 init function */
-static void MX_USART1_UART_Init(void) {
-
-	huart_if.Instance = USART1;
-	huart_if.Init.BaudRate = 115200;
-	huart_if.Init.WordLength = UART_WORDLENGTH_8B;
-	huart_if.Init.StopBits = UART_STOPBITS_1;
-	huart_if.Init.Parity = UART_PARITY_NONE;
-	huart_if.Init.Mode = UART_MODE_TX_RX;
-	huart_if.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-	huart_if.Init.OverSampling = UART_OVERSAMPLING_16;
-	if (HAL_UART_Init(&huart_if) != HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-}
-
-/* USART3 init function */
-static void MX_USART3_UART_Init(void) {
-
-	huart_dut.Instance = USART3;
-	huart_dut.Init.BaudRate = 115200;
-	huart_dut.Init.WordLength = UART_WORDLENGTH_8B;
-	huart_dut.Init.StopBits = UART_STOPBITS_1;
-	huart_dut.Init.Parity = UART_PARITY_NONE;
-	huart_dut.Init.Mode = UART_MODE_TX_RX;
-	huart_dut.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-	huart_dut.Init.OverSampling = UART_OVERSAMPLING_16;
-	if (HAL_UART_Init(&huart_dut) != HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-}
-
 /**
  * Enable DMA controller clock
  */
@@ -309,7 +246,7 @@ static void MX_GPIO_Init(void) {
 
 	/*Configure GPIO pin Output Level */
 	HAL_GPIO_WritePin(GPIOA, DEBUG0_Pin|DEBUG1_Pin|DEBUG2_Pin|TEST_PASS_Pin
-					  |TEST_WARN_Pin|TEST_FAIL_Pin, GPIO_PIN_RESET);
+			|TEST_WARN_Pin|TEST_FAIL_Pin, GPIO_PIN_RESET);
 
 	/*Configure GPIO pin Output Level */
 	HAL_GPIO_WritePin(DUT_RST_GPIO_Port, DUT_RST_Pin, GPIO_PIN_SET);
@@ -324,9 +261,9 @@ static void MX_GPIO_Init(void) {
 	HAL_GPIO_Init(LED0_GPIO_Port, &GPIO_InitStruct);
 
 	/*Configure GPIO pins : DEBUG0_Pin DEBUG1_Pin DEBUG2_Pin TEST_PASS_Pin
-	TEST_WARN_Pin TEST_FAIL_Pin */
+	 TEST_WARN_Pin TEST_FAIL_Pin */
 	GPIO_InitStruct.Pin = DEBUG0_Pin|DEBUG1_Pin|DEBUG2_Pin|TEST_PASS_Pin
-						  |TEST_WARN_Pin|TEST_FAIL_Pin;
+	|TEST_WARN_Pin|TEST_FAIL_Pin;
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -363,9 +300,9 @@ static void MX_GPIO_Init(void) {
 	HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 }
 /**
-  * @brief System Clock Configuration
-  * @retval None
-  */
+ * @brief System Clock Configuration
+ * @retval None
+ */
 void SystemClock_Config(void) {
 
 	RCC_OscInitTypeDef RCC_OscInitStruct;
@@ -375,7 +312,7 @@ void SystemClock_Config(void) {
 	/**Initializes the CPU, AHB and APB busses clocks
 	 */
 	RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI
-			| RCC_OSCILLATORTYPE_HSE | RCC_OSCILLATORTYPE_LSE;
+	| RCC_OSCILLATORTYPE_HSE | RCC_OSCILLATORTYPE_LSE;
 	RCC_OscInitStruct.HSEState = RCC_HSE_ON;
 	RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
 	RCC_OscInitStruct.LSEState = RCC_LSE_ON;
@@ -391,7 +328,7 @@ void SystemClock_Config(void) {
 	/**Initializes the CPU, AHB and APB busses clocks
 	 */
 	RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK
-			| RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
+	| RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
 	RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
 	RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
 	RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
@@ -402,7 +339,7 @@ void SystemClock_Config(void) {
 	}
 
 	PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_RTC | RCC_PERIPHCLK_ADC
-			| RCC_PERIPHCLK_USB;
+	| RCC_PERIPHCLK_USB;
 	PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
 	PeriphClkInit.AdcClockSelection = RCC_ADCPCLK2_DIV6;
 	PeriphClkInit.UsbClockSelection = RCC_USBCLKSOURCE_PLL_DIV1_5;
@@ -498,6 +435,7 @@ static void MX_ADC2_Init(void) {
 
 }
 
+#if 0
 /* I2C1 init function */
 static void MX_I2C1_Init(void) {
 
@@ -515,6 +453,7 @@ static void MX_I2C1_Init(void) {
 	}
 
 }
+#endif
 
 /* SPI2 init function */
 static void MX_SPI2_Init(void) {
@@ -635,6 +574,7 @@ static void MX_TIM3_Init(void) {
 
 }
 
+#if 0
 /* USART1 init function */
 static void MX_USART1_UART_Init(void) {
 
@@ -668,6 +608,7 @@ static void MX_USART2_UART_Init(void) {
 	}
 
 }
+#endif
 
 /**
  * Enable DMA controller clock
@@ -708,20 +649,26 @@ static void MX_GPIO_Init(void) {
 	GPIO_InitTypeDef GPIO_InitStruct;
 
 	/* GPIO Ports Clock Enable */
-	__HAL_RCC_GPIOC_CLK_ENABLE();
-	__HAL_RCC_GPIOD_CLK_ENABLE();
-	__HAL_RCC_GPIOA_CLK_ENABLE();
-	__HAL_RCC_GPIOB_CLK_ENABLE();
+	__HAL_RCC_GPIOC_CLK_ENABLE()
+	;
+	__HAL_RCC_GPIOD_CLK_ENABLE()
+	;
+	__HAL_RCC_GPIOA_CLK_ENABLE()
+	;
+	__HAL_RCC_GPIOB_CLK_ENABLE()
+	;
 
 	/*Configure GPIO pin Output Level */
-	HAL_GPIO_WritePin(GPIOA, TEST_WARN_Pin|TEST_FAIL_Pin|TEST_PASS_Pin|LED0_Pin
-						  |DUT_RTS_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOA,
+			TEST_WARN_Pin | TEST_FAIL_Pin | TEST_PASS_Pin | LED0_Pin
+					| DUT_RTS_Pin, GPIO_PIN_RESET);
 
 	/*Configure GPIO pin Output Level */
 	HAL_GPIO_WritePin(DUT_RST_GPIO_Port, DUT_RST_Pin, GPIO_PIN_SET);
 
 	/*Configure GPIO pin Output Level */
-	HAL_GPIO_WritePin(GPIOB, DEBUG0_Pin|DEBUG1_Pin|DEBUG2_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOB, DEBUG0_Pin | DEBUG1_Pin | DEBUG2_Pin,
+			GPIO_PIN_RESET);
 
 	/*Configure GPIO pin : USER_BTN_Pin */
 	GPIO_InitStruct.Pin = USER_BTN_Pin;
@@ -730,16 +677,16 @@ static void MX_GPIO_Init(void) {
 	HAL_GPIO_Init(USER_BTN_GPIO_Port, &GPIO_InitStruct);
 
 	/*Configure GPIO pins : TEST_WARN_Pin TEST_FAIL_Pin TEST_PASS_Pin LED0_Pin
-						   DUT_RTS_Pin */
-	GPIO_InitStruct.Pin = TEST_WARN_Pin|TEST_FAIL_Pin|TEST_PASS_Pin|LED0_Pin
-						  |DUT_RTS_Pin;
+	 DUT_RTS_Pin */
+	GPIO_InitStruct.Pin = TEST_WARN_Pin | TEST_FAIL_Pin | TEST_PASS_Pin
+			| LED0_Pin | DUT_RTS_Pin;
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
 	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
 	/*Configure GPIO pins : DUT_RST_Pin DEBUG0_Pin DEBUG1_Pin DEBUG2_Pin */
-	GPIO_InitStruct.Pin = DUT_RST_Pin|DEBUG0_Pin|DEBUG1_Pin|DEBUG2_Pin;
+	GPIO_InitStruct.Pin = DUT_RST_Pin | DEBUG0_Pin | DEBUG1_Pin | DEBUG2_Pin;
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -757,65 +704,61 @@ static void MX_GPIO_Init(void) {
 }
 
 /**
-  * @brief System Clock Configuration
-  * @retval None
-  */
-void SystemClock_Config(void)
-{
+ * @brief System Clock Configuration
+ * @retval None
+ */
+void SystemClock_Config(void) {
 
-  RCC_OscInitTypeDef RCC_OscInitStruct;
-  RCC_ClkInitTypeDef RCC_ClkInitStruct;
-  RCC_PeriphCLKInitTypeDef PeriphClkInit;
+	RCC_OscInitTypeDef RCC_OscInitStruct;
+	RCC_ClkInitTypeDef RCC_ClkInitStruct;
+	RCC_PeriphCLKInitTypeDef PeriphClkInit;
 
-    /**Initializes the CPU, AHB and APB busses clocks
-    */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI|RCC_OSCILLATORTYPE_HSE
-                              |RCC_OSCILLATORTYPE_LSE;
-  RCC_OscInitStruct.HSEState = RCC_HSE_BYPASS;
-  RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
-  RCC_OscInitStruct.LSEState = RCC_LSE_ON;
-  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9;
-  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-  {
-    _Error_Handler(__FILE__, __LINE__);
-  }
+	/**Initializes the CPU, AHB and APB busses clocks
+	 */
+	RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI
+			| RCC_OSCILLATORTYPE_HSE | RCC_OSCILLATORTYPE_LSE;
+	RCC_OscInitStruct.HSEState = RCC_HSE_BYPASS;
+	RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
+	RCC_OscInitStruct.LSEState = RCC_LSE_ON;
+	RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+	RCC_OscInitStruct.LSIState = RCC_LSI_ON;
+	RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+	RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+	RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9;
+	if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK) {
+		_Error_Handler(__FILE__, __LINE__);
+	}
 
-    /**Initializes the CPU, AHB and APB busses clocks
-    */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+	/**Initializes the CPU, AHB and APB busses clocks
+	 */
+	RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK
+			| RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
+	RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+	RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+	RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
+	RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
-  {
-    _Error_Handler(__FILE__, __LINE__);
-  }
+	if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK) {
+		_Error_Handler(__FILE__, __LINE__);
+	}
 
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_RTC|RCC_PERIPHCLK_ADC;
-  PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
-  PeriphClkInit.AdcClockSelection = RCC_ADCPCLK2_DIV6;
-  if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
-  {
-    _Error_Handler(__FILE__, __LINE__);
-  }
+	PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_RTC | RCC_PERIPHCLK_ADC;
+	PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
+	PeriphClkInit.AdcClockSelection = RCC_ADCPCLK2_DIV6;
+	if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK) {
+		_Error_Handler(__FILE__, __LINE__);
+	}
 
-    /**Configure the Systick interrupt time
-    */
-  HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000);
+	/**Configure the Systick interrupt time
+	 */
+	HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq() / 1000);
 
-    /**Configure the Systick
-    */
-  HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
+	/**Configure the Systick
+	 */
+	HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
 
-  /* SysTick_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
+	/* SysTick_IRQn interrupt configuration */
+	HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
 }
 #endif
 
@@ -904,20 +847,19 @@ void init_periphs(void) {
 
 	MX_GPIO_Init();
 	MX_DMA_Init();
-	MX_USART1_UART_Init();
+
 #ifdef BLUEPILL
-	MX_USART3_UART_Init();
+
 	MX_SPI1_Init();
 	MX_TIM4_Init();
-	MX_USB_DEVICE_Init();
 
 #endif
 #ifdef NUCLEOF103RB
-	MX_USART2_UART_Init();
+
 	MX_SPI2_Init();
 	MX_TIM3_Init();
 #endif
-	MX_I2C1_Init();
+
 	MX_TIM1_Init();
 	MX_ADC1_Init();
 	MX_ADC2_Init();
@@ -928,5 +870,4 @@ void init_periphs(void) {
 void init_clock(void) {
 	SystemClock_Config();
 }
-
 

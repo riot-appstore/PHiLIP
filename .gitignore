@@ -9,3 +9,7 @@ NUCLEOF103RB/
 .project
 .settings
 .idea
+
+# Docs
+FW/Docs/html/
+FW/Docs/latex/

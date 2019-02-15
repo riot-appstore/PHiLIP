@@ -4,12 +4,17 @@
             "elements": [
                 {
                     "bits": 1,
+                    "description": "initialize with new params",
+                    "name": "init"
+                },
+                {
+                    "bits": 1,
                     "description": "resets the DUT",
                     "name": "dut_rst"
                 }
             ],
             "type": "uint8_t",
-            "type_name": "sys_cr_t"
+            "type_name": "sys_mode_t"
         },
         {
             "elements": [
@@ -20,10 +25,20 @@
                 }
             ],
             "type": "uint8_t",
-            "type_name": "sys_sr_t"
+            "type_name": "sys_status_t"
         },
         {
             "elements": [
+                {
+                    "bits": 1,
+                    "description": "initialize with new params",
+                    "name": "init"
+                },
+                {
+                    "bits": 1,
+                    "description": "disable i2c functionality",
+                    "name": "disable"
+                },
                 {
                     "bits": 1,
                     "description": "10 bit address enable",
@@ -46,6 +61,11 @@
                 },
                 {
                     "bits": 1,
+                    "description": "sets the endianess of the 16 bit reg",
+                    "name": "reg_16_big_endian"
+                },
+                {
+                    "bits": 1,
                     "description": "Forces a data nack",
                     "name": "nack_data"
                 }
@@ -58,32 +78,32 @@
                 {
                     "bits": 1,
                     "description": "Overrun/Underrun: Request for new byte when not ready",
-                    "name": "OVR"
+                    "name": "ovr"
                 },
                 {
                     "bits": 1,
                     "description": "Acknowledge failure",
-                    "name": "AF"
+                    "name": "af"
                 },
                 {
                     "bits": 1,
                     "description": "Bus error:  Non-valid position during a byte transfer",
-                    "name": "BERR"
+                    "name": "berr"
                 },
                 {
                     "bits": 1,
                     "description": "General call address received",
-                    "name": "GENCALL"
+                    "name": "gencall"
                 },
                 {
                     "bits": 1,
                     "description": "i2c bus is BUSY",
-                    "name": "BUSY"
+                    "name": "busy"
                 },
                 {
                     "bits": 1,
                     "description": "Repeated start detected",
-                    "name": "RSR"
+                    "name": "rsr"
                 }
             ],
             "type": "uint8_t",
@@ -91,6 +111,21 @@
         },
         {
             "elements": [
+                {
+                    "bits": 1,
+                    "description": "initialize with new params",
+                    "name": "init"
+                },
+                {
+                    "bits": 1,
+                    "description": "disable uart functionality",
+                    "name": "disable"
+                },
+                {
+                    "bits": 2,
+                    "description": "interface mode/echo/etc.",
+                    "name": "if_type"
+                },
                 {
                     "bits": 1,
                     "description": "Number of stop bits",
@@ -112,8 +147,8 @@
                     "name": "data_bits"
                 }
             ],
-            "type": "uint8_t",
-            "type_name": "uart_ctrl_t"
+            "type": "uint16_t",
+            "type_name": "uart_mode_t"
         },
         {
             "elements": [
@@ -336,7 +371,7 @@
                         "status"
                     ],
                     "offset": 296,
-                    "type": "sys_sr_t",
+                    "type": "sys_status_t",
                     "type_size": 1
                 },
                 {
@@ -357,20 +392,33 @@
                     "description": "Control register for device",
                     "name": [
                         "sys",
-                        "cr"
+                        "mode"
                     ],
                     "offset": 297,
-                    "type": "sys_cr_t",
+                    "type": "sys_mode_t",
                     "type_size": 1
                 },
                 {
                     "access": 1,
                     "bit_offset": 0,
                     "bits": 1,
+                    "description": "initialize with new params",
+                    "name": [
+                        "sys",
+                        "mode",
+                        "init"
+                    ],
+                    "offset": 297,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 1,
+                    "bits": 1,
                     "description": "resets the DUT",
                     "name": [
                         "sys",
-                        "cr",
+                        "mode",
                         "dut_rst"
                     ],
                     "offset": 297,
@@ -404,6 +452,32 @@
                     "access": 1,
                     "bit_offset": 0,
                     "bits": 1,
+                    "description": "initialize with new params",
+                    "name": [
+                        "i2c",
+                        "mode",
+                        "init"
+                    ],
+                    "offset": 320,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 1,
+                    "bits": 1,
+                    "description": "disable i2c functionality",
+                    "name": [
+                        "i2c",
+                        "mode",
+                        "disable"
+                    ],
+                    "offset": 320,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 2,
+                    "bits": 1,
                     "description": "10 bit address enable",
                     "name": [
                         "i2c",
@@ -415,7 +489,7 @@
                 },
                 {
                     "access": 1,
-                    "bit_offset": 1,
+                    "bit_offset": 3,
                     "bits": 1,
                     "description": "General call enable",
                     "name": [
@@ -428,7 +502,7 @@
                 },
                 {
                     "access": 1,
-                    "bit_offset": 2,
+                    "bit_offset": 4,
                     "bits": 1,
                     "description": "Disable for clk stretch",
                     "name": [
@@ -441,7 +515,7 @@
                 },
                 {
                     "access": 1,
-                    "bit_offset": 3,
+                    "bit_offset": 5,
                     "bits": 1,
                     "description": "16 bit register access mode",
                     "name": [
@@ -454,7 +528,20 @@
                 },
                 {
                     "access": 1,
-                    "bit_offset": 4,
+                    "bit_offset": 6,
+                    "bits": 1,
+                    "description": "sets the endianess of the 16 bit reg",
+                    "name": [
+                        "i2c",
+                        "mode",
+                        "reg_16_big_endian"
+                    ],
+                    "offset": 320,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 7,
                     "bits": 1,
                     "description": "Forces a data nack",
                     "name": [
@@ -477,79 +564,79 @@
                     "type_size": 1
                 },
                 {
-                    "access": 0,
+                    "access": 1,
                     "bit_offset": 0,
                     "bits": 1,
                     "description": "Overrun/Underrun: Request for new byte when not ready",
                     "name": [
                         "i2c",
                         "status",
-                        "OVR"
+                        "ovr"
                     ],
                     "offset": 321,
                     "type_size": 1
                 },
                 {
-                    "access": 0,
+                    "access": 1,
                     "bit_offset": 1,
                     "bits": 1,
                     "description": "Acknowledge failure",
                     "name": [
                         "i2c",
                         "status",
-                        "AF"
+                        "af"
                     ],
                     "offset": 321,
                     "type_size": 1
                 },
                 {
-                    "access": 0,
+                    "access": 1,
                     "bit_offset": 2,
                     "bits": 1,
                     "description": "Bus error:  Non-valid position during a byte transfer",
                     "name": [
                         "i2c",
                         "status",
-                        "BERR"
+                        "berr"
                     ],
                     "offset": 321,
                     "type_size": 1
                 },
                 {
-                    "access": 0,
+                    "access": 1,
                     "bit_offset": 3,
                     "bits": 1,
                     "description": "General call address received",
                     "name": [
                         "i2c",
                         "status",
-                        "GENCALL"
+                        "gencall"
                     ],
                     "offset": 321,
                     "type_size": 1
                 },
                 {
-                    "access": 0,
+                    "access": 1,
                     "bit_offset": 4,
                     "bits": 1,
                     "description": "i2c bus is BUSY",
                     "name": [
                         "i2c",
                         "status",
-                        "BUSY"
+                        "busy"
                     ],
                     "offset": 321,
                     "type_size": 1
                 },
                 {
-                    "access": 0,
+                    "access": 1,
                     "bit_offset": 5,
                     "bits": 1,
                     "description": "Repeated start detected",
                     "name": [
                         "i2c",
                         "status",
-                        "RSR"
+                        "rsr"
                     ],
                     "offset": 321,
                     "type_size": 1
@@ -596,13 +683,46 @@
                     "type_size": 2
                 },
                 {
+                    "access": 0,
+                    "description": "Current state of the i2c bus",
+                    "name": [
+                        "i2c",
+                        "state"
+                    ],
+                    "offset": 328,
+                    "type": "uint16_t",
+                    "type_size": 2
+                },
+                {
+                    "access": 0,
+                    "description": "current index of i2c pointer",
+                    "name": [
+                        "i2c",
+                        "reg_index"
+                    ],
+                    "offset": 330,
+                    "type": "uint16_t",
+                    "type_size": 2
+                },
+                {
+                    "access": 0,
+                    "description": "start index of i2c pointer",
+                    "name": [
+                        "i2c",
+                        "start_reg_index"
+                    ],
+                    "offset": 332,
+                    "type": "uint16_t",
+                    "type_size": 2
+                },
+                {
                     "access": 1,
                     "description": "Last read frame byte count",
                     "name": [
                         "i2c",
                         "r_count"
                     ],
-                    "offset": 328,
+                    "offset": 334,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -613,7 +733,7 @@
                         "i2c",
                         "w_count"
                     ],
-                    "offset": 329,
+                    "offset": 335,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -624,7 +744,7 @@
                         "i2c",
                         "r_ticks"
                     ],
-                    "offset": 330,
+                    "offset": 336,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -635,7 +755,7 @@
                         "i2c",
                         "w_ticks"
                     ],
-                    "offset": 334,
+                    "offset": 340,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -646,31 +766,42 @@
                         "i2c",
                         "s_ticks"
                     ],
-                    "offset": 338,
+                    "offset": 344,
                     "type": "uint32_t",
                     "type_size": 4
                 },
                 {
                     "access": 0,
-                    "description": "Ticks for full frame",
+                    "description": "Ticks for full read frame",
                     "name": [
                         "i2c",
-                        "f_ticks"
+                        "f_r_ticks"
                     ],
-                    "offset": 342,
+                    "offset": 348,
                     "type": "uint32_t",
                     "type_size": 4
                 },
                 {
                     "access": 0,
-                    "array_size": 6,
+                    "description": "Ticks for full write frame",
+                    "name": [
+                        "i2c",
+                        "f_w_ticks"
+                    ],
+                    "offset": 352,
+                    "type": "uint32_t",
+                    "type_size": 4
+                },
+                {
+                    "access": 0,
+                    "array_size": 28,
                     "description": "Reserved bytes",
                     "name": [
                         "i2c",
                         "res"
                     ],
-                    "offset": 346,
-                    "total_size": 6,
+                    "offset": 356,
+                    "total_size": 28,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -680,7 +811,7 @@
                         "spi",
                         "mode"
                     ],
-                    "offset": 352,
+                    "offset": 384,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -690,7 +821,7 @@
                         "spi",
                         "error_code"
                     ],
-                    "offset": 353,
+                    "offset": 385,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -702,7 +833,7 @@
                         "spi",
                         "res"
                     ],
-                    "offset": 357,
+                    "offset": 389,
                     "total_size": 11,
                     "type": "uint8_t",
                     "type_size": 1
@@ -714,9 +845,100 @@
                         "uart",
                         "mode"
                     ],
-                    "offset": 368,
-                    "type": "uint8_t",
-                    "type_size": 1
+                    "offset": 400,
+                    "type": "uart_mode_t",
+                    "type_size": 2
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 0,
+                    "bits": 1,
+                    "description": "initialize with new params",
+                    "name": [
+                        "uart",
+                        "mode",
+                        "init"
+                    ],
+                    "offset": 400,
+                    "type_size": 2
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 1,
+                    "bits": 1,
+                    "description": "disable uart functionality",
+                    "name": [
+                        "uart",
+                        "mode",
+                        "disable"
+                    ],
+                    "offset": 400,
+                    "type_size": 2
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 2,
+                    "bits": 2,
+                    "description": "interface mode/echo/etc.",
+                    "name": [
+                        "uart",
+                        "mode",
+                        "if_type"
+                    ],
+                    "offset": 400,
+                    "type_size": 2
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 4,
+                    "bits": 1,
+                    "description": "Number of stop bits",
+                    "name": [
+                        "uart",
+                        "mode",
+                        "stop_bits"
+                    ],
+                    "offset": 400,
+                    "type_size": 2
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 5,
+                    "bits": 2,
+                    "description": "Parity",
+                    "name": [
+                        "uart",
+                        "mode",
+                        "parity"
+                    ],
+                    "offset": 400,
+                    "type_size": 2
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 7,
+                    "bits": 1,
+                    "description": "RTS pin state",
+                    "name": [
+                        "uart",
+                        "mode",
+                        "rts"
+                    ],
+                    "offset": 400,
+                    "type_size": 2
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 8,
+                    "bits": 1,
+                    "description": "Number of data bits",
+                    "name": [
+                        "uart",
+                        "mode",
+                        "data_bits"
+                    ],
+                    "offset": 400,
+                    "type_size": 2
                 },
                 {
                     "access": 1,
@@ -725,9 +947,20 @@
                         "uart",
                         "baud"
                     ],
-                    "offset": 369,
+                    "offset": 402,
                     "type": "uint32_t",
                     "type_size": 4
+                },
+                {
+                    "access": 0,
+                    "description": "Baudrate",
+                    "name": [
+                        "uart",
+                        "mask_msb"
+                    ],
+                    "offset": 406,
+                    "type": "uint8_t",
+                    "type_size": 1
                 },
                 {
                     "access": 0,
@@ -736,7 +969,7 @@
                         "uart",
                         "rx_count"
                     ],
-                    "offset": 373,
+                    "offset": 407,
                     "type": "uint16_t",
                     "type_size": 2
                 },
@@ -747,72 +980,9 @@
                         "uart",
                         "tx_count"
                     ],
-                    "offset": 375,
+                    "offset": 409,
                     "type": "uint16_t",
                     "type_size": 2
-                },
-                {
-                    "access": 1,
-                    "description": "UART control register",
-                    "name": [
-                        "uart",
-                        "ctrl"
-                    ],
-                    "offset": 377,
-                    "type": "uart_ctrl_t",
-                    "type_size": 1
-                },
-                {
-                    "access": 1,
-                    "bit_offset": 0,
-                    "bits": 1,
-                    "description": "Number of stop bits",
-                    "name": [
-                        "uart",
-                        "ctrl",
-                        "stop_bits"
-                    ],
-                    "offset": 377,
-                    "type_size": 1
-                },
-                {
-                    "access": 1,
-                    "bit_offset": 1,
-                    "bits": 2,
-                    "description": "Parity",
-                    "name": [
-                        "uart",
-                        "ctrl",
-                        "parity"
-                    ],
-                    "offset": 377,
-                    "type_size": 1
-                },
-                {
-                    "access": 1,
-                    "bit_offset": 3,
-                    "bits": 1,
-                    "description": "RTS pin state",
-                    "name": [
-                        "uart",
-                        "ctrl",
-                        "rts"
-                    ],
-                    "offset": 377,
-                    "type_size": 1
-                },
-                {
-                    "access": 1,
-                    "bit_offset": 4,
-                    "bits": 1,
-                    "description": "Number of data bits",
-                    "name": [
-                        "uart",
-                        "ctrl",
-                        "data_bits"
-                    ],
-                    "offset": 377,
-                    "type_size": 1
                 },
                 {
                     "access": 0,
@@ -821,7 +991,7 @@
                         "uart",
                         "status"
                     ],
-                    "offset": 378,
+                    "offset": 411,
                     "type": "uart_status_t",
                     "type_size": 1
                 },
@@ -835,7 +1005,7 @@
                         "status",
                         "cts"
                     ],
-                    "offset": 378,
+                    "offset": 411,
                     "type_size": 1
                 },
                 {
@@ -848,7 +1018,7 @@
                         "status",
                         "pe"
                     ],
-                    "offset": 378,
+                    "offset": 411,
                     "type_size": 1
                 },
                 {
@@ -861,7 +1031,7 @@
                         "status",
                         "fe"
                     ],
-                    "offset": 378,
+                    "offset": 411,
                     "type_size": 1
                 },
                 {
@@ -874,7 +1044,7 @@
                         "status",
                         "nf"
                     ],
-                    "offset": 378,
+                    "offset": 411,
                     "type_size": 1
                 },
                 {
@@ -887,19 +1057,19 @@
                         "status",
                         "ore"
                     ],
-                    "offset": 378,
+                    "offset": 411,
                     "type_size": 1
                 },
                 {
                     "access": 0,
-                    "array_size": 5,
+                    "array_size": 4,
                     "description": "Reserved bytes",
                     "name": [
                         "uart",
                         "res"
                     ],
-                    "offset": 379,
-                    "total_size": 5,
+                    "offset": 412,
+                    "total_size": 4,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -910,7 +1080,7 @@
                         "rtc",
                         "second"
                     ],
-                    "offset": 384,
+                    "offset": 416,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -921,7 +1091,7 @@
                         "rtc",
                         "minute"
                     ],
-                    "offset": 385,
+                    "offset": 417,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -932,7 +1102,7 @@
                         "rtc",
                         "hour"
                     ],
-                    "offset": 386,
+                    "offset": 418,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -943,7 +1113,7 @@
                         "rtc",
                         "day_of_month"
                     ],
-                    "offset": 387,
+                    "offset": 419,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -954,7 +1124,7 @@
                         "rtc",
                         "day_of_week"
                     ],
-                    "offset": 388,
+                    "offset": 420,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -965,7 +1135,7 @@
                         "rtc",
                         "month"
                     ],
-                    "offset": 389,
+                    "offset": 421,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -976,7 +1146,7 @@
                         "rtc",
                         "year"
                     ],
-                    "offset": 390,
+                    "offset": 422,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -988,7 +1158,7 @@
                         "rtc",
                         "res"
                     ],
-                    "offset": 391,
+                    "offset": 423,
                     "total_size": 1,
                     "type": "uint8_t",
                     "type_size": 1
@@ -1001,129 +1171,6 @@
                         "0",
                         "mode"
                     ],
-                    "offset": 392,
-                    "type": "uint8_t",
-                    "type_size": 1
-                },
-                {
-                    "access": 1,
-                    "description": "",
-                    "name": [
-                        "adc",
-                        "0",
-                        "error_code"
-                    ],
-                    "offset": 393,
-                    "type": "uint16_t",
-                    "type_size": 2
-                },
-                {
-                    "access": 1,
-                    "description": "",
-                    "name": [
-                        "adc",
-                        "0",
-                        "sample_rate"
-                    ],
-                    "offset": 395,
-                    "type": "uint8_t",
-                    "type_size": 1
-                },
-                {
-                    "access": 1,
-                    "description": "",
-                    "name": [
-                        "adc",
-                        "0",
-                        "value"
-                    ],
-                    "offset": 396,
-                    "type": "uint32_t",
-                    "type_size": 4
-                },
-                {
-                    "access": 0,
-                    "array_size": 8,
-                    "description": "Reserved bytes",
-                    "name": [
-                        "adc",
-                        "0",
-                        "res"
-                    ],
-                    "offset": 400,
-                    "total_size": 8,
-                    "type": "uint8_t",
-                    "type_size": 1
-                },
-                {
-                    "access": 1,
-                    "description": "",
-                    "name": [
-                        "adc",
-                        "1",
-                        "mode"
-                    ],
-                    "offset": 408,
-                    "type": "uint8_t",
-                    "type_size": 1
-                },
-                {
-                    "access": 1,
-                    "description": "",
-                    "name": [
-                        "adc",
-                        "1",
-                        "error_code"
-                    ],
-                    "offset": 409,
-                    "type": "uint16_t",
-                    "type_size": 2
-                },
-                {
-                    "access": 1,
-                    "description": "",
-                    "name": [
-                        "adc",
-                        "1",
-                        "sample_rate"
-                    ],
-                    "offset": 411,
-                    "type": "uint8_t",
-                    "type_size": 1
-                },
-                {
-                    "access": 1,
-                    "description": "",
-                    "name": [
-                        "adc",
-                        "1",
-                        "value"
-                    ],
-                    "offset": 412,
-                    "type": "uint32_t",
-                    "type_size": 4
-                },
-                {
-                    "access": 0,
-                    "array_size": 8,
-                    "description": "Reserved bytes",
-                    "name": [
-                        "adc",
-                        "1",
-                        "res"
-                    ],
-                    "offset": 416,
-                    "total_size": 8,
-                    "type": "uint8_t",
-                    "type_size": 1
-                },
-                {
-                    "access": 1,
-                    "description": "",
-                    "name": [
-                        "pwm",
-                        "mode"
-                    ],
                     "offset": 424,
                     "type": "uint8_t",
                     "type_size": 1
@@ -1132,7 +1179,8 @@
                     "access": 1,
                     "description": "",
                     "name": [
-                        "pwm",
+                        "adc",
+                        "0",
                         "error_code"
                     ],
                     "offset": 425,
@@ -1143,8 +1191,9 @@
                     "access": 1,
                     "description": "",
                     "name": [
-                        "pwm",
-                        "duty"
+                        "adc",
+                        "0",
+                        "sample_rate"
                     ],
                     "offset": 427,
                     "type": "uint8_t",
@@ -1154,8 +1203,9 @@
                     "access": 1,
                     "description": "",
                     "name": [
-                        "pwm",
-                        "freq"
+                        "adc",
+                        "0",
+                        "value"
                     ],
                     "offset": 428,
                     "type": "uint32_t",
@@ -1166,7 +1216,8 @@
                     "array_size": 8,
                     "description": "Reserved bytes",
                     "name": [
-                        "pwm",
+                        "adc",
+                        "0",
                         "res"
                     ],
                     "offset": 432,
@@ -1178,7 +1229,8 @@
                     "access": 1,
                     "description": "",
                     "name": [
-                        "tmr",
+                        "adc",
+                        "1",
                         "mode"
                     ],
                     "offset": 440,
@@ -1189,7 +1241,8 @@
                     "access": 1,
                     "description": "",
                     "name": [
-                        "tmr",
+                        "adc",
+                        "1",
                         "error_code"
                     ],
                     "offset": 441,
@@ -1200,10 +1253,127 @@
                     "access": 1,
                     "description": "",
                     "name": [
+                        "adc",
+                        "1",
+                        "sample_rate"
+                    ],
+                    "offset": 443,
+                    "type": "uint8_t",
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "description": "",
+                    "name": [
+                        "adc",
+                        "1",
+                        "value"
+                    ],
+                    "offset": 444,
+                    "type": "uint32_t",
+                    "type_size": 4
+                },
+                {
+                    "access": 0,
+                    "array_size": 8,
+                    "description": "Reserved bytes",
+                    "name": [
+                        "adc",
+                        "1",
+                        "res"
+                    ],
+                    "offset": 448,
+                    "total_size": 8,
+                    "type": "uint8_t",
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "description": "",
+                    "name": [
+                        "pwm",
+                        "mode"
+                    ],
+                    "offset": 456,
+                    "type": "uint8_t",
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "description": "",
+                    "name": [
+                        "pwm",
+                        "error_code"
+                    ],
+                    "offset": 457,
+                    "type": "uint16_t",
+                    "type_size": 2
+                },
+                {
+                    "access": 1,
+                    "description": "",
+                    "name": [
+                        "pwm",
+                        "duty"
+                    ],
+                    "offset": 459,
+                    "type": "uint8_t",
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "description": "",
+                    "name": [
+                        "pwm",
+                        "freq"
+                    ],
+                    "offset": 460,
+                    "type": "uint32_t",
+                    "type_size": 4
+                },
+                {
+                    "access": 0,
+                    "array_size": 8,
+                    "description": "Reserved bytes",
+                    "name": [
+                        "pwm",
+                        "res"
+                    ],
+                    "offset": 464,
+                    "total_size": 8,
+                    "type": "uint8_t",
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "description": "",
+                    "name": [
+                        "tmr",
+                        "mode"
+                    ],
+                    "offset": 472,
+                    "type": "uint8_t",
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "description": "",
+                    "name": [
+                        "tmr",
+                        "error_code"
+                    ],
+                    "offset": 473,
+                    "type": "uint16_t",
+                    "type_size": 2
+                },
+                {
+                    "access": 1,
+                    "description": "",
+                    "name": [
                         "tmr",
                         "duty"
                     ],
-                    "offset": 443,
+                    "offset": 475,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -1214,7 +1384,7 @@
                         "tmr",
                         "freq"
                     ],
-                    "offset": 444,
+                    "offset": 476,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -1225,7 +1395,7 @@
                         "tmr",
                         "hi_us"
                     ],
-                    "offset": 448,
+                    "offset": 480,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -1236,19 +1406,19 @@
                         "tmr",
                         "lo_us"
                     ],
-                    "offset": 452,
+                    "offset": 484,
                     "type": "uint32_t",
                     "type_size": 4
                 },
                 {
                     "access": 0,
-                    "array_size": 568,
+                    "array_size": 536,
                     "description": "Reserved bytes",
                     "name": [
                         "res"
                     ],
-                    "offset": 456,
-                    "total_size": 568,
+                    "offset": 488,
+                    "total_size": 536,
                     "type": "uint8_t",
                     "type_size": 1
                 }
@@ -1347,12 +1517,12 @@
                     "access": 0,
                     "description": "Status of system",
                     "name": "status",
-                    "type": "sys_sr_t"
+                    "type": "sys_status_t"
                 },
                 {
                     "description": "Control register for device",
-                    "name": "cr",
-                    "type": "sys_cr_t"
+                    "name": "mode",
+                    "type": "sys_mode_t"
                 }
             ],
             "type_name": "sys_t",
@@ -1389,6 +1559,24 @@
                 },
                 {
                     "access": 0,
+                    "description": "Current state of the i2c bus",
+                    "name": "state",
+                    "type": "uint16_t"
+                },
+                {
+                    "access": 0,
+                    "description": "current index of i2c pointer",
+                    "name": "reg_index",
+                    "type": "uint16_t"
+                },
+                {
+                    "access": 0,
+                    "description": "start index of i2c pointer",
+                    "name": "start_reg_index",
+                    "type": "uint16_t"
+                },
+                {
+                    "access": 0,
                     "description": "Last read frame byte count",
                     "name": "r_count",
                     "type": "uint8_t"
@@ -1419,13 +1607,19 @@
                 },
                 {
                     "access": 0,
-                    "description": "Ticks for full frame",
-                    "name": "f_ticks",
+                    "description": "Ticks for full read frame",
+                    "name": "f_r_ticks",
+                    "type": "uint32_t"
+                },
+                {
+                    "access": 0,
+                    "description": "Ticks for full write frame",
+                    "name": "f_w_ticks",
                     "type": "uint32_t"
                 }
             ],
             "type_name": "i2c_t",
-            "type_size": 32
+            "type_size": 64
         },
         {
             "elements": [
@@ -1445,14 +1639,20 @@
             "description": "Controls and provides information for the uart",
             "elements": [
                 {
-                    "description": "Test mode",
+                    "description": "UART control register",
                     "name": "mode",
-                    "type": "uint8_t"
+                    "type": "uart_mode_t"
                 },
                 {
                     "description": "Baudrate",
                     "name": "baud",
                     "type": "uint32_t"
+                },
+                {
+                    "access": 0,
+                    "description": "Baudrate",
+                    "name": "mask_msb",
+                    "type": "uint8_t"
                 },
                 {
                     "access": 0,
@@ -1465,11 +1665,6 @@
                     "description": "Number of transmitted bytes",
                     "name": "tx_count",
                     "type": "uint16_t"
-                },
-                {
-                    "description": "UART control register",
-                    "name": "ctrl",
-                    "type": "uart_ctrl_t"
                 },
                 {
                     "access": 0,
