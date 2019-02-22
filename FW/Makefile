@@ -22,9 +22,9 @@ TARGET = PHiLIP
 # building variables
 ######################################
 # debug build?
-DEBUG = 1
+DEBUG = 0
 # optimization
-OPT = -Og
+OPT = -O3
 
 
 #######################################
@@ -169,6 +169,12 @@ $(BUILD_DIR):
 #######################################
 clean:
 	-rm -fR $(BUILD_DIR)
+
+#######################################
+# doxygen
+#######################################
+doc:
+	doxygen $(TARGET).doxyfile
 
 #######################################
 # dependencies

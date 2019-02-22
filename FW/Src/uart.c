@@ -305,22 +305,23 @@ static error_t _xfer_complete(uart_dev_t *dev) {
 	memset(str, 0, UART_BUF_SIZE);
 	HAL_UART_AbortTransmit(huart);
 	HAL_UART_AbortReceive(huart);
-	if (dev->saved_reg != NULL
-			|| dev->saved_reg->mode.if_type == UART_IF_TYPE_TX) {
-		memset(str, 'a', UART_BUF_SIZE - 3);
-		str[UART_BUF_SIZE - 2] = '\n';
-		str[UART_BUF_SIZE - 1] = '\0';
-		err = _tx_str(dev);
-	} else {
-		status = HAL_UART_Receive_DMA(huart, (uint8_t*) str, UART_BUF_SIZE);
-		if (status == HAL_BUSY) {
-			err = EBUSY;
+	if (dev->saved_reg != NULL) {
+		if (dev->saved_reg->mode.if_type == UART_IF_TYPE_TX) {
+			memset(str, 'a', UART_BUF_SIZE - 3);
+			str[UART_BUF_SIZE - 2] = '\n';
+			str[UART_BUF_SIZE - 1] = '\0';
+			return _tx_str(dev);
+
 		}
-		if (status == HAL_ERROR) {
-			err = ENXIO;
-		} else if (status == HAL_OK) {
-			err = EOK;
-		}
+	}
+	status = HAL_UART_Receive_DMA(huart, (uint8_t*) str, UART_BUF_SIZE);
+	if (status == HAL_BUSY) {
+		err = EBUSY;
+	}
+	if (status == HAL_ERROR) {
+		err = ENXIO;
+	} else if (status == HAL_OK) {
+		err = EOK;
 	}
 
 	return err;
@@ -366,9 +367,14 @@ static error_t _rx_str(uart_dev_t *dev) {
 		}
 		if (str[rx_amount - 1] == RX_END_CHAR
 				&& _get_rx_amount(dev) != UART_BUF_SIZE) {
+
 			_update_rx_count(dev, strlen(str));
 			HAL_UART_AbortTransmit(huart);
 			HAL_UART_AbortReceive(huart);
+			if (rx_amount >= 2 && str[rx_amount - 2] == '\r'){
+				str[rx_amount - 2] = '\n';
+				str[rx_amount - 1] = 0;
+			}
 			if (dev->saved_reg == NULL
 					|| dev->saved_reg->mode.if_type == UART_IF_TYPE_REG) {
 				err = parse_command(str, UART_BUF_SIZE, dev->access);

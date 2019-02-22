@@ -8,8 +8,9 @@
 #ifndef APP_DEFAULTS_H_
 #define APP_DEFAULTS_H_
 
-#define FW_REV	(10010U)
-#define IF_REV	(1U)
+#define FW_REV_MAJOR	(1)
+#define FW_REV_MINOR	(0)
+#define FW_REV_PATCH	(10)
 
 #define DEFAULT_I2C_SLAVE_ID_1	0x55
 #define DEFAULT_I2C_SLAVE_ID_2	0x42

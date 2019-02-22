@@ -6,7 +6,8 @@ sudo: false
 addons:
   apt:
     packages:
-      libc6-i386
+      - libc6-i386
+      - doxygen
 
 cache:
   directories:
@@ -31,3 +32,4 @@ script:
   - BOARD=BLUEPILL make clean
   - BOARD=NUCLEOF103RB make
   - BOARD=NUCLEOF103RB make clean
+  - make doc

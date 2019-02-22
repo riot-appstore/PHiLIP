@@ -294,6 +294,7 @@
                 },
                 {
                     "access": 0,
+                    "array_size": 4,
                     "description": "Firmware revision",
                     "invalid": 0,
                     "name": [
@@ -301,19 +302,22 @@
                         "fw_rev"
                     ],
                     "offset": 268,
-                    "type": "uint32_t",
-                    "type_size": 4
+                    "total_size": 4,
+                    "type": "uint8_t",
+                    "type_size": 1
                 },
                 {
                     "access": 0,
+                    "array_size": 4,
                     "description": "Interface revision",
                     "name": [
                         "sys",
                         "if_rev"
                     ],
                     "offset": 272,
-                    "type": "uint32_t",
-                    "type_size": 4
+                    "total_size": 4,
+                    "type": "uint8_t",
+                    "type_size": 1
                 },
                 {
                     "access": 0,
@@ -1754,7 +1758,7 @@
     "metadata": {
         "app_name": "PHiLIP",
         "author": "Kevin Weiss",
-        "version": "0.00.01"
+        "version": "0.0.2"
     },
     "typedefs": [
         {
@@ -1811,15 +1815,17 @@
                 },
                 {
                     "access": 0,
+                    "array_size": 4,
                     "description": "Firmware revision",
                     "name": "fw_rev",
-                    "type": "uint32_t"
+                    "type": "uint8_t"
                 },
                 {
                     "access": 0,
+                    "array_size": 4,
                     "description": "Interface revision",
                     "name": "if_rev",
-                    "type": "uint32_t"
+                    "type": "uint8_t"
                 },
                 {
                     "access": 0,
@@ -2055,7 +2061,7 @@
             "type_size": 16
         },
         {
-            "description": "",
+            "description": "unimplemented ADC",
             "elements": [
                 {
                     "description": "",
@@ -2082,7 +2088,7 @@
             "type_size": 16
         },
         {
-            "description": "",
+            "description": "unimplemented PWM",
             "elements": [
                 {
                     "description": "",
@@ -2109,7 +2115,7 @@
             "type_size": 16
         },
         {
-            "description": "",
+            "description": "unimplemented TMR",
             "elements": [
                 {
                     "description": "",

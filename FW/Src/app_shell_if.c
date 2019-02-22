@@ -43,10 +43,12 @@
 #include <string.h>
 
 #include "PHiLIP_typedef.h"
+#include "PHiLIP_map.h"
 #include "app_access.h"
 #include "app_errno.h"
 #include "app_common.h"
 #include "app_reg.h"
+#include "map_if.h"
 
 #include "app_shell_if.h"
 
@@ -62,10 +64,37 @@
 
 /** @brief   The command to provide a software reset to the applications */
 #define RESET_CMD		"mcu_rst\n"
+
+/** @brief   Prints the version of the interface */
+#define VERSION_CMD		"-v\n"
+
+/** @brief   Prints the version of the interface */
+#define VERSION_CMD2	"version\n"
+
+/** @brief   Prints the version of the interface */
+#define VERSION_CMD3	"ver\n"
+
+/** @brief   Prints the version of the interface */
+#define VERSION_CMD4	"--v\n"
+
+/** @brief   Prints a help menu */
+#define HELP_CMD		"help\n"
+
+/** @brief   Gives properties of the memory map for a given index */
+#define MEMORY_MAP_CMD	"mm "
+
+/** @brief   Gives the amount of records in the memory map */
+#define MM_SIZE_CMD		"mm_size\n"
+
+/** @brief   Reads values given a record name */
+#define READ_KEY_CMD	"r "
+
+/** @brief   Writes a value to a record name */
+#define WRITE_KEY_CMD	"w "
 /** @} */
 
 /** @brief   Maximum characters for parsing strings to numbers */
-#define ATOU_MAX_CHAR	5
+#define ATOU_MAX_CHAR	10
 
 /** @brief   Error code for parsing strings to numbers */
 #define ATOU_ERROR		0xFFFFFFFF
@@ -74,13 +103,20 @@
 #define BYTE_MAX		((uint8_t)0xFF)
 
 /** @brief   Is a ascii number */
-#define IS_NUM(x)			(x >= '0' && x <= '9')
+#define IS_NUM(x)		(x >= '0' && x <= '9')
 
+/** @brief   Macro to check if command string matches */
+#define IS_COMMAND(x)	(memcmp(str, x, strlen(x)) == 0)
 /* Private function prototypes -----------------------------------------------*/
 static error_t _cmd_read_reg(char *str, uint16_t buf_size);
 static error_t _cmd_write_reg(char *str, uint16_t buf_size, uint8_t access);
+static error_t _cmd_read_key(char *str, uint16_t buf_size);
+static error_t _cmd_write_key(char *str, uint16_t buf_size, uint8_t access);
 static error_t _cmd_execute(char *str);
 static error_t _cmd_reset();
+static error_t _cmd_mm_print(char *str, uint16_t buf_size);
+static error_t _cmd_print_help(char *str);
+static error_t _cmd_print_version(char *str);
 
 static error_t _valid_args(char *str, uint32_t *arg_count, uint16_t buf_size);
 static uint32_t _fast_atou(char **str, char terminator);
@@ -108,17 +144,31 @@ static uint32_t _fast_atou(char **str, char terminator);
 error_t parse_command(char *str, uint16_t buf_size, uint8_t access) {
 	error_t err = EPROTONOSUPPORT;
 
-	if (memcmp(str, READ_REG_CMD, strlen(READ_REG_CMD)) == 0) {
+	if (IS_COMMAND(READ_REG_CMD)) {
 		err = _cmd_read_reg(str, buf_size);
-	} else if (memcmp(str, WRITE_REG_CMD, strlen(WRITE_REG_CMD)) == 0) {
+	} else if (IS_COMMAND(WRITE_REG_CMD)) {
 		err = _cmd_write_reg(str, buf_size, access);
-	} else if (memcmp(str, EXECUTE_CMD, strlen(EXECUTE_CMD)) == 0) {
+	} else if (IS_COMMAND(READ_KEY_CMD)) {
+		err = _cmd_read_key(str, buf_size);
+	} else if (IS_COMMAND(WRITE_KEY_CMD)) {
+		err = _cmd_write_key(str, buf_size, access);
+	} else if (IS_COMMAND(MEMORY_MAP_CMD)) {
+		err = _cmd_mm_print(str, buf_size);
+	} else if (IS_COMMAND(MM_SIZE_CMD)) {
+		sprintf(str, "%d,%d%s", EOK, MAP_T_NUM_OF_RECORDS, TX_END_STR);
+		err = EOK;
+	} else if (IS_COMMAND(HELP_CMD)) {
+		err = _cmd_print_help(str);
+	} else if (IS_COMMAND(VERSION_CMD) || IS_COMMAND(VERSION_CMD2) ||
+	IS_COMMAND(VERSION_CMD3) || IS_COMMAND(VERSION_CMD4)) {
+		err = _cmd_print_version(str);
+	} else if (IS_COMMAND(EXECUTE_CMD)) {
 		if (!(access & IF_ACCESS)) {
 			err = EACCES;
 		} else {
 			err = _cmd_execute(str);
 		}
-	} else if (memcmp(str, RESET_CMD, strlen(RESET_CMD)) == 0) {
+	} else if (IS_COMMAND(RESET_CMD)) {
 		if (!(access & IF_ACCESS)) {
 			err = EACCES;
 		} else {
@@ -224,12 +274,93 @@ static error_t _cmd_write_reg(char *str, uint16_t buf_size, uint8_t access) {
 	return err;
 }
 
+static error_t _cmd_read_key(char *str, uint16_t buf_size) {
+	char *arg_str = str + strlen(READ_KEY_CMD);
+	uint32_t array_index = 0;
+	uint32_t data = 0;
+	error_t err = EUNKNOWN;
+	for (; *arg_str != 0 && *arg_str != ' ' && *arg_str != RX_END_CHAR;
+			arg_str++)
+		;
+	if (*arg_str == ' ') {
+		*arg_str = 0;
+		arg_str++;
+		array_index = _fast_atou(&(arg_str), RX_END_CHAR);
+		if (array_index == ATOU_ERROR) {
+			return EINVAL;
+		}
+	}
+	*arg_str = 0;
+	err = get_mm_val(str + strlen(READ_KEY_CMD), array_index, &data);
+	/* If error the print will be overwritten */
+	sprintf(str, "%d,0x%lX,%lu%s", EOK, data, data, TX_END_STR);
+	return err;
+}
+
+static error_t _cmd_write_key(char *str, uint16_t buf_size, uint8_t access) {
+	char *arg_str = str + strlen(WRITE_KEY_CMD);
+	uint32_t array_index = 0;
+	uint32_t data = 0;
+	error_t err = EUNKNOWN;
+
+	for (; *arg_str != 0 && *arg_str != ' ' && *arg_str != RX_END_CHAR;
+			arg_str++)
+		;
+	if (*arg_str != ' ') {
+		return EINVAL;
+	}
+	*arg_str = 0;
+	arg_str++;
+	char *end_check_str = arg_str;
+	array_index = _fast_atou(&end_check_str, ' ');
+	if (array_index == ATOU_ERROR) {
+		array_index = 0;
+	} else {
+		arg_str = end_check_str;
+	}
+	data = _fast_atou(&arg_str, '\n');
+	if (data == ATOU_ERROR) {
+		return EINVAL;
+	}
+
+	err = set_mm_val(str + strlen(WRITE_KEY_CMD), array_index, data, access);
+	/* If error the print will be overwritten */
+	sprintf(str, "%d%s", EOK, TX_END_STR);
+	return err;
+}
+
+static error_t _cmd_mm_print(char *str, uint16_t buf_size) {
+	char *arg_str = str + strlen(MEMORY_MAP_CMD);
+	uint32_t index = _fast_atou(&arg_str, '\n');
+	return get_mm(index, str);
+
+}
+
 static error_t _cmd_execute(char *str) {
 	error_t err = execute_reg_change();
 	if (err == EOK) {
 		sprintf(str, "%d%s", EOK, TX_END_STR);
 	}
 	return err;
+}
+
+static error_t _cmd_print_version(char *str) {
+	sprintf(str, "%u.%u.%u\n", IF_VERSION_MAJOR, IF_VERSION_MINOR,
+	IF_VERSION_PATCH);
+	return EOK;
+}
+
+static error_t _cmd_print_help(char *str) {
+	sprintf(str, "rr <reg_offset> <size> : Reads bytes\n\
+wr <reg_offest> <DATA0> [DATA1] ... [DATAn] : Writes bytes\n\
+r <reg_key> [array_index]: Reads register\n\
+w <reg_key> [array_index] <DATA> : Writes register\n\
+ex : Executes config changes\n\
+mcu_rst : Soft reset\n\
+mm <index> : Prints mem map record \n\
+mm_size : Amount of records in memory map\n\
+version : Interface version\n");
+	return EOK;
 }
 
 static error_t _valid_args(char *str, uint32_t *arg_count, uint16_t buf_size) {

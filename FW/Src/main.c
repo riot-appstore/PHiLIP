@@ -33,6 +33,8 @@
  */
 
 /* Includes ------------------------------------------------------------------*/
+#include <stdint.h>
+
 #include "stm32f1xx_hal.h"
 
 #include "PHiLIP_typedef.h"
@@ -50,6 +52,7 @@
 #include "port.h"
 
 #include "test.h"
+
 
 /* Private variables ---------------------------------------------------------*/
 /** @brief  Watchdog timer handle. */
