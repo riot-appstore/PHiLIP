@@ -20,8 +20,6 @@ IWDG_HandleTypeDef hiwdg;
 
 RTC_HandleTypeDef hrtc;
 
-SPI_HandleTypeDef hspi_dut;
-
 TIM_HandleTypeDef htim_ic;
 TIM_HandleTypeDef htim_pwm;
 
@@ -95,28 +93,6 @@ static void MX_ADC2_Init(void) {
 	sConfig.Rank = ADC_REGULAR_RANK_1;
 	sConfig.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
 	if (HAL_ADC_ConfigChannel(&hadc_dut, &sConfig) != HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-}
-
-/* SPI1 init function */
-static void MX_SPI1_Init(void) {
-
-	/* SPI1 parameter configuration*/
-	hspi_dut.Instance = SPI1;
-	hspi_dut.Init.Mode = SPI_MODE_SLAVE;
-	hspi_dut.Init.Direction = SPI_DIRECTION_2LINES;
-	hspi_dut.Init.DataSize = SPI_DATASIZE_8BIT;
-	hspi_dut.Init.CLKPolarity = SPI_POLARITY_LOW;
-	hspi_dut.Init.CLKPhase = SPI_PHASE_1EDGE;
-	hspi_dut.Init.NSS = SPI_NSS_HARD_INPUT;
-	hspi_dut.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_4;
-	hspi_dut.Init.FirstBit = SPI_FIRSTBIT_MSB;
-	hspi_dut.Init.TIMode = SPI_TIMODE_DISABLE;
-	hspi_dut.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-	hspi_dut.Init.CRCPolynomial = 10;
-	if (HAL_SPI_Init(&hspi_dut) != HAL_OK) {
 		_Error_Handler(__FILE__, __LINE__);
 	}
 
@@ -435,48 +411,6 @@ static void MX_ADC2_Init(void) {
 
 }
 
-#if 0
-/* I2C1 init function */
-static void MX_I2C1_Init(void) {
-
-	hi2c_dut.Instance = I2C1;
-	hi2c_dut.Init.ClockSpeed = 400000;
-	hi2c_dut.Init.DutyCycle = I2C_DUTYCYCLE_2;
-	hi2c_dut.Init.OwnAddress1 = 170;
-	hi2c_dut.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
-	hi2c_dut.Init.DualAddressMode = I2C_DUALADDRESS_ENABLE;
-	hi2c_dut.Init.OwnAddress2 = 128;
-	hi2c_dut.Init.GeneralCallMode = I2C_GENERALCALL_ENABLE;
-	hi2c_dut.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
-	if (HAL_I2C_Init(&hi2c_dut) != HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-}
-#endif
-
-/* SPI2 init function */
-static void MX_SPI2_Init(void) {
-
-	/* SPI2 parameter configuration*/
-	hspi_dut.Instance = SPI2;
-	hspi_dut.Init.Mode = SPI_MODE_SLAVE;
-	hspi_dut.Init.Direction = SPI_DIRECTION_2LINES;
-	hspi_dut.Init.DataSize = SPI_DATASIZE_8BIT;
-	hspi_dut.Init.CLKPolarity = SPI_POLARITY_LOW;
-	hspi_dut.Init.CLKPhase = SPI_PHASE_1EDGE;
-	hspi_dut.Init.NSS = SPI_NSS_HARD_INPUT;
-	hspi_dut.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_4;
-	hspi_dut.Init.FirstBit = SPI_FIRSTBIT_MSB;
-	hspi_dut.Init.TIMode = SPI_TIMODE_DISABLE;
-	hspi_dut.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-	hspi_dut.Init.CRCPolynomial = 10;
-	if (HAL_SPI_Init(&hspi_dut) != HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-}
-
 /* TIM1 init function */
 static void MX_TIM1_Init(void) {
 
@@ -574,42 +508,6 @@ static void MX_TIM3_Init(void) {
 
 }
 
-#if 0
-/* USART1 init function */
-static void MX_USART1_UART_Init(void) {
-
-	huart_dut.Instance = USART1;
-	huart_dut.Init.BaudRate = 115200;
-	huart_dut.Init.WordLength = UART_WORDLENGTH_8B;
-	huart_dut.Init.StopBits = UART_STOPBITS_1;
-	huart_dut.Init.Parity = UART_PARITY_NONE;
-	huart_dut.Init.Mode = UART_MODE_TX_RX;
-	huart_dut.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-	huart_dut.Init.OverSampling = UART_OVERSAMPLING_16;
-	if (HAL_UART_Init(&huart_dut) != HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-}
-
-/* USART2 init function */
-static void MX_USART2_UART_Init(void) {
-
-	huart_if.Instance = USART2;
-	huart_if.Init.BaudRate = 115200;
-	huart_if.Init.WordLength = UART_WORDLENGTH_8B;
-	huart_if.Init.StopBits = UART_STOPBITS_1;
-	huart_if.Init.Parity = UART_PARITY_NONE;
-	huart_if.Init.Mode = UART_MODE_TX_RX;
-	huart_if.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-	huart_if.Init.OverSampling = UART_OVERSAMPLING_16;
-	if (HAL_UART_Init(&huart_if) != HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-}
-#endif
-
 /**
  * Enable DMA controller clock
  */
@@ -635,72 +533,6 @@ static void MX_DMA_Init(void) {
 	HAL_NVIC_SetPriority(DMA1_Channel7_IRQn, 0, 0);
 	HAL_NVIC_EnableIRQ(DMA1_Channel7_IRQn);
 
-}
-
-/** Configure pins as
- * Analog
- * Input
- * Output
- * EVENT_OUT
- * EXTI
- */
-static void MX_GPIO_Init(void) {
-
-	GPIO_InitTypeDef GPIO_InitStruct;
-
-	/* GPIO Ports Clock Enable */
-	__HAL_RCC_GPIOC_CLK_ENABLE()
-	;
-	__HAL_RCC_GPIOD_CLK_ENABLE()
-	;
-	__HAL_RCC_GPIOA_CLK_ENABLE()
-	;
-	__HAL_RCC_GPIOB_CLK_ENABLE()
-	;
-
-	/*Configure GPIO pin Output Level */
-	HAL_GPIO_WritePin(GPIOA,
-			TEST_WARN_Pin | TEST_FAIL_Pin | TEST_PASS_Pin | LED0_Pin
-					| DUT_RTS_Pin, GPIO_PIN_RESET);
-
-	/*Configure GPIO pin Output Level */
-	HAL_GPIO_WritePin(DUT_RST_GPIO_Port, DUT_RST_Pin, GPIO_PIN_SET);
-
-	/*Configure GPIO pin Output Level */
-	HAL_GPIO_WritePin(GPIOB, DEBUG0_Pin | DEBUG1_Pin | DEBUG2_Pin,
-			GPIO_PIN_RESET);
-
-	/*Configure GPIO pin : USER_BTN_Pin */
-	GPIO_InitStruct.Pin = USER_BTN_Pin;
-	GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-	GPIO_InitStruct.Pull = GPIO_PULLUP;
-	HAL_GPIO_Init(USER_BTN_GPIO_Port, &GPIO_InitStruct);
-
-	/*Configure GPIO pins : TEST_WARN_Pin TEST_FAIL_Pin TEST_PASS_Pin LED0_Pin
-	 DUT_RTS_Pin */
-	GPIO_InitStruct.Pin = TEST_WARN_Pin | TEST_FAIL_Pin | TEST_PASS_Pin
-			| LED0_Pin | DUT_RTS_Pin;
-	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-	GPIO_InitStruct.Pull = GPIO_NOPULL;
-	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-	/*Configure GPIO pins : DUT_RST_Pin DEBUG0_Pin DEBUG1_Pin DEBUG2_Pin */
-	GPIO_InitStruct.Pin = DUT_RST_Pin | DEBUG0_Pin | DEBUG1_Pin | DEBUG2_Pin;
-	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-	GPIO_InitStruct.Pull = GPIO_NOPULL;
-	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-	/*Configure GPIO pin : DUT_CTS_Pin */
-	GPIO_InitStruct.Pin = DUT_CTS_Pin;
-	GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-	GPIO_InitStruct.Pull = GPIO_PULLDOWN;
-	HAL_GPIO_Init(DUT_CTS_GPIO_Port, &GPIO_InitStruct);
-
-	/* EXTI interrupt init*/
-	HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
-	HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 }
 
 /**
@@ -845,18 +677,13 @@ void init_periphs(void) {
 	/* Prevents i2c clk from toggling at init */
 	__HAL_RCC_I2C1_CLK_ENABLE();
 
-	MX_GPIO_Init();
 	MX_DMA_Init();
 
 #ifdef BLUEPILL
-
-	MX_SPI1_Init();
 	MX_TIM4_Init();
 
 #endif
 #ifdef NUCLEOF103RB
-
-	MX_SPI2_Init();
 	MX_TIM3_Init();
 #endif
 

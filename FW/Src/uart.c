@@ -81,7 +81,7 @@ typedef struct {
 } uart_dev_t;
 /** @} */
 
-/* Private defines -------------------------------------------------------------------*/
+/* Private defines -----------------------------------------------------------*/
 /** @brief	Checks the uart register to see if any data is waiting */
 #define IS_RX_WAITING(x)	(HAL_IS_BIT_SET(x, USART_CR3_DMAR))
 
@@ -468,8 +468,6 @@ void DUT_UART_INT(void) {
 /**
  * @brief This function handles dut_cts event interrupt.
  */
-void DUT_CTS_INT(void) {
+void dut_cts_int() {
 	dut_uart.reg->status.cts = 1;
-	HAL_GPIO_EXTI_IRQHandler(DUT_CTS_Pin);
-
 }

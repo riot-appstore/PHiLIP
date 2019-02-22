@@ -46,6 +46,7 @@
 #include "app_errno.h"
 #include "app_common.h"
 #include "app_defaults.h"
+#include "port.h"
 
 #include "sys.h"
 

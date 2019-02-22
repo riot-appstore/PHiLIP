@@ -1,6 +1,7 @@
 {
     "bitfields": [
         {
+            "description": "System mode settings",
             "elements": [
                 {
                     "bits": 1,
@@ -17,6 +18,7 @@
             "type_name": "sys_mode_t"
         },
         {
+            "description": "System status",
             "elements": [
                 {
                     "bits": 1,
@@ -28,6 +30,7 @@
             "type_name": "sys_status_t"
         },
         {
+            "description": "I2C mode settings",
             "elements": [
                 {
                     "bits": 1,
@@ -74,6 +77,7 @@
             "type_name": "i2c_mode_t"
         },
         {
+            "description": "I2C status",
             "elements": [
                 {
                     "bits": 1,
@@ -110,6 +114,81 @@
             "type_name": "i2c_status_t"
         },
         {
+            "description": "SPI mode settings",
+            "elements": [
+                {
+                    "bits": 1,
+                    "description": "initialize with new params",
+                    "name": "init"
+                },
+                {
+                    "bits": 1,
+                    "description": "disable spi functionality",
+                    "name": "disable"
+                },
+                {
+                    "bits": 1,
+                    "description": "Clock phase",
+                    "name": "cpha"
+                },
+                {
+                    "bits": 1,
+                    "description": "Clock polarity",
+                    "name": "cpol"
+                },
+                {
+                    "bits": 2,
+                    "description": "spi interface type",
+                    "name": "if_type"
+                },
+                {
+                    "bits": 1,
+                    "description": "16 bit register access mode",
+                    "name": "reg_16_bit"
+                },
+                {
+                    "bits": 1,
+                    "description": "sets the endianess of the 16 bit reg",
+                    "name": "reg_16_big_endian"
+                }
+            ],
+            "type": "uint8_t",
+            "type_name": "spi_mode_t"
+        },
+        {
+            "description": "SPI status",
+            "elements": [
+                {
+                    "bits": 1,
+                    "description": "Busy flag",
+                    "name": "bsy"
+                },
+                {
+                    "bits": 1,
+                    "description": "Overrun flag",
+                    "name": "ovr"
+                },
+                {
+                    "bits": 1,
+                    "description": "Mode fault",
+                    "name": "modf"
+                },
+                {
+                    "bits": 1,
+                    "description": "Underrun flag",
+                    "name": "udr"
+                },
+                {
+                    "bits": 1,
+                    "description": "Register index error",
+                    "name": "index_err"
+                }
+            ],
+            "type": "uint8_t",
+            "type_name": "spi_status_t"
+        },
+        {
+            "description": "UART mode settings",
             "elements": [
                 {
                     "bits": 1,
@@ -151,6 +230,7 @@
             "type_name": "uart_mode_t"
         },
         {
+            "description": "UART status",
             "elements": [
                 {
                     "bits": 1,
@@ -807,34 +887,280 @@
                 },
                 {
                     "access": 1,
+                    "description": "Specific spi modes",
                     "name": [
                         "spi",
                         "mode"
                     ],
                     "offset": 384,
-                    "type": "uint8_t",
+                    "type": "spi_mode_t",
                     "type_size": 1
                 },
                 {
                     "access": 1,
+                    "bit_offset": 0,
+                    "bits": 1,
+                    "description": "initialize with new params",
                     "name": [
                         "spi",
-                        "error_code"
+                        "mode",
+                        "init"
+                    ],
+                    "offset": 384,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 1,
+                    "bits": 1,
+                    "description": "disable spi functionality",
+                    "name": [
+                        "spi",
+                        "mode",
+                        "disable"
+                    ],
+                    "offset": 384,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 2,
+                    "bits": 1,
+                    "description": "Clock phase",
+                    "name": [
+                        "spi",
+                        "mode",
+                        "cpha"
+                    ],
+                    "offset": 384,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 3,
+                    "bits": 1,
+                    "description": "Clock polarity",
+                    "name": [
+                        "spi",
+                        "mode",
+                        "cpol"
+                    ],
+                    "offset": 384,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 4,
+                    "bits": 2,
+                    "description": "spi interface type",
+                    "name": [
+                        "spi",
+                        "mode",
+                        "if_type"
+                    ],
+                    "offset": 384,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 6,
+                    "bits": 1,
+                    "description": "16 bit register access mode",
+                    "name": [
+                        "spi",
+                        "mode",
+                        "reg_16_bit"
+                    ],
+                    "offset": 384,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 7,
+                    "bits": 1,
+                    "description": "sets the endianess of the 16 bit reg",
+                    "name": [
+                        "spi",
+                        "mode",
+                        "reg_16_big_endian"
+                    ],
+                    "offset": 384,
+                    "type_size": 1
+                },
+                {
+                    "access": 0,
+                    "description": "Spi status register",
+                    "name": [
+                        "spi",
+                        "status"
                     ],
                     "offset": 385,
+                    "type": "spi_status_t",
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 0,
+                    "bits": 1,
+                    "description": "Busy flag",
+                    "name": [
+                        "spi",
+                        "status",
+                        "bsy"
+                    ],
+                    "offset": 385,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 1,
+                    "bits": 1,
+                    "description": "Overrun flag",
+                    "name": [
+                        "spi",
+                        "status",
+                        "ovr"
+                    ],
+                    "offset": 385,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 2,
+                    "bits": 1,
+                    "description": "Mode fault",
+                    "name": [
+                        "spi",
+                        "status",
+                        "modf"
+                    ],
+                    "offset": 385,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 3,
+                    "bits": 1,
+                    "description": "Underrun flag",
+                    "name": [
+                        "spi",
+                        "status",
+                        "udr"
+                    ],
+                    "offset": 385,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 4,
+                    "bits": 1,
+                    "description": "Register index error",
+                    "name": [
+                        "spi",
+                        "status",
+                        "index_err"
+                    ],
+                    "offset": 385,
+                    "type_size": 1
+                },
+                {
+                    "access": 0,
+                    "description": "Current state of the i2c bus",
+                    "name": [
+                        "spi",
+                        "state"
+                    ],
+                    "offset": 386,
+                    "type": "uint16_t",
+                    "type_size": 2
+                },
+                {
+                    "access": 0,
+                    "description": "current index of i2c pointer",
+                    "name": [
+                        "spi",
+                        "reg_index"
+                    ],
+                    "offset": 388,
+                    "type": "uint16_t",
+                    "type_size": 2
+                },
+                {
+                    "access": 0,
+                    "description": "start index of i2c pointer",
+                    "name": [
+                        "spi",
+                        "start_reg_index"
+                    ],
+                    "offset": 390,
+                    "type": "uint16_t",
+                    "type_size": 2
+                },
+                {
+                    "access": 0,
+                    "description": "Last read frame byte count",
+                    "name": [
+                        "spi",
+                        "r_count"
+                    ],
+                    "offset": 392,
+                    "type": "uint8_t",
+                    "type_size": 1
+                },
+                {
+                    "access": 0,
+                    "description": "Last write frame byte count",
+                    "name": [
+                        "spi",
+                        "w_count"
+                    ],
+                    "offset": 393,
+                    "type": "uint8_t",
+                    "type_size": 1
+                },
+                {
+                    "access": 0,
+                    "description": "The amount of bytes in the last transfer ",
+                    "name": [
+                        "spi",
+                        "transfer_count"
+                    ],
+                    "offset": 394,
+                    "type": "uint8_t",
+                    "type_size": 1
+                },
+                {
+                    "access": 0,
+                    "description": "Ticks per frame",
+                    "name": [
+                        "spi",
+                        "frame_ticks"
+                    ],
+                    "offset": 395,
                     "type": "uint32_t",
                     "type_size": 4
                 },
                 {
                     "access": 0,
-                    "array_size": 11,
+                    "description": "Ticks per byte",
+                    "name": [
+                        "spi",
+                        "byte_ticks"
+                    ],
+                    "offset": 399,
+                    "type": "uint32_t",
+                    "type_size": 4
+                },
+                {
+                    "access": 0,
+                    "array_size": 13,
                     "description": "Reserved bytes",
                     "name": [
                         "spi",
                         "res"
                     ],
-                    "offset": 389,
-                    "total_size": 11,
+                    "offset": 403,
+                    "total_size": 13,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -845,7 +1171,7 @@
                         "uart",
                         "mode"
                     ],
-                    "offset": 400,
+                    "offset": 416,
                     "type": "uart_mode_t",
                     "type_size": 2
                 },
@@ -859,7 +1185,7 @@
                         "mode",
                         "init"
                     ],
-                    "offset": 400,
+                    "offset": 416,
                     "type_size": 2
                 },
                 {
@@ -872,7 +1198,7 @@
                         "mode",
                         "disable"
                     ],
-                    "offset": 400,
+                    "offset": 416,
                     "type_size": 2
                 },
                 {
@@ -885,7 +1211,7 @@
                         "mode",
                         "if_type"
                     ],
-                    "offset": 400,
+                    "offset": 416,
                     "type_size": 2
                 },
                 {
@@ -898,7 +1224,7 @@
                         "mode",
                         "stop_bits"
                     ],
-                    "offset": 400,
+                    "offset": 416,
                     "type_size": 2
                 },
                 {
@@ -911,7 +1237,7 @@
                         "mode",
                         "parity"
                     ],
-                    "offset": 400,
+                    "offset": 416,
                     "type_size": 2
                 },
                 {
@@ -924,7 +1250,7 @@
                         "mode",
                         "rts"
                     ],
-                    "offset": 400,
+                    "offset": 416,
                     "type_size": 2
                 },
                 {
@@ -937,7 +1263,7 @@
                         "mode",
                         "data_bits"
                     ],
-                    "offset": 400,
+                    "offset": 416,
                     "type_size": 2
                 },
                 {
@@ -947,7 +1273,7 @@
                         "uart",
                         "baud"
                     ],
-                    "offset": 402,
+                    "offset": 418,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -958,7 +1284,7 @@
                         "uart",
                         "mask_msb"
                     ],
-                    "offset": 406,
+                    "offset": 422,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -969,7 +1295,7 @@
                         "uart",
                         "rx_count"
                     ],
-                    "offset": 407,
+                    "offset": 423,
                     "type": "uint16_t",
                     "type_size": 2
                 },
@@ -980,7 +1306,7 @@
                         "uart",
                         "tx_count"
                     ],
-                    "offset": 409,
+                    "offset": 425,
                     "type": "uint16_t",
                     "type_size": 2
                 },
@@ -991,7 +1317,7 @@
                         "uart",
                         "status"
                     ],
-                    "offset": 411,
+                    "offset": 427,
                     "type": "uart_status_t",
                     "type_size": 1
                 },
@@ -1005,7 +1331,7 @@
                         "status",
                         "cts"
                     ],
-                    "offset": 411,
+                    "offset": 427,
                     "type_size": 1
                 },
                 {
@@ -1018,7 +1344,7 @@
                         "status",
                         "pe"
                     ],
-                    "offset": 411,
+                    "offset": 427,
                     "type_size": 1
                 },
                 {
@@ -1031,7 +1357,7 @@
                         "status",
                         "fe"
                     ],
-                    "offset": 411,
+                    "offset": 427,
                     "type_size": 1
                 },
                 {
@@ -1044,7 +1370,7 @@
                         "status",
                         "nf"
                     ],
-                    "offset": 411,
+                    "offset": 427,
                     "type_size": 1
                 },
                 {
@@ -1057,7 +1383,7 @@
                         "status",
                         "ore"
                     ],
-                    "offset": 411,
+                    "offset": 427,
                     "type_size": 1
                 },
                 {
@@ -1068,7 +1394,7 @@
                         "uart",
                         "res"
                     ],
-                    "offset": 412,
+                    "offset": 428,
                     "total_size": 4,
                     "type": "uint8_t",
                     "type_size": 1
@@ -1080,7 +1406,7 @@
                         "rtc",
                         "second"
                     ],
-                    "offset": 416,
+                    "offset": 432,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -1091,7 +1417,7 @@
                         "rtc",
                         "minute"
                     ],
-                    "offset": 417,
+                    "offset": 433,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -1102,7 +1428,7 @@
                         "rtc",
                         "hour"
                     ],
-                    "offset": 418,
+                    "offset": 434,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -1113,7 +1439,7 @@
                         "rtc",
                         "day_of_month"
                     ],
-                    "offset": 419,
+                    "offset": 435,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -1124,7 +1450,7 @@
                         "rtc",
                         "day_of_week"
                     ],
-                    "offset": 420,
+                    "offset": 436,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -1135,7 +1461,7 @@
                         "rtc",
                         "month"
                     ],
-                    "offset": 421,
+                    "offset": 437,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -1146,7 +1472,7 @@
                         "rtc",
                         "year"
                     ],
-                    "offset": 422,
+                    "offset": 438,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -1158,7 +1484,7 @@
                         "rtc",
                         "res"
                     ],
-                    "offset": 423,
+                    "offset": 439,
                     "total_size": 1,
                     "type": "uint8_t",
                     "type_size": 1
@@ -1171,68 +1497,6 @@
                         "0",
                         "mode"
                     ],
-                    "offset": 424,
-                    "type": "uint8_t",
-                    "type_size": 1
-                },
-                {
-                    "access": 1,
-                    "description": "",
-                    "name": [
-                        "adc",
-                        "0",
-                        "error_code"
-                    ],
-                    "offset": 425,
-                    "type": "uint16_t",
-                    "type_size": 2
-                },
-                {
-                    "access": 1,
-                    "description": "",
-                    "name": [
-                        "adc",
-                        "0",
-                        "sample_rate"
-                    ],
-                    "offset": 427,
-                    "type": "uint8_t",
-                    "type_size": 1
-                },
-                {
-                    "access": 1,
-                    "description": "",
-                    "name": [
-                        "adc",
-                        "0",
-                        "value"
-                    ],
-                    "offset": 428,
-                    "type": "uint32_t",
-                    "type_size": 4
-                },
-                {
-                    "access": 0,
-                    "array_size": 8,
-                    "description": "Reserved bytes",
-                    "name": [
-                        "adc",
-                        "0",
-                        "res"
-                    ],
-                    "offset": 432,
-                    "total_size": 8,
-                    "type": "uint8_t",
-                    "type_size": 1
-                },
-                {
-                    "access": 1,
-                    "description": "",
-                    "name": [
-                        "adc",
-                        "1",
-                        "mode"
-                    ],
                     "offset": 440,
                     "type": "uint8_t",
                     "type_size": 1
@@ -1242,7 +1506,7 @@
                     "description": "",
                     "name": [
                         "adc",
-                        "1",
+                        "0",
                         "error_code"
                     ],
                     "offset": 441,
@@ -1254,7 +1518,7 @@
                     "description": "",
                     "name": [
                         "adc",
-                        "1",
+                        "0",
                         "sample_rate"
                     ],
                     "offset": 443,
@@ -1266,7 +1530,7 @@
                     "description": "",
                     "name": [
                         "adc",
-                        "1",
+                        "0",
                         "value"
                     ],
                     "offset": 444,
@@ -1279,7 +1543,7 @@
                     "description": "Reserved bytes",
                     "name": [
                         "adc",
-                        "1",
+                        "0",
                         "res"
                     ],
                     "offset": 448,
@@ -1291,7 +1555,8 @@
                     "access": 1,
                     "description": "",
                     "name": [
-                        "pwm",
+                        "adc",
+                        "1",
                         "mode"
                     ],
                     "offset": 456,
@@ -1302,7 +1567,8 @@
                     "access": 1,
                     "description": "",
                     "name": [
-                        "pwm",
+                        "adc",
+                        "1",
                         "error_code"
                     ],
                     "offset": 457,
@@ -1313,8 +1579,9 @@
                     "access": 1,
                     "description": "",
                     "name": [
-                        "pwm",
-                        "duty"
+                        "adc",
+                        "1",
+                        "sample_rate"
                     ],
                     "offset": 459,
                     "type": "uint8_t",
@@ -1324,8 +1591,9 @@
                     "access": 1,
                     "description": "",
                     "name": [
-                        "pwm",
-                        "freq"
+                        "adc",
+                        "1",
+                        "value"
                     ],
                     "offset": 460,
                     "type": "uint32_t",
@@ -1336,7 +1604,8 @@
                     "array_size": 8,
                     "description": "Reserved bytes",
                     "name": [
-                        "pwm",
+                        "adc",
+                        "1",
                         "res"
                     ],
                     "offset": 464,
@@ -1348,7 +1617,7 @@
                     "access": 1,
                     "description": "",
                     "name": [
-                        "tmr",
+                        "pwm",
                         "mode"
                     ],
                     "offset": 472,
@@ -1359,7 +1628,7 @@
                     "access": 1,
                     "description": "",
                     "name": [
-                        "tmr",
+                        "pwm",
                         "error_code"
                     ],
                     "offset": 473,
@@ -1370,7 +1639,7 @@
                     "access": 1,
                     "description": "",
                     "name": [
-                        "tmr",
+                        "pwm",
                         "duty"
                     ],
                     "offset": 475,
@@ -1381,10 +1650,67 @@
                     "access": 1,
                     "description": "",
                     "name": [
-                        "tmr",
+                        "pwm",
                         "freq"
                     ],
                     "offset": 476,
+                    "type": "uint32_t",
+                    "type_size": 4
+                },
+                {
+                    "access": 0,
+                    "array_size": 8,
+                    "description": "Reserved bytes",
+                    "name": [
+                        "pwm",
+                        "res"
+                    ],
+                    "offset": 480,
+                    "total_size": 8,
+                    "type": "uint8_t",
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "description": "",
+                    "name": [
+                        "tmr",
+                        "mode"
+                    ],
+                    "offset": 488,
+                    "type": "uint8_t",
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "description": "",
+                    "name": [
+                        "tmr",
+                        "error_code"
+                    ],
+                    "offset": 489,
+                    "type": "uint16_t",
+                    "type_size": 2
+                },
+                {
+                    "access": 1,
+                    "description": "",
+                    "name": [
+                        "tmr",
+                        "duty"
+                    ],
+                    "offset": 491,
+                    "type": "uint8_t",
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "description": "",
+                    "name": [
+                        "tmr",
+                        "freq"
+                    ],
+                    "offset": 492,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -1395,7 +1721,7 @@
                         "tmr",
                         "hi_us"
                     ],
-                    "offset": 480,
+                    "offset": 496,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -1406,19 +1732,19 @@
                         "tmr",
                         "lo_us"
                     ],
-                    "offset": 484,
+                    "offset": 500,
                     "type": "uint32_t",
                     "type_size": 4
                 },
                 {
                     "access": 0,
-                    "array_size": 536,
+                    "array_size": 520,
                     "description": "Reserved bytes",
                     "name": [
                         "res"
                     ],
-                    "offset": 488,
-                    "total_size": 536,
+                    "offset": 504,
+                    "total_size": 520,
                     "type": "uint8_t",
                     "type_size": 1
                 }
@@ -1622,18 +1948,70 @@
             "type_size": 64
         },
         {
+            "description": "Controls and provides information for the spi",
             "elements": [
                 {
+                    "description": "Specific spi modes",
                     "name": "mode",
+                    "type": "spi_mode_t"
+                },
+                {
+                    "access": 0,
+                    "description": "Spi status register",
+                    "name": "status",
+                    "type": "spi_status_t"
+                },
+                {
+                    "access": 0,
+                    "description": "Current state of the i2c bus",
+                    "name": "state",
+                    "type": "uint16_t"
+                },
+                {
+                    "access": 0,
+                    "description": "current index of i2c pointer",
+                    "name": "reg_index",
+                    "type": "uint16_t"
+                },
+                {
+                    "access": 0,
+                    "description": "start index of i2c pointer",
+                    "name": "start_reg_index",
+                    "type": "uint16_t"
+                },
+                {
+                    "access": 0,
+                    "description": "Last read frame byte count",
+                    "name": "r_count",
                     "type": "uint8_t"
                 },
                 {
-                    "name": "error_code",
+                    "access": 0,
+                    "description": "Last write frame byte count",
+                    "name": "w_count",
+                    "type": "uint8_t"
+                },
+                {
+                    "access": 0,
+                    "description": "The amount of bytes in the last transfer ",
+                    "name": "transfer_count",
+                    "type": "uint8_t"
+                },
+                {
+                    "access": 0,
+                    "description": "Ticks per frame",
+                    "name": "frame_ticks",
+                    "type": "uint32_t"
+                },
+                {
+                    "access": 0,
+                    "description": "Ticks per byte",
+                    "name": "byte_ticks",
                     "type": "uint32_t"
                 }
             ],
             "type_name": "spi_t",
-            "type_size": 16
+            "type_size": 32
         },
         {
             "description": "Controls and provides information for the uart",
@@ -1788,7 +2166,7 @@
                     "type": "i2c_t"
                 },
                 {
-                    "description": "",
+                    "description": "SPI configuration",
                     "name": "spi",
                     "type": "spi_t"
                 },

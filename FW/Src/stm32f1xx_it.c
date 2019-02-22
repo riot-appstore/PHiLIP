@@ -46,9 +46,11 @@
 extern PCD_HandleTypeDef hpcd_USB_FS;
 #endif
 extern DMA_HandleTypeDef hdma_adc_pm;
+/** @brief		For power management. */
 extern ADC_HandleTypeDef hadc_pm;
+/** @brief		For dut adc. */
 extern ADC_HandleTypeDef hadc_dut;
-extern SPI_HandleTypeDef hspi_dut;
+/** @brief		For input capture. */
 extern TIM_HandleTypeDef htim_ic;
 
 /******************************************************************************/
@@ -313,7 +315,6 @@ void ADC1_2_IRQHandler(void) {
 	/* USER CODE END ADC1_2_IRQn 1 */
 }
 
-
 /**
  * @brief This function handles TIM1 update interrupt.
  */
@@ -326,110 +327,7 @@ void TIM1_UP_IRQHandler(void) {
 
 	/* USER CODE END TIM1_UP_IRQn 1 */
 }
-#if 0
-/**
- * @brief This function handles I2C1 event interrupt.
- */
-//void I2C1_EV_IRQHandler(void) {
-//	i2c_it(&hi2c_dut);
-//}
-/**
- * @brief This function handles I2C1 error interrupt.
- */
-//void I2C1_ER_IRQHandler(void) {
-//	i2c_err(&hi2c_dut);
-//}
-#endif
-/**
- * @brief This function handles SPI1 global interrupt.
- */
-void SPI1_IRQHandler(void) {
-	/* USER CODE BEGIN SPI1_IRQn 0 */
 
-	/* USER CODE END SPI1_IRQn 0 */
-#ifdef BLUEPILL
-	HAL_SPI_IRQHandler(&hspi_dut);
-#endif
-	/* USER CODE BEGIN SPI1_IRQn 1 */
-
-	/* USER CODE END SPI1_IRQn 1 */
-}
-
-/**
- * @brief This function handles SPI2 global interrupt.
- */
-void SPI2_IRQHandler(void) {
-	/* USER CODE BEGIN SPI2_IRQn 0 */
-
-	/* USER CODE END SPI2_IRQn 0 */
-#ifdef NUCLEOF103RB
-	HAL_SPI_IRQHandler(&hspi_dut);
-#endif
-	/* USER CODE BEGIN SPI2_IRQn 1 */
-
-	/* USER CODE END SPI2_IRQn 1 */
-}
-
-#if 0
-/**
- * @brief This function handles USART3 global interrupt.
- */
-void USART3_IRQHandler(void) {
-	/* USER CODE BEGIN USART3_IRQn 0 */
-	uint8_t status;
-	/* USER CODE END USART3_IRQn 0 */
-#ifdef BLUEPILL
-	HAL_UART_IRQHandler(&huart_dut);
-#endif
-	/* USER CODE BEGIN USART3_IRQn 1 */
-	read_regs(offsetof(map_t, uart.status), (uint8_t *)&status, sizeof(((uart_t *)0)->status));
-	if (huart_dut.ErrorCode & HAL_UART_ERROR_PE)
-	status |= BPT_SR_PE;
-	if (huart_dut.ErrorCode & HAL_UART_ERROR_FE)
-	status |= BPT_SR_FE;
-	if (huart_dut.ErrorCode & HAL_UART_ERROR_NE)
-	status |= BPT_SR_NF;
-	if (huart_dut.ErrorCode & HAL_UART_ERROR_ORE)
-	status |= BPT_SR_ORE;
-	write_regs(offsetof(map_t, uart.status), (uint8_t *)&status, sizeof(((uart_t *)0)->status), IF_ACCESS);
-	/* USER CODE END USART3_IRQn 1 */
-}
-
-/**
- * @brief This function handles USART1 global interrupt.
- */
-void USART1_IRQHandler(void) {
-	/* USER CODE BEGIN USART1_IRQn 0 */
-
-	/* USER CODE END USART1_IRQn 0 */
-#ifdef NUCLEOF103RB
-	HAL_UART_IRQHandler(&huart_dut);
-#endif
-	/* USER CODE BEGIN USART1_IRQn 1 */
-
-	/* USER CODE END USART1_IRQn 1 */
-}
-
-/**
- * @brief This function handles EXTI line[15:10] interrupts.
- */
-void EXTI15_10_IRQHandler(void)
-{
-	/* USER CODE BEGIN EXTI15_10_IRQn 0 */
-
-	uint8_t status;
-	read_regs(offsetof(map_t, uart.status), (uint8_t *)&status, sizeof(((uart_t *)0)->status));
-	status |= 0x01;
-	write_regs(offsetof(map_t, uart.status), (uint8_t *)&status, sizeof(((uart_t *)0)->status), IF_ACCESS);
-#ifdef BLUEPILL
-	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_13);
-#endif
-#ifdef NUCLEOF103RB
-	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_10);
-#endif
-	/* USER CODE END EXTI15_10_IRQn 1 */
-}
-#endif
 /* USER CODE BEGIN 1 */
 
 /* USER CODE END 1 */
