@@ -39,7 +39,7 @@
 
 /* Defines -------------------------------------------------------------------*/
 /** @brief	Size allocated for uart buffers */
-#define UART_BUF_SIZE	256
+#define UART_BUF_SIZE	(256 + 128)
 
 /* Function prototypes -------------------------------------------------------*/
 /**

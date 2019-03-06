@@ -1,8 +1,8 @@
 name,offset,total_size,type_size,type,description,access,array_size,bit_offset,bits,default,flag,invalid,max,min
 user_reg,0,256,1,uint8_t,Writable registers for user testing,3,256,,,,,,,
 sys.sn,256,12,1,uint8_t,Unique ID of the device,0,12,,,,DEVICE_SPECIFIC,,,
-sys.fw_rev,268,,4,uint32_t,Firmware revision,0,,,,,,0,,
-sys.if_rev,272,,4,uint32_t,Interface revision,0,,,,,,,,
+sys.fw_rev,268,4,1,uint8_t,Firmware revision,0,4,,,,,0,,
+sys.if_rev,272,4,1,uint8_t,Interface revision,0,4,,,,,,,
 sys.tick,276,,8,uint64_t,Tick in ms,0,,,,,,,,
 sys.build_time.second,284,,1,uint8_t,The seconds in decimal,0,,,,,DEVICE_SPECIFIC,,,
 sys.build_time.minute,285,,1,uint8_t,The minutes in decimal,0,,,,,DEVICE_SPECIFIC,,,

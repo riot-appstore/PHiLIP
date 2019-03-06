@@ -75,6 +75,8 @@ void delay_us(uint16_t micros) {
 	_delay_ticks(freq);
 }
 
+#pragma GCC push_options
+#pragma GCC optimize ("O0")
 /**
  * @brief		Copies and compares data until copied data matches.
  *
@@ -84,10 +86,12 @@ void delay_us(uint16_t micros) {
  * @note		Used for data concurrency issues without blocking interrupts.
  */
 void copy_until_same(void *dest, void *src, size_t size) {
+
 	while (memcmp(dest, src, size)) {
 		memcpy(dest, src, size);
 	}
 }
+#pragma GCC pop_options
 
 /** @brief	Wrapper function to disable interrupts. */
 inline void disable_interrupt() {

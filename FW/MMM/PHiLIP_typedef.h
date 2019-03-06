@@ -1,16 +1,18 @@
 /**
  ******************************************************************************
- * @file       PHiLIP_typedef.h
- * @author     Kevin Weiss
- * @version    0.00.01
- * @date       2019-02-20
- * @addtogroup PHiLIP_Typedefs
+ * @addtogroup PHiLIP_MMM
  * @{
+ * @file      PHiLIP_typedef.h
+ * @author    Kevin Weiss
+ * @version   0.0.2
+ * @date      2019-03-06
+ * @details   Generated from the memory map manager
  ******************************************************************************
  */
 
 #ifndef PHILIP_TYPEDEF_H
 #define PHILIP_TYPEDEF_H
+
 
 #include <stdint.h>
 
@@ -107,8 +109,8 @@ typedef union {
 typedef union {
 	struct {
 		uint8_t sn[12]; /**< Unique ID of the device */
-		uint32_t fw_rev; /**< Firmware revision */
-		uint32_t if_rev; /**< Interface revision */
+		uint8_t fw_rev[4]; /**< Firmware revision */
+		uint8_t if_rev[4]; /**< Interface revision */
 		uint64_t tick; /**< Tick in ms */
 		timestamp_t build_time; /**< time of build */
 		uint32_t device_num; /**< A constant number that should always be the same */
@@ -174,7 +176,7 @@ typedef union {
 	uint8_t data8[16];/**< array for padding */
 } uart_t;
 
-/** @brief   */
+/** @brief  unimplemented ADC */
 typedef union {
 	struct {
 		uint8_t mode; /**<  */
@@ -186,7 +188,7 @@ typedef union {
 	uint8_t data8[16];/**< array for padding */
 } adc_t;
 
-/** @brief   */
+/** @brief  unimplemented PWM */
 typedef union {
 	struct {
 		uint8_t mode; /**<  */
@@ -198,7 +200,7 @@ typedef union {
 	uint8_t data8[16];/**< array for padding */
 } pwm_t;
 
-/** @brief   */
+/** @brief  unimplemented TMR */
 typedef union {
 	struct {
 		uint8_t mode; /**<  */
