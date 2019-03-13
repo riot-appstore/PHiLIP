@@ -180,6 +180,21 @@
                 },
                 {
                     "bits": 1,
+                    "description": "Current reading of spi clock",
+                    "name": "clk"
+                },
+                {
+                    "bits": 1,
+                    "description": "Clk reading when cs pin starts spi frame",
+                    "name": "start_clk"
+                },
+                {
+                    "bits": 1,
+                    "description": "Clk reading when cs pin ends frame",
+                    "name": "end_clk"
+                },
+                {
+                    "bits": 1,
                     "description": "Register index error",
                     "name": "index_err"
                 }
@@ -260,6 +275,50 @@
             ],
             "type": "uint8_t",
             "type_name": "uart_status_t"
+        },
+        {
+            "description": "IO pin mode control",
+            "elements": [
+                {
+                    "bits": 1,
+                    "description": "initialize with new params",
+                    "name": "init"
+                },
+                {
+                    "bits": 2,
+                    "description": "direction of io, in/outpp/outod/int",
+                    "name": "io_type"
+                },
+                {
+                    "bits": 1,
+                    "description": "0 for low, 1 for high, only if output",
+                    "name": "level"
+                },
+                {
+                    "bits": 2,
+                    "description": "pull of the resistor none/up/down",
+                    "name": "pull"
+                },
+                {
+                    "bits": 5,
+                    "description": "for trace tick divisor",
+                    "name": "tick_div"
+                }
+            ],
+            "type": "uint16_t",
+            "type_name": "gpio_mode_t"
+        },
+        {
+            "description": "IO pin status",
+            "elements": [
+                {
+                    "bits": 1,
+                    "description": "The io level of the pin, 0=low, 1=high",
+                    "name": "level"
+                }
+            ],
+            "type": "uint8_t",
+            "type_name": "gpio_status_t"
         }
     ],
     "mem_maps": [
@@ -449,12 +508,23 @@
                 },
                 {
                     "access": 0,
+                    "description": "The frequency of the system clock",
+                    "name": [
+                        "sys",
+                        "sys_clk"
+                    ],
+                    "offset": 296,
+                    "type": "uint32_t",
+                    "type_size": 4
+                },
+                {
+                    "access": 0,
                     "description": "Status of system",
                     "name": [
                         "sys",
                         "status"
                     ],
-                    "offset": 296,
+                    "offset": 300,
                     "type": "sys_status_t",
                     "type_size": 1
                 },
@@ -468,7 +538,7 @@
                         "status",
                         "update"
                     ],
-                    "offset": 296,
+                    "offset": 300,
                     "type_size": 1
                 },
                 {
@@ -478,7 +548,7 @@
                         "sys",
                         "mode"
                     ],
-                    "offset": 297,
+                    "offset": 301,
                     "type": "sys_mode_t",
                     "type_size": 1
                 },
@@ -492,7 +562,7 @@
                         "mode",
                         "init"
                     ],
-                    "offset": 297,
+                    "offset": 301,
                     "type_size": 1
                 },
                 {
@@ -505,19 +575,19 @@
                         "mode",
                         "dut_rst"
                     ],
-                    "offset": 297,
+                    "offset": 301,
                     "type_size": 1
                 },
                 {
                     "access": 0,
-                    "array_size": 22,
+                    "array_size": 18,
                     "description": "Reserved bytes",
                     "name": [
                         "sys",
                         "res"
                     ],
-                    "offset": 298,
-                    "total_size": 22,
+                    "offset": 302,
+                    "total_size": 18,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -1058,6 +1128,45 @@
                     "access": 1,
                     "bit_offset": 4,
                     "bits": 1,
+                    "description": "Clock active/inactive",
+                    "name": [
+                        "spi",
+                        "status",
+                        "clk"
+                    ],
+                    "offset": 385,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 5,
+                    "bits": 1,
+                    "description": "Clk reading when cs pin starts spi frame",
+                    "name": [
+                        "spi",
+                        "status",
+                        "start_clk"
+                    ],
+                    "offset": 385,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 6,
+                    "bits": 1,
+                    "description": "Clk reading when cs pin ends frame",
+                    "name": [
+                        "spi",
+                        "status",
+                        "end_clk"
+                    ],
+                    "offset": 385,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 7,
+                    "bits": 1,
                     "description": "Register index error",
                     "name": [
                         "spi",
@@ -1157,14 +1266,25 @@
                 },
                 {
                     "access": 0,
-                    "array_size": 13,
+                    "description": "Holder for previous byte ticks",
+                    "name": [
+                        "spi",
+                        "prev_ticks"
+                    ],
+                    "offset": 403,
+                    "type": "uint32_t",
+                    "type_size": 4
+                },
+                {
+                    "access": 0,
+                    "array_size": 9,
                     "description": "Reserved bytes",
                     "name": [
                         "spi",
                         "res"
                     ],
-                    "offset": 403,
-                    "total_size": 13,
+                    "offset": 407,
+                    "total_size": 9,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -1742,13 +1862,442 @@
                 },
                 {
                     "access": 0,
-                    "array_size": 520,
+                    "description": "",
+                    "name": [
+                        "gpio",
+                        "0",
+                        "mode"
+                    ],
+                    "offset": 504,
+                    "type": "gpio_mode_t",
+                    "type_size": 2
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 0,
+                    "bits": 1,
+                    "description": "initialize with new params",
+                    "name": [
+                        "gpio",
+                        "0",
+                        "mode",
+                        "init"
+                    ],
+                    "offset": 504,
+                    "type_size": 2
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 1,
+                    "bits": 2,
+                    "description": "direction of io, out0/out1/in/int",
+                    "name": [
+                        "gpio",
+                        "0",
+                        "mode",
+                        "io_type"
+                    ],
+                    "offset": 504,
+                    "type_size": 2
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 3,
+                    "bits": 1,
+                    "description": "0 for low, 1 for high, only if output",
+                    "name": [
+                        "gpio",
+                        "0",
+                        "mode",
+                        "level"
+                    ],
+                    "offset": 504,
+                    "type_size": 2
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 4,
+                    "bits": 2,
+                    "description": "pull of the resistor up/down/none",
+                    "name": [
+                        "gpio",
+                        "0",
+                        "mode",
+                        "pull"
+                    ],
+                    "offset": 504,
+                    "type_size": 2
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 6,
+                    "bits": 5,
+                    "description": "for trace tick divisor",
+                    "name": [
+                        "gpio",
+                        "0",
+                        "mode",
+                        "tick_div"
+                    ],
+                    "offset": 504,
+                    "type_size": 2
+                },
+                {
+                    "access": 0,
+                    "description": "",
+                    "name": [
+                        "gpio",
+                        "0",
+                        "status"
+                    ],
+                    "offset": 506,
+                    "type": "gpio_status_t",
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 0,
+                    "bits": 1,
+                    "description": "The io level of the pin, 0=low, 1=high",
+                    "name": [
+                        "gpio",
+                        "0",
+                        "status",
+                        "level"
+                    ],
+                    "offset": 506,
+                    "type_size": 1
+                },
+                {
+                    "access": 0,
+                    "array_size": 1,
+                    "description": "Reserved bytes",
+                    "name": [
+                        "gpio",
+                        "0",
+                        "res"
+                    ],
+                    "offset": 507,
+                    "total_size": 1,
+                    "type": "uint8_t",
+                    "type_size": 1
+                },
+                {
+                    "access": 0,
+                    "description": "",
+                    "name": [
+                        "gpio",
+                        "1",
+                        "mode"
+                    ],
+                    "offset": 508,
+                    "type": "gpio_mode_t",
+                    "type_size": 2
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 0,
+                    "bits": 1,
+                    "description": "initialize with new params",
+                    "name": [
+                        "gpio",
+                        "1",
+                        "mode",
+                        "init"
+                    ],
+                    "offset": 508,
+                    "type_size": 2
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 1,
+                    "bits": 2,
+                    "description": "direction of io, out0/out1/in/int",
+                    "name": [
+                        "gpio",
+                        "1",
+                        "mode",
+                        "io_type"
+                    ],
+                    "offset": 508,
+                    "type_size": 2
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 3,
+                    "bits": 1,
+                    "description": "0 for low, 1 for high, only if output",
+                    "name": [
+                        "gpio",
+                        "1",
+                        "mode",
+                        "level"
+                    ],
+                    "offset": 508,
+                    "type_size": 2
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 4,
+                    "bits": 2,
+                    "description": "pull of the resistor up/down/none",
+                    "name": [
+                        "gpio",
+                        "1",
+                        "mode",
+                        "pull"
+                    ],
+                    "offset": 508,
+                    "type_size": 2
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 6,
+                    "bits": 5,
+                    "description": "for trace tick divisor",
+                    "name": [
+                        "gpio",
+                        "1",
+                        "mode",
+                        "tick_div"
+                    ],
+                    "offset": 508,
+                    "type_size": 2
+                },
+                {
+                    "access": 0,
+                    "description": "",
+                    "name": [
+                        "gpio",
+                        "1",
+                        "status"
+                    ],
+                    "offset": 510,
+                    "type": "gpio_status_t",
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 0,
+                    "bits": 1,
+                    "description": "The io level of the pin, 0=low, 1=high",
+                    "name": [
+                        "gpio",
+                        "1",
+                        "status",
+                        "level"
+                    ],
+                    "offset": 510,
+                    "type_size": 1
+                },
+                {
+                    "access": 0,
+                    "array_size": 1,
+                    "description": "Reserved bytes",
+                    "name": [
+                        "gpio",
+                        "1",
+                        "res"
+                    ],
+                    "offset": 511,
+                    "total_size": 1,
+                    "type": "uint8_t",
+                    "type_size": 1
+                },
+                {
+                    "access": 0,
+                    "description": "",
+                    "name": [
+                        "gpio",
+                        "2",
+                        "mode"
+                    ],
+                    "offset": 512,
+                    "type": "gpio_mode_t",
+                    "type_size": 2
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 0,
+                    "bits": 1,
+                    "description": "initialize with new params",
+                    "name": [
+                        "gpio",
+                        "2",
+                        "mode",
+                        "init"
+                    ],
+                    "offset": 512,
+                    "type_size": 2
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 1,
+                    "bits": 2,
+                    "description": "direction of io, out0/out1/in/int",
+                    "name": [
+                        "gpio",
+                        "2",
+                        "mode",
+                        "io_type"
+                    ],
+                    "offset": 512,
+                    "type_size": 2
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 3,
+                    "bits": 1,
+                    "description": "0 for low, 1 for high, only if output",
+                    "name": [
+                        "gpio",
+                        "2",
+                        "mode",
+                        "level"
+                    ],
+                    "offset": 512,
+                    "type_size": 2
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 4,
+                    "bits": 2,
+                    "description": "pull of the resistor up/down/none",
+                    "name": [
+                        "gpio",
+                        "2",
+                        "mode",
+                        "pull"
+                    ],
+                    "offset": 512,
+                    "type_size": 2
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 6,
+                    "bits": 5,
+                    "description": "for trace tick divisor",
+                    "name": [
+                        "gpio",
+                        "2",
+                        "mode",
+                        "tick_div"
+                    ],
+                    "offset": 512,
+                    "type_size": 2
+                },
+                {
+                    "access": 0,
+                    "description": "",
+                    "name": [
+                        "gpio",
+                        "2",
+                        "status"
+                    ],
+                    "offset": 514,
+                    "type": "gpio_status_t",
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 0,
+                    "bits": 1,
+                    "description": "The io level of the pin, 0=low, 1=high",
+                    "name": [
+                        "gpio",
+                        "2",
+                        "status",
+                        "level"
+                    ],
+                    "offset": 514,
+                    "type_size": 1
+                },
+                {
+                    "access": 0,
+                    "array_size": 1,
+                    "description": "Reserved bytes",
+                    "name": [
+                        "gpio",
+                        "2",
+                        "res"
+                    ],
+                    "offset": 515,
+                    "total_size": 1,
+                    "type": "uint8_t",
+                    "type_size": 1
+                },
+                {
+                    "access": 0,
+                    "description": "Index of the current trace",
+                    "name": [
+                        "trace",
+                        "index"
+                    ],
+                    "offset": 516,
+                    "type": "uint32_t",
+                    "type_size": 4
+                },
+                {
+                    "access": 0,
+                    "array_size": 32,
+                    "description": "The tick divisor of the event",
+                    "name": [
+                        "trace",
+                        "tick_div"
+                    ],
+                    "offset": 520,
+                    "total_size": 32,
+                    "type": "uint8_t",
+                    "type_size": 1
+                },
+                {
+                    "access": 0,
+                    "array_size": 32,
+                    "description": "The event source of the event",
+                    "name": [
+                        "trace",
+                        "source"
+                    ],
+                    "offset": 552,
+                    "total_size": 32,
+                    "type": "uint8_t",
+                    "type_size": 1
+                },
+                {
+                    "access": 0,
+                    "array_size": 32,
+                    "description": "The value of the event",
+                    "name": [
+                        "trace",
+                        "value"
+                    ],
+                    "offset": 584,
+                    "total_size": 64,
+                    "type": "uint16_t",
+                    "type_size": 2
+                },
+                {
+                    "access": 0,
+                    "array_size": 32,
+                    "description": "The tick when the event occured",
+                    "name": [
+                        "trace",
+                        "tick"
+                    ],
+                    "offset": 648,
+                    "total_size": 128,
+                    "type": "uint32_t",
+                    "type_size": 4
+                },
+                {
+                    "access": 0,
+                    "array_size": 248,
                     "description": "Reserved bytes",
                     "name": [
                         "res"
                     ],
-                    "offset": 504,
-                    "total_size": 520,
+                    "offset": 776,
+                    "total_size": 248,
                     "type": "uint8_t",
                     "type_size": 1
                 }
@@ -1847,6 +2396,12 @@
                 },
                 {
                     "access": 0,
+                    "description": "The frequency of the system clock",
+                    "name": "sys_clk",
+                    "type": "uint32_t"
+                },
+                {
+                    "access": 0,
                     "description": "Status of system",
                     "name": "status",
                     "type": "sys_status_t"
@@ -1933,7 +2488,7 @@
                 },
                 {
                     "access": 0,
-                    "description": "Ticks for start and address",
+                    "description": "Holder when the start occured",
                     "name": "s_ticks",
                     "type": "uint32_t"
                 },
@@ -2013,6 +2568,12 @@
                     "access": 0,
                     "description": "Ticks per byte",
                     "name": "byte_ticks",
+                    "type": "uint32_t"
+                },
+                {
+                    "access": 0,
+                    "description": "Holder for previous byte ticks",
+                    "name": "prev_ticks",
                     "type": "uint32_t"
                 }
             ],
@@ -2152,6 +2713,64 @@
             "type_size": 16
         },
         {
+            "description": "Controls GPIO settings",
+            "elements": [
+                {
+                    "description": "The selected GPIO mode",
+                    "name": "mode",
+                    "type": "gpio_mode_t"
+                },
+                {
+                    "access": 0,
+                    "description": "The status of the GPIO",
+                    "name": "status",
+                    "type": "gpio_status_t"
+                }
+            ],
+            "type_name": "gpio_t",
+            "type_size": 4
+        },
+        {
+            "description": "Saved timestamps and events",
+            "elements": [
+                {
+                    "access": 0,
+                    "description": "Index of the current trace",
+                    "name": "index",
+                    "type": "uint32_t"
+                },
+                {
+                    "access": 0,
+                    "array_size": 32,
+                    "description": "The tick divisor of the event",
+                    "name": "tick_div",
+                    "type": "uint8_t"
+                },
+                {
+                    "access": 0,
+                    "array_size": 32,
+                    "description": "The event source of the event",
+                    "name": "source",
+                    "type": "uint8_t"
+                },
+                {
+                    "access": 0,
+                    "array_size": 32,
+                    "description": "The value of the event",
+                    "name": "value",
+                    "type": "uint16_t"
+                },
+                {
+                    "access": 0,
+                    "array_size": 32,
+                    "description": "The tick when the event occured",
+                    "name": "tick",
+                    "type": "uint32_t"
+                }
+            ],
+            "type_name": "trace_t"
+        },
+        {
             "description": "The memory map",
             "elements": [
                 {
@@ -2201,6 +2820,17 @@
                     "description": "",
                     "name": "tmr",
                     "type": "tmr_t"
+                },
+                {
+                    "array_size": 3,
+                    "description": "GPIO pins available",
+                    "name": "gpio",
+                    "type": "gpio_t"
+                },
+                {
+                    "description": "Saved timestamps and events",
+                    "name": "trace",
+                    "type": "trace_t"
                 }
             ],
             "generate_mem_map": true,

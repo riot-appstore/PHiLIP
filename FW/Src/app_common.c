@@ -107,4 +107,43 @@ inline void enable_interrupt() {
 inline void soft_reset() {
 	NVIC_SystemReset();
 }
+
+/** @brief	Gets tick value in amount to system tick (72 MHz). */
+uint64_t get_tick() {
+	uint32_t sys_tick;
+	uint32_t tick;
+	do {
+		sys_tick = SysTick->VAL;
+		tick = HAL_GetTick();
+	} while (SysTick->VAL > sys_tick);
+	return (tick << TICK_BIT_OFFSET) + (SysTick->LOAD - sys_tick);
+}
+
+/** @brief	Gets tick value in amount to system tick (72 MHz) in 32bit. */
+uint32_t get_tick32() {
+	uint32_t sys_tick;
+	uint32_t tick;
+	do {
+		sys_tick = SysTick->VAL;
+		tick = HAL_GetTick();
+	} while (SysTick->VAL > sys_tick);
+	return (uint32_t) (((uint32_t) tick << TICK_BIT_OFFSET)
+			+ (SysTick->LOAD - sys_tick));
+}
+
+/**
+ * @brief		Gets 32 bit tick shifted down by an amount.
+ *
+ * @param[in]	div		Divisor, divide ticks by 2^n
+ */
+uint32_t get_tick32_div(uint8_t div) {
+	uint32_t sys_tick;
+	uint32_t tick;
+	do {
+		sys_tick = SysTick->VAL;
+		tick = HAL_GetTick();
+	} while (SysTick->VAL > sys_tick);
+	return (uint32_t) (((uint32_t) (tick << (TICK_BIT_OFFSET - div))
+			+ ((SysTick->LOAD - sys_tick) >> div)));
+}
 /** @} */

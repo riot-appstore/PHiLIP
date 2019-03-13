@@ -5,7 +5,7 @@
  * @file      PHiLIP_typedef.h
  * @author    Kevin Weiss
  * @version   0.0.2
- * @date      2019-03-06
+ * @date      2019-03-14
  * @details   Generated from the memory map manager
  ******************************************************************************
  */
@@ -67,6 +67,9 @@ typedef struct {
 	uint8_t ovr : 1; /**< Overrun flag */
 	uint8_t modf : 1; /**< Mode fault */
 	uint8_t udr : 1; /**< Underrun flag */
+	uint8_t clk : 1; /**< Current reading of spi clock */
+	uint8_t start_clk : 1; /**< Clk reading when cs pin starts spi frame */
+	uint8_t end_clk : 1; /**< Clk reading when cs pin ends frame */
 	uint8_t index_err : 1; /**< Register index error */
 } spi_status_t;
 
@@ -89,6 +92,20 @@ typedef struct {
 	uint8_t nf : 1; /**< Noise detected flag */
 	uint8_t ore : 1; /**< Overrun error */
 } uart_status_t;
+
+/** @brief  IO pin mode control */
+typedef struct {
+	uint16_t init : 1; /**< initialize with new params */
+	uint16_t io_type : 2; /**< direction of io, in/outpp/outod/int */
+	uint16_t level : 1; /**< 0 for low, 1 for high, only if output */
+	uint16_t pull : 2; /**< pull of the resistor none/up/down */
+	uint16_t tick_div : 5; /**< for trace tick divisor */
+} gpio_mode_t;
+
+/** @brief  IO pin status */
+typedef struct {
+	uint8_t level : 1; /**< The io level of the pin, 0=low, 1=high */
+} gpio_status_t;
 
 /** @brief  Time and date */
 typedef union {
@@ -114,9 +131,10 @@ typedef union {
 		uint64_t tick; /**< Tick in ms */
 		timestamp_t build_time; /**< time of build */
 		uint32_t device_num; /**< A constant number that should always be the same */
+		uint32_t sys_clk; /**< The frequency of the system clock */
 		sys_status_t status; /**< Status of system */
 		sys_mode_t mode; /**< Control register for device */
-		uint8_t res[22]; /**< Reserved bytes */
+		uint8_t res[18]; /**< Reserved bytes */
 	};
 	uint8_t data8[64];/**< array for padding */
 } sys_t;
@@ -136,7 +154,7 @@ typedef union {
 		uint8_t w_count; /**< Last write frame byte count */
 		uint32_t r_ticks; /**< Ticks for read byte */
 		uint32_t w_ticks; /**< Ticks for write byte */
-		uint32_t s_ticks; /**< Ticks for start and address */
+		uint32_t s_ticks; /**< Holder when the start occured */
 		uint32_t f_r_ticks; /**< Ticks for full read frame */
 		uint32_t f_w_ticks; /**< Ticks for full write frame */
 		uint8_t res[28]; /**< Reserved bytes */
@@ -157,7 +175,8 @@ typedef union {
 		uint8_t transfer_count; /**< The amount of bytes in the last transfer  */
 		uint32_t frame_ticks; /**< Ticks per frame */
 		uint32_t byte_ticks; /**< Ticks per byte */
-		uint8_t res[13]; /**< Reserved bytes */
+		uint32_t prev_ticks; /**< Holder for previous byte ticks */
+		uint8_t res[9]; /**< Reserved bytes */
 	};
 	uint8_t data8[32];/**< array for padding */
 } spi_t;
@@ -213,6 +232,28 @@ typedef union {
 	uint8_t data8[16];/**< array for padding */
 } tmr_t;
 
+/** @brief  Controls GPIO settings */
+typedef union {
+	struct {
+		gpio_mode_t mode; /**< The selected GPIO mode */
+		gpio_status_t status; /**< The status of the GPIO */
+		uint8_t res[1]; /**< Reserved bytes */
+	};
+	uint8_t data8[4];/**< array for padding */
+} gpio_t;
+
+/** @brief  Saved timestamps and events */
+typedef union {
+	struct {
+		uint32_t index; /**< Index of the current trace */
+		uint8_t tick_div[32]; /**< The tick divisor of the event */
+		uint8_t source[32]; /**< The event source of the event */
+		uint16_t value[32]; /**< The value of the event */
+		uint32_t tick[32]; /**< The tick when the event occured */
+	};
+	uint8_t data8[260];/**< array for padding */
+} trace_t;
+
 /** @brief  The memory map */
 typedef union {
 	struct {
@@ -225,7 +266,9 @@ typedef union {
 		adc_t adc[2]; /**<  */
 		pwm_t pwm; /**<  */
 		tmr_t tmr; /**<  */
-		uint8_t res[520]; /**< Reserved bytes */
+		gpio_t gpio[3]; /**< GPIO pins available */
+		trace_t trace; /**< Saved timestamps and events */
+		uint8_t res[248]; /**< Reserved bytes */
 	};
 	uint8_t data8[1024];/**< array for padding */
 } map_t;

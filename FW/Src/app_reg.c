@@ -46,8 +46,10 @@
 #include "app_access.h"
 #include "app_reg.h"
 
+#include "gpio.h"
 #include "uart.h"
 #include "i2c.h"
+#include "spi.h"
 #include "sys.h"
 
 /* Private variables ---------------------------------------------------------*/
@@ -80,7 +82,9 @@ void init_app_reg(map_t *reg, map_t *saved_reg) {
  * @return      ERRNO error code
  */
 error_t execute_reg_change() {
+	commit_debug();
 	commit_dut_i2c();
+	commit_dut_spi();
 	commit_dut_uart();
 	commit_sys();
 

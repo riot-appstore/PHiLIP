@@ -74,7 +74,6 @@
 #define DUT_UART_DMA_RX_INT	DMA1_Channel3_IRQHandler
 #define DUT_UART_DMA_TX_INT	DMA1_Channel2_IRQHandler
 #define DUT_UART_INT		USART3_IRQHandler
-#define GPIO_INT			EXTI15_10_IRQHandler
 
 #define IF_UART				USART1
 #define IF_UART_DMA_RX_INT	DMA1_Channel5_IRQHandler
@@ -82,6 +81,16 @@
 
 #define DUT_SPI				SPI1
 #define DUT_SPI_INT			SPI1_IRQHandler
+
+#define GPIO_NSS_CTS_IRQ	EXTI15_10_IRQn
+#define GPIO_DEBUG0_IRQ		EXTI0_IRQn
+#define GPIO_DEBUG1_IRQ		EXTI1_IRQn
+#define GPIO_DEBUG2_IRQ		EXTI2_IRQn
+
+#define GPIO_NSS_CTS_INT	EXTI15_10_IRQHandler
+#define GPIO_DEBUG0_INT		EXTI0_IRQHandler
+#define GPIO_DEBUG1_INT		EXTI1_IRQHandler
+#define GPIO_DEBUG2_INT		EXTI2_IRQHandler
 #endif
 
 #ifdef NUCLEOF103RB
@@ -154,7 +163,16 @@
 #define DUT_UART_DMA_RX_INT	DMA1_Channel5_IRQHandler
 #define DUT_UART_DMA_TX_INT	DMA1_Channel4_IRQHandler
 #define DUT_UART_INT		USART1_IRQHandler
-#define GPIO_INT			EXTI15_10_IRQHandler
+
+#define GPIO_NSS_CTS_IRQ	EXTI15_10_IRQn
+#define GPIO_DEBUG0_IRQ		EXTI3_IRQn
+#define GPIO_DEBUG1_IRQ		EXTI4_IRQn
+#define GPIO_DEBUG2_IRQ		EXTI9_5_IRQn
+
+#define GPIO_NSS_CTS_INT	EXTI15_10_IRQHandler
+#define GPIO_DEBUG0_INT		EXTI3_IRQHandler
+#define GPIO_DEBUG1_INT		EXTI4_IRQHandler
+#define GPIO_DEBUG2_INT		EXTI9_5_IRQHandler
 
 #define IF_UART				USART2
 #define IF_UART_DMA_RX_INT	DMA1_Channel6_IRQHandler

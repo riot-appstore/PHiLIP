@@ -52,6 +52,9 @@
  */
 #define SOFT_RESET	soft_reset()
 
+/** @brief	Bit shifting ticks. */
+#define TICK_BIT_OFFSET 16
+
 /* Function prototypes -------------------------------------------------------*/
 /**
  * @brief  		Imprecise blocking delay in microseconds.
@@ -78,6 +81,19 @@ void enable_interrupt();
 
 /** @brief	Wrapper function to provide software reset. */
 void soft_reset();
+
+/** @brief	Gets tick value in amount to system tick (72 MHz). */
+uint64_t get_tick();
+
+/** @brief	Gets tick value in amount to system tick (72 MHz) in 32bit. */
+uint32_t get_tick32();
+
+/**
+ * @brief		Gets 32 bit tick shifted down by an amount.
+ *
+ * @param[in]	div		Divisor, divide ticks by 2^n
+ */
+uint32_t get_tick32_div(uint8_t div);
 
 #endif /* APP_COMMON_H_ */
 /** @} */

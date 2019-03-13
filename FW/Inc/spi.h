@@ -63,6 +63,12 @@ void init_dut_spi(map_t *reg, map_t *saved_reg);
 error_t commit_dut_spi();
 
 /**
+ * @brief		Updates the spi input levels.
+ */
+void update_dut_spi_inputs();
+
+/* Interrupts ----------------------------------------------------------------*/
+/**
  * @brief Interrupt for the spi line raise or lower
  */
 void dut_nss_int();

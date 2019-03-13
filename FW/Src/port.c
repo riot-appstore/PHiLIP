@@ -4,8 +4,9 @@
  *  Created on: Jul 18, 2018
  *      Author: kevinweiss
  */
-#include "port.h"
 #include "stm32f1xx_hal.h"
+#include "app_common.h"
+#include "port.h"
 
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 extern void _Error_Handler(char *, int);
@@ -508,7 +509,7 @@ void SystemClock_Config(void) {
 
 	/**Configure the Systick interrupt time
 	 */
-	HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq() / 1000);
+	HAL_SYSTICK_Config((1UL)<<TICK_BIT_OFFSET);
 
 	/**Configure the Systick
 	 */
