@@ -153,8 +153,8 @@ static inline error_t _commit_spi(spi_dev *dev) {
 		if (spi->mode.cpol) {
 			hspi_inst->Init.CLKPolarity = SPI_POLARITY_HIGH;
 		}
-
-		spi->mode.if_type = SPI_IF_TYPE_CONST;
+		dut_spi.reg->frame_ticks = 0;
+		dut_spi.reg->prev_ticks = 0;
 		dev->initial_byte = SPI_NO_DATA_BYTE;
 		if (spi->mode.if_type == SPI_IF_TYPE_REG) {
 			dev->if_mode_int = _spi_reg_int;
@@ -173,7 +173,7 @@ static inline error_t _commit_spi(spi_dev *dev) {
 		}
 
 		spi->mode.init = 1;
-		copy_until_same(dev->saved_reg, dev->reg, sizeof(dev->saved_reg));
+		copy_until_same(dev->saved_reg, dev->reg, sizeof(*(dev->saved_reg)));
 
 		__HAL_SPI_ENABLE(hspi_inst);
 		hspi_inst->Instance->DR = dev->initial_byte;
@@ -185,6 +185,12 @@ static inline error_t _commit_spi(spi_dev *dev) {
 	return ENOACTION;
 }
 
+/**
+ * @brief		Updates the spi input levels.
+ */
+void update_dut_spi_inputs() {
+	dut_spi.reg->status.clk = HAL_GPIO_ReadPin(DUT_SCK);
+}
 /* Interrupts ----------------------------------------------------------------*/
 /**
  * @brief This function handles DUT_SPI global interrupt.
@@ -229,7 +235,6 @@ static void _spi_reg_int() {
 			}
 			add_index(&dut_spi.reg->reg_index);
 			spi->transfer_count++;
-			// get ticks per byte
 		}
 	}
 }
@@ -265,21 +270,30 @@ static void _spi_echo_int() {
 	}
 }
 
+#pragma GCC push_options
+#pragma GCC optimize ("O3")
 static void _spi_const_int() {
 	if (dut_spi.hspi.Instance->SR & SPI_FLAG_RXNE) {
+		(void)dut_spi.hspi.Instance->DR;
+		dut_spi.reg->byte_ticks = get_tick32() - dut_spi.reg->prev_ticks;
+		dut_spi.reg->prev_ticks += dut_spi.reg->byte_ticks;
 		dut_spi.reg->transfer_count++;
 	}
 }
+#pragma GCC pop_options
 
 /**
  * @brief Interrupt for the spi line raise or lower
  */
+#pragma GCC push_options
+#pragma GCC optimize ("O3")
 void dut_nss_int() {
 	if (HAL_GPIO_ReadPin(DUT_NSS)) {
 		/* Finished frame */
 		uint32_t itflag = dut_spi.hspi.Instance->SR;
 
-		//end frame tick
+		dut_spi.reg->frame_ticks = get_tick32() - dut_spi.reg->frame_ticks;
+		dut_spi.reg->status.end_clk = HAL_GPIO_ReadPin(DUT_SCK);
 
 		/* read error flags */
 		memset(&dut_spi.reg->status, 0, sizeof(dut_spi.reg->status));
@@ -304,14 +318,24 @@ void dut_nss_int() {
 		dut_spi.reg->state = SPI_FRAME_FINISHED;
 	} else {
 		/* Starting frame */
+		if (dut_spi.reg->mode.if_type == SPI_IF_TYPE_CONST) {
+			dut_spi.reg->transfer_count = 0;
+			dut_spi.reg->frame_ticks = get_tick32();
+			dut_spi.reg->prev_ticks = dut_spi.reg->frame_ticks;
+			if (dut_spi.hspi.Instance->SR & SPI_FLAG_RXNE) {
+				(void)dut_spi.hspi.Instance->DR;
+				dut_spi.reg->transfer_count = 1;
+			}
+			return;
+		}
+		dut_spi.reg->status.start_clk = HAL_GPIO_ReadPin(DUT_SCK);
 		dut_spi.hspi.Instance->DR = dut_spi.initial_byte;
 		dut_spi.reg->transfer_count = 0;
 		if (dut_spi.reg->mode.if_type == SPI_IF_TYPE_ECHO) {
-			dut_spi.reg->state = SPI_TRANSFERING;
 			return;
 		}
 		dut_spi.reg->reg_index = 0;
 		dut_spi.reg->state = SPI_FRAME_STARTED;
-
 	}
 }
+#pragma GCC pop_options

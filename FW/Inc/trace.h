@@ -26,45 +26,47 @@
  ******************************************************************************
  * @addtogroup periph
  * @{
- * @file			sys.h
+ * @file			trace.h
  * @author			Kevin Weiss
- * @date			13.02.2019
- * @brief			System control and management.
- * @details			Deals with build times, serial numbers, ticks, etc.
+ * @date			12.03.2019
+ * @brief			Used for logging traces.
  ******************************************************************************
  */
+#ifndef TRACE_H_
+#define TRACE_H_
 
-#ifndef SYS_H_
-#define SYS_H_
+/* Defines -------------------------------------------------------------------*/
+/** @brief  	The sources of an event. */
+enum EVENT_SOURCES {
+	SOURCE_NONE, /**< No source selected, should be invalid */
+	SOURCE_DEBUG0, /**< Source is from DEBUG0 pin */
+	SOURCE_DEBUG1, /**< Source is from DEBUG1 pin */
+	SOURCE_DEBUG2 /**< Source is from DEBUG2 pin */
+};
+
+/** @brief  	Type of trigger causing the event. */
+enum EVENT_TYPE {
+	EVENT_TYPE_FALLING, /**< Falling edge interrupt */
+	EVENT_TYPE_RISING /**< Rising edge interrupt */
+};
+
 
 /* Function prototypes -------------------------------------------------------*/
 /**
- * @brief		Initializes system registers.
+ * @brief		Initializes trace register.
  *
  * @param[in]	reg			Pointer to live register memory map
- * @param[in]	saved_reg	Pointer to saved register memory map
- * @note		Populates system defaults registers and assigns system register
- * 				pointers.
+ * @note		No saved reg is needed since nothing is configurable
  */
-void init_sys(map_t *reg, map_t *saved_reg);
-
+void init_trace(map_t *reg);
 /**
- * @brief		Commits the system registers and executes operations.
+ * @brief		Stores an gpio toggle event.
  *
- * @pre			sys must first be initialized with init_sys()
- * @return      EOK if init occurred
- * @return      ENOACTION if no init was triggered
- *
- * @note		Only executes actions if the sys.mode.init is set.  Update will
- * 				always be reset.
+ * @param[in]	tick_div	Divides ticks by power of 2
+ * @param[in]	source		The source of the event
+ * @param[in]	value		The value from the event
  */
-error_t commit_sys();
+void store_gpio_trace(uint8_t tick_div, uint8_t source, uint16_t value);
 
-/**
- * @brief		Updates the tick count to the app reg.
- *
- * @note		May have concurrent access issues.
- */
-void update_tick();
-#endif /* SYS_H_ */
+#endif /* TRACE_H_ */
 /** @} */

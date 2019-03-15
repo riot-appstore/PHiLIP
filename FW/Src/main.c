@@ -44,6 +44,7 @@
 
 #include "app_reg.h"
 #include "app_shell_if.h"
+#include "trace.h"
 #include "gpio.h"
 #include "i2c.h"
 #include "uart.h"
@@ -71,24 +72,26 @@ int main(void) {
 	init_clock();
 
 	/* Initialize all configured peripherals */
+	DIS_INT;
 	init_periphs();
-
-	init_gpio();
+	init_gpio(&reg, &saved_reg);
 	init_app_reg(&reg, &saved_reg);
+	init_trace(&reg);
 	init_dut_uart(&reg, &saved_reg);
 	init_if_uart();
 	init_dut_i2c(&reg, &saved_reg);
 	init_dut_spi(&reg, &saved_reg);
 	init_sys(&reg, &saved_reg);
+	EN_INT;
 
 	while (1) {
-
 		if (led_tick < HAL_GetTick()) {
-			led_tick = HAL_GetTick() + 500;
+			led_tick = HAL_GetTick() + 20;
 			HAL_GPIO_TogglePin(LED0);
-		}
-
-		if (HAL_IWDG_Refresh(&hiwdg) != HAL_OK) {
+			HAL_IWDG_Refresh(&hiwdg);
+			update_tick();
+			update_debug_inputs();
+			update_dut_spi_inputs();
 		}
 		poll_dut_uart();
 		poll_if_uart();

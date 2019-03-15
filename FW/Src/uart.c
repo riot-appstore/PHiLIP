@@ -229,6 +229,9 @@ static error_t _commit_uart(uart_dev_t *dev) {
 		uart->tx_count = 0;
 		memset(&uart->status, 0, sizeof(uart->status));
 
+		uart->mode.init = 1;
+		copy_until_same(dev->saved_reg, dev->reg, sizeof(*(dev->saved_reg)));
+
 		return EOK;
 	}
 	return ENOACTION;

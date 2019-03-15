@@ -71,10 +71,15 @@ typedef struct {
 
 /* Private defines -----------------------------------------------------------*/
 /** @brief	convert 7 but i2c address */
-#define CONVERT_7ADDR(x)	((x<<1)&0xFF)
+#define CONVERT_7ADDR(x)		((x<<1)&0xFF)
 
 /** @brief	convert 10 but i2c address */
-#define CONVERT_10ADDR(x)	((x<<1)&0x07FF)
+#define CONVERT_10ADDR(x)		((x<<1)&0x07FF)
+
+/** @brief	Check all i2c writing states */
+#define IS_STATE_WRITING(x)	 	(x == I2C_WRITE_ADDRESS_RECEIVED || \
+								x == I2C_WRITE_1ST_REG_BYTE_RECEIVED || \
+								x == I2C_WRITING_DATA)
 
 /* Private function prototypes -----------------------------------------------*/
 static inline error_t _commit_i2c(i2c_dev *dev);
@@ -161,7 +166,7 @@ static inline error_t _commit_i2c(i2c_dev *dev) {
 		hi2c_inst->Instance->CR1 |= I2C_CR1_ACK;
 		__HAL_I2C_ENABLE_IT(hi2c_inst, I2C_IT_EVT | I2C_IT_BUF | I2C_IT_ERR);
 		i2c->mode.init = 1;
-		copy_until_same(dev->saved_reg, dev->reg, sizeof(dev->saved_reg));
+		copy_until_same(dev->saved_reg, dev->reg, sizeof(*(dev->saved_reg)));
 		return EOK;
 	}
 	return ENOACTION;
@@ -187,6 +192,7 @@ static void _i2c_slave_addr(i2c_dev *dev) {
 	i2c_t *i2c = dev->reg;
 	/* Transfer Direction requested by Master */
 	if (__HAL_I2C_GET_FLAG(hi2c, I2C_FLAG_TRA) == RESET) {
+		i2c->f_w_ticks = get_tick32();
 		i2c->state = I2C_WRITE_ADDRESS_RECEIVED;
 		i2c->w_count = 0;
 	} else {
@@ -194,11 +200,16 @@ static void _i2c_slave_addr(i2c_dev *dev) {
 		if (i2c->clk_stretch_delay != 0) {
 			delay_us(i2c->clk_stretch_delay);
 		}
-		read_reg(i2c->reg_index, (uint8_t*) &hi2c->Instance->DR);
+		unprotected_read_uint8(i2c->reg_index, (uint8_t*) &hi2c->Instance->DR);
 		add_index(&i2c->reg_index);
+		if (IS_STATE_WRITING(i2c->state)) {
+			i2c->f_w_ticks = get_tick32() - i2c->s_ticks;
+		}
+		i2c->f_r_ticks = get_tick32();
 		i2c->state = I2C_READING_DATA;
 		i2c->r_count = 1;
 	}
+	i2c->s_ticks = get_tick32();
 	if (READ_REG(hi2c->Instance->SR2) & I2C_FLAG_GENCALL) {
 		i2c->status.gencall = 1;
 	} else {
@@ -225,13 +236,22 @@ static void _i2c_it(i2c_dev *dev) {
 	} else if (((sr1itflags & I2C_FLAG_STOPF) != RESET)
 			&& ((itsources & I2C_IT_EVT) != RESET)) {
 		__HAL_I2C_CLEAR_STOPFLAG(hi2c);
+		if(i2c->state == I2C_READING_DATA) {
+			i2c->f_r_ticks = get_tick32() - i2c->s_ticks;
+		}
+		else if (IS_STATE_WRITING(i2c->state)){
+			i2c->f_w_ticks = get_tick32() - i2c->s_ticks;
+		}
+		i2c->state = I2C_STOPPED;
 	} else if ((sr2itflags & I2C_FLAG_TRA) != RESET) {
 		if (((sr1itflags & I2C_FLAG_TXE) != RESET)
 				&& ((itsources & I2C_IT_BUF) != RESET)
 				&& ((sr1itflags & I2C_FLAG_BTF) == RESET)) {
-			read_reg(i2c->reg_index, (uint8_t*) &hi2c->Instance->DR);
+			unprotected_read_uint8(i2c->reg_index, (uint8_t*) &hi2c->Instance->DR);
 			add_index(&(i2c->reg_index));
 			i2c->r_count++;
+			i2c->r_ticks = get_tick32() - i2c->f_r_ticks ;
+			i2c->f_r_ticks = get_tick32();
 		} else if (((sr1itflags & I2C_FLAG_BTF) != RESET)
 				&& ((itsources & I2C_IT_EVT) != RESET)) {
 		}
@@ -240,6 +260,8 @@ static void _i2c_it(i2c_dev *dev) {
 			&& ((sr1itflags & I2C_FLAG_BTF) == RESET)))
 			|| (((sr1itflags & I2C_FLAG_BTF) != RESET)
 					&& ((itsources & I2C_IT_EVT) != RESET))) {
+		i2c->w_ticks = get_tick32() - i2c->f_w_ticks ;
+		i2c->f_w_ticks = get_tick32();
 		if (i2c->state == I2C_WRITE_ADDRESS_RECEIVED) {
 			if (i2c->mode.reg_16_bit) {
 				i2c->state = I2C_WRITE_1ST_REG_BYTE_RECEIVED;
@@ -274,6 +296,12 @@ static void _i2c_err(i2c_dev *dev) {
 	uint32_t sr1itflags = READ_REG(hi2c->Instance->SR1);
 	uint32_t itsources = READ_REG(hi2c->Instance->CR2);
 
+	if(i2c->state == I2C_READING_DATA) {
+		i2c->f_r_ticks = get_tick32() - i2c->s_ticks;
+	}
+	else if (IS_STATE_WRITING(i2c->state)){
+		i2c->f_w_ticks = get_tick32() - i2c->s_ticks;
+	}
 	if (((sr1itflags & I2C_FLAG_AF) != RESET)
 			&& ((itsources & I2C_IT_ERR) != RESET)) {
 		sub_index(&i2c->reg_index);

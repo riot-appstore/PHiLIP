@@ -42,7 +42,46 @@
 /**
  * @brief		Initializes gpio directions, states and interrupt settings.
  */
-void init_gpio();
+void init_gpio(map_t *reg, map_t *saved_reg);
 
+/**
+ * @brief		Commits the gpio registers and executes operations.
+ *
+ * @pre			gpio must first be initialized with init_gpio()
+ * @return      EOK if init occurred
+ * @return      EINVAL if invalid setting
+ * @return      ENOACTION if no init was triggered
+ *
+ * @note		Only executes actions if the spi.mode.init is set.
+ */
+error_t commit_debug();
+
+/**
+ * @brief		Updates the DEBUG input levels.
+ */
+void update_debug_inputs();
+
+/* Interrupts ----------------------------------------------------------------*/
+/**
+ * @brief 	Interrupt for NSS and CTS triggering
+ * @note 	This is a shared interrupt, both functions being used at the same
+ * 			time should be avoided.
+ */
+void GPIO_NSS_CTS_INT();
+
+/**
+ * @brief 	Interrupt for the DEBUG0 triggering when interrupt mode set
+ */
+void GPIO_DEBUG0_INT();
+
+/**
+ * @brief 	Interrupt for the DEBUG1 triggering when interrupt mode set
+ */
+void GPIO_DEBUG1_INT();
+
+/**
+ * @brief 	Interrupt for the DEBUG2 triggering when interrupt mode set
+ */
+void GPIO_DEBUG2_INT();
 #endif /* GPIO_H_ */
 /** @} */

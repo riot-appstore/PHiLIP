@@ -86,6 +86,8 @@ void init_sys(map_t *reg, map_t *saved_reg) {
 
 	sys_reg->device_num = DEFAULT_SYS_DEVICE_NUM;
 
+	sys_reg->sys_clk = SystemCoreClock;
+
 	commit_sys();
 }
 
@@ -117,4 +119,13 @@ error_t commit_sys() {
 
 	copy_until_same(saved_sys_inst, sys_inst, sizeof(*sys_inst));
 	return ret;
+}
+
+/**
+ * @brief		Updates the tick count to the app reg.
+ *
+ * @note		May have concurrent access issues.
+ */
+void update_tick() {
+	 sys_reg->tick = get_tick();
 }
