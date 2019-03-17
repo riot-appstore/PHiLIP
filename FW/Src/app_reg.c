@@ -36,6 +36,7 @@
  */
 
 /* Includes ------------------------------------------------------------------*/
+#include <errno.h>
 #include <stdint.h>
 
 #include "stm32f1xx_hal.h"
@@ -50,6 +51,7 @@
 #include "uart.h"
 #include "i2c.h"
 #include "spi.h"
+#include "pwm_dac.h"
 #include "sys.h"
 
 /* Private variables ---------------------------------------------------------*/
@@ -85,6 +87,8 @@ error_t execute_reg_change() {
 	commit_debug();
 	commit_dut_i2c();
 	commit_dut_spi();
+	commit_dut_pwm();
+	commit_dut_dac();
 	commit_dut_uart();
 	commit_sys();
 

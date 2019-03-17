@@ -13,10 +13,6 @@ cache:
   directories:
     - $HOME/gcc-arm-none-eabi-7-2017-q4-major
 
-env:
-  - BOARD=BLUEPILL
-  - BOARD=NUCLEOF103RB
-
 install:
   - export GCC_DIR=$HOME/gcc-arm-none-eabi-7-2017-q4-major
   - export GCC_ARCHIVE=$HOME/gcc-arm-none-eabi-7-2017-q4-major-linux.tar.bz2

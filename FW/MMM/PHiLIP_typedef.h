@@ -5,7 +5,7 @@
  * @file      PHiLIP_typedef.h
  * @author    Kevin Weiss
  * @version   0.0.2
- * @date      2019-03-14
+ * @date      2019-03-17
  * @details   Generated from the memory map manager
  ******************************************************************************
  */
@@ -107,6 +107,12 @@ typedef struct {
 	uint8_t level : 1; /**< The io level of the pin, 0=low, 1=high */
 } gpio_status_t;
 
+/** @brief  Basic mode settings */
+typedef struct {
+	uint8_t init : 1; /**< initialize with new params */
+	uint8_t disable : 1; /**< disable periph functionality */
+} basic_mode_t;
+
 /** @brief  Time and date */
 typedef union {
 	struct {
@@ -207,17 +213,30 @@ typedef union {
 	uint8_t data8[16];/**< array for padding */
 } adc_t;
 
-/** @brief  unimplemented PWM */
+/** @brief  Controls and calculates PWM values */
 typedef union {
 	struct {
-		uint8_t mode; /**<  */
-		uint16_t error_code; /**<  */
-		uint8_t duty; /**<  */
-		uint32_t freq; /**<  */
-		uint8_t res[8]; /**< Reserved bytes */
+		basic_mode_t mode; /**<  */
+		uint8_t status; /**< Unimplemented status for padding */
+		uint16_t duty_cycle; /**< The calculated duty cycle in percent/100 */
+		uint32_t period; /**< The calculated period in ticks */
+		uint32_t h_ticks; /**< Settable high time in sys clock ticks */
+		uint32_t l_ticks; /**< Settable low time in sys clock ticks */
+		uint8_t res[16]; /**< Reserved bytes */
+	};
+	uint8_t data8[32];/**< array for padding */
+} pwm_t;
+
+/** @brief  Controls and calculates PWM values */
+typedef union {
+	struct {
+		basic_mode_t mode; /**<  */
+		uint8_t status; /**< Unimplemented status for padding */
+		uint16_t level; /**< The percent/100 of output level */
+		uint8_t res[12]; /**< Reserved bytes */
 	};
 	uint8_t data8[16];/**< array for padding */
-} pwm_t;
+} dac_t;
 
 /** @brief  unimplemented TMR */
 typedef union {
@@ -264,11 +283,12 @@ typedef union {
 		uart_t uart; /**<  */
 		timestamp_t rtc; /**<  */
 		adc_t adc[2]; /**<  */
-		pwm_t pwm; /**<  */
+		pwm_t pwm; /**< PWM configuration */
+		dac_t dac; /**< DAC configuration */
 		tmr_t tmr; /**<  */
 		gpio_t gpio[3]; /**< GPIO pins available */
 		trace_t trace; /**< Saved timestamps and events */
-		uint8_t res[248]; /**< Reserved bytes */
+		uint8_t res[216]; /**< Reserved bytes */
 	};
 	uint8_t data8[1024];/**< array for padding */
 } map_t;

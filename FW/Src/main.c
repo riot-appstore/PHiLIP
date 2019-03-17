@@ -33,6 +33,7 @@
  */
 
 /* Includes ------------------------------------------------------------------*/
+#include <errno.h>
 #include <stdint.h>
 
 #include "stm32f1xx_hal.h"
@@ -49,12 +50,11 @@
 #include "i2c.h"
 #include "uart.h"
 #include "spi.h"
+#include "pwm_dac.h"
 #include "sys.h"
 #include "port.h"
 
 #include "test.h"
-
-
 /* Private variables ---------------------------------------------------------*/
 /** @brief  Watchdog timer handle. */
 extern IWDG_HandleTypeDef hiwdg;
@@ -77,6 +77,7 @@ int main(void) {
 	init_gpio(&reg, &saved_reg);
 	init_app_reg(&reg, &saved_reg);
 	init_trace(&reg);
+	init_dut_pwm_dac(&reg, &saved_reg);
 	init_dut_uart(&reg, &saved_reg);
 	init_if_uart();
 	init_dut_i2c(&reg, &saved_reg);
