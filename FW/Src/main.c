@@ -51,6 +51,7 @@
 #include "uart.h"
 #include "spi.h"
 #include "pwm_dac.h"
+#include "rtc.h"
 #include "sys.h"
 #include "port.h"
 
@@ -82,6 +83,7 @@ int main(void) {
 	init_if_uart();
 	init_dut_i2c(&reg, &saved_reg);
 	init_dut_spi(&reg, &saved_reg);
+	init_rtc(&reg);
 	init_sys(&reg, &saved_reg);
 	EN_INT;
 
@@ -93,6 +95,7 @@ int main(void) {
 			update_tick();
 			update_debug_inputs();
 			update_dut_spi_inputs();
+			update_rtc();
 		}
 		poll_dut_uart();
 		poll_if_uart();
