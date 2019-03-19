@@ -8,7 +8,6 @@
 #include "app_common.h"
 #include "port.h"
 
-void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 extern void _Error_Handler(char *, int);
 
 ADC_HandleTypeDef hadc_pm;
@@ -130,48 +129,6 @@ static void MX_TIM1_Init(void) {
 	if (HAL_TIM_IC_ConfigChannel(&htim_ic, &sConfigIC, TIM_CHANNEL_1) != HAL_OK) {
 		_Error_Handler(__FILE__, __LINE__);
 	}
-
-}
-
-/* TIM4 init function */
-static void MX_TIM4_Init(void) {
-
-	TIM_MasterConfigTypeDef sMasterConfig;
-	TIM_OC_InitTypeDef sConfigOC;
-
-	htim_pwm.Instance = TIM4;
-	htim_pwm.Init.Prescaler = 0;
-	htim_pwm.Init.CounterMode = TIM_COUNTERMODE_UP;
-	htim_pwm.Init.Period = 0;
-	htim_pwm.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-	htim_pwm.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-	if (HAL_TIM_PWM_Init(&htim_pwm) != HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-	sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-	sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-	if (HAL_TIMEx_MasterConfigSynchronization(&htim_pwm, &sMasterConfig)
-			!= HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-	sConfigOC.OCMode = TIM_OCMODE_PWM1;
-	sConfigOC.Pulse = 1;
-	sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
-	sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
-	if (HAL_TIM_PWM_ConfigChannel(&htim_pwm, &sConfigOC, TIM_CHANNEL_3)
-			!= HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-	sConfigOC.Pulse = 32768;
-	if (HAL_TIM_PWM_ConfigChannel(&htim_pwm, &sConfigOC, TIM_CHANNEL_4)
-			!= HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-	HAL_TIM_MspPostInit(&htim_pwm);
 
 }
 
@@ -382,58 +339,6 @@ static void MX_TIM1_Init(void) {
 
 }
 
-/* TIM3 init function */
-static void MX_TIM3_Init(void) {
-
-	TIM_ClockConfigTypeDef sClockSourceConfig;
-	TIM_MasterConfigTypeDef sMasterConfig;
-	TIM_OC_InitTypeDef sConfigOC;
-
-	htim_pwm.Instance = TIM3;
-	htim_pwm.Init.Prescaler = 0;
-	htim_pwm.Init.CounterMode = TIM_COUNTERMODE_UP;
-	htim_pwm.Init.Period = 0;
-	htim_pwm.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-	htim_pwm.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-	if (HAL_TIM_Base_Init(&htim_pwm) != HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-	sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-	if (HAL_TIM_ConfigClockSource(&htim_pwm, &sClockSourceConfig) != HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-	if (HAL_TIM_PWM_Init(&htim_pwm) != HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-	sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-	sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-	if (HAL_TIMEx_MasterConfigSynchronization(&htim_pwm, &sMasterConfig)
-			!= HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-	sConfigOC.OCMode = TIM_OCMODE_PWM1;
-	sConfigOC.Pulse = 1;
-	sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
-	sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
-	if (HAL_TIM_PWM_ConfigChannel(&htim_pwm, &sConfigOC, TIM_CHANNEL_3)
-			!= HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-	sConfigOC.Pulse = 32768;
-	if (HAL_TIM_PWM_ConfigChannel(&htim_pwm, &sConfigOC, TIM_CHANNEL_4)
-			!= HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-	HAL_TIM_MspPostInit(&htim_pwm);
-
-}
-
 /**
  * Enable DMA controller clock
  */
@@ -509,7 +414,7 @@ void SystemClock_Config(void) {
 
 	/**Configure the Systick interrupt time
 	 */
-	HAL_SYSTICK_Config((1UL)<<TICK_BIT_OFFSET);
+	HAL_SYSTICK_Config((1UL) << TICK_BIT_OFFSET);
 
 	/**Configure the Systick
 	 */
@@ -601,18 +506,10 @@ void _Error_Handler(char *file, int line) {
 
 void init_periphs(void) {
 	/* Prevents i2c clk from toggling at init */
-	__HAL_RCC_I2C1_CLK_ENABLE();
+	__HAL_RCC_I2C1_CLK_ENABLE()
+	;
 
 	MX_DMA_Init();
-
-#ifdef BLUEPILL
-	MX_TIM4_Init();
-
-#endif
-#ifdef NUCLEOF103RB
-	MX_TIM3_Init();
-#endif
-
 	MX_TIM1_Init();
 	MX_ADC1_Init();
 	MX_ADC2_Init();

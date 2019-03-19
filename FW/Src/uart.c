@@ -178,7 +178,7 @@ void init_if_uart() {
  * @return      EOK if init occurred
  * @return      ENOACTION if no init was triggered
  *
- * @note		Only executes actions if the uart.mode.init is set.
+ * @note		Only executes actions if the uart.mode.init is clear.
  */
 error_t commit_dut_uart() {
 	return _commit_uart(&dut_uart);

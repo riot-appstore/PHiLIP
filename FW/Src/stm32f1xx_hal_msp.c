@@ -563,13 +563,12 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef* htim) {
 		 PC8     ------> TIM3_CH3
 		 PC9     ------> TIM3_CH4
 		 */
+
 		GPIO_InitStruct.Pin = DUT_PWM_Pin | DUT_DAC_Pin;
 		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
 		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
 		HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-
-		__HAL_AFIO_REMAP_TIM3_ENABLE()
-		;
+		__HAL_AFIO_REMAP_TIM3_ENABLE();
 
 	}
 #endif

@@ -84,15 +84,11 @@ static gpio_dev debug_gpio[3];
 void init_gpio(map_t *reg, map_t *saved_reg) {
 	GPIO_InitTypeDef GPIO_InitStruct;
 	/* GPIO Ports Clock Enable */
-	__HAL_RCC_GPIOC_CLK_ENABLE()
-	;
-	__HAL_RCC_GPIOD_CLK_ENABLE()
-	;
-	__HAL_RCC_GPIOA_CLK_ENABLE()
-	;
-	__HAL_RCC_GPIOB_CLK_ENABLE()
-	;
-
+	__HAL_RCC_GPIOC_CLK_ENABLE();
+	__HAL_RCC_GPIOD_CLK_ENABLE();
+	__HAL_RCC_GPIOA_CLK_ENABLE();
+	__HAL_RCC_GPIOB_CLK_ENABLE();
+	EN_RCC_DUT_I2C_CLK;
 	/*Configure GPIO pin Output Level */
 	HAL_GPIO_WritePin(GPIOA,
 	TEST_WARN_Pin | TEST_FAIL_Pin | TEST_PASS_Pin | LED0_Pin | DUT_RTS_Pin,
@@ -135,6 +131,12 @@ void init_gpio(map_t *reg, map_t *saved_reg) {
 	GPIO_InitStruct.Pull = GPIO_PULLUP;
 	HAL_GPIO_Init(DUT_NSS_GPIO_Port, &GPIO_InitStruct);
 
+	GPIO_InitStruct.Pin = DUT_PWM_Pin | DUT_DAC_Pin;
+	GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+	HAL_GPIO_Init(DUT_PWM_GPIO_Port, &GPIO_InitStruct);
+	PWM_DAC_REMAP;
+
 	HAL_NVIC_SetPriority(GPIO_NSS_CTS_IRQ, 0, 0);
 	HAL_NVIC_SetPriority(GPIO_DEBUG0_IRQ, 0, 0);
 	HAL_NVIC_SetPriority(GPIO_DEBUG1_IRQ, 0, 0);
@@ -160,7 +162,7 @@ void init_gpio(map_t *reg, map_t *saved_reg) {
 
 	commit_debug();
 	HAL_NVIC_EnableIRQ(GPIO_NSS_CTS_IRQ);
-	EXTI->PR = DEBUG0_Pin | DEBUG1_Pin | DEBUG2_Pin;
+
 }
 
 /**
@@ -188,7 +190,7 @@ error_t commit_debug() {
 		return err;
 	}
 	err = _commit_gpio(&debug_gpio[2]);
-
+	EXTI->PR = DEBUG0_Pin | DEBUG1_Pin | DEBUG2_Pin;
 	HAL_NVIC_EnableIRQ(GPIO_DEBUG0_IRQ);
 	HAL_NVIC_EnableIRQ(GPIO_DEBUG1_IRQ);
 	HAL_NVIC_EnableIRQ(GPIO_DEBUG2_IRQ);

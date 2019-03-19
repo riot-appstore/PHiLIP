@@ -319,6 +319,23 @@
             ],
             "type": "uint8_t",
             "type_name": "gpio_status_t"
+        },
+        {
+            "description": "Basic mode settings",
+            "elements": [
+                {
+                    "bits": 1,
+                    "description": "initialize with new params",
+                    "name": "init"
+                },
+                {
+                    "bits": 1,
+                    "description": "disable periph functionality",
+                    "name": "disable"
+                }
+            ],
+            "type": "uint8_t",
+            "type_name": "basic_mode_t"
         }
     ],
     "mem_maps": [
@@ -1745,52 +1762,175 @@
                         "mode"
                     ],
                     "offset": 472,
-                    "type": "uint8_t",
+                    "type": "basic_mode_t",
                     "type_size": 1
                 },
                 {
                     "access": 1,
-                    "description": "",
+                    "bit_offset": 0,
+                    "bits": 1,
+                    "description": "initialize with new params",
                     "name": [
                         "pwm",
-                        "error_code"
+                        "mode",
+                        "init"
+                    ],
+                    "offset": 472,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 1,
+                    "bits": 1,
+                    "description": "disable periph functionality",
+                    "name": [
+                        "pwm",
+                        "mode",
+                        "disable"
+                    ],
+                    "offset": 472,
+                    "type_size": 1
+                },
+                {
+                    "access": 0,
+                    "description": "Unimplemented status for padding",
+                    "name": [
+                        "pwm",
+                        "status"
                     ],
                     "offset": 473,
+                    "type": "uint8_t",
+                    "type_size": 1
+                },
+                {
+                    "access": 0,
+                    "description": "The calculated duty cycle in percent/100",
+                    "name": [
+                        "pwm",
+                        "duty_cycle"
+                    ],
+                    "offset": 474,
                     "type": "uint16_t",
                     "type_size": 2
                 },
                 {
-                    "access": 1,
-                    "description": "",
+                    "access": 0,
+                    "description": "The calculated period in us",
                     "name": [
                         "pwm",
-                        "duty"
-                    ],
-                    "offset": 475,
-                    "type": "uint8_t",
-                    "type_size": 1
-                },
-                {
-                    "access": 1,
-                    "description": "",
-                    "name": [
-                        "pwm",
-                        "freq"
+                        "period"
                     ],
                     "offset": 476,
                     "type": "uint32_t",
                     "type_size": 4
                 },
                 {
+                    "access": 1,
+                    "default": 10000,
+                    "description": "Settable high time in sys clock ticks",
+                    "name": [
+                        "pwm",
+                        "h_ticks"
+                    ],
+                    "offset": 480,
+                    "type": "uint32_t",
+                    "type_size": 4
+                },
+                {
+                    "access": 1,
+                    "default": 10000,
+                    "description": "Settable low time in sys clock ticks",
+                    "name": [
+                        "pwm",
+                        "l_ticks"
+                    ],
+                    "offset": 484,
+                    "type": "uint32_t",
+                    "type_size": 4
+                },
+                {
                     "access": 0,
-                    "array_size": 8,
+                    "array_size": 16,
                     "description": "Reserved bytes",
                     "name": [
                         "pwm",
                         "res"
                     ],
-                    "offset": 480,
-                    "total_size": 8,
+                    "offset": 488,
+                    "total_size": 16,
+                    "type": "uint8_t",
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "description": "",
+                    "name": [
+                        "dac",
+                        "mode"
+                    ],
+                    "offset": 504,
+                    "type": "basic_mode_t",
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 0,
+                    "bits": 1,
+                    "description": "initialize with new params",
+                    "name": [
+                        "dac",
+                        "mode",
+                        "init"
+                    ],
+                    "offset": 504,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 1,
+                    "bits": 1,
+                    "description": "disable periph functionality",
+                    "name": [
+                        "dac",
+                        "mode",
+                        "disable"
+                    ],
+                    "offset": 504,
+                    "type_size": 1
+                },
+                {
+                    "access": 0,
+                    "description": "Unimplemented status for padding",
+                    "name": [
+                        "dac",
+                        "status"
+                    ],
+                    "offset": 505,
+                    "type": "uint8_t",
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "default": 5000,
+                    "description": "The percent/100 of output level",
+                    "name": [
+                        "dac",
+                        "level"
+                    ],
+                    "offset": 506,
+                    "type": "uint16_t",
+                    "type_size": 2
+                },
+                {
+                    "access": 0,
+                    "array_size": 12,
+                    "description": "Reserved bytes",
+                    "name": [
+                        "dac",
+                        "res"
+                    ],
+                    "offset": 508,
+                    "total_size": 12,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -1801,7 +1941,7 @@
                         "tmr",
                         "mode"
                     ],
-                    "offset": 488,
+                    "offset": 520,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -1812,7 +1952,7 @@
                         "tmr",
                         "error_code"
                     ],
-                    "offset": 489,
+                    "offset": 521,
                     "type": "uint16_t",
                     "type_size": 2
                 },
@@ -1823,7 +1963,7 @@
                         "tmr",
                         "duty"
                     ],
-                    "offset": 491,
+                    "offset": 523,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -1834,7 +1974,7 @@
                         "tmr",
                         "freq"
                     ],
-                    "offset": 492,
+                    "offset": 524,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -1845,7 +1985,7 @@
                         "tmr",
                         "hi_us"
                     ],
-                    "offset": 496,
+                    "offset": 528,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -1856,7 +1996,7 @@
                         "tmr",
                         "lo_us"
                     ],
-                    "offset": 500,
+                    "offset": 532,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -1868,7 +2008,7 @@
                         "0",
                         "mode"
                     ],
-                    "offset": 504,
+                    "offset": 536,
                     "type": "gpio_mode_t",
                     "type_size": 2
                 },
@@ -1883,7 +2023,7 @@
                         "mode",
                         "init"
                     ],
-                    "offset": 504,
+                    "offset": 536,
                     "type_size": 2
                 },
                 {
@@ -1897,7 +2037,7 @@
                         "mode",
                         "io_type"
                     ],
-                    "offset": 504,
+                    "offset": 536,
                     "type_size": 2
                 },
                 {
@@ -1911,7 +2051,7 @@
                         "mode",
                         "level"
                     ],
-                    "offset": 504,
+                    "offset": 536,
                     "type_size": 2
                 },
                 {
@@ -1925,7 +2065,7 @@
                         "mode",
                         "pull"
                     ],
-                    "offset": 504,
+                    "offset": 536,
                     "type_size": 2
                 },
                 {
@@ -1939,7 +2079,7 @@
                         "mode",
                         "tick_div"
                     ],
-                    "offset": 504,
+                    "offset": 536,
                     "type_size": 2
                 },
                 {
@@ -1950,7 +2090,7 @@
                         "0",
                         "status"
                     ],
-                    "offset": 506,
+                    "offset": 538,
                     "type": "gpio_status_t",
                     "type_size": 1
                 },
@@ -1965,7 +2105,7 @@
                         "status",
                         "level"
                     ],
-                    "offset": 506,
+                    "offset": 538,
                     "type_size": 1
                 },
                 {
@@ -1977,7 +2117,7 @@
                         "0",
                         "res"
                     ],
-                    "offset": 507,
+                    "offset": 539,
                     "total_size": 1,
                     "type": "uint8_t",
                     "type_size": 1
@@ -1990,7 +2130,7 @@
                         "1",
                         "mode"
                     ],
-                    "offset": 508,
+                    "offset": 540,
                     "type": "gpio_mode_t",
                     "type_size": 2
                 },
@@ -2005,7 +2145,7 @@
                         "mode",
                         "init"
                     ],
-                    "offset": 508,
+                    "offset": 540,
                     "type_size": 2
                 },
                 {
@@ -2019,7 +2159,7 @@
                         "mode",
                         "io_type"
                     ],
-                    "offset": 508,
+                    "offset": 540,
                     "type_size": 2
                 },
                 {
@@ -2033,7 +2173,7 @@
                         "mode",
                         "level"
                     ],
-                    "offset": 508,
+                    "offset": 540,
                     "type_size": 2
                 },
                 {
@@ -2047,7 +2187,7 @@
                         "mode",
                         "pull"
                     ],
-                    "offset": 508,
+                    "offset": 540,
                     "type_size": 2
                 },
                 {
@@ -2061,7 +2201,7 @@
                         "mode",
                         "tick_div"
                     ],
-                    "offset": 508,
+                    "offset": 540,
                     "type_size": 2
                 },
                 {
@@ -2072,7 +2212,7 @@
                         "1",
                         "status"
                     ],
-                    "offset": 510,
+                    "offset": 542,
                     "type": "gpio_status_t",
                     "type_size": 1
                 },
@@ -2087,7 +2227,7 @@
                         "status",
                         "level"
                     ],
-                    "offset": 510,
+                    "offset": 542,
                     "type_size": 1
                 },
                 {
@@ -2099,7 +2239,7 @@
                         "1",
                         "res"
                     ],
-                    "offset": 511,
+                    "offset": 543,
                     "total_size": 1,
                     "type": "uint8_t",
                     "type_size": 1
@@ -2112,7 +2252,7 @@
                         "2",
                         "mode"
                     ],
-                    "offset": 512,
+                    "offset": 544,
                     "type": "gpio_mode_t",
                     "type_size": 2
                 },
@@ -2127,7 +2267,7 @@
                         "mode",
                         "init"
                     ],
-                    "offset": 512,
+                    "offset": 544,
                     "type_size": 2
                 },
                 {
@@ -2141,7 +2281,7 @@
                         "mode",
                         "io_type"
                     ],
-                    "offset": 512,
+                    "offset": 544,
                     "type_size": 2
                 },
                 {
@@ -2155,7 +2295,7 @@
                         "mode",
                         "level"
                     ],
-                    "offset": 512,
+                    "offset": 544,
                     "type_size": 2
                 },
                 {
@@ -2169,7 +2309,7 @@
                         "mode",
                         "pull"
                     ],
-                    "offset": 512,
+                    "offset": 544,
                     "type_size": 2
                 },
                 {
@@ -2183,7 +2323,7 @@
                         "mode",
                         "tick_div"
                     ],
-                    "offset": 512,
+                    "offset": 544,
                     "type_size": 2
                 },
                 {
@@ -2194,7 +2334,7 @@
                         "2",
                         "status"
                     ],
-                    "offset": 514,
+                    "offset": 546,
                     "type": "gpio_status_t",
                     "type_size": 1
                 },
@@ -2209,7 +2349,7 @@
                         "status",
                         "level"
                     ],
-                    "offset": 514,
+                    "offset": 546,
                     "type_size": 1
                 },
                 {
@@ -2221,7 +2361,7 @@
                         "2",
                         "res"
                     ],
-                    "offset": 515,
+                    "offset": 547,
                     "total_size": 1,
                     "type": "uint8_t",
                     "type_size": 1
@@ -2233,7 +2373,7 @@
                         "trace",
                         "index"
                     ],
-                    "offset": 516,
+                    "offset": 548,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -2245,7 +2385,7 @@
                         "trace",
                         "tick_div"
                     ],
-                    "offset": 520,
+                    "offset": 552,
                     "total_size": 32,
                     "type": "uint8_t",
                     "type_size": 1
@@ -2258,7 +2398,7 @@
                         "trace",
                         "source"
                     ],
-                    "offset": 552,
+                    "offset": 584,
                     "total_size": 32,
                     "type": "uint8_t",
                     "type_size": 1
@@ -2271,7 +2411,7 @@
                         "trace",
                         "value"
                     ],
-                    "offset": 584,
+                    "offset": 616,
                     "total_size": 64,
                     "type": "uint16_t",
                     "type_size": 2
@@ -2284,20 +2424,20 @@
                         "trace",
                         "tick"
                     ],
-                    "offset": 648,
+                    "offset": 680,
                     "total_size": 128,
                     "type": "uint32_t",
                     "type_size": 4
                 },
                 {
                     "access": 0,
-                    "array_size": 248,
+                    "array_size": 216,
                     "description": "Reserved bytes",
                     "name": [
                         "res"
                     ],
-                    "offset": 776,
-                    "total_size": 248,
+                    "offset": 808,
+                    "total_size": 216,
                     "type": "uint8_t",
                     "type_size": 1
                 }
@@ -2649,30 +2789,69 @@
             "type_size": 16
         },
         {
-            "description": "unimplemented PWM",
+            "description": "Controls and calculates PWM values",
             "elements": [
                 {
                     "description": "",
                     "name": "mode",
+                    "type": "basic_mode_t"
+                },
+                {
+                    "access": 0,
+                    "description": "Unimplemented status for padding",
+                    "name": "status",
                     "type": "uint8_t"
                 },
                 {
-                    "description": "",
-                    "name": "error_code",
+                    "access": 0,
+                    "description": "The calculated duty cycle in percent/100",
+                    "name": "duty_cycle",
                     "type": "uint16_t"
                 },
                 {
-                    "description": "",
-                    "name": "duty",
-                    "type": "uint8_t"
+                    "access": 0,
+                    "description": "The calculated period in ticks",
+                    "name": "period",
+                    "type": "uint32_t"
                 },
                 {
-                    "description": "",
-                    "name": "freq",
+                    "default": 10000,
+                    "description": "Settable high time in sys clock ticks",
+                    "name": "h_ticks",
+                    "type": "uint32_t"
+                },
+                {
+                    "default": 10000,
+                    "description": "Settable low time in sys clock ticks",
+                    "name": "l_ticks",
                     "type": "uint32_t"
                 }
             ],
             "type_name": "pwm_t",
+            "type_size": 32
+        },
+        {
+            "description": "Controls and calculates PWM values",
+            "elements": [
+                {
+                    "description": "",
+                    "name": "mode",
+                    "type": "basic_mode_t"
+                },
+                {
+                    "access": 0,
+                    "description": "Unimplemented status for padding",
+                    "name": "status",
+                    "type": "uint8_t"
+                },
+                {
+                    "default": 5000,
+                    "description": "The percent/100 of output level",
+                    "name": "level",
+                    "type": "uint16_t"
+                }
+            ],
+            "type_name": "dac_t",
             "type_size": 16
         },
         {
@@ -2812,9 +2991,14 @@
                     "type": "adc_t"
                 },
                 {
-                    "description": "",
+                    "description": "PWM configuration",
                     "name": "pwm",
                     "type": "pwm_t"
+                },
+                {
+                    "description": "DAC configuration",
+                    "name": "dac",
+                    "type": "dac_t"
                 },
                 {
                     "description": "",
