@@ -52,6 +52,7 @@
 #include "i2c.h"
 #include "spi.h"
 #include "pwm_dac.h"
+#include "rtc.h"
 #include "sys.h"
 
 /* Private variables ---------------------------------------------------------*/
@@ -90,6 +91,7 @@ error_t execute_reg_change() {
 	commit_dut_pwm();
 	commit_dut_dac();
 	commit_dut_uart();
+	commit_rtc();
 	commit_sys();
 
 	return EOK;

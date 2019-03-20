@@ -18,8 +18,6 @@ I2C_HandleTypeDef hi2c_dut;
 
 IWDG_HandleTypeDef hiwdg;
 
-RTC_HandleTypeDef hrtc;
-
 TIM_HandleTypeDef htim_ic;
 TIM_HandleTypeDef htim_pwm;
 
@@ -437,58 +435,7 @@ static void MX_IWDG_Init(void) {
 
 }
 
-/* RTC init function */
-static void MX_RTC_Init(void) {
 
-	/* USER CODE BEGIN RTC_Init 0 */
-
-	/* USER CODE END RTC_Init 0 */
-
-	RTC_TimeTypeDef sTime;
-	RTC_DateTypeDef DateToUpdate;
-
-	/* USER CODE BEGIN RTC_Init 1 */
-
-	/* USER CODE END RTC_Init 1 */
-
-	/**Initialize RTC Only
-	 */
-	hrtc.Instance = RTC;
-	hrtc.Init.AsynchPrediv = RTC_AUTO_1_SECOND;
-	hrtc.Init.OutPut = RTC_OUTPUTSOURCE_NONE;
-	if (HAL_RTC_Init(&hrtc) != HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-	/* USER CODE BEGIN RTC_Init 2 */
-
-	/* USER CODE END RTC_Init 2 */
-
-	/**Initialize RTC and set the Time and Date
-	 */
-	sTime.Hours = 1;
-	sTime.Minutes = 0;
-	sTime.Seconds = 0;
-
-	if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN) != HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-	/* USER CODE BEGIN RTC_Init 3 */
-
-	/* USER CODE END RTC_Init 3 */
-
-	DateToUpdate.WeekDay = RTC_WEEKDAY_MONDAY;
-	DateToUpdate.Month = RTC_MONTH_JANUARY;
-	DateToUpdate.Date = 1;
-	DateToUpdate.Year = 18;
-
-	if (HAL_RTC_SetDate(&hrtc, &DateToUpdate, RTC_FORMAT_BIN) != HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-	/* USER CODE BEGIN RTC_Init 4 */
-
-	/* USER CODE END RTC_Init 4 */
-
-}
 
 /**
  * @brief  This function is executed in case of error occurrence.
@@ -514,7 +461,6 @@ void init_periphs(void) {
 	MX_ADC1_Init();
 	MX_ADC2_Init();
 	MX_IWDG_Init();
-	MX_RTC_Init();
 }
 
 void init_clock(void) {

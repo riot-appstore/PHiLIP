@@ -5,7 +5,7 @@
  * @file      PHiLIP_typedef.h
  * @author    Kevin Weiss
  * @version   0.0.2
- * @date      2019-03-17
+ * @date      2019-03-19
  * @details   Generated from the memory map manager
  ******************************************************************************
  */
@@ -216,7 +216,7 @@ typedef union {
 /** @brief  Controls and calculates PWM values */
 typedef union {
 	struct {
-		basic_mode_t mode; /**<  */
+		basic_mode_t mode; /**< basic mode for pwm settings */
 		uint8_t status; /**< Unimplemented status for padding */
 		uint16_t duty_cycle; /**< The calculated duty cycle in percent/100 */
 		uint32_t period; /**< The calculated period in ticks */
@@ -227,16 +227,27 @@ typedef union {
 	uint8_t data8[32];/**< array for padding */
 } pwm_t;
 
-/** @brief  Controls and calculates PWM values */
+/** @brief  Controls DAC values */
 typedef union {
 	struct {
-		basic_mode_t mode; /**<  */
+		basic_mode_t mode; /**< basic mode for dac settings */
 		uint8_t status; /**< Unimplemented status for padding */
 		uint16_t level; /**< The percent/100 of output level */
 		uint8_t res[12]; /**< Reserved bytes */
 	};
 	uint8_t data8[16];/**< array for padding */
 } dac_t;
+
+/** @brief  Controls the RTC */
+typedef union {
+	struct {
+		basic_mode_t mode; /**< basic mode for rtc settings */
+		timestamp_t time; /**< date and time of the rtc */
+		timestamp_t set_time; /**< date and time of the rtc */
+		uint8_t res[15]; /**< Reserved bytes */
+	};
+	uint8_t data8[32];/**< array for padding */
+} rtc_t;
 
 /** @brief  unimplemented TMR */
 typedef union {
@@ -281,14 +292,14 @@ typedef union {
 		i2c_t i2c; /**< I2C configuration */
 		spi_t spi; /**< SPI configuration */
 		uart_t uart; /**<  */
-		timestamp_t rtc; /**<  */
+		rtc_t rtc; /**<  */
 		adc_t adc[2]; /**<  */
 		pwm_t pwm; /**< PWM configuration */
 		dac_t dac; /**< DAC configuration */
 		tmr_t tmr; /**<  */
 		gpio_t gpio[3]; /**< GPIO pins available */
 		trace_t trace; /**< Saved timestamps and events */
-		uint8_t res[216]; /**< Reserved bytes */
+		uint8_t res[192]; /**< Reserved bytes */
 	};
 	uint8_t data8[1024];/**< array for padding */
 } map_t;
