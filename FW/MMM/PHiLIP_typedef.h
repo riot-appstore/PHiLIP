@@ -5,7 +5,7 @@
  * @file      PHiLIP_typedef.h
  * @author    Kevin Weiss
  * @version   0.0.2
- * @date      2019-03-19
+ * @date      2019-03-20
  * @details   Generated from the memory map manager
  ******************************************************************************
  */
@@ -107,6 +107,13 @@ typedef struct {
 	uint8_t level : 1; /**< The io level of the pin, 0=low, 1=high */
 } gpio_status_t;
 
+/** @brief  ADC mode settings */
+typedef struct {
+	uint8_t init : 1; /**< initialize with new params */
+	uint8_t enable : 1; /**< enables periph functionality (disabled by default) */
+	uint8_t fast_sample : 1; /**< Set to sample as fast as possible */
+} adc_mode_t;
+
 /** @brief  Basic mode settings */
 typedef struct {
 	uint8_t init : 1; /**< initialize with new params */
@@ -190,7 +197,7 @@ typedef union {
 /** @brief  Controls and provides information for the uart */
 typedef union {
 	struct {
-		uart_mode_t mode; /**< UART control register */
+		uart_mode_t mode; /**< UART mode register */
 		uint32_t baud; /**< Baudrate */
 		uint8_t mask_msb; /**< Baudrate */
 		uint16_t rx_count; /**< Number of received bytes */
@@ -201,16 +208,19 @@ typedef union {
 	uint8_t data8[16];/**< array for padding */
 } uart_t;
 
-/** @brief  unimplemented ADC */
+/** @brief  Controls and reads the ADC */
 typedef union {
 	struct {
-		uint8_t mode; /**<  */
-		uint16_t error_code; /**<  */
-		uint8_t sample_rate; /**<  */
-		uint32_t value; /**<  */
-		uint8_t res[8]; /**< Reserved bytes */
+		adc_mode_t mode; /**< Mode settings for the ADC */
+		uint32_t num_of_samples; /**< Number of sample in the sum */
+		uint8_t counter; /**< sum counter, increases when available */
+		uint32_t index; /**< sample index, increases when new sample read */
+		uint16_t sample; /**< current 12 bit sample value */
+		uint32_t sum; /**< Sum of the last num_of_samples */
+		uint32_t current_sum; /**< Current collection of the sums */
+		uint8_t res[12]; /**< Reserved bytes */
 	};
-	uint8_t data8[16];/**< array for padding */
+	uint8_t data8[32];/**< array for padding */
 } adc_t;
 
 /** @brief  Controls and calculates PWM values */
@@ -292,8 +302,8 @@ typedef union {
 		i2c_t i2c; /**< I2C configuration */
 		spi_t spi; /**< SPI configuration */
 		uart_t uart; /**<  */
-		rtc_t rtc; /**<  */
-		adc_t adc[2]; /**<  */
+		rtc_t rtc; /**< RTC configuration */
+		adc_t adc; /**< ADC configuration */
 		pwm_t pwm; /**< PWM configuration */
 		dac_t dac; /**< DAC configuration */
 		tmr_t tmr; /**<  */

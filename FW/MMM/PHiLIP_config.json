@@ -321,6 +321,28 @@
             "type_name": "gpio_status_t"
         },
         {
+            "description": "ADC mode settings",
+            "elements": [
+                {
+                    "bits": 1,
+                    "description": "initialize with new params",
+                    "name": "init"
+                },
+                {
+                    "bits": 1,
+                    "description": "enables periph functionality (disabled by default)",
+                    "name": "enable"
+                },
+                {
+                    "bits": 1,
+                    "description": "Set to sample as fast as possible",
+                    "name": "fast_sample"
+                }
+            ],
+            "type": "uint8_t",
+            "type_name": "adc_mode_t"
+        },
+        {
             "description": "Basic mode settings",
             "elements": [
                 {
@@ -1788,125 +1810,133 @@
                 },
                 {
                     "access": 1,
-                    "description": "",
+                    "description": "Mode settings for the ADC",
                     "name": [
                         "adc",
-                        "0",
                         "mode"
                     ],
                     "offset": 464,
-                    "type": "uint8_t",
+                    "type": "adc_mode_t",
                     "type_size": 1
                 },
                 {
                     "access": 1,
-                    "description": "",
+                    "bit_offset": 0,
+                    "bits": 1,
+                    "description": "initialize with new params",
                     "name": [
                         "adc",
-                        "0",
-                        "error_code"
+                        "mode",
+                        "init"
+                    ],
+                    "offset": 464,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 1,
+                    "bits": 1,
+                    "description": "enables periph functionality (disabled by default)",
+                    "name": [
+                        "adc",
+                        "mode",
+                        "enable"
+                    ],
+                    "offset": 464,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 2,
+                    "bits": 1,
+                    "description": "Set to sample as fast as possible",
+                    "name": [
+                        "adc",
+                        "mode",
+                        "fast_sample"
+                    ],
+                    "offset": 464,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "default": 1024,
+                    "description": "Number of sample in the sum",
+                    "max": 1048575,
+                    "min": 0,
+                    "name": [
+                        "adc",
+                        "num_of_samples"
                     ],
                     "offset": 465,
-                    "type": "uint16_t",
-                    "type_size": 2
-                },
-                {
-                    "access": 1,
-                    "description": "",
-                    "name": [
-                        "adc",
-                        "0",
-                        "sample_rate"
-                    ],
-                    "offset": 467,
-                    "type": "uint8_t",
-                    "type_size": 1
-                },
-                {
-                    "access": 1,
-                    "description": "",
-                    "name": [
-                        "adc",
-                        "0",
-                        "value"
-                    ],
-                    "offset": 468,
                     "type": "uint32_t",
                     "type_size": 4
                 },
                 {
                     "access": 0,
-                    "array_size": 8,
-                    "description": "Reserved bytes",
+                    "description": "sum counter, increases when available",
                     "name": [
                         "adc",
-                        "0",
-                        "res"
+                        "counter"
                     ],
-                    "offset": 472,
-                    "total_size": 8,
+                    "offset": 469,
                     "type": "uint8_t",
                     "type_size": 1
                 },
                 {
-                    "access": 1,
-                    "description": "",
+                    "access": 0,
+                    "description": "sample index, increases when new sample read",
                     "name": [
                         "adc",
-                        "1",
-                        "mode"
+                        "index"
+                    ],
+                    "offset": 470,
+                    "type": "uint32_t",
+                    "type_size": 4
+                },
+                {
+                    "access": 0,
+                    "description": "current 12 bit sample value",
+                    "name": [
+                        "adc",
+                        "sample"
+                    ],
+                    "offset": 474,
+                    "type": "uint16_t",
+                    "type_size": 2
+                },
+                {
+                    "access": 0,
+                    "description": "Sum of the last num_of_samples",
+                    "name": [
+                        "adc",
+                        "sum"
+                    ],
+                    "offset": 476,
+                    "type": "uint32_t",
+                    "type_size": 4
+                },
+                {
+                    "access": 0,
+                    "description": "Current collection of the sums",
+                    "name": [
+                        "adc",
+                        "current_sum"
                     ],
                     "offset": 480,
-                    "type": "uint8_t",
-                    "type_size": 1
-                },
-                {
-                    "access": 1,
-                    "description": "",
-                    "name": [
-                        "adc",
-                        "1",
-                        "error_code"
-                    ],
-                    "offset": 481,
-                    "type": "uint16_t",
-                    "type_size": 2
-                },
-                {
-                    "access": 1,
-                    "description": "",
-                    "name": [
-                        "adc",
-                        "1",
-                        "sample_rate"
-                    ],
-                    "offset": 483,
-                    "type": "uint8_t",
-                    "type_size": 1
-                },
-                {
-                    "access": 1,
-                    "description": "",
-                    "name": [
-                        "adc",
-                        "1",
-                        "value"
-                    ],
-                    "offset": 484,
                     "type": "uint32_t",
                     "type_size": 4
                 },
                 {
                     "access": 0,
-                    "array_size": 8,
+                    "array_size": 12,
                     "description": "Reserved bytes",
                     "name": [
                         "adc",
-                        "1",
                         "res"
                     ],
-                    "offset": 488,
-                    "total_size": 8,
+                    "offset": 484,
+                    "total_size": 12,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -2880,7 +2910,7 @@
             "description": "Controls and provides information for the uart",
             "elements": [
                 {
-                    "description": "UART control register",
+                    "description": "UART mode register",
                     "name": "mode",
                     "type": "uart_mode_t"
                 },
@@ -2918,31 +2948,54 @@
             "type_size": 16
         },
         {
-            "description": "unimplemented ADC",
+            "description": "Controls and reads the ADC",
             "elements": [
                 {
-                    "description": "",
+                    "description": "Mode settings for the ADC",
                     "name": "mode",
+                    "type": "adc_mode_t"
+                },
+                {
+                    "default": 1024,
+                    "description": "Number of sample in the sum",
+                    "max": 1048575,
+                    "min": 0,
+                    "name": "num_of_samples",
+                    "type": "uint32_t"
+                },
+                {
+                    "access": 0,
+                    "description": "sum counter, increases when available",
+                    "name": "counter",
                     "type": "uint8_t"
                 },
                 {
-                    "description": "",
-                    "name": "error_code",
+                    "access": 0,
+                    "description": "sample index, increases when new sample read",
+                    "name": "index",
+                    "type": "uint32_t"
+                },
+                {
+                    "access": 0,
+                    "description": "current 12 bit sample value",
+                    "name": "sample",
                     "type": "uint16_t"
                 },
                 {
-                    "description": "",
-                    "name": "sample_rate",
-                    "type": "uint8_t"
+                    "access": 0,
+                    "description": "Sum of the last num_of_samples",
+                    "name": "sum",
+                    "type": "uint32_t"
                 },
                 {
-                    "description": "",
-                    "name": "value",
+                    "access": 0,
+                    "description": "Current collection of the sums",
+                    "name": "current_sum",
                     "type": "uint32_t"
                 }
             ],
             "type_name": "adc_t",
-            "type_size": 16
+            "type_size": 32
         },
         {
             "description": "Controls and calculates PWM values",
@@ -3159,13 +3212,12 @@
                     "type": "uart_t"
                 },
                 {
-                    "description": "",
+                    "description": "RTC configuration",
                     "name": "rtc",
                     "type": "rtc_t"
                 },
                 {
-                    "array_size": 2,
-                    "description": "",
+                    "description": "ADC configuration",
                     "name": "adc",
                     "type": "adc_t"
                 },

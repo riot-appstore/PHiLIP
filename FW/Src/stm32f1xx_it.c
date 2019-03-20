@@ -42,14 +42,7 @@
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
-#ifdef BLUEPILL
-extern PCD_HandleTypeDef hpcd_USB_FS;
-#endif
 extern DMA_HandleTypeDef hdma_adc_pm;
-/** @brief		For power management. */
-extern ADC_HandleTypeDef hadc_pm;
-/** @brief		For dut adc. */
-extern ADC_HandleTypeDef hadc_dut;
 /** @brief		For input capture. */
 extern TIM_HandleTypeDef htim_ic;
 
@@ -303,19 +296,6 @@ void DMA1_Channel7_IRQHandler(void) {
 	/* USER CODE END DMA1_Channel7_IRQn 1 */
 }
 #endif
-/**
- * @brief This function handles ADC1 and ADC2 global interrupts.
- */
-void ADC1_2_IRQHandler(void) {
-	/* USER CODE BEGIN ADC1_2_IRQn 0 */
-
-	/* USER CODE END ADC1_2_IRQn 0 */
-	HAL_ADC_IRQHandler(&hadc_dut);
-	HAL_ADC_IRQHandler(&hadc_pm);
-	/* USER CODE BEGIN ADC1_2_IRQn 1 */
-
-	/* USER CODE END ADC1_2_IRQn 1 */
-}
 
 /**
  * @brief This function handles TIM1 update interrupt.
