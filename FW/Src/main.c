@@ -39,6 +39,7 @@
 #include "stm32f1xx_hal.h"
 
 #include "PHiLIP_typedef.h"
+#include "PHiLIP_defaults.h"
 #include "app_access.h"
 #include "app_common.h"
 #include "app_defaults.h"
@@ -52,6 +53,7 @@
 #include "spi.h"
 #include "pwm_dac.h"
 #include "rtc.h"
+#include "adc.h"
 #include "sys.h"
 #include "port.h"
 
@@ -72,6 +74,7 @@ int main(void) {
 	/* Configure the system clock */
 	init_clock();
 
+	init_defaults_map_t(&reg);
 	/* Initialize all configured peripherals */
 	DIS_INT;
 	init_periphs();
@@ -84,6 +87,7 @@ int main(void) {
 	init_dut_i2c(&reg, &saved_reg);
 	init_dut_spi(&reg, &saved_reg);
 	init_rtc(&reg);
+	init_dut_adc(&reg, &saved_reg);
 	init_sys(&reg, &saved_reg);
 	EN_INT;
 

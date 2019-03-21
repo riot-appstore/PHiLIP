@@ -97,6 +97,10 @@
 #define DUT_DAC_TMR			TIM4
 #define PWM_DAC_REMAP
 #define EN_RCC_DUT_PWM_DAC_CLK	__HAL_RCC_TIM4_CLK_ENABLE()
+
+#define DUT_ADC_DEV			ADC2
+#define ADC_INT				ADC1_2_IRQHandler
+#define ADC_IRQ				ADC1_2_IRQn
 #endif
 
 #ifdef NUCLEOF103RB
@@ -194,7 +198,9 @@
 #define PWM_DAC_REMAP		__HAL_AFIO_REMAP_TIM3_ENABLE()
 #define EN_RCC_DUT_PWM_DAC_CLK	__HAL_RCC_TIM3_CLK_ENABLE()
 
-
+#define DUT_ADC_DEV			ADC2
+#define ADC_INT				ADC1_2_IRQHandler
+#define ADC_IRQ				ADC1_2_IRQn
 #endif
 
 #define USER_BTN USER_BTN_GPIO_Port, USER_BTN_Pin

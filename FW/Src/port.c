@@ -11,7 +11,6 @@
 extern void _Error_Handler(char *, int);
 
 ADC_HandleTypeDef hadc_pm;
-ADC_HandleTypeDef hadc_dut;
 DMA_HandleTypeDef hdma_adc_pm;
 
 I2C_HandleTypeDef hi2c_dut;
@@ -62,35 +61,6 @@ static void MX_ADC1_Init(void) {
 	sConfig.Channel = ADC_CHANNEL_7;
 	sConfig.Rank = ADC_REGULAR_RANK_3;
 	if (HAL_ADC_ConfigChannel(&hadc_pm, &sConfig) != HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-}
-
-/* ADC2 init function */
-static void MX_ADC2_Init(void) {
-
-	ADC_ChannelConfTypeDef sConfig;
-
-	/**Common config
-	 */
-	hadc_dut.Instance = ADC2;
-	hadc_dut.Init.ScanConvMode = ADC_SCAN_DISABLE;
-	hadc_dut.Init.ContinuousConvMode = ENABLE;
-	hadc_dut.Init.DiscontinuousConvMode = DISABLE;
-	hadc_dut.Init.ExternalTrigConv = ADC_SOFTWARE_START;
-	hadc_dut.Init.DataAlign = ADC_DATAALIGN_RIGHT;
-	hadc_dut.Init.NbrOfConversion = 1;
-	if (HAL_ADC_Init(&hadc_dut) != HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-	/**Configure Regular Channel
-	 */
-	sConfig.Channel = ADC_CHANNEL_6;
-	sConfig.Rank = ADC_REGULAR_RANK_1;
-	sConfig.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
-	if (HAL_ADC_ConfigChannel(&hadc_dut, &sConfig) != HAL_OK) {
 		_Error_Handler(__FILE__, __LINE__);
 	}
 
@@ -263,35 +233,6 @@ static void MX_ADC1_Init(void) {
 
 }
 
-/* ADC2 init function */
-static void MX_ADC2_Init(void) {
-
-	ADC_ChannelConfTypeDef sConfig;
-
-	/**Common config
-	 */
-	hadc_dut.Instance = ADC2;
-	hadc_dut.Init.ScanConvMode = ADC_SCAN_DISABLE;
-	hadc_dut.Init.ContinuousConvMode = ENABLE;
-	hadc_dut.Init.DiscontinuousConvMode = DISABLE;
-	hadc_dut.Init.ExternalTrigConv = ADC_SOFTWARE_START;
-	hadc_dut.Init.DataAlign = ADC_DATAALIGN_RIGHT;
-	hadc_dut.Init.NbrOfConversion = 1;
-	if (HAL_ADC_Init(&hadc_dut) != HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-	/**Configure Regular Channel
-	 */
-	sConfig.Channel = ADC_CHANNEL_8;
-	sConfig.Rank = ADC_REGULAR_RANK_1;
-	sConfig.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
-	if (HAL_ADC_ConfigChannel(&hadc_dut, &sConfig) != HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-}
-
 /* TIM1 init function */
 static void MX_TIM1_Init(void) {
 
@@ -459,7 +400,6 @@ void init_periphs(void) {
 	MX_DMA_Init();
 	MX_TIM1_Init();
 	MX_ADC1_Init();
-	MX_ADC2_Init();
 	MX_IWDG_Init();
 }
 
