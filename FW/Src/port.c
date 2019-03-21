@@ -15,8 +15,6 @@ DMA_HandleTypeDef hdma_adc_pm;
 
 I2C_HandleTypeDef hi2c_dut;
 
-IWDG_HandleTypeDef hiwdg;
-
 TIM_HandleTypeDef htim_ic;
 TIM_HandleTypeDef htim_pwm;
 
@@ -364,20 +362,6 @@ void SystemClock_Config(void) {
 }
 #endif
 
-/* IWDG init function */
-static void MX_IWDG_Init(void) {
-
-	hiwdg.Instance = IWDG;
-	hiwdg.Init.Prescaler = IWDG_PRESCALER_32;
-	hiwdg.Init.Reload = 4095;
-	if (HAL_IWDG_Init(&hiwdg) != HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-}
-
-
-
 /**
  * @brief  This function is executed in case of error occurrence.
  * @param  file: The file name as string.
@@ -400,7 +384,6 @@ void init_periphs(void) {
 	MX_DMA_Init();
 	MX_TIM1_Init();
 	MX_ADC1_Init();
-	MX_IWDG_Init();
 }
 
 void init_clock(void) {

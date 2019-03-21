@@ -84,8 +84,6 @@ void init_sys(map_t *reg, map_t *saved_reg) {
 	sys_reg->build_time.month = BUILD_MONTH;
 	sys_reg->build_time.year = BUILD_YEAR;
 
-	sys_reg->device_num = DEFAULT_SYS_DEVICE_NUM;
-
 	sys_reg->sys_clk = SystemCoreClock;
 
 	commit_sys();

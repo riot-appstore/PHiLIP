@@ -112,8 +112,6 @@ void init_dut_i2c(map_t *reg, map_t *saved_reg) {
 	dut_i2c.reg = &(reg->i2c);
 	dut_i2c.saved_reg = &(saved_reg->i2c);
 
-	dut_i2c.reg->slave_addr_1 = DEFAULT_I2C_SLAVE_ID_1;
-	dut_i2c.reg->slave_addr_2 = DEFAULT_I2C_SLAVE_ID_2;
 
 	commit_dut_i2c();
 }

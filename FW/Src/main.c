@@ -27,8 +27,9 @@
  * @file			main.c
  * @author			Kevin Weiss
  * @author			Yegor Yefremov
- * @date			13.02.2019
- * @brief			Controls the uart peripherals.
+ * @date			21.03.2019
+ * @brief			Main function that initializes and controls super loop and
+ * 					polling based functions.
  ******************************************************************************
  */
 
@@ -40,12 +41,9 @@
 
 #include "PHiLIP_typedef.h"
 #include "PHiLIP_defaults.h"
-#include "app_access.h"
 #include "app_common.h"
-#include "app_defaults.h"
 
 #include "app_reg.h"
-#include "app_shell_if.h"
 #include "trace.h"
 #include "gpio.h"
 #include "i2c.h"
@@ -55,16 +53,16 @@
 #include "rtc.h"
 #include "adc.h"
 #include "sys.h"
+#include "led_flash.h"
+#include "wdt.h"
 #include "port.h"
 
-#include "test.h"
-/* Private variables ---------------------------------------------------------*/
-/** @brief  Watchdog timer handle. */
-extern IWDG_HandleTypeDef hiwdg;
+/* Private function prototypes -----------------------------------------------*/
+static uint32_t _is_tick();
+static void _super_loop();
 
 /** @brief  The application entry point. */
 int main(void) {
-	int32_t led_tick = 0;
 	map_t reg = { 0 };
 	map_t saved_reg = { 0 };
 
@@ -89,19 +87,38 @@ int main(void) {
 	init_rtc(&reg);
 	init_dut_adc(&reg, &saved_reg);
 	init_sys(&reg, &saved_reg);
+	init_wdt();
 	EN_INT;
 
 	while (1) {
-		if (led_tick < HAL_GetTick()) {
-			led_tick = HAL_GetTick() + 20;
-			HAL_GPIO_TogglePin(LED0);
-			HAL_IWDG_Refresh(&hiwdg);
-			update_tick();
-			update_debug_inputs();
-			update_dut_spi_inputs();
-			update_rtc();
-		}
+		_super_loop();
 		poll_dut_uart();
 		poll_if_uart();
 	}
+}
+
+static void _super_loop() {
+	void (* const fxn_to_ex_per_tick[])(void) = {update_tick,
+												update_debug_inputs,
+												update_dut_spi_inputs,
+												update_rtc};
+	static uint32_t fxn_index = 0;
+	if (_is_tick()) {
+		flash_fw_version();
+		reset_wdt();
+		(fxn_to_ex_per_tick[fxn_index++])();
+		if (fxn_index >= sizeof(fxn_to_ex_per_tick)/sizeof(fxn_to_ex_per_tick[0])) {
+			fxn_index = 0;
+		}
+	}
+}
+
+static uint32_t _is_tick() {
+	static uint32_t tick = 0;
+	if (tick != HAL_GetTick()) {
+
+		tick = HAL_GetTick();
+		return 1;
+	}
+	return 0;
 }
