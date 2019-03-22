@@ -28,14 +28,13 @@
  * @{
  * @file			rtc.c
  * @author			Kevin Weiss
- * @date			19.03.2019
+ * @date			22.03.2019
  * @brief			Controls the rtc peripheral.
  * @}
  ******************************************************************************
  */
 
 /* Includes ------------------------------------------------------------------*/
-#include <string.h>
 #include <errno.h>
 
 #include "stm32f1xx_hal.h"
@@ -43,24 +42,11 @@
 #include "PHiLIP_typedef.h"
 #include "port.h"
 #include "app_errno.h"
-#include "app_access.h"
-#include "app_common.h"
-#include "app_defaults.h"
-#include "app_reg.h"
 
 #include "rtc.h"
 
-/* Private enums/structs -----------------------------------------------------*/
-
-/** @brief	The parameters for rtc control */
-typedef struct {
-	RTC_HandleTypeDef hrtc; /**< Handle for the spi device */
-	rtc_t *reg; /**< rtc live application registers */
-} rtc_dev;
-/** @} */
-
 /* Private variables ---------------------------------------------------------*/
-static rtc_dev rtc;
+static rtc_t *rtc;
 
 /* Functions -----------------------------------------------------------------*/
 /**
@@ -71,13 +57,48 @@ static rtc_dev rtc;
  * 				pointers.
  */
 void init_rtc(map_t *reg) {
-	rtc.hrtc.Instance = RTC;
-	rtc.hrtc.Init.AsynchPrediv = RTC_AUTO_1_SECOND;
-	rtc.hrtc.Init.OutPut = RTC_OUTPUTSOURCE_NONE;
-	HAL_RTC_Init(&rtc.hrtc);
-	rtc.reg = &(reg->rtc);
+	RTC_TypeDef *rtc_inst = RTC;
+
+	HAL_PWR_EnableBkUpAccess();
+	/* Enable BKP CLK enable for backup registers */
+	__HAL_RCC_BKP_CLK_ENABLE();
+	/* Peripheral clock enable */
+	__HAL_RCC_RTC_ENABLE();
+
+	/* Wait to sync */
+	CLEAR_BIT(rtc_inst->CRL, RTC_FLAG_RSF);
+	while (!(rtc_inst->CRL & RTC_FLAG_RSF));
+
+	/* Enter init mode */
+	while (!(rtc_inst->CRL & RTC_CRL_RTOFF));
+	/* Disable the write protection for RTC registers */
+	SET_BIT(rtc_inst->CRL, RTC_CRL_CNF);
+
+	/* Clear Flags Bits */
+	CLEAR_BIT(rtc_inst->CRL, (RTC_FLAG_OW | RTC_FLAG_ALRAF | RTC_FLAG_SEC));
+
+	/* Set the signal which will be routed to RTC Tamper pin*/
+	MODIFY_REG(BKP->RTCCR, (BKP_RTCCR_CCO | BKP_RTCCR_ASOE | BKP_RTCCR_ASOS), RTC_OUTPUTSOURCE_NONE);
+
+	/* RTC Prescaler will be automatically calculated to get 1 second timebase */
+	/* Get the RTCCLK frequency */
+	uint32_t prescaler = HAL_RCCEx_GetPeriphCLKFreq(RCC_PERIPHCLK_RTC);
+
+	/* RTC period = RTCCLK/(RTC_PR + 1) */
+	prescaler = prescaler - 1U;
+
+	/* Configure the RTC_PRLH / RTC_PRLL */
+	MODIFY_REG(rtc_inst->PRLH, RTC_PRLH_PRL, (prescaler >> 16U));
+	MODIFY_REG(rtc_inst->PRLL, RTC_PRLL_PRL, (prescaler & RTC_PRLL_PRL));
+
+	/* Wait for synchro */
+	/* Exit init mode */
+	CLEAR_BIT(rtc_inst->CRL, RTC_CRL_CNF);
+	while(!(rtc_inst->CRL & RTC_CRL_RTOFF));
+
+	rtc = &(reg->rtc);
 	/* init because we don't want to reset the rtc value after reset */
-	rtc.reg->mode.init = 1;
+	rtc->mode.init = 1;
 	commit_rtc();
 }
 
@@ -91,22 +112,34 @@ void init_rtc(map_t *reg) {
  * @note		Only executes actions if the rtc.mode.init is set.
  */
 error_t commit_rtc() {
-	if (!rtc.reg->mode.init) {
-		RTC_TimeTypeDef time;
-		RTC_DateTypeDef date;
+	RTC_TypeDef *rtc_inst = RTC;
+	if (!rtc->mode.init) {
 
-		time.Seconds = rtc.reg->set_time.second;
-		time.Minutes = rtc.reg->set_time.minute;
-		time.Hours = rtc.reg->set_time.hour;
-		date.WeekDay = rtc.reg->set_time.day_of_week;
-		date.Month = rtc.reg->set_time.month;
-		date.Date = rtc.reg->set_time.day_of_month;
-		date.Year = rtc.reg->set_time.year;
+	    uint32_t counter_time = (((uint32_t)rtc->set_day * 86400U) + \
+	    						((uint32_t)rtc->set_hour * 3600U) + \
+								((uint32_t)rtc->set_minute * 60U) + \
+								((uint32_t)rtc->set_second));
 
-		HAL_RTC_SetTime(&rtc.hrtc, &time, RTC_FORMAT_BIN);
+		/* Enter init mode */
+		while (!(rtc_inst->CRL & RTC_CRL_RTOFF));
+		/* Disable the write protection for RTC registers */
+		SET_BIT(rtc_inst->CRL, RTC_CRL_CNF);
 
-		HAL_RTC_SetDate(&rtc.hrtc, &date, RTC_FORMAT_BIN);
-		rtc.reg->mode.init = 1;
+
+
+		/* Set RTC COUNTER MSB word */
+		WRITE_REG(rtc_inst->CNTH, (counter_time >> 16U));
+		/* Set RTC COUNTER LSB word */
+		WRITE_REG(rtc_inst->CNTL, (counter_time & RTC_CNTL_RTC_CNT));
+
+		/* Wait for synchro */
+		/* Exit init mode */
+		CLEAR_BIT(rtc_inst->CRL, RTC_CRL_CNF);
+		while(!(rtc_inst->CRL & RTC_CRL_RTOFF));
+
+		CLEAR_BIT(rtc_inst->CRL, (RTC_FLAG_SEC | RTC_FLAG_OW));
+
+		rtc->mode.init = 1;
 		return EOK;
 	}
 	return ENOACTION;
@@ -116,17 +149,21 @@ error_t commit_rtc() {
  * @brief		Updates the rtc time.
  */
 void update_rtc() {
-	if (!rtc.reg->mode.disable) {
-		RTC_TimeTypeDef time;
-		RTC_DateTypeDef date;
-		HAL_RTC_GetDate(&rtc.hrtc, &date, RTC_FORMAT_BIN);
-		HAL_RTC_GetTime(&rtc.hrtc, &time, RTC_FORMAT_BIN);
-		rtc.reg->time.second = time.Seconds;
-		rtc.reg->time.minute = time.Minutes;
-		rtc.reg->time.hour = time.Hours;
-		rtc.reg->time.day_of_month = date.Date;
-		rtc.reg->time.day_of_week = date.WeekDay;
-		rtc.reg->time.month = date.Month;
-		rtc.reg->time.year = date.Year;
+	if (!rtc->mode.disable) {
+		RTC_TypeDef *rtc_inst = RTC;
+		uint32_t timecounter;
+		uint16_t high;
+		uint16_t low;
+
+		do {
+			high = rtc_inst->CNTH;
+			low = rtc_inst->CNTL;
+		} while (high != rtc_inst->CNTH);
+		timecounter = (((uint32_t) high << 16U) | low);
+
+		rtc->second = timecounter % 60;
+		rtc->minute = (timecounter / 60) % 60;
+		rtc->hour = (timecounter / (60 * 60)) % 24;
+		rtc->day = (timecounter / (60 * 60 * 24));
 	}
 }

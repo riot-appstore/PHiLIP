@@ -5,7 +5,7 @@
  * @file      PHiLIP_typedef.h
  * @author    Kevin Weiss
  * @version   0.0.2
- * @date      2019-03-20
+ * @date      2019-03-22
  * @details   Generated from the memory map manager
  ******************************************************************************
  */
@@ -252,11 +252,17 @@ typedef union {
 typedef union {
 	struct {
 		basic_mode_t mode; /**< basic mode for rtc settings */
-		timestamp_t time; /**< date and time of the rtc */
-		timestamp_t set_time; /**< date and time of the rtc */
-		uint8_t res[15]; /**< Reserved bytes */
+		uint8_t second; /**< Seconds of rtc */
+		uint8_t minute; /**< Minutes of rtc */
+		uint8_t hour; /**< Hours of rtc */
+		uint16_t day; /**< Days of rtc */
+		uint8_t set_second; /**< Seconds to set of rtc */
+		uint8_t set_minute; /**< Minutes to set of rtc */
+		uint8_t set_hour; /**< Hours to set of rtc */
+		uint16_t set_day; /**< Days to set of rtc */
+		uint8_t res[5]; /**< Reserved bytes */
 	};
-	uint8_t data8[32];/**< array for padding */
+	uint8_t data8[16];/**< array for padding */
 } rtc_t;
 
 /** @brief  unimplemented TMR */
@@ -309,7 +315,7 @@ typedef union {
 		tmr_t tmr; /**<  */
 		gpio_t gpio[3]; /**< GPIO pins available */
 		trace_t trace; /**< Saved timestamps and events */
-		uint8_t res[192]; /**< Reserved bytes */
+		uint8_t res[208]; /**< Reserved bytes */
 	};
 	uint8_t data8[1024];/**< array for padding */
 } map_t;

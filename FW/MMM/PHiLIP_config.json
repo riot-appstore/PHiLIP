@@ -1600,11 +1600,12 @@
                     "type_size": 1
                 },
                 {
-                    "access": 1,
-                    "description": "The seconds in decimal",
+                    "access": 0,
+                    "description": "Seconds of rtc",
+                    "max": 59,
+                    "min": 0,
                     "name": [
                         "rtc",
-                        "time",
                         "second"
                     ],
                     "offset": 433,
@@ -1613,10 +1614,11 @@
                 },
                 {
                     "access": 1,
-                    "description": "The minutes in decimal",
+                    "description": "Minutes to set of rtc",
+                    "max": 59,
+                    "min": 0,
                     "name": [
                         "rtc",
-                        "time",
                         "minute"
                     ],
                     "offset": 434,
@@ -1625,10 +1627,11 @@
                 },
                 {
                     "access": 1,
-                    "description": "The hours in decimal",
+                    "description": "Hours to set of rtc",
+                    "max": 23,
+                    "min": 0,
                     "name": [
                         "rtc",
-                        "time",
                         "hour"
                     ],
                     "offset": 435,
@@ -1637,35 +1640,23 @@
                 },
                 {
                     "access": 1,
-                    "description": "The months in decimal",
+                    "description": "Days to set of rtc",
                     "name": [
                         "rtc",
-                        "time",
-                        "day_of_month"
+                        "day"
                     ],
                     "offset": 436,
-                    "type": "uint8_t",
-                    "type_size": 1
+                    "type": "uint16_t",
+                    "type_size": 2
                 },
                 {
                     "access": 1,
-                    "description": "The week in decimal",
+                    "description": "Seconds to set of rtc",
+                    "max": 59,
+                    "min": 0,
                     "name": [
                         "rtc",
-                        "time",
-                        "day_of_week"
-                    ],
-                    "offset": 437,
-                    "type": "uint8_t",
-                    "type_size": 1
-                },
-                {
-                    "access": 1,
-                    "description": "The month in decimal",
-                    "name": [
-                        "rtc",
-                        "time",
-                        "month"
+                        "set_second"
                     ],
                     "offset": 438,
                     "type": "uint8_t",
@@ -1673,138 +1664,51 @@
                 },
                 {
                     "access": 1,
-                    "description": "The last two digits of the year in decimal (20xx)",
+                    "description": "Minutes to set of rtc",
+                    "max": 59,
+                    "min": 0,
                     "name": [
                         "rtc",
-                        "time",
-                        "year"
+                        "set_minute"
                     ],
                     "offset": 439,
                     "type": "uint8_t",
                     "type_size": 1
                 },
                 {
-                    "access": 0,
-                    "array_size": 1,
-                    "description": "Reserved bytes",
+                    "access": 1,
+                    "description": "Hours to set of rtc",
+                    "max": 23,
+                    "min": 0,
                     "name": [
                         "rtc",
-                        "time",
-                        "res"
+                        "set_hour"
                     ],
                     "offset": 440,
-                    "total_size": 1,
                     "type": "uint8_t",
                     "type_size": 1
                 },
                 {
                     "access": 1,
-                    "description": "The seconds in decimal",
+                    "description": "Days to set of rtc",
                     "name": [
                         "rtc",
-                        "set_time",
-                        "second"
+                        "set_day"
                     ],
                     "offset": 441,
-                    "type": "uint8_t",
-                    "type_size": 1
+                    "type": "uint16_t",
+                    "type_size": 2
                 },
                 {
-                    "access": 1,
-                    "description": "The minutes in decimal",
+                    "access": 0,
+                    "array_size": 5,
+                    "description": "Reserved bytes",
                     "name": [
                         "rtc",
-                        "set_time",
-                        "minute"
-                    ],
-                    "offset": 442,
-                    "type": "uint8_t",
-                    "type_size": 1
-                },
-                {
-                    "access": 1,
-                    "description": "The hours in decimal",
-                    "name": [
-                        "rtc",
-                        "set_time",
-                        "hour"
+                        "res"
                     ],
                     "offset": 443,
-                    "type": "uint8_t",
-                    "type_size": 1
-                },
-                {
-                    "access": 1,
-                    "description": "The months in decimal",
-                    "name": [
-                        "rtc",
-                        "set_time",
-                        "day_of_month"
-                    ],
-                    "offset": 444,
-                    "type": "uint8_t",
-                    "type_size": 1
-                },
-                {
-                    "access": 1,
-                    "description": "The week in decimal",
-                    "name": [
-                        "rtc",
-                        "set_time",
-                        "day_of_week"
-                    ],
-                    "offset": 445,
-                    "type": "uint8_t",
-                    "type_size": 1
-                },
-                {
-                    "access": 1,
-                    "description": "The month in decimal",
-                    "name": [
-                        "rtc",
-                        "set_time",
-                        "month"
-                    ],
-                    "offset": 446,
-                    "type": "uint8_t",
-                    "type_size": 1
-                },
-                {
-                    "access": 1,
-                    "description": "The last two digits of the year in decimal (20xx)",
-                    "name": [
-                        "rtc",
-                        "set_time",
-                        "year"
-                    ],
-                    "offset": 447,
-                    "type": "uint8_t",
-                    "type_size": 1
-                },
-                {
-                    "access": 0,
-                    "array_size": 1,
-                    "description": "Reserved bytes",
-                    "name": [
-                        "rtc",
-                        "set_time",
-                        "res"
-                    ],
-                    "offset": 448,
-                    "total_size": 1,
-                    "type": "uint8_t",
-                    "type_size": 1
-                },
-                {
-                    "access": 0,
-                    "array_size": 15,
-                    "description": "Reserved bytes",
-                    "name": [
-                        "rtc",
-                        "res"
-                    ],
-                    "offset": 449,
-                    "total_size": 15,
+                    "total_size": 5,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -1815,7 +1719,7 @@
                         "adc",
                         "mode"
                     ],
-                    "offset": 464,
+                    "offset": 448,
                     "type": "adc_mode_t",
                     "type_size": 1
                 },
@@ -1829,7 +1733,7 @@
                         "mode",
                         "init"
                     ],
-                    "offset": 464,
+                    "offset": 448,
                     "type_size": 1
                 },
                 {
@@ -1842,7 +1746,7 @@
                         "mode",
                         "enable"
                     ],
-                    "offset": 464,
+                    "offset": 448,
                     "type_size": 1
                 },
                 {
@@ -1855,7 +1759,7 @@
                         "mode",
                         "fast_sample"
                     ],
-                    "offset": 464,
+                    "offset": 448,
                     "type_size": 1
                 },
                 {
@@ -1868,7 +1772,7 @@
                         "adc",
                         "num_of_samples"
                     ],
-                    "offset": 465,
+                    "offset": 449,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -1879,7 +1783,7 @@
                         "adc",
                         "counter"
                     ],
-                    "offset": 469,
+                    "offset": 453,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -1890,7 +1794,7 @@
                         "adc",
                         "index"
                     ],
-                    "offset": 470,
+                    "offset": 454,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -1901,7 +1805,7 @@
                         "adc",
                         "sample"
                     ],
-                    "offset": 474,
+                    "offset": 458,
                     "type": "uint16_t",
                     "type_size": 2
                 },
@@ -1912,7 +1816,7 @@
                         "adc",
                         "sum"
                     ],
-                    "offset": 476,
+                    "offset": 460,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -1923,7 +1827,7 @@
                         "adc",
                         "current_sum"
                     ],
-                    "offset": 480,
+                    "offset": 464,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -1935,7 +1839,7 @@
                         "adc",
                         "res"
                     ],
-                    "offset": 484,
+                    "offset": 468,
                     "total_size": 12,
                     "type": "uint8_t",
                     "type_size": 1
@@ -1947,7 +1851,7 @@
                         "pwm",
                         "mode"
                     ],
-                    "offset": 496,
+                    "offset": 480,
                     "type": "basic_mode_t",
                     "type_size": 1
                 },
@@ -1961,7 +1865,7 @@
                         "mode",
                         "init"
                     ],
-                    "offset": 496,
+                    "offset": 480,
                     "type_size": 1
                 },
                 {
@@ -1974,7 +1878,7 @@
                         "mode",
                         "disable"
                     ],
-                    "offset": 496,
+                    "offset": 480,
                     "type_size": 1
                 },
                 {
@@ -1984,7 +1888,7 @@
                         "pwm",
                         "status"
                     ],
-                    "offset": 497,
+                    "offset": 481,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -1995,7 +1899,7 @@
                         "pwm",
                         "duty_cycle"
                     ],
-                    "offset": 498,
+                    "offset": 482,
                     "type": "uint16_t",
                     "type_size": 2
                 },
@@ -2006,7 +1910,7 @@
                         "pwm",
                         "period"
                     ],
-                    "offset": 500,
+                    "offset": 484,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -2018,7 +1922,7 @@
                         "pwm",
                         "h_ticks"
                     ],
-                    "offset": 504,
+                    "offset": 488,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -2030,7 +1934,7 @@
                         "pwm",
                         "l_ticks"
                     ],
-                    "offset": 508,
+                    "offset": 492,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -2042,7 +1946,7 @@
                         "pwm",
                         "res"
                     ],
-                    "offset": 512,
+                    "offset": 496,
                     "total_size": 16,
                     "type": "uint8_t",
                     "type_size": 1
@@ -2054,7 +1958,7 @@
                         "dac",
                         "mode"
                     ],
-                    "offset": 528,
+                    "offset": 512,
                     "type": "basic_mode_t",
                     "type_size": 1
                 },
@@ -2068,7 +1972,7 @@
                         "mode",
                         "init"
                     ],
-                    "offset": 528,
+                    "offset": 512,
                     "type_size": 1
                 },
                 {
@@ -2081,7 +1985,7 @@
                         "mode",
                         "disable"
                     ],
-                    "offset": 528,
+                    "offset": 512,
                     "type_size": 1
                 },
                 {
@@ -2091,7 +1995,7 @@
                         "dac",
                         "status"
                     ],
-                    "offset": 529,
+                    "offset": 513,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -2103,7 +2007,7 @@
                         "dac",
                         "level"
                     ],
-                    "offset": 530,
+                    "offset": 514,
                     "type": "uint16_t",
                     "type_size": 2
                 },
@@ -2115,7 +2019,7 @@
                         "dac",
                         "res"
                     ],
-                    "offset": 532,
+                    "offset": 516,
                     "total_size": 12,
                     "type": "uint8_t",
                     "type_size": 1
@@ -2127,7 +2031,7 @@
                         "tmr",
                         "mode"
                     ],
-                    "offset": 544,
+                    "offset": 528,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -2138,7 +2042,7 @@
                         "tmr",
                         "error_code"
                     ],
-                    "offset": 545,
+                    "offset": 529,
                     "type": "uint16_t",
                     "type_size": 2
                 },
@@ -2149,7 +2053,7 @@
                         "tmr",
                         "duty"
                     ],
-                    "offset": 547,
+                    "offset": 531,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -2160,7 +2064,7 @@
                         "tmr",
                         "freq"
                     ],
-                    "offset": 548,
+                    "offset": 532,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -2171,7 +2075,7 @@
                         "tmr",
                         "hi_us"
                     ],
-                    "offset": 552,
+                    "offset": 536,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -2182,7 +2086,7 @@
                         "tmr",
                         "lo_us"
                     ],
-                    "offset": 556,
+                    "offset": 540,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -2194,7 +2098,7 @@
                         "0",
                         "mode"
                     ],
-                    "offset": 560,
+                    "offset": 544,
                     "type": "gpio_mode_t",
                     "type_size": 2
                 },
@@ -2209,7 +2113,7 @@
                         "mode",
                         "init"
                     ],
-                    "offset": 560,
+                    "offset": 544,
                     "type_size": 2
                 },
                 {
@@ -2223,7 +2127,7 @@
                         "mode",
                         "io_type"
                     ],
-                    "offset": 560,
+                    "offset": 544,
                     "type_size": 2
                 },
                 {
@@ -2237,7 +2141,7 @@
                         "mode",
                         "level"
                     ],
-                    "offset": 560,
+                    "offset": 544,
                     "type_size": 2
                 },
                 {
@@ -2251,7 +2155,7 @@
                         "mode",
                         "pull"
                     ],
-                    "offset": 560,
+                    "offset": 544,
                     "type_size": 2
                 },
                 {
@@ -2265,7 +2169,7 @@
                         "mode",
                         "tick_div"
                     ],
-                    "offset": 560,
+                    "offset": 544,
                     "type_size": 2
                 },
                 {
@@ -2276,7 +2180,7 @@
                         "0",
                         "status"
                     ],
-                    "offset": 562,
+                    "offset": 546,
                     "type": "gpio_status_t",
                     "type_size": 1
                 },
@@ -2291,7 +2195,7 @@
                         "status",
                         "level"
                     ],
-                    "offset": 562,
+                    "offset": 546,
                     "type_size": 1
                 },
                 {
@@ -2303,7 +2207,7 @@
                         "0",
                         "res"
                     ],
-                    "offset": 563,
+                    "offset": 547,
                     "total_size": 1,
                     "type": "uint8_t",
                     "type_size": 1
@@ -2316,7 +2220,7 @@
                         "1",
                         "mode"
                     ],
-                    "offset": 564,
+                    "offset": 548,
                     "type": "gpio_mode_t",
                     "type_size": 2
                 },
@@ -2331,7 +2235,7 @@
                         "mode",
                         "init"
                     ],
-                    "offset": 564,
+                    "offset": 548,
                     "type_size": 2
                 },
                 {
@@ -2345,7 +2249,7 @@
                         "mode",
                         "io_type"
                     ],
-                    "offset": 564,
+                    "offset": 548,
                     "type_size": 2
                 },
                 {
@@ -2359,7 +2263,7 @@
                         "mode",
                         "level"
                     ],
-                    "offset": 564,
+                    "offset": 548,
                     "type_size": 2
                 },
                 {
@@ -2373,7 +2277,7 @@
                         "mode",
                         "pull"
                     ],
-                    "offset": 564,
+                    "offset": 548,
                     "type_size": 2
                 },
                 {
@@ -2387,7 +2291,7 @@
                         "mode",
                         "tick_div"
                     ],
-                    "offset": 564,
+                    "offset": 548,
                     "type_size": 2
                 },
                 {
@@ -2398,7 +2302,7 @@
                         "1",
                         "status"
                     ],
-                    "offset": 566,
+                    "offset": 550,
                     "type": "gpio_status_t",
                     "type_size": 1
                 },
@@ -2413,7 +2317,7 @@
                         "status",
                         "level"
                     ],
-                    "offset": 566,
+                    "offset": 550,
                     "type_size": 1
                 },
                 {
@@ -2425,7 +2329,7 @@
                         "1",
                         "res"
                     ],
-                    "offset": 567,
+                    "offset": 551,
                     "total_size": 1,
                     "type": "uint8_t",
                     "type_size": 1
@@ -2438,7 +2342,7 @@
                         "2",
                         "mode"
                     ],
-                    "offset": 568,
+                    "offset": 552,
                     "type": "gpio_mode_t",
                     "type_size": 2
                 },
@@ -2453,7 +2357,7 @@
                         "mode",
                         "init"
                     ],
-                    "offset": 568,
+                    "offset": 552,
                     "type_size": 2
                 },
                 {
@@ -2467,7 +2371,7 @@
                         "mode",
                         "io_type"
                     ],
-                    "offset": 568,
+                    "offset": 552,
                     "type_size": 2
                 },
                 {
@@ -2481,7 +2385,7 @@
                         "mode",
                         "level"
                     ],
-                    "offset": 568,
+                    "offset": 552,
                     "type_size": 2
                 },
                 {
@@ -2495,7 +2399,7 @@
                         "mode",
                         "pull"
                     ],
-                    "offset": 568,
+                    "offset": 552,
                     "type_size": 2
                 },
                 {
@@ -2509,7 +2413,7 @@
                         "mode",
                         "tick_div"
                     ],
-                    "offset": 568,
+                    "offset": 552,
                     "type_size": 2
                 },
                 {
@@ -2520,7 +2424,7 @@
                         "2",
                         "status"
                     ],
-                    "offset": 570,
+                    "offset": 554,
                     "type": "gpio_status_t",
                     "type_size": 1
                 },
@@ -2535,7 +2439,7 @@
                         "status",
                         "level"
                     ],
-                    "offset": 570,
+                    "offset": 554,
                     "type_size": 1
                 },
                 {
@@ -2547,7 +2451,7 @@
                         "2",
                         "res"
                     ],
-                    "offset": 571,
+                    "offset": 555,
                     "total_size": 1,
                     "type": "uint8_t",
                     "type_size": 1
@@ -2559,7 +2463,7 @@
                         "trace",
                         "index"
                     ],
-                    "offset": 572,
+                    "offset": 556,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -2571,7 +2475,7 @@
                         "trace",
                         "tick_div"
                     ],
-                    "offset": 576,
+                    "offset": 560,
                     "total_size": 32,
                     "type": "uint8_t",
                     "type_size": 1
@@ -2584,7 +2488,7 @@
                         "trace",
                         "source"
                     ],
-                    "offset": 608,
+                    "offset": 592,
                     "total_size": 32,
                     "type": "uint8_t",
                     "type_size": 1
@@ -2597,7 +2501,7 @@
                         "trace",
                         "value"
                     ],
-                    "offset": 640,
+                    "offset": 624,
                     "total_size": 64,
                     "type": "uint16_t",
                     "type_size": 2
@@ -2610,20 +2514,20 @@
                         "trace",
                         "tick"
                     ],
-                    "offset": 704,
+                    "offset": 688,
                     "total_size": 128,
                     "type": "uint32_t",
                     "type_size": 4
                 },
                 {
                     "access": 0,
-                    "array_size": 192,
+                    "array_size": 208,
                     "description": "Reserved bytes",
                     "name": [
                         "res"
                     ],
-                    "offset": 832,
-                    "total_size": 192,
+                    "offset": 816,
+                    "total_size": 208,
                     "type": "uint8_t",
                     "type_size": 1
                 }
@@ -3073,18 +2977,63 @@
                 },
                 {
                     "access": 0,
-                    "description": "date and time of the rtc",
-                    "name": "time",
-                    "type": "timestamp_t"
+                    "description": "Seconds of rtc",
+                    "max": 59,
+                    "min": 0,
+                    "name": "second",
+                    "type": "uint8_t"
                 },
                 {
-                    "description": "date and time of the rtc",
-                    "name": "set_time",
-                    "type": "timestamp_t"
+                    "access": 0,
+                    "description": "Minutes of rtc",
+                    "max": 59,
+                    "min": 0,
+                    "name": "minute",
+                    "type": "uint8_t"
+                },
+                {
+                    "access": 0,
+                    "description": "Hours of rtc",
+                    "max": 23,
+                    "min": 0,
+                    "name": "hour",
+                    "type": "uint8_t"
+                },
+                {
+                    "access": 0,
+                    "description": "Days of rtc",
+                    "name": "day",
+                    "type": "uint16_t"
+                },
+                {
+                    "description": "Seconds to set of rtc",
+                    "max": 59,
+                    "min": 0,
+                    "name": "set_second",
+                    "type": "uint8_t"
+                },
+                {
+                    "description": "Minutes to set of rtc",
+                    "max": 59,
+                    "min": 0,
+                    "name": "set_minute",
+                    "type": "uint8_t"
+                },
+                {
+                    "description": "Hours to set of rtc",
+                    "max": 23,
+                    "min": 0,
+                    "name": "set_hour",
+                    "type": "uint8_t"
+                },
+                {
+                    "description": "Days to set of rtc",
+                    "name": "set_day",
+                    "type": "uint16_t"
                 }
             ],
             "type_name": "rtc_t",
-            "type_size": 32
+            "type_size": 16
         },
         {
             "description": "unimplemented TMR",
