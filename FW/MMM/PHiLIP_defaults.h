@@ -5,7 +5,7 @@
  * @file      PHiLIP_defaults.h
  * @author    Kevin Weiss
  * @version   0.0.2
- * @date      2019-03-20
+ * @date      2019-03-22
  * @details   Generated from the memory map manager
  ******************************************************************************
  */
@@ -31,6 +31,5 @@
 
 /** @brief Assign defaults for map_t */
 void init_defaults_map_t(map_t *init);
-
 #endif /* PHILIP_DEFAULTS_H */
 /** @} */
