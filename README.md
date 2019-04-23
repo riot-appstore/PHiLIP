@@ -22,8 +22,8 @@ This is intended to provide tools for embedded testing.
 2. Drag and drop the .bin file to flash
 
 # bluepill Pinout
-<a href="RESOURCES/PHiLIP-BLUEPILL-PINOUT.jpg">
-    <img src="RESOURCES/PHiLIP-BLUEPILL-PINOUT.jpg" alt="drawing" width="720px"/>
+<a href="RESOURCES/PHiLIP-BLUEPILL-PINOUT.png">
+    <img src="RESOURCES/PHiLIP-BLUEPILL-PINOUT.png" alt="drawing" width="720px"/>
 </a>
 
 # nucleo-f103rb Pinout

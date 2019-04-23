@@ -5,6 +5,9 @@ matrix:
       python:
         - "3.5"
         - "3.6"
+
+      install:
+        - "pip install flake8"
       script:
         - flake8
 
