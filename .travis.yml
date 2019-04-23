@@ -1,31 +1,39 @@
-# travis build configuration for stm32plus
+# travis build configuration for philip
+matrix:
+  include:
+    - language: python
+      python:
+        - "3.5"
+        - "3.6"
+      script:
+        - flake8
 
-language: c
-sudo: false
+    - language: c
+      sudo: false
 
-addons:
-  apt:
-    packages:
-      - libc6-i386
-      - doxygen
+      addons:
+        apt:
+          packages:
+            - libc6-i386
+            - doxygen
 
-cache:
-  directories:
-    - $HOME/gcc-arm-none-eabi-7-2017-q4-major
+      cache:
+        directories:
+          - $HOME/gcc-arm-none-eabi-7-2017-q4-major
 
-install:
-  - export GCC_DIR=$HOME/gcc-arm-none-eabi-7-2017-q4-major
-  - export GCC_ARCHIVE=$HOME/gcc-arm-none-eabi-7-2017-q4-major-linux.tar.bz2
-  - export GCC_URL=https://developer.arm.com/-/media/Files/downloads/gnu-rm/7-2017q4/gcc-arm-none-eabi-7-2017-q4-major-linux.tar.bz2?revision=375265d4-e9b5-41c8-bf23-56cbe927e156?product=GNU%20Arm%20Embedded%20Toolchain,64-bit,,Linux,7-2017-q4-major
-  - if [ ! -e $GCC_DIR/bin/arm-none-eabi-gcc ]; then wget $GCC_URL -O $GCC_ARCHIVE; tar xfj $GCC_ARCHIVE -C $HOME; fi
-  - export PATH=$PATH:$GCC_DIR/bin
+      install:
+        - export GCC_DIR=$HOME/gcc-arm-none-eabi-7-2017-q4-major
+        - export GCC_ARCHIVE=$HOME/gcc-arm-none-eabi-7-2017-q4-major-linux.tar.bz2
+        - export GCC_URL=https://developer.arm.com/-/media/Files/downloads/gnu-rm/7-2017q4/gcc-arm-none-eabi-7-2017-q4-major-linux.tar.bz2?revision=375265d4-e9b5-41c8-bf23-56cbe927e156?product=GNU%20Arm%20Embedded%20Toolchain,64-bit,,Linux,7-2017-q4-major
+        - if [ ! -e $GCC_DIR/bin/arm-none-eabi-gcc ]; then wget $GCC_URL -O $GCC_ARCHIVE; tar xfj $GCC_ARCHIVE -C $HOME; fi
+        - export PATH=$PATH:$GCC_DIR/bin
 
-script:
-  - cd FW
-  - make
-  - make clean
-  - BOARD=BLUEPILL make
-  - BOARD=BLUEPILL make clean
-  - BOARD=NUCLEOF103RB make
-  - BOARD=NUCLEOF103RB make clean
-  - make doc
+      script:
+        - cd FW
+        - make
+        - make clean
+        - BOARD=BLUEPILL make
+        - BOARD=BLUEPILL make clean
+        - BOARD=NUCLEOF103RB make
+        - BOARD=NUCLEOF103RB make clean
+        - make doc

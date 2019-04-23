@@ -12,3 +12,12 @@ NUCLEOF103RB/
 
 # Docs
 Docs/
+
+# Python compiled files
+*.pyc
+dist/
+build/
+*.egg-info
+*.eggs
+__pycache__
+.pytest_cache
