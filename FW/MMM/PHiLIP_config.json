@@ -5,12 +5,12 @@
             "elements": [
                 {
                     "bits": 1,
-                    "description": "initialize with new params",
+                    "description": "0:periph will initialize on execute - 1:periph initialized",
                     "name": "init"
                 },
                 {
                     "bits": 1,
-                    "description": "resets the DUT",
+                    "description": "1:put DUT in reset mode - 0:run DUT",
                     "name": "dut_rst"
                 }
             ],
@@ -22,8 +22,13 @@
             "elements": [
                 {
                     "bits": 1,
-                    "description": "Update available execute needed",
+                    "description": "1:register configuration requires exceution for changes - 0:nothing to update",
                     "name": "update"
+                },
+                {
+                    "bits": 1,
+                    "description": "1:board is a bluepill - 0:board is a nucleo-f103rb",
+                    "name": "board"
                 }
             ],
             "type": "uint8_t",
@@ -34,42 +39,42 @@
             "elements": [
                 {
                     "bits": 1,
-                    "description": "initialize with new params",
+                    "description": "0:periph will initialize on execute - 1:periph initialized",
                     "name": "init"
                 },
                 {
                     "bits": 1,
-                    "description": "disable i2c functionality",
+                    "description": "0:periph is enabled - 1:periph is disabled",
                     "name": "disable"
                 },
                 {
                     "bits": 1,
-                    "description": "10 bit address enable",
+                    "description": "0:i2c address is 7 bit mode - 1:10 i2c address is 10 bit mode",
                     "name": "addr_10_bit"
                 },
                 {
                     "bits": 1,
-                    "description": "General call enable",
+                    "description": "0:disable general call - 1:enable general call",
                     "name": "general_call"
                 },
                 {
                     "bits": 1,
-                    "description": "Disable for clk stretch",
+                    "description": "0:slave can clock stretch - 1:disables clock stretch",
                     "name": "no_clk_stretch"
                 },
                 {
                     "bits": 1,
-                    "description": "16 bit register access mode",
+                    "description": "0:8 bit register access - 1:16 bit register access mode",
                     "name": "reg_16_bit"
                 },
                 {
                     "bits": 1,
-                    "description": "sets the endianess of the 16 bit reg",
+                    "description": "0:little endian if 16 bit register access - 1:big endian if 16 bit register access",
                     "name": "reg_16_big_endian"
                 },
                 {
                     "bits": 1,
-                    "description": "Forces a data nack",
+                    "description": "0:all data will ACK - 1:all data will NACK",
                     "name": "nack_data"
                 }
             ],
@@ -118,37 +123,37 @@
             "elements": [
                 {
                     "bits": 1,
-                    "description": "initialize with new params",
+                    "description": "0:periph will initialize on execute - 1:periph initialized",
                     "name": "init"
                 },
                 {
                     "bits": 1,
-                    "description": "disable spi functionality",
+                    "description": "0:periph is enabled - 1:periph is disabled",
                     "name": "disable"
                 },
                 {
                     "bits": 1,
-                    "description": "Clock phase",
+                    "description": "0:CK to 0 when idle - 1:CK to 1 when idle",
                     "name": "cpha"
                 },
                 {
                     "bits": 1,
-                    "description": "Clock polarity",
+                    "description": "0:the first clock transition is the first data capture edge - 1:the second clock transition is the first data capture edge",
                     "name": "cpol"
                 },
                 {
                     "bits": 2,
-                    "description": "spi interface type",
+                    "description": "Sets spi modes since slave cannot repsond immediatly - 0:access registers with spi - 1:preloads reg address to 0 for high speed tests - 2:echos SPI bytes - 3:always output user reg 0 (use for timing)",
                     "name": "if_type"
                 },
                 {
                     "bits": 1,
-                    "description": "16 bit register access mode",
+                    "description": "0:8 bit register access - 1:16 bit register access mode",
                     "name": "reg_16_bit"
                 },
                 {
                     "bits": 1,
-                    "description": "sets the endianess of the 16 bit reg",
+                    "description": "0:little endian for 16 bit mode - 1:big endian for 16 bit mode",
                     "name": "reg_16_big_endian"
                 }
             ],
@@ -180,17 +185,17 @@
                 },
                 {
                     "bits": 1,
-                    "description": "Current reading of spi clock",
+                    "description": "0:sclk line low - 1:sclk line high",
                     "name": "clk"
                 },
                 {
                     "bits": 1,
-                    "description": "Clk reading when cs pin starts spi frame",
+                    "description": "SCLK reading at start of frame - 0:sclk line low - 1:sclk line high",
                     "name": "start_clk"
                 },
                 {
                     "bits": 1,
-                    "description": "Clk reading when cs pin ends frame",
+                    "description": "SCLK reading at end of frame - 0:sclk line low - 1:sclk line high",
                     "name": "end_clk"
                 },
                 {
@@ -207,27 +212,27 @@
             "elements": [
                 {
                     "bits": 1,
-                    "description": "initialize with new params",
+                    "description": "0:periph will initialize on execute - 1:periph initialized",
                     "name": "init"
                 },
                 {
                     "bits": 1,
-                    "description": "disable uart functionality",
+                    "description": "0:periph is enabled - 1:periph is disabled",
                     "name": "disable"
                 },
                 {
                     "bits": 2,
-                    "description": "interface mode/echo/etc.",
+                    "description": "0:echos - 1:echos and adds one - 2:reads application registers - 3:constantly transmits",
                     "name": "if_type"
                 },
                 {
                     "bits": 1,
-                    "description": "Number of stop bits",
+                    "description": "0:1 stop bit - 1:2 stop bits",
                     "name": "stop_bits"
                 },
                 {
                     "bits": 2,
-                    "description": "Parity",
+                    "description": "0:no parity - 1:even parity - 2:odd parity",
                     "name": "parity"
                 },
                 {
@@ -237,7 +242,7 @@
                 },
                 {
                     "bits": 1,
-                    "description": "Number of data bits",
+                    "description": "0:8 data bits - 1:7 data bits",
                     "name": "data_bits"
                 }
             ],
@@ -281,27 +286,27 @@
             "elements": [
                 {
                     "bits": 1,
-                    "description": "initialize with new params",
+                    "description": "0:periph will initialize on execute - 1:periph initialized",
                     "name": "init"
                 },
                 {
                     "bits": 2,
-                    "description": "direction of io, in/outpp/outod/int",
+                    "description": "0:high impedance input - 1:push pull output - 2:open drain output - 3:interrupts and saves event",
                     "name": "io_type"
                 },
                 {
                     "bits": 1,
-                    "description": "0 for low, 1 for high, only if output",
+                    "description": "If output sets gpio level - 0:low - 1:high",
                     "name": "level"
                 },
                 {
                     "bits": 2,
-                    "description": "pull of the resistor none/up/down",
+                    "description": "pull of the resistor - 0:none - 1:pullup - 2:pulldown",
                     "name": "pull"
                 },
                 {
                     "bits": 5,
-                    "description": "for trace tick divisor",
+                    "description": "for trace tick divisor - max should be 16 for interface",
                     "name": "tick_div"
                 }
             ],
@@ -313,7 +318,7 @@
             "elements": [
                 {
                     "bits": 1,
-                    "description": "The io level of the pin, 0=low, 1=high",
+                    "description": "The io level of the pin - 0:low - 1:high",
                     "name": "level"
                 }
             ],
@@ -325,17 +330,17 @@
             "elements": [
                 {
                     "bits": 1,
-                    "description": "initialize with new params",
+                    "description": "0:periph will initialize on execute - 1:periph initialized",
                     "name": "init"
                 },
                 {
                     "bits": 1,
-                    "description": "enables periph functionality (disabled by default)",
+                    "description": "0:periph is disabled - 1:periph is enabled",
                     "name": "enable"
                 },
                 {
                     "bits": 1,
-                    "description": "Set to sample as fast as possible",
+                    "description": "0:slow sample rate - 1:fast sample rate",
                     "name": "fast_sample"
                 }
             ],
@@ -347,12 +352,12 @@
             "elements": [
                 {
                     "bits": 1,
-                    "description": "initialize with new params",
+                    "description": "0:periph will initialize on execute - 1:periph initialized",
                     "name": "init"
                 },
                 {
                     "bits": 1,
-                    "description": "disable periph functionality",
+                    "description": "0:periph is enabled - 1:periph is disabled",
                     "name": "disable"
                 }
             ],
@@ -367,7 +372,7 @@
                 {
                     "access": 3,
                     "array_size": 256,
-                    "description": "Writable registers for user testing",
+                    "description": "Writable registers for user testing - Starts at 0 and increases 1 each register by default",
                     "name": [
                         "user_reg"
                     ],
@@ -407,7 +412,7 @@
                 {
                     "access": 0,
                     "array_size": 4,
-                    "description": "Interface revision",
+                    "description": "Interface revision - This corelates to the version of the memory map",
                     "name": [
                         "sys",
                         "if_rev"
@@ -419,7 +424,8 @@
                 },
                 {
                     "access": 0,
-                    "description": "Tick in ms",
+                    "description": "Tick in ms - Updates with the sys tick register every few ms",
+                    "flag": "VOLATILE",
                     "name": [
                         "sys",
                         "tick"
@@ -430,7 +436,7 @@
                 },
                 {
                     "access": 0,
-                    "description": "The seconds in decimal",
+                    "description": "The build time seconds",
                     "flag": "DEVICE_SPECIFIC",
                     "name": [
                         "sys",
@@ -443,7 +449,7 @@
                 },
                 {
                     "access": 0,
-                    "description": "The minutes in decimal",
+                    "description": "The build time minutes",
                     "flag": "DEVICE_SPECIFIC",
                     "name": [
                         "sys",
@@ -456,7 +462,7 @@
                 },
                 {
                     "access": 0,
-                    "description": "The hours in decimal",
+                    "description": "The build time hours",
                     "flag": "DEVICE_SPECIFIC",
                     "name": [
                         "sys",
@@ -469,7 +475,7 @@
                 },
                 {
                     "access": 0,
-                    "description": "The months in decimal",
+                    "description": "The build time day of month",
                     "flag": "DEVICE_SPECIFIC",
                     "name": [
                         "sys",
@@ -482,7 +488,7 @@
                 },
                 {
                     "access": 0,
-                    "description": "The week in decimal",
+                    "description": "Not used",
                     "flag": "DEVICE_SPECIFIC",
                     "name": [
                         "sys",
@@ -495,7 +501,7 @@
                 },
                 {
                     "access": 0,
-                    "description": "The month in decimal",
+                    "description": "The build time month",
                     "flag": "DEVICE_SPECIFIC",
                     "name": [
                         "sys",
@@ -508,7 +514,7 @@
                 },
                 {
                     "access": 0,
-                    "description": "The last two digits of the year in decimal (20xx)",
+                    "description": "The build time year (20XX)",
                     "flag": "DEVICE_SPECIFIC",
                     "name": [
                         "sys",
@@ -536,7 +542,7 @@
                 {
                     "access": 0,
                     "default": 17061,
-                    "description": "A constant number that should always be the same",
+                    "description": "The philip device designator - A constant number to identify philip firmware",
                     "name": [
                         "sys",
                         "device_num"
@@ -547,7 +553,7 @@
                 },
                 {
                     "access": 0,
-                    "description": "The frequency of the system clock",
+                    "description": "The frequency of the system clock in Hz",
                     "name": [
                         "sys",
                         "sys_clk"
@@ -559,6 +565,7 @@
                 {
                     "access": 0,
                     "description": "Status of system",
+                    "flag": "DEVICE_SPECIFIC",
                     "name": [
                         "sys",
                         "status"
@@ -571,11 +578,25 @@
                     "access": 0,
                     "bit_offset": 0,
                     "bits": 1,
-                    "description": "Update available execute needed",
+                    "description": "1:register configuration requires exceution for changes - 0:nothing to update",
                     "name": [
                         "sys",
                         "status",
                         "update"
+                    ],
+                    "offset": 300,
+                    "type_size": 1
+                },
+                {
+                    "access": 0,
+                    "bit_offset": 1,
+                    "bits": 1,
+                    "description": "1:board is a bluepill - 0:board is a nucleo-f103rb",
+                    "flag": "DEVICE_SPECIFIC",
+                    "name": [
+                        "sys",
+                        "status",
+                        "board"
                     ],
                     "offset": 300,
                     "type_size": 1
@@ -595,7 +616,7 @@
                     "access": 1,
                     "bit_offset": 0,
                     "bits": 1,
-                    "description": "initialize with new params",
+                    "description": "0:periph will initialize on execute - 1:periph initialized",
                     "name": [
                         "sys",
                         "mode",
@@ -608,7 +629,7 @@
                     "access": 1,
                     "bit_offset": 1,
                     "bits": 1,
-                    "description": "resets the DUT",
+                    "description": "1:put DUT in reset mode - 0:run DUT",
                     "name": [
                         "sys",
                         "mode",
@@ -645,7 +666,7 @@
                     "access": 1,
                     "bit_offset": 0,
                     "bits": 1,
-                    "description": "initialize with new params",
+                    "description": "0:periph will initialize on execute - 1:periph initialized",
                     "name": [
                         "i2c",
                         "mode",
@@ -658,7 +679,7 @@
                     "access": 1,
                     "bit_offset": 1,
                     "bits": 1,
-                    "description": "disable i2c functionality",
+                    "description": "0:periph is enabled - 1:periph is disabled",
                     "name": [
                         "i2c",
                         "mode",
@@ -671,7 +692,7 @@
                     "access": 1,
                     "bit_offset": 2,
                     "bits": 1,
-                    "description": "10 bit address enable",
+                    "description": "0:i2c address is 7 bit mode - 1:10 i2c address is 10 bit mode",
                     "name": [
                         "i2c",
                         "mode",
@@ -684,7 +705,7 @@
                     "access": 1,
                     "bit_offset": 3,
                     "bits": 1,
-                    "description": "General call enable",
+                    "description": "0:disable general call - 1:enable general call",
                     "name": [
                         "i2c",
                         "mode",
@@ -697,7 +718,7 @@
                     "access": 1,
                     "bit_offset": 4,
                     "bits": 1,
-                    "description": "Disable for clk stretch",
+                    "description": "0:slave can clock stretch - 1:disables clock stretch",
                     "name": [
                         "i2c",
                         "mode",
@@ -710,7 +731,7 @@
                     "access": 1,
                     "bit_offset": 5,
                     "bits": 1,
-                    "description": "16 bit register access mode",
+                    "description": "0:8 bit register access - 1:16 bit register access mode",
                     "name": [
                         "i2c",
                         "mode",
@@ -723,7 +744,7 @@
                     "access": 1,
                     "bit_offset": 6,
                     "bits": 1,
-                    "description": "sets the endianess of the 16 bit reg",
+                    "description": "0:little endian if 16 bit register access - 1:big endian if 16 bit register access",
                     "name": [
                         "i2c",
                         "mode",
@@ -736,7 +757,7 @@
                     "access": 1,
                     "bit_offset": 7,
                     "bits": 1,
-                    "description": "Forces a data nack",
+                    "description": "0:all data will ACK - 1:all data will NACK",
                     "name": [
                         "i2c",
                         "mode",
@@ -757,7 +778,7 @@
                     "type_size": 1
                 },
                 {
-                    "access": 1,
+                    "access": 0,
                     "bit_offset": 0,
                     "bits": 1,
                     "description": "Overrun/Underrun: Request for new byte when not ready",
@@ -770,7 +791,7 @@
                     "type_size": 1
                 },
                 {
-                    "access": 1,
+                    "access": 0,
                     "bit_offset": 1,
                     "bits": 1,
                     "description": "Acknowledge failure",
@@ -783,7 +804,7 @@
                     "type_size": 1
                 },
                 {
-                    "access": 1,
+                    "access": 0,
                     "bit_offset": 2,
                     "bits": 1,
                     "description": "Bus error:  Non-valid position during a byte transfer",
@@ -796,7 +817,7 @@
                     "type_size": 1
                 },
                 {
-                    "access": 1,
+                    "access": 0,
                     "bit_offset": 3,
                     "bits": 1,
                     "description": "General call address received",
@@ -809,7 +830,7 @@
                     "type_size": 1
                 },
                 {
-                    "access": 1,
+                    "access": 0,
                     "bit_offset": 4,
                     "bits": 1,
                     "description": "i2c bus is BUSY",
@@ -822,7 +843,7 @@
                     "type_size": 1
                 },
                 {
-                    "access": 1,
+                    "access": 0,
                     "bit_offset": 5,
                     "bits": 1,
                     "description": "Repeated start detected",
@@ -836,7 +857,7 @@
                 },
                 {
                     "access": 1,
-                    "description": "Delay in us for clock stretch",
+                    "description": "Clock stretch the first byte in us",
                     "name": [
                         "i2c",
                         "clk_stretch_delay"
@@ -877,7 +898,7 @@
                 },
                 {
                     "access": 0,
-                    "description": "Current state of the i2c bus",
+                    "description": "Current state of i2c frame - 0:initialized - 1:reading data - 2-write address recieved - 3-1st reg byte recieved - 4-writing data - 5-NACK - 6-stopped",
                     "name": [
                         "i2c",
                         "state"
@@ -910,7 +931,7 @@
                 },
                 {
                     "access": 1,
-                    "description": "Last read frame byte count",
+                    "description": "Last read frame byte count - only in reg if_type 0",
                     "name": [
                         "i2c",
                         "r_count"
@@ -921,7 +942,7 @@
                 },
                 {
                     "access": 1,
-                    "description": "Last write frame byte count",
+                    "description": "Last write frame byte count - only in reg if_type 0",
                     "name": [
                         "i2c",
                         "w_count"
@@ -965,7 +986,7 @@
                 },
                 {
                     "access": 0,
-                    "description": "Ticks for full read frame",
+                    "description": "Ticks for full read frame after the address is acked",
                     "name": [
                         "i2c",
                         "f_r_ticks"
@@ -1013,7 +1034,7 @@
                     "access": 1,
                     "bit_offset": 0,
                     "bits": 1,
-                    "description": "initialize with new params",
+                    "description": "0:periph will initialize on execute - 1:periph initialized",
                     "name": [
                         "spi",
                         "mode",
@@ -1026,7 +1047,7 @@
                     "access": 1,
                     "bit_offset": 1,
                     "bits": 1,
-                    "description": "disable spi functionality",
+                    "description": "0:periph is enabled - 1:periph is disabled",
                     "name": [
                         "spi",
                         "mode",
@@ -1039,7 +1060,7 @@
                     "access": 1,
                     "bit_offset": 2,
                     "bits": 1,
-                    "description": "Clock phase",
+                    "description": "0:CK to 0 when idle - 1:CK to 1 when idle",
                     "name": [
                         "spi",
                         "mode",
@@ -1052,7 +1073,7 @@
                     "access": 1,
                     "bit_offset": 3,
                     "bits": 1,
-                    "description": "Clock polarity",
+                    "description": "0:the first clock transition is the first data capture edge - 1:the second clock transition is the first data capture edge",
                     "name": [
                         "spi",
                         "mode",
@@ -1065,7 +1086,7 @@
                     "access": 1,
                     "bit_offset": 4,
                     "bits": 2,
-                    "description": "spi interface type",
+                    "description": "Sets spi modes since slave cannot responds immediately - 0:access registers with spi - 1:preloads reg address to 0 for high speed tests - 2:echos SPI bytes - 3:always output user reg 0 (use for timing)",
                     "name": [
                         "spi",
                         "mode",
@@ -1078,7 +1099,7 @@
                     "access": 1,
                     "bit_offset": 6,
                     "bits": 1,
-                    "description": "16 bit register access mode",
+                    "description": "0:8 bit register access - 1:16 bit register access mode",
                     "name": [
                         "spi",
                         "mode",
@@ -1091,7 +1112,7 @@
                     "access": 1,
                     "bit_offset": 7,
                     "bits": 1,
-                    "description": "sets the endianess of the 16 bit reg",
+                    "description": "0:little endian for 16 bit mode - 1:big endian for 16 bit mode",
                     "name": [
                         "spi",
                         "mode",
@@ -1112,7 +1133,7 @@
                     "type_size": 1
                 },
                 {
-                    "access": 1,
+                    "access": 0,
                     "bit_offset": 0,
                     "bits": 1,
                     "description": "Busy flag",
@@ -1125,7 +1146,7 @@
                     "type_size": 1
                 },
                 {
-                    "access": 1,
+                    "access": 0,
                     "bit_offset": 1,
                     "bits": 1,
                     "description": "Overrun flag",
@@ -1138,7 +1159,7 @@
                     "type_size": 1
                 },
                 {
-                    "access": 1,
+                    "access": 0,
                     "bit_offset": 2,
                     "bits": 1,
                     "description": "Mode fault",
@@ -1151,7 +1172,7 @@
                     "type_size": 1
                 },
                 {
-                    "access": 1,
+                    "access": 0,
                     "bit_offset": 3,
                     "bits": 1,
                     "description": "Underrun flag",
@@ -1164,10 +1185,10 @@
                     "type_size": 1
                 },
                 {
-                    "access": 1,
+                    "access": 0,
                     "bit_offset": 4,
                     "bits": 1,
-                    "description": "Clock active/inactive",
+                    "description": "0:sclk line low - 1:sclk line high",
                     "name": [
                         "spi",
                         "status",
@@ -1177,10 +1198,10 @@
                     "type_size": 1
                 },
                 {
-                    "access": 1,
+                    "access": 0,
                     "bit_offset": 5,
                     "bits": 1,
-                    "description": "Clk reading when cs pin starts spi frame",
+                    "description": "SCLK reading at start of frame - 0:sclk line low - 1:sclk line high",
                     "name": [
                         "spi",
                         "status",
@@ -1190,10 +1211,10 @@
                     "type_size": 1
                 },
                 {
-                    "access": 1,
+                    "access": 0,
                     "bit_offset": 6,
                     "bits": 1,
-                    "description": "Clk reading when cs pin ends frame",
+                    "description": "SCLK reading at end of frame - 0:sclk line low - 1:sclk line high",
                     "name": [
                         "spi",
                         "status",
@@ -1203,7 +1224,7 @@
                     "type_size": 1
                 },
                 {
-                    "access": 1,
+                    "access": 0,
                     "bit_offset": 7,
                     "bits": 1,
                     "description": "Register index error",
@@ -1217,7 +1238,7 @@
                 },
                 {
                     "access": 0,
-                    "description": "Current state of the i2c bus",
+                    "description": "Current state of the spi bus - 0:initialized - 1:NSS pin just lowered - 2:writing to reg - 3:reading reg - 4:transfering data - 5:NSS up and finished",
                     "name": [
                         "spi",
                         "state"
@@ -1228,7 +1249,7 @@
                 },
                 {
                     "access": 0,
-                    "description": "current index of i2c pointer",
+                    "description": "Current index of reg pointer",
                     "name": [
                         "spi",
                         "reg_index"
@@ -1239,7 +1260,7 @@
                 },
                 {
                     "access": 0,
-                    "description": "start index of i2c pointer",
+                    "description": "Start index of reg pointer",
                     "name": [
                         "spi",
                         "start_reg_index"
@@ -1329,7 +1350,7 @@
                 },
                 {
                     "access": 1,
-                    "description": "Test mode",
+                    "description": "UART mode settings",
                     "name": [
                         "uart",
                         "mode"
@@ -1342,7 +1363,7 @@
                     "access": 1,
                     "bit_offset": 0,
                     "bits": 1,
-                    "description": "initialize with new params",
+                    "description": "0:periph will initialize on execute - 1:periph initialized",
                     "name": [
                         "uart",
                         "mode",
@@ -1355,7 +1376,7 @@
                     "access": 1,
                     "bit_offset": 1,
                     "bits": 1,
-                    "description": "disable uart functionality",
+                    "description": "0:periph is enabled - 1:periph is disabled",
                     "name": [
                         "uart",
                         "mode",
@@ -1368,7 +1389,7 @@
                     "access": 1,
                     "bit_offset": 2,
                     "bits": 2,
-                    "description": "interface mode/echo/etc.",
+                    "description": "0:echos - 1:echos and adds one - 2:reads application registers - 3:constantly transmits",
                     "name": [
                         "uart",
                         "mode",
@@ -1381,7 +1402,7 @@
                     "access": 1,
                     "bit_offset": 4,
                     "bits": 1,
-                    "description": "Number of stop bits",
+                    "description": "0:1 stop bit - 1:2 stop bits",
                     "name": [
                         "uart",
                         "mode",
@@ -1394,7 +1415,7 @@
                     "access": 1,
                     "bit_offset": 5,
                     "bits": 2,
-                    "description": "Parity",
+                    "description": "0:no parity - 1:even parity - 2:odd parity",
                     "name": [
                         "uart",
                         "mode",
@@ -1420,7 +1441,7 @@
                     "access": 1,
                     "bit_offset": 8,
                     "bits": 1,
-                    "description": "Number of data bits",
+                    "description": "0:8 data bits - 1:7 data bits",
                     "name": [
                         "uart",
                         "mode",
@@ -1442,7 +1463,7 @@
                 },
                 {
                     "access": 0,
-                    "description": "Baudrate",
+                    "description": "Masks the data coming in if 7 bit mode",
                     "name": [
                         "uart",
                         "mask_msb"
@@ -1577,7 +1598,7 @@
                     "access": 1,
                     "bit_offset": 0,
                     "bits": 1,
-                    "description": "initialize with new params",
+                    "description": "0:periph will initialize on execute - 1:periph initialized",
                     "name": [
                         "rtc",
                         "mode",
@@ -1590,7 +1611,7 @@
                     "access": 1,
                     "bit_offset": 1,
                     "bits": 1,
-                    "description": "disable periph functionality",
+                    "description": "0:periph is enabled - 1:periph is disabled",
                     "name": [
                         "rtc",
                         "mode",
@@ -1602,6 +1623,7 @@
                 {
                     "access": 0,
                     "description": "Seconds of rtc",
+                    "flag": "VOLATILE",
                     "max": 59,
                     "min": 0,
                     "name": [
@@ -1613,8 +1635,9 @@
                     "type_size": 1
                 },
                 {
-                    "access": 1,
+                    "access": 0,
                     "description": "Minutes to set of rtc",
+                    "flag": "VOLATILE",
                     "max": 59,
                     "min": 0,
                     "name": [
@@ -1626,8 +1649,9 @@
                     "type_size": 1
                 },
                 {
-                    "access": 1,
+                    "access": 0,
                     "description": "Hours to set of rtc",
+                    "flag": "VOLATILE",
                     "max": 23,
                     "min": 0,
                     "name": [
@@ -1639,8 +1663,9 @@
                     "type_size": 1
                 },
                 {
-                    "access": 1,
+                    "access": 0,
                     "description": "Days to set of rtc",
+                    "flag": "VOLATILE",
                     "name": [
                         "rtc",
                         "day"
@@ -1727,7 +1752,7 @@
                     "access": 1,
                     "bit_offset": 0,
                     "bits": 1,
-                    "description": "initialize with new params",
+                    "description": "0:periph will initialize on execute - 1:periph initialized",
                     "name": [
                         "adc",
                         "mode",
@@ -1740,7 +1765,7 @@
                     "access": 1,
                     "bit_offset": 1,
                     "bits": 1,
-                    "description": "enables periph functionality (disabled by default)",
+                    "description": "0:periph is disabled - 1:periph is enabled",
                     "name": [
                         "adc",
                         "mode",
@@ -1753,7 +1778,7 @@
                     "access": 1,
                     "bit_offset": 2,
                     "bits": 1,
-                    "description": "Set to sample as fast as possible",
+                    "description": "0:slow sample rate - 1:fastest sample rate",
                     "name": [
                         "adc",
                         "mode",
@@ -1778,7 +1803,7 @@
                 },
                 {
                     "access": 0,
-                    "description": "sum counter, increases when available",
+                    "description": "Sum counter increases when available",
                     "name": [
                         "adc",
                         "counter"
@@ -1789,7 +1814,7 @@
                 },
                 {
                     "access": 0,
-                    "description": "sample index, increases when new sample read",
+                    "description": "Sample index increases when new sample read",
                     "name": [
                         "adc",
                         "index"
@@ -1800,7 +1825,7 @@
                 },
                 {
                     "access": 0,
-                    "description": "current 12 bit sample value",
+                    "description": "Current 12 bit sample value",
                     "name": [
                         "adc",
                         "sample"
@@ -1846,7 +1871,7 @@
                 },
                 {
                     "access": 1,
-                    "description": "",
+                    "description": "basic mode for pwm settings",
                     "name": [
                         "pwm",
                         "mode"
@@ -1859,7 +1884,7 @@
                     "access": 1,
                     "bit_offset": 0,
                     "bits": 1,
-                    "description": "initialize with new params",
+                    "description": "0:periph will initialize on execute - 1:periph initialized",
                     "name": [
                         "pwm",
                         "mode",
@@ -1872,7 +1897,7 @@
                     "access": 1,
                     "bit_offset": 1,
                     "bits": 1,
-                    "description": "disable periph functionality",
+                    "description": "0:periph is enabled - 1:periph is disabled",
                     "name": [
                         "pwm",
                         "mode",
@@ -1966,7 +1991,7 @@
                     "access": 1,
                     "bit_offset": 0,
                     "bits": 1,
-                    "description": "initialize with new params",
+                    "description": "0:periph will initialize on execute - 1:periph initialized",
                     "name": [
                         "dac",
                         "mode",
@@ -1979,7 +2004,7 @@
                     "access": 1,
                     "bit_offset": 1,
                     "bits": 1,
-                    "description": "disable periph functionality",
+                    "description": "0:periph is enabled - 1:periph is disabled",
                     "name": [
                         "dac",
                         "mode",
@@ -2026,79 +2051,261 @@
                 },
                 {
                     "access": 1,
-                    "description": "",
+                    "description": "The selected GPIO mode",
                     "name": [
-                        "tmr",
+                        "gpio",
+                        "0",
                         "mode"
                     ],
                     "offset": 528,
-                    "type": "uint8_t",
-                    "type_size": 1
-                },
-                {
-                    "access": 1,
-                    "description": "",
-                    "name": [
-                        "tmr",
-                        "error_code"
-                    ],
-                    "offset": 529,
-                    "type": "uint16_t",
+                    "type": "gpio_mode_t",
                     "type_size": 2
                 },
                 {
                     "access": 1,
-                    "description": "",
+                    "bit_offset": 0,
+                    "bits": 1,
+                    "description": "0:periph will initialize on execute - 1:periph initialized",
                     "name": [
-                        "tmr",
-                        "duty"
+                        "gpio",
+                        "0",
+                        "mode",
+                        "init"
+                    ],
+                    "offset": 528,
+                    "type_size": 2
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 1,
+                    "bits": 2,
+                    "description": "direction of io in/out0/out1/int",
+                    "name": [
+                        "gpio",
+                        "0",
+                        "mode",
+                        "io_type"
+                    ],
+                    "offset": 528,
+                    "type_size": 2
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 3,
+                    "bits": 1,
+                    "description": "If output sets gpio level - 0:low - 1:high",
+                    "name": [
+                        "gpio",
+                        "0",
+                        "mode",
+                        "level"
+                    ],
+                    "offset": 528,
+                    "type_size": 2
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 4,
+                    "bits": 2,
+                    "description": "pull of the resistor - 0:none - 1:pullup - 2:pulldown",
+                    "name": [
+                        "gpio",
+                        "0",
+                        "mode",
+                        "pull"
+                    ],
+                    "offset": 528,
+                    "type_size": 2
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 6,
+                    "bits": 5,
+                    "description": "for trace tick divisor - max should be 16 for interface",
+                    "name": [
+                        "gpio",
+                        "0",
+                        "mode",
+                        "tick_div"
+                    ],
+                    "offset": 528,
+                    "type_size": 2
+                },
+                {
+                    "access": 0,
+                    "description": "The status of the GPIO",
+                    "flag": "VOLATILE",
+                    "name": [
+                        "gpio",
+                        "0",
+                        "status"
+                    ],
+                    "offset": 530,
+                    "type": "gpio_status_t",
+                    "type_size": 1
+                },
+                {
+                    "access": 0,
+                    "bit_offset": 0,
+                    "bits": 1,
+                    "description": "The io level of the pin 0=low 1=high",
+                    "flag": "VOLATILE",
+                    "name": [
+                        "gpio",
+                        "0",
+                        "status",
+                        "level"
+                    ],
+                    "offset": 530,
+                    "type_size": 1
+                },
+                {
+                    "access": 0,
+                    "array_size": 1,
+                    "description": "Reserved bytes",
+                    "name": [
+                        "gpio",
+                        "0",
+                        "res"
                     ],
                     "offset": 531,
+                    "total_size": 1,
                     "type": "uint8_t",
                     "type_size": 1
                 },
                 {
                     "access": 1,
-                    "description": "",
+                    "description": "The selected GPIO mode",
                     "name": [
-                        "tmr",
-                        "freq"
+                        "gpio",
+                        "1",
+                        "mode"
                     ],
                     "offset": 532,
-                    "type": "uint32_t",
-                    "type_size": 4
+                    "type": "gpio_mode_t",
+                    "type_size": 2
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 0,
+                    "bits": 1,
+                    "description": "0:periph will initialize on execute - 1:periph initialized",
+                    "name": [
+                        "gpio",
+                        "1",
+                        "mode",
+                        "init"
+                    ],
+                    "offset": 532,
+                    "type_size": 2
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 1,
+                    "bits": 2,
+                    "description": "0:high impedance input - 1:push pull output - 2:open drain output - 3:interrupts and saves event",
+                    "name": [
+                        "gpio",
+                        "1",
+                        "mode",
+                        "io_type"
+                    ],
+                    "offset": 532,
+                    "type_size": 2
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 3,
+                    "bits": 1,
+                    "description": "If output sets gpio level - 0:low - 1:high",
+                    "name": [
+                        "gpio",
+                        "1",
+                        "mode",
+                        "level"
+                    ],
+                    "offset": 532,
+                    "type_size": 2
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 4,
+                    "bits": 2,
+                    "description": "pull of the resistor - 0:none - 1:pullup - 2:pulldown",
+                    "name": [
+                        "gpio",
+                        "1",
+                        "mode",
+                        "pull"
+                    ],
+                    "offset": 532,
+                    "type_size": 2
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 6,
+                    "bits": 5,
+                    "description": "for trace tick divisor - max should be 16 for interface",
+                    "name": [
+                        "gpio",
+                        "1",
+                        "mode",
+                        "tick_div"
+                    ],
+                    "offset": 532,
+                    "type_size": 2
+                },
+                {
+                    "access": 0,
+                    "description": "The status of the GPIO",
+                    "flag": "VOLATILE",
+                    "name": [
+                        "gpio",
+                        "1",
+                        "status"
+                    ],
+                    "offset": 534,
+                    "type": "gpio_status_t",
+                    "type_size": 1
+                },
+                {
+                    "access": 0,
+                    "bit_offset": 0,
+                    "bits": 1,
+                    "description": "The io level of the pin - 0:low - 1:high",
+                    "flag": "VOLATILE",
+                    "name": [
+                        "gpio",
+                        "1",
+                        "status",
+                        "level"
+                    ],
+                    "offset": 534,
+                    "type_size": 1
+                },
+                {
+                    "access": 0,
+                    "array_size": 1,
+                    "description": "Reserved bytes",
+                    "name": [
+                        "gpio",
+                        "1",
+                        "res"
+                    ],
+                    "offset": 535,
+                    "total_size": 1,
+                    "type": "uint8_t",
+                    "type_size": 1
                 },
                 {
                     "access": 1,
                     "description": "",
                     "name": [
-                        "tmr",
-                        "hi_us"
+                        "gpio",
+                        "2",
+                        "mode"
                     ],
                     "offset": 536,
-                    "type": "uint32_t",
-                    "type_size": 4
-                },
-                {
-                    "access": 1,
-                    "description": "",
-                    "name": [
-                        "tmr",
-                        "lo_us"
-                    ],
-                    "offset": 540,
-                    "type": "uint32_t",
-                    "type_size": 4
-                },
-                {
-                    "access": 0,
-                    "description": "",
-                    "name": [
-                        "gpio",
-                        "0",
-                        "mode"
-                    ],
-                    "offset": 544,
                     "type": "gpio_mode_t",
                     "type_size": 2
                 },
@@ -2106,340 +2313,98 @@
                     "access": 1,
                     "bit_offset": 0,
                     "bits": 1,
-                    "description": "initialize with new params",
-                    "name": [
-                        "gpio",
-                        "0",
-                        "mode",
-                        "init"
-                    ],
-                    "offset": 544,
-                    "type_size": 2
-                },
-                {
-                    "access": 1,
-                    "bit_offset": 1,
-                    "bits": 2,
-                    "description": "direction of io, out0/out1/in/int",
-                    "name": [
-                        "gpio",
-                        "0",
-                        "mode",
-                        "io_type"
-                    ],
-                    "offset": 544,
-                    "type_size": 2
-                },
-                {
-                    "access": 1,
-                    "bit_offset": 3,
-                    "bits": 1,
-                    "description": "0 for low, 1 for high, only if output",
-                    "name": [
-                        "gpio",
-                        "0",
-                        "mode",
-                        "level"
-                    ],
-                    "offset": 544,
-                    "type_size": 2
-                },
-                {
-                    "access": 1,
-                    "bit_offset": 4,
-                    "bits": 2,
-                    "description": "pull of the resistor up/down/none",
-                    "name": [
-                        "gpio",
-                        "0",
-                        "mode",
-                        "pull"
-                    ],
-                    "offset": 544,
-                    "type_size": 2
-                },
-                {
-                    "access": 1,
-                    "bit_offset": 6,
-                    "bits": 5,
-                    "description": "for trace tick divisor",
-                    "name": [
-                        "gpio",
-                        "0",
-                        "mode",
-                        "tick_div"
-                    ],
-                    "offset": 544,
-                    "type_size": 2
-                },
-                {
-                    "access": 0,
-                    "description": "",
-                    "name": [
-                        "gpio",
-                        "0",
-                        "status"
-                    ],
-                    "offset": 546,
-                    "type": "gpio_status_t",
-                    "type_size": 1
-                },
-                {
-                    "access": 1,
-                    "bit_offset": 0,
-                    "bits": 1,
-                    "description": "The io level of the pin, 0=low, 1=high",
-                    "name": [
-                        "gpio",
-                        "0",
-                        "status",
-                        "level"
-                    ],
-                    "offset": 546,
-                    "type_size": 1
-                },
-                {
-                    "access": 0,
-                    "array_size": 1,
-                    "description": "Reserved bytes",
-                    "name": [
-                        "gpio",
-                        "0",
-                        "res"
-                    ],
-                    "offset": 547,
-                    "total_size": 1,
-                    "type": "uint8_t",
-                    "type_size": 1
-                },
-                {
-                    "access": 0,
-                    "description": "",
-                    "name": [
-                        "gpio",
-                        "1",
-                        "mode"
-                    ],
-                    "offset": 548,
-                    "type": "gpio_mode_t",
-                    "type_size": 2
-                },
-                {
-                    "access": 1,
-                    "bit_offset": 0,
-                    "bits": 1,
-                    "description": "initialize with new params",
-                    "name": [
-                        "gpio",
-                        "1",
-                        "mode",
-                        "init"
-                    ],
-                    "offset": 548,
-                    "type_size": 2
-                },
-                {
-                    "access": 1,
-                    "bit_offset": 1,
-                    "bits": 2,
-                    "description": "direction of io, out0/out1/in/int",
-                    "name": [
-                        "gpio",
-                        "1",
-                        "mode",
-                        "io_type"
-                    ],
-                    "offset": 548,
-                    "type_size": 2
-                },
-                {
-                    "access": 1,
-                    "bit_offset": 3,
-                    "bits": 1,
-                    "description": "0 for low, 1 for high, only if output",
-                    "name": [
-                        "gpio",
-                        "1",
-                        "mode",
-                        "level"
-                    ],
-                    "offset": 548,
-                    "type_size": 2
-                },
-                {
-                    "access": 1,
-                    "bit_offset": 4,
-                    "bits": 2,
-                    "description": "pull of the resistor up/down/none",
-                    "name": [
-                        "gpio",
-                        "1",
-                        "mode",
-                        "pull"
-                    ],
-                    "offset": 548,
-                    "type_size": 2
-                },
-                {
-                    "access": 1,
-                    "bit_offset": 6,
-                    "bits": 5,
-                    "description": "for trace tick divisor",
-                    "name": [
-                        "gpio",
-                        "1",
-                        "mode",
-                        "tick_div"
-                    ],
-                    "offset": 548,
-                    "type_size": 2
-                },
-                {
-                    "access": 0,
-                    "description": "",
-                    "name": [
-                        "gpio",
-                        "1",
-                        "status"
-                    ],
-                    "offset": 550,
-                    "type": "gpio_status_t",
-                    "type_size": 1
-                },
-                {
-                    "access": 1,
-                    "bit_offset": 0,
-                    "bits": 1,
-                    "description": "The io level of the pin, 0=low, 1=high",
-                    "name": [
-                        "gpio",
-                        "1",
-                        "status",
-                        "level"
-                    ],
-                    "offset": 550,
-                    "type_size": 1
-                },
-                {
-                    "access": 0,
-                    "array_size": 1,
-                    "description": "Reserved bytes",
-                    "name": [
-                        "gpio",
-                        "1",
-                        "res"
-                    ],
-                    "offset": 551,
-                    "total_size": 1,
-                    "type": "uint8_t",
-                    "type_size": 1
-                },
-                {
-                    "access": 0,
-                    "description": "",
-                    "name": [
-                        "gpio",
-                        "2",
-                        "mode"
-                    ],
-                    "offset": 552,
-                    "type": "gpio_mode_t",
-                    "type_size": 2
-                },
-                {
-                    "access": 1,
-                    "bit_offset": 0,
-                    "bits": 1,
-                    "description": "initialize with new params",
+                    "description": "0:periph will initialize on execute - 1:periph initialized",
                     "name": [
                         "gpio",
                         "2",
                         "mode",
                         "init"
                     ],
-                    "offset": 552,
+                    "offset": 536,
                     "type_size": 2
                 },
                 {
                     "access": 1,
                     "bit_offset": 1,
                     "bits": 2,
-                    "description": "direction of io, out0/out1/in/int",
+                    "description": "0:high impedance input - 1:push pull output - 2:open drain output - 3:interrupts and saves event",
                     "name": [
                         "gpio",
                         "2",
                         "mode",
                         "io_type"
                     ],
-                    "offset": 552,
+                    "offset": 536,
                     "type_size": 2
                 },
                 {
                     "access": 1,
                     "bit_offset": 3,
                     "bits": 1,
-                    "description": "0 for low, 1 for high, only if output",
+                    "description": "If output sets gpio level - 0:low - 1:high",
                     "name": [
                         "gpio",
                         "2",
                         "mode",
                         "level"
                     ],
-                    "offset": 552,
+                    "offset": 536,
                     "type_size": 2
                 },
                 {
                     "access": 1,
                     "bit_offset": 4,
                     "bits": 2,
-                    "description": "pull of the resistor up/down/none",
+                    "description": "pull of the resistor - 0:none - 1:pullup - 2:pulldown",
                     "name": [
                         "gpio",
                         "2",
                         "mode",
                         "pull"
                     ],
-                    "offset": 552,
+                    "offset": 536,
                     "type_size": 2
                 },
                 {
                     "access": 1,
                     "bit_offset": 6,
                     "bits": 5,
-                    "description": "for trace tick divisor",
+                    "description": "for trace tick divisor - max should be 16 for interface",
                     "name": [
                         "gpio",
                         "2",
                         "mode",
                         "tick_div"
                     ],
-                    "offset": 552,
+                    "offset": 536,
                     "type_size": 2
                 },
                 {
                     "access": 0,
-                    "description": "",
+                    "description": "The status of the GPIO",
+                    "flag": "VOLATILE",
                     "name": [
                         "gpio",
                         "2",
                         "status"
                     ],
-                    "offset": 554,
+                    "offset": 538,
                     "type": "gpio_status_t",
                     "type_size": 1
                 },
                 {
-                    "access": 1,
+                    "access": 0,
                     "bit_offset": 0,
                     "bits": 1,
-                    "description": "The io level of the pin, 0=low, 1=high",
+                    "description": "The io level of the pin - 0:low - 1:high",
+                    "flag": "VOLATILE",
                     "name": [
                         "gpio",
                         "2",
                         "status",
                         "level"
                     ],
-                    "offset": 554,
+                    "offset": 538,
                     "type_size": 1
                 },
                 {
@@ -2451,7 +2416,7 @@
                         "2",
                         "res"
                     ],
-                    "offset": 555,
+                    "offset": 539,
                     "total_size": 1,
                     "type": "uint8_t",
                     "type_size": 1
@@ -2463,19 +2428,19 @@
                         "trace",
                         "index"
                     ],
-                    "offset": 556,
+                    "offset": 540,
                     "type": "uint32_t",
                     "type_size": 4
                 },
                 {
                     "access": 0,
                     "array_size": 32,
-                    "description": "The tick divisor of the event",
+                    "description": "The tick divisor of the event - max should be 16 for interface",
                     "name": [
                         "trace",
                         "tick_div"
                     ],
-                    "offset": 560,
+                    "offset": 544,
                     "total_size": 32,
                     "type": "uint8_t",
                     "type_size": 1
@@ -2483,12 +2448,12 @@
                 {
                     "access": 0,
                     "array_size": 32,
-                    "description": "The event source of the event",
+                    "description": "The event source of the event - 0:no source selected - 1:DEBUG0 pin - 2:DEBUG1 pin - 3:DEBUG2 pin",
                     "name": [
                         "trace",
                         "source"
                     ],
-                    "offset": 592,
+                    "offset": 576,
                     "total_size": 32,
                     "type": "uint8_t",
                     "type_size": 1
@@ -2496,12 +2461,12 @@
                 {
                     "access": 0,
                     "array_size": 32,
-                    "description": "The value of the event",
+                    "description": "The value of the event - 0:falling edge interrupt - 1:rising edge interrupt",
                     "name": [
                         "trace",
                         "value"
                     ],
-                    "offset": 624,
+                    "offset": 608,
                     "total_size": 64,
                     "type": "uint16_t",
                     "type_size": 2
@@ -2514,20 +2479,20 @@
                         "trace",
                         "tick"
                     ],
-                    "offset": 688,
+                    "offset": 672,
                     "total_size": 128,
                     "type": "uint32_t",
                     "type_size": 4
                 },
                 {
                     "access": 0,
-                    "array_size": 208,
+                    "array_size": 224,
                     "description": "Reserved bytes",
                     "name": [
                         "res"
                     ],
-                    "offset": 816,
-                    "total_size": 208,
+                    "offset": 800,
+                    "total_size": 224,
                     "type": "uint8_t",
                     "type_size": 1
                 }
@@ -2588,7 +2553,7 @@
                 {
                     "access": 0,
                     "array_size": 12,
-                    "description": "Unique ID of the device",
+                    "description": "Writable registers for user testing - Starts at 0 and increases 1 each register by default",
                     "name": "sn",
                     "type": "uint8_t"
                 },
@@ -2602,13 +2567,13 @@
                 {
                     "access": 0,
                     "array_size": 4,
-                    "description": "Interface revision",
+                    "description": "Interface revision - This corelates to the version of the memory map",
                     "name": "if_rev",
                     "type": "uint8_t"
                 },
                 {
                     "access": 0,
-                    "description": "Tick in ms",
+                    "description": "Tick in ms - Updates with the sys tick register every few ms",
                     "name": "tick",
                     "type": "uint64_t"
                 },
@@ -2620,13 +2585,13 @@
                 },
                 {
                     "access": 0,
-                    "description": "A constant number that should always be the same",
+                    "description": "The philip device designator - A constant number to identify philip firmware",
                     "name": "device_num",
                     "type": "uint32_t"
                 },
                 {
                     "access": 0,
-                    "description": "The frequency of the system clock",
+                    "description": "The frequency of the system clock in Hz",
                     "name": "sys_clk",
                     "type": "uint32_t"
                 },
@@ -2660,7 +2625,7 @@
                     "type": "i2c_status_t"
                 },
                 {
-                    "description": "Delay in us for clock stretch",
+                    "description": "Clock stretch the first byte in us",
                     "name": "clk_stretch_delay",
                     "type": "uint16_t"
                 },
@@ -2676,19 +2641,19 @@
                 },
                 {
                     "access": 0,
-                    "description": "Current state of the i2c bus",
+                    "description": "Current state of the spi bus - 0:initialized - 1:NSS pin just lowered - 2:writing to reg - 3:reading reg - 4:transfering data - 5:NSS up and finished",
                     "name": "state",
                     "type": "uint16_t"
                 },
                 {
                     "access": 0,
-                    "description": "current index of i2c pointer",
+                    "description": "Current index of reg pointer",
                     "name": "reg_index",
                     "type": "uint16_t"
                 },
                 {
                     "access": 0,
-                    "description": "start index of i2c pointer",
+                    "description": "Start index of reg pointer",
                     "name": "start_reg_index",
                     "type": "uint16_t"
                 },
@@ -2700,13 +2665,13 @@
                 },
                 {
                     "access": 0,
-                    "description": "Last write frame byte count",
+                    "description": "Last write frame byte count - only in reg if_type 0",
                     "name": "w_count",
                     "type": "uint8_t"
                 },
                 {
                     "access": 0,
-                    "description": "Ticks for read byte",
+                    "description": "Ticks for read byte - only in reg if_type 0",
                     "name": "r_ticks",
                     "type": "uint32_t"
                 },
@@ -2724,7 +2689,7 @@
                 },
                 {
                     "access": 0,
-                    "description": "Ticks for full read frame",
+                    "description": "Ticks for full read frame after the address is acked",
                     "name": "f_r_ticks",
                     "type": "uint32_t"
                 },
@@ -2754,7 +2719,7 @@
                 },
                 {
                     "access": 0,
-                    "description": "Current state of the i2c bus",
+                    "description": "Current state of i2c frame - 0:initialized - 1:reading data - 2-write address recieved - 3-1st reg byte recieved - 4-writing data - 5-NACK - 6-stopped",
                     "name": "state",
                     "type": "uint16_t"
                 },
@@ -2825,7 +2790,7 @@
                 },
                 {
                     "access": 0,
-                    "description": "Baudrate",
+                    "description": "Masks the data coming in if 7 bit mode",
                     "name": "mask_msb",
                     "type": "uint8_t"
                 },
@@ -2869,19 +2834,19 @@
                 },
                 {
                     "access": 0,
-                    "description": "sum counter, increases when available",
+                    "description": "Sum counter increases when available",
                     "name": "counter",
                     "type": "uint8_t"
                 },
                 {
                     "access": 0,
-                    "description": "sample index, increases when new sample read",
+                    "description": "Sample index increases when new sample read",
                     "name": "index",
                     "type": "uint32_t"
                 },
                 {
                     "access": 0,
-                    "description": "current 12 bit sample value",
+                    "description": "Current 12 bit sample value",
                     "name": "sample",
                     "type": "uint16_t"
                 },
@@ -2978,6 +2943,7 @@
                 {
                     "access": 0,
                     "description": "Seconds of rtc",
+                    "flag": "VOLATILE",
                     "max": 59,
                     "min": 0,
                     "name": "second",
@@ -2986,6 +2952,7 @@
                 {
                     "access": 0,
                     "description": "Minutes of rtc",
+                    "flag": "VOLATILE",
                     "max": 59,
                     "min": 0,
                     "name": "minute",
@@ -2994,6 +2961,7 @@
                 {
                     "access": 0,
                     "description": "Hours of rtc",
+                    "flag": "VOLATILE",
                     "max": 23,
                     "min": 0,
                     "name": "hour",
@@ -3002,6 +2970,7 @@
                 {
                     "access": 0,
                     "description": "Days of rtc",
+                    "flag": "VOLATILE",
                     "name": "day",
                     "type": "uint16_t"
                 },
@@ -3036,43 +3005,6 @@
             "type_size": 16
         },
         {
-            "description": "unimplemented TMR",
-            "elements": [
-                {
-                    "description": "",
-                    "name": "mode",
-                    "type": "uint8_t"
-                },
-                {
-                    "description": "",
-                    "name": "error_code",
-                    "type": "uint16_t"
-                },
-                {
-                    "description": "",
-                    "name": "duty",
-                    "type": "uint8_t"
-                },
-                {
-                    "description": "",
-                    "name": "freq",
-                    "type": "uint32_t"
-                },
-                {
-                    "description": "",
-                    "name": "hi_us",
-                    "type": "uint32_t"
-                },
-                {
-                    "description": "",
-                    "name": "lo_us",
-                    "type": "uint32_t"
-                }
-            ],
-            "type_name": "tmr_t",
-            "type_size": 16
-        },
-        {
             "description": "Controls GPIO settings",
             "elements": [
                 {
@@ -3102,21 +3034,21 @@
                 {
                     "access": 0,
                     "array_size": 32,
-                    "description": "The tick divisor of the event",
+                    "description": "The tick divisor of the event - max should be 16 for interface",
                     "name": "tick_div",
                     "type": "uint8_t"
                 },
                 {
                     "access": 0,
                     "array_size": 32,
-                    "description": "The event source of the event",
+                    "description": "The event source of the event - 0:no source selected - 1:DEBUG0 pin - 2:DEBUG1 pin - 3:DEBUG2 pin",
                     "name": "source",
                     "type": "uint8_t"
                 },
                 {
                     "access": 0,
                     "array_size": 32,
-                    "description": "The value of the event",
+                    "description": "The value of the event - 0:falling edge interrupt - 1:rising edge interrupt",
                     "name": "value",
                     "type": "uint16_t"
                 },
@@ -3179,11 +3111,6 @@
                     "description": "DAC configuration",
                     "name": "dac",
                     "type": "dac_t"
-                },
-                {
-                    "description": "",
-                    "name": "tmr",
-                    "type": "tmr_t"
                 },
                 {
                     "array_size": 3,

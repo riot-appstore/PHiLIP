@@ -5,8 +5,8 @@
  * @file      PHiLIP_typedef.h
  * @author    Kevin Weiss
  * @version   0.0.2
- * @date      2019-03-22
- * @details   Generated from the memory map manager
+ * @date      2019-04-21
+ * @details   Generated from the memory map manager version 0.0.9
  ******************************************************************************
  */
 
@@ -19,25 +19,26 @@
 #pragma pack(1)
 /** @brief  System mode settings */
 typedef struct {
-	uint8_t init : 1; /**< initialize with new params */
-	uint8_t dut_rst : 1; /**< resets the DUT */
+	uint8_t init : 1; /**< 0:periph will initialize on execute - 1:periph initialized */
+	uint8_t dut_rst : 1; /**< 1:put DUT in reset mode - 0:run DUT */
 } sys_mode_t;
 
 /** @brief  System status */
 typedef struct {
-	uint8_t update : 1; /**< Update available execute needed */
+	uint8_t update : 1; /**< 1:register configuration requires exceution for changes - 0:nothing to update */
+	uint8_t board : 1; /**< 1:board is a bluepill - 0:board is a nucleo-f103rb */
 } sys_status_t;
 
 /** @brief  I2C mode settings */
 typedef struct {
-	uint8_t init : 1; /**< initialize with new params */
-	uint8_t disable : 1; /**< disable i2c functionality */
-	uint8_t addr_10_bit : 1; /**< 10 bit address enable */
-	uint8_t general_call : 1; /**< General call enable */
-	uint8_t no_clk_stretch : 1; /**< Disable for clk stretch */
-	uint8_t reg_16_bit : 1; /**< 16 bit register access mode */
-	uint8_t reg_16_big_endian : 1; /**< sets the endianess of the 16 bit reg */
-	uint8_t nack_data : 1; /**< Forces a data nack */
+	uint8_t init : 1; /**< 0:periph will initialize on execute - 1:periph initialized */
+	uint8_t disable : 1; /**< 0:periph is enabled - 1:periph is disabled */
+	uint8_t addr_10_bit : 1; /**< 0:i2c address is 7 bit mode - 1:10 i2c address is 10 bit mode */
+	uint8_t general_call : 1; /**< 0:disable general call - 1:enable general call */
+	uint8_t no_clk_stretch : 1; /**< 0:slave can clock stretch - 1:disables clock stretch */
+	uint8_t reg_16_bit : 1; /**< 0:8 bit register access - 1:16 bit register access mode */
+	uint8_t reg_16_big_endian : 1; /**< 0:little endian if 16 bit register access - 1:big endian if 16 bit register access */
+	uint8_t nack_data : 1; /**< 0:all data will ACK - 1:all data will NACK */
 } i2c_mode_t;
 
 /** @brief  I2C status */
@@ -52,13 +53,13 @@ typedef struct {
 
 /** @brief  SPI mode settings */
 typedef struct {
-	uint8_t init : 1; /**< initialize with new params */
-	uint8_t disable : 1; /**< disable spi functionality */
-	uint8_t cpha : 1; /**< Clock phase */
-	uint8_t cpol : 1; /**< Clock polarity */
-	uint8_t if_type : 2; /**< spi interface type */
-	uint8_t reg_16_bit : 1; /**< 16 bit register access mode */
-	uint8_t reg_16_big_endian : 1; /**< sets the endianess of the 16 bit reg */
+	uint8_t init : 1; /**< 0:periph will initialize on execute - 1:periph initialized */
+	uint8_t disable : 1; /**< 0:periph is enabled - 1:periph is disabled */
+	uint8_t cpha : 1; /**< 0:CK to 0 when idle - 1:CK to 1 when idle */
+	uint8_t cpol : 1; /**< 0:the first clock transition is the first data capture edge - 1:the second clock transition is the first data capture edge */
+	uint8_t if_type : 2; /**< Sets spi modes since slave cannot repsond immediatly - 0:access registers with spi - 1:preloads reg address to 0 for high speed tests - 2:echos SPI bytes - 3:always output user reg 0 (use for timing) */
+	uint8_t reg_16_bit : 1; /**< 0:8 bit register access - 1:16 bit register access mode */
+	uint8_t reg_16_big_endian : 1; /**< 0:little endian for 16 bit mode - 1:big endian for 16 bit mode */
 } spi_mode_t;
 
 /** @brief  SPI status */
@@ -67,21 +68,21 @@ typedef struct {
 	uint8_t ovr : 1; /**< Overrun flag */
 	uint8_t modf : 1; /**< Mode fault */
 	uint8_t udr : 1; /**< Underrun flag */
-	uint8_t clk : 1; /**< Current reading of spi clock */
-	uint8_t start_clk : 1; /**< Clk reading when cs pin starts spi frame */
-	uint8_t end_clk : 1; /**< Clk reading when cs pin ends frame */
+	uint8_t clk : 1; /**< 0:sclk line low - 1:sclk line high */
+	uint8_t start_clk : 1; /**< SCLK reading at start of frame - 0:sclk line low - 1:sclk line high */
+	uint8_t end_clk : 1; /**< SCLK reading at end of frame - 0:sclk line low - 1:sclk line high */
 	uint8_t index_err : 1; /**< Register index error */
 } spi_status_t;
 
 /** @brief  UART mode settings */
 typedef struct {
-	uint16_t init : 1; /**< initialize with new params */
-	uint16_t disable : 1; /**< disable uart functionality */
-	uint16_t if_type : 2; /**< interface mode/echo/etc. */
-	uint16_t stop_bits : 1; /**< Number of stop bits */
-	uint16_t parity : 2; /**< Parity */
+	uint16_t init : 1; /**< 0:periph will initialize on execute - 1:periph initialized */
+	uint16_t disable : 1; /**< 0:periph is enabled - 1:periph is disabled */
+	uint16_t if_type : 2; /**< 0:echos - 1:echos and adds one - 2:reads application registers - 3:constantly transmits */
+	uint16_t stop_bits : 1; /**< 0:1 stop bit - 1:2 stop bits */
+	uint16_t parity : 2; /**< 0:no parity - 1:even parity - 2:odd parity */
 	uint16_t rts : 1; /**< RTS pin state */
-	uint16_t data_bits : 1; /**< Number of data bits */
+	uint16_t data_bits : 1; /**< 0:8 data bits - 1:7 data bits */
 } uart_mode_t;
 
 /** @brief  UART status */
@@ -95,29 +96,29 @@ typedef struct {
 
 /** @brief  IO pin mode control */
 typedef struct {
-	uint16_t init : 1; /**< initialize with new params */
-	uint16_t io_type : 2; /**< direction of io, in/outpp/outod/int */
-	uint16_t level : 1; /**< 0 for low, 1 for high, only if output */
-	uint16_t pull : 2; /**< pull of the resistor none/up/down */
-	uint16_t tick_div : 5; /**< for trace tick divisor */
+	uint16_t init : 1; /**< 0:periph will initialize on execute - 1:periph initialized */
+	uint16_t io_type : 2; /**< 0:high impedance input - 1:push pull output - 2:open drain output - 3:interrupts and saves event */
+	uint16_t level : 1; /**< If output sets gpio level - 0:low - 1:high */
+	uint16_t pull : 2; /**< pull of the resistor - 0:none - 1:pullup - 2:pulldown */
+	uint16_t tick_div : 5; /**< for trace tick divisor - max should be 16 for interface */
 } gpio_mode_t;
 
 /** @brief  IO pin status */
 typedef struct {
-	uint8_t level : 1; /**< The io level of the pin, 0=low, 1=high */
+	uint8_t level : 1; /**< The io level of the pin - 0:low - 1:high */
 } gpio_status_t;
 
 /** @brief  ADC mode settings */
 typedef struct {
-	uint8_t init : 1; /**< initialize with new params */
-	uint8_t enable : 1; /**< enables periph functionality (disabled by default) */
-	uint8_t fast_sample : 1; /**< Set to sample as fast as possible */
+	uint8_t init : 1; /**< 0:periph will initialize on execute - 1:periph initialized */
+	uint8_t enable : 1; /**< 0:periph is disabled - 1:periph is enabled */
+	uint8_t fast_sample : 1; /**< 0:slow sample rate - 1:fast sample rate */
 } adc_mode_t;
 
 /** @brief  Basic mode settings */
 typedef struct {
-	uint8_t init : 1; /**< initialize with new params */
-	uint8_t disable : 1; /**< disable periph functionality */
+	uint8_t init : 1; /**< 0:periph will initialize on execute - 1:periph initialized */
+	uint8_t disable : 1; /**< 0:periph is enabled - 1:periph is disabled */
 } basic_mode_t;
 
 /** @brief  Time and date */
@@ -138,13 +139,13 @@ typedef union {
 /** @brief  System settings for PHiLIP */
 typedef union {
 	struct {
-		uint8_t sn[12]; /**< Unique ID of the device */
+		uint8_t sn[12]; /**< Writable registers for user testing - Starts at 0 and increases 1 each register by default */
 		uint8_t fw_rev[4]; /**< Firmware revision */
-		uint8_t if_rev[4]; /**< Interface revision */
-		uint64_t tick; /**< Tick in ms */
+		uint8_t if_rev[4]; /**< Interface revision - This corelates to the version of the memory map */
+		uint64_t tick; /**< Tick in ms - Updates with the sys tick register every few ms */
 		timestamp_t build_time; /**< time of build */
-		uint32_t device_num; /**< A constant number that should always be the same */
-		uint32_t sys_clk; /**< The frequency of the system clock */
+		uint32_t device_num; /**< The philip device designator - A constant number to identify philip firmware */
+		uint32_t sys_clk; /**< The frequency of the system clock in Hz */
 		sys_status_t status; /**< Status of system */
 		sys_mode_t mode; /**< Control register for device */
 		uint8_t res[18]; /**< Reserved bytes */
@@ -157,18 +158,18 @@ typedef union {
 	struct {
 		i2c_mode_t mode; /**< Specific modes for I2C */
 		i2c_status_t status; /**< Specific status for I2C */
-		uint16_t clk_stretch_delay; /**< Delay in us for clock stretch */
+		uint16_t clk_stretch_delay; /**< Clock stretch the first byte in us */
 		uint16_t slave_addr_1; /**< Primary slave address */
 		uint16_t slave_addr_2; /**< Secondary slave address */
-		uint16_t state; /**< Current state of the i2c bus */
-		uint16_t reg_index; /**< current index of i2c pointer */
-		uint16_t start_reg_index; /**< start index of i2c pointer */
+		uint16_t state; /**< Current state of the spi bus - 0:initialized - 1:NSS pin just lowered - 2:writing to reg - 3:reading reg - 4:transfering data - 5:NSS up and finished */
+		uint16_t reg_index; /**< Current index of reg pointer */
+		uint16_t start_reg_index; /**< Start index of reg pointer */
 		uint8_t r_count; /**< Last read frame byte count */
-		uint8_t w_count; /**< Last write frame byte count */
-		uint32_t r_ticks; /**< Ticks for read byte */
+		uint8_t w_count; /**< Last write frame byte count - only in reg if_type 0 */
+		uint32_t r_ticks; /**< Ticks for read byte - only in reg if_type 0 */
 		uint32_t w_ticks; /**< Ticks for write byte */
 		uint32_t s_ticks; /**< Holder when the start occured */
-		uint32_t f_r_ticks; /**< Ticks for full read frame */
+		uint32_t f_r_ticks; /**< Ticks for full read frame after the address is acked */
 		uint32_t f_w_ticks; /**< Ticks for full write frame */
 		uint8_t res[28]; /**< Reserved bytes */
 	};
@@ -180,7 +181,7 @@ typedef union {
 	struct {
 		spi_mode_t mode; /**< Specific spi modes */
 		spi_status_t status; /**< Spi status register */
-		uint16_t state; /**< Current state of the i2c bus */
+		uint16_t state; /**< Current state of i2c frame - 0:initialized - 1:reading data - 2-write address recieved - 3-1st reg byte recieved - 4-writing data - 5-NACK - 6-stopped */
 		uint16_t reg_index; /**< current index of i2c pointer */
 		uint16_t start_reg_index; /**< start index of i2c pointer */
 		uint8_t r_count; /**< Last read frame byte count */
@@ -199,7 +200,7 @@ typedef union {
 	struct {
 		uart_mode_t mode; /**< UART mode register */
 		uint32_t baud; /**< Baudrate */
-		uint8_t mask_msb; /**< Baudrate */
+		uint8_t mask_msb; /**< Masks the data coming in if 7 bit mode */
 		uint16_t rx_count; /**< Number of received bytes */
 		uint16_t tx_count; /**< Number of transmitted bytes */
 		uart_status_t status; /**< UART status register */
@@ -213,9 +214,9 @@ typedef union {
 	struct {
 		adc_mode_t mode; /**< Mode settings for the ADC */
 		uint32_t num_of_samples; /**< Number of sample in the sum */
-		uint8_t counter; /**< sum counter, increases when available */
-		uint32_t index; /**< sample index, increases when new sample read */
-		uint16_t sample; /**< current 12 bit sample value */
+		uint8_t counter; /**< Sum counter increases when available */
+		uint32_t index; /**< Sample index increases when new sample read */
+		uint16_t sample; /**< Current 12 bit sample value */
 		uint32_t sum; /**< Sum of the last num_of_samples */
 		uint32_t current_sum; /**< Current collection of the sums */
 		uint8_t res[12]; /**< Reserved bytes */
@@ -265,19 +266,6 @@ typedef union {
 	uint8_t data8[16];/**< array for padding */
 } rtc_t;
 
-/** @brief  unimplemented TMR */
-typedef union {
-	struct {
-		uint8_t mode; /**<  */
-		uint16_t error_code; /**<  */
-		uint8_t duty; /**<  */
-		uint32_t freq; /**<  */
-		uint32_t hi_us; /**<  */
-		uint32_t lo_us; /**<  */
-	};
-	uint8_t data8[16];/**< array for padding */
-} tmr_t;
-
 /** @brief  Controls GPIO settings */
 typedef union {
 	struct {
@@ -292,9 +280,9 @@ typedef union {
 typedef union {
 	struct {
 		uint32_t index; /**< Index of the current trace */
-		uint8_t tick_div[32]; /**< The tick divisor of the event */
-		uint8_t source[32]; /**< The event source of the event */
-		uint16_t value[32]; /**< The value of the event */
+		uint8_t tick_div[32]; /**< The tick divisor of the event - max should be 16 for interface */
+		uint8_t source[32]; /**< The event source of the event - 0:no source selected - 1:DEBUG0 pin - 2:DEBUG1 pin - 3:DEBUG2 pin */
+		uint16_t value[32]; /**< The value of the event - 0:falling edge interrupt - 1:rising edge interrupt */
 		uint32_t tick[32]; /**< The tick when the event occured */
 	};
 	uint8_t data8[260];/**< array for padding */
@@ -312,10 +300,9 @@ typedef union {
 		adc_t adc; /**< ADC configuration */
 		pwm_t pwm; /**< PWM configuration */
 		dac_t dac; /**< DAC configuration */
-		tmr_t tmr; /**<  */
 		gpio_t gpio[3]; /**< GPIO pins available */
 		trace_t trace; /**< Saved timestamps and events */
-		uint8_t res[208]; /**< Reserved bytes */
+		uint8_t res[224]; /**< Reserved bytes */
 	};
 	uint8_t data8[1024];/**< array for padding */
 } map_t;

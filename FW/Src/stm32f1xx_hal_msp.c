@@ -251,6 +251,7 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef* hi2c) {
 
 	GPIO_InitTypeDef GPIO_InitStruct;
 	if (hi2c->Instance == I2C1) {
+		EN_RCC_DUT_I2C_CLK;
 #ifdef NUCLEOF103RB
 		__HAL_AFIO_REMAP_I2C1_ENABLE()
 		;
@@ -286,7 +287,7 @@ void HAL_I2C_MspDeInit(I2C_HandleTypeDef* hi2c) {
 
 		/* USER CODE END I2C1_MspDeInit 0 */
 		/* Peripheral clock disable */
-		__HAL_RCC_I2C1_CLK_DISABLE();
+		//__HAL_RCC_I2C1_CLK_DISABLE();
 
 		/**I2C1 GPIO Configuration
 		 PB6     ------> I2C1_SCL

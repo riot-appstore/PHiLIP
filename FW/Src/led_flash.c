@@ -79,12 +79,12 @@ enum FLASH_STATE {
  * @pre			Must be called within a tick context, 1 ms or so.
  */
 void flash_fw_version() {
-	const uint8_t const amount_of_flashes[] = {	START_WAIT_FLASHES,
-												MAJOR_FLASHES,
-												WAIT_FLASHES,
-												MINOR_FLASHES,
-												WAIT_FLASHES,
-												PATCH_FLASHES };
+	const uint8_t amount_of_flashes[] = {	START_WAIT_FLASHES,
+											MAJOR_FLASHES,
+											WAIT_FLASHES,
+											MINOR_FLASHES,
+											WAIT_FLASHES,
+											PATCH_FLASHES };
 	static uint8_t state = 0;
 	static uint8_t flash_tick = 0;
 	static uint8_t flashes = 0;

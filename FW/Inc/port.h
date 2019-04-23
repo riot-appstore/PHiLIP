@@ -66,6 +66,8 @@
 #define DUT_DAC_Pin GPIO_PIN_9
 #define DUT_DAC_GPIO_Port GPIOB
 
+#define LED_OFF				GPIO_PIN_SET
+
 #define GPIO_NSS_CTS_IRQ	EXTI15_10_IRQn
 #define GPIO_DEBUG0_IRQ		EXTI0_IRQn
 #define GPIO_DEBUG1_IRQ		EXTI1_IRQn
@@ -165,6 +167,8 @@
 #define DUT_SDA_Pin GPIO_PIN_9
 #define DUT_SDA_GPIO_Port GPIOB
 
+#define LED_OFF 			GPIO_PIN_RESET
+
 #define GPIO_NSS_CTS_IRQ	EXTI15_10_IRQn
 #define GPIO_DEBUG0_IRQ		EXTI3_IRQn
 #define GPIO_DEBUG1_IRQ		EXTI4_IRQn
@@ -231,6 +235,8 @@
 #define DEBUG2 DEBUG2_GPIO_Port, DEBUG2_Pin
 #define DUT_SCL DUT_SCL_GPIO_Port, DUT_SCL_Pin
 #define DUT_SDA DUT_SDA_GPIO_Port, DUT_SDA_Pin
+
+
 
 void init_periphs(void);
 void init_clock(void);

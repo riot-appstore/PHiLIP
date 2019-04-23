@@ -66,8 +66,8 @@ error_t get_mm(uint16_t index, char* str) {
 		return EOVERFLOW;
 	}
 	sprintf(str,
-			"0,{\"name\":\"%s\",\"offset\":%d,\"type\":\"%s\",\"\
-array_size\":%d,bit_offset\":%d,\"bits\":%d}\n",
+			"{\"name\":\"%s\",\"offset\":%d,\"type\":\"%s\",\"\
+array_size\":%d,\"bit_offset\":%d,\"bits\":%d,\"result\":0}\n",
 			MAP_T_NAME[index], MAP_T_OFFSET[index],
 			PHILIP_TYPE_NAME[MAP_T_TYPE[index]], MAP_T_ARRAY_SIZE[index],
 			MAP_T_BIT_OFFSET[index], MAP_T_BITS[index]);
