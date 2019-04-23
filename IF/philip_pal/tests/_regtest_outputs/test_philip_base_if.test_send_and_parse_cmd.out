@@ -1,0 +1,6 @@
+{'cmd': 'rr 0 10', 'data': 42649378395939397566720, 'result': 'Success'}
+{'cmd': 'rr 0 2', 'data': 256, 'result': 'Success'}
+{'cmd': 'rr 0 2', 'data': [0, 1], 'result': 'Success'}
+{'cmd': 'rr 0 2', 'data': [0, 1], 'result': 'Success'}
+{'cmd': 'help', 'result': 'Timeout'}
+{'cmd': 'version', 'result': 'Success', 'version': '0.0.2'}

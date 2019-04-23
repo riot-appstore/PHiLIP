@@ -88,14 +88,15 @@ void init_gpio(map_t *reg, map_t *saved_reg) {
 	__HAL_RCC_GPIOD_CLK_ENABLE();
 	__HAL_RCC_GPIOA_CLK_ENABLE();
 	__HAL_RCC_GPIOB_CLK_ENABLE();
-	EN_RCC_DUT_I2C_CLK;
-	/*Configure GPIO pin Output Level */
-	HAL_GPIO_WritePin(GPIOA,
-	TEST_WARN_Pin | TEST_FAIL_Pin | TEST_PASS_Pin | LED0_Pin | DUT_RTS_Pin,
-			GPIO_PIN_RESET);
 
 	/*Configure GPIO pin Output Level */
-	HAL_GPIO_WritePin(DUT_RST_GPIO_Port, DUT_RST_Pin, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(TEST_WARN, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(TEST_FAIL, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(TEST_PASS, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(LED0, LED_OFF);
+
+	/*Configure GPIO pin Output Level */
+	HAL_GPIO_WritePin(DUT_RST, GPIO_PIN_SET);
 
 	/*Configure GPIO pin : USER_BTN_Pin */
 	GPIO_InitStruct.Pin = USER_BTN_Pin;
@@ -103,21 +104,26 @@ void init_gpio(map_t *reg, map_t *saved_reg) {
 	GPIO_InitStruct.Pull = GPIO_PULLUP;
 	HAL_GPIO_Init(USER_BTN_GPIO_Port, &GPIO_InitStruct);
 
-	/*Configure GPIO pins : TEST_WARN_Pin TEST_FAIL_Pin TEST_PASS_Pin LED0_Pin
-	 DUT_RTS_Pin */
-	GPIO_InitStruct.Pin = TEST_WARN_Pin | TEST_FAIL_Pin | TEST_PASS_Pin
-			| LED0_Pin | DUT_RTS_Pin;
+	GPIO_InitStruct.Pin = TEST_WARN_Pin;
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+	HAL_GPIO_Init(TEST_WARN_GPIO_Port, &GPIO_InitStruct);
 
-	/*Configure GPIO pins : DUT_RST_Pin DEBUG0_Pin DEBUG1_Pin DEBUG2_Pin */
+	GPIO_InitStruct.Pin = TEST_FAIL_Pin;
+	HAL_GPIO_Init(TEST_FAIL_GPIO_Port, &GPIO_InitStruct);
+
+	GPIO_InitStruct.Pin = TEST_PASS_Pin;
+	HAL_GPIO_Init(TEST_PASS_GPIO_Port, &GPIO_InitStruct);
+
+	GPIO_InitStruct.Pin = LED0_Pin;
+	HAL_GPIO_Init(LED0_GPIO_Port, &GPIO_InitStruct);
+
+	GPIO_InitStruct.Pin = DUT_RTS_Pin;
+	HAL_GPIO_Init(DUT_RTS_GPIO_Port, &GPIO_InitStruct);
+
 	GPIO_InitStruct.Pin = DUT_RST_Pin;
-	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-	GPIO_InitStruct.Pull = GPIO_NOPULL;
-	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+	HAL_GPIO_Init(DUT_RST_GPIO_Port, &GPIO_InitStruct);
 
 	/*Configure GPIO pin : DUT_CTS_Pin */
 	GPIO_InitStruct.Pin = DUT_CTS_Pin;

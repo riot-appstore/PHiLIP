@@ -89,9 +89,6 @@ static void _spi_const_int();
 /** @brief	Checks the write direction */
 #define SPI_ADDR_MASK	(0x80)
 
-/* Global functions ----------------------------------------------------------*/
-extern void _Error_Handler(char *, int);
-
 /* Private variables ---------------------------------------------------------*/
 static spi_dev dut_spi;
 
@@ -155,6 +152,8 @@ static inline error_t _commit_spi(spi_dev *dev) {
 		}
 		dut_spi.reg->frame_ticks = 0;
 		dut_spi.reg->prev_ticks = 0;
+        spi->w_count = 0;
+        spi->r_count = 0;
 		dev->initial_byte = SPI_NO_DATA_BYTE;
 		if (spi->mode.if_type == SPI_IF_TYPE_REG) {
 			dev->if_mode_int = _spi_reg_int;
@@ -167,18 +166,17 @@ static inline error_t _commit_spi(spi_dev *dev) {
 			dev->if_mode_int = _spi_const_int;
 		}
 
-		__HAL_SPI_DISABLE(hspi_inst);
-		if (HAL_SPI_Init(hspi_inst) != HAL_OK) {
-			_Error_Handler(__FILE__, __LINE__);
-		}
-
 		spi->mode.init = 1;
 		copy_until_same(dev->saved_reg, dev->reg, sizeof(*(dev->saved_reg)));
 
-		__HAL_SPI_ENABLE(hspi_inst);
-		hspi_inst->Instance->DR = dev->initial_byte;
-		__HAL_SPI_ENABLE_IT(hspi_inst,
-				SPI_IT_RXNE | SPI_CR2_ERRIE | SPI_CR2_TXEIE);
+		__HAL_SPI_DISABLE(hspi_inst);
+		if (!dev->reg->mode.disable) {
+			HAL_SPI_Init(hspi_inst);
+			__HAL_SPI_ENABLE(hspi_inst);
+			hspi_inst->Instance->DR = dev->initial_byte;
+			__HAL_SPI_ENABLE_IT(hspi_inst,
+					SPI_IT_RXNE | SPI_CR2_ERRIE | SPI_CR2_TXEIE);
+		}
 
 		return EOK;
 	}

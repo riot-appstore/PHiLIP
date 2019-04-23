@@ -87,9 +87,6 @@ static inline void _i2c_slave_addr(i2c_dev *dev);
 static void _i2c_it(i2c_dev *dev);
 static void _i2c_err(i2c_dev *dev);
 
-/* Global functions ----------------------------------------------------------*/
-extern void _Error_Handler(char *, int);
-
 /* Private variables ---------------------------------------------------------*/
 static i2c_dev dut_i2c;
 
@@ -157,8 +154,11 @@ static inline error_t _commit_i2c(i2c_dev *dev) {
 			hi2c_inst->Init.GeneralCallMode = I2C_GENERALCALL_ENABLE;
 		}
 
-		if (HAL_I2C_Init(hi2c_inst) != HAL_OK) {
-			_Error_Handler(__FILE__, __LINE__);
+		if (dev->reg->mode.disable) {
+			HAL_I2C_DeInit(hi2c_inst);
+		}
+		else {
+			HAL_I2C_Init(hi2c_inst);
 		}
 
 		hi2c_inst->Instance->CR1 |= I2C_CR1_ACK;
@@ -193,6 +193,9 @@ static void _i2c_slave_addr(i2c_dev *dev) {
 		i2c->f_w_ticks = get_tick32();
 		i2c->state = I2C_WRITE_ADDRESS_RECEIVED;
 		i2c->w_count = 0;
+		if (i2c->mode.nack_data) {
+			hi2c->Instance->CR1 &= ~I2C_CR1_ACK;
+		}
 	} else {
 		i2c->reg_index = i2c->start_reg_index;
 		if (i2c->clk_stretch_delay != 0) {
@@ -205,7 +208,7 @@ static void _i2c_slave_addr(i2c_dev *dev) {
 		}
 		i2c->f_r_ticks = get_tick32();
 		i2c->state = I2C_READING_DATA;
-		i2c->r_count = 1;
+		i2c->r_count = 0;
 	}
 	i2c->s_ticks = get_tick32();
 	if (READ_REG(hi2c->Instance->SR2) & I2C_FLAG_GENCALL) {
@@ -227,18 +230,18 @@ static void _i2c_it(i2c_dev *dev) {
 	uint32_t sr2itflags = READ_REG(hi2c->Instance->SR2);
 	uint32_t sr1itflags = READ_REG(hi2c->Instance->SR1);
 	uint32_t itsources = READ_REG(hi2c->Instance->CR2);
-
+	hi2c->Instance->CR1 |= I2C_CR1_ACK;
 	if (((sr1itflags & I2C_FLAG_ADDR) != RESET)
 			&& ((itsources & I2C_IT_EVT) != RESET)) {
 		_i2c_slave_addr(dev);
 	} else if (((sr1itflags & I2C_FLAG_STOPF) != RESET)
 			&& ((itsources & I2C_IT_EVT) != RESET)) {
 		__HAL_I2C_CLEAR_STOPFLAG(hi2c);
-		if(i2c->state == I2C_READING_DATA) {
-			i2c->f_r_ticks = get_tick32() - i2c->s_ticks;
-		}
-		else if (IS_STATE_WRITING(i2c->state)){
+		if (IS_STATE_WRITING(i2c->state)){
 			i2c->f_w_ticks = get_tick32() - i2c->s_ticks;
+		}
+		else if(i2c->state == I2C_READING_DATA) {
+			i2c->f_r_ticks = get_tick32() - i2c->s_ticks;
 		}
 		i2c->state = I2C_STOPPED;
 	} else if ((sr2itflags & I2C_FLAG_TRA) != RESET) {
@@ -264,16 +267,29 @@ static void _i2c_it(i2c_dev *dev) {
 			if (i2c->mode.reg_16_bit) {
 				i2c->state = I2C_WRITE_1ST_REG_BYTE_RECEIVED;
 				if (i2c->mode.reg_16_big_endian) {
-					i2c->start_reg_index = hi2c->Instance->DR;
-				} else {
 					i2c->start_reg_index = (hi2c->Instance->DR << 8);
+				} else {
+					i2c->start_reg_index = hi2c->Instance->DR;
 				}
 			} else {
 				i2c->start_reg_index = hi2c->Instance->DR;
 				i2c->reg_index = i2c->start_reg_index;
 				i2c->state = I2C_WRITING_DATA;
 			}
-		} else {
+			i2c->w_count++;
+		}
+		else if (i2c->state == I2C_WRITE_1ST_REG_BYTE_RECEIVED) {
+			if (i2c->mode.reg_16_big_endian) {
+				i2c->start_reg_index |= hi2c->Instance->DR;
+			} else {
+				i2c->start_reg_index |= (hi2c->Instance->DR << 8);
+			}
+			i2c->reg_index = i2c->start_reg_index;
+			i2c->state = I2C_WRITING_DATA;
+			i2c->w_count++;
+
+		}
+		else {
 			write_reg(i2c->reg_index, hi2c->Instance->DR, PERIPH_ACCESS);
 			i2c->w_count++;
 			add_index(&(i2c->reg_index));
@@ -300,11 +316,14 @@ static void _i2c_err(i2c_dev *dev) {
 	else if (IS_STATE_WRITING(i2c->state)){
 		i2c->f_w_ticks = get_tick32() - i2c->s_ticks;
 	}
+
 	if (((sr1itflags & I2C_FLAG_AF) != RESET)
 			&& ((itsources & I2C_IT_ERR) != RESET)) {
 		sub_index(&i2c->reg_index);
 		i2c->status.af = 1;
+		i2c->status.busy = 0;
 		i2c->state = I2C_ADDR_NACK;
+
 	} else if ((itsources & I2C_IT_ERR) != RESET) {
 		if (((sr1itflags & I2C_FLAG_BERR) != RESET)) {
 			i2c->status.berr = 1;
@@ -331,13 +350,11 @@ static void _i2c_err(i2c_dev *dev) {
 		__HAL_I2C_ENABLE_IT(hi2c_inst, I2C_IT_EVT | I2C_IT_BUF | I2C_IT_ERR);
 #endif
 		i2c->state = I2C_STOPPED;
+		if (READ_REG(hi2c->Instance->SR2) & I2C_FLAG_BUSY) {
+			i2c->status.busy = 1;
+		} else {
+			i2c->status.busy = 0;
+		}
 	}
-
 	__HAL_I2C_CLEAR_FLAG(hi2c, I2C_FLAG_AF);
-
-	if (READ_REG(hi2c->Instance->SR2) & I2C_FLAG_BUSY) {
-		i2c->status.busy = 1;
-	} else {
-		i2c->status.busy = 0;
-	}
 }

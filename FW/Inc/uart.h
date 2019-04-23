@@ -38,8 +38,12 @@
 #define UART_H_
 
 /* Defines -------------------------------------------------------------------*/
-/** @brief	Size allocated for uart buffers */
-#define UART_BUF_SIZE	(256 + 128)
+/** @brief	Size allocated for if uart buffer */
+#define UART_IF_BUF_SIZE	(1024)
+
+/** @brief	Size allocated for dut uart buffer */
+#define UART_DUT_BUF_SIZE	(128)
+
 
 /* Function prototypes -------------------------------------------------------*/
 /**

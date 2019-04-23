@@ -1,0 +1,595 @@
+{'data': 0, 'name': 'adc.counter', 'result': 'Success'}
+{'data': 0, 'name': 'adc.current_sum', 'result': 'Success'}
+{'data': 0, 'name': 'adc.index', 'result': 'Success'}
+{'data': 1, 'name': 'adc.mode', 'result': 'Success'}
+{'data': 0, 'name': 'adc.mode.enable', 'result': 'Success'}
+{'data': 0, 'name': 'adc.mode.fast_sample', 'result': 'Success'}
+{'data': 1, 'name': 'adc.mode.init', 'result': 'Success'}
+{'data': 1024, 'name': 'adc.num_of_samples', 'result': 'Success'}
+{'data': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ 'name': 'adc.res',
+ 'result': 'Success'}
+{'data': 0, 'name': 'adc.sample', 'result': 'Success'}
+{'data': 0, 'name': 'adc.sum', 'result': 'Success'}
+{'data': 5000, 'name': 'dac.level', 'result': 'Success'}
+{'data': 0, 'name': 'dac.mode', 'result': 'Success'}
+{'data': 0, 'name': 'dac.mode.disable', 'result': 'Success'}
+{'data': 0, 'name': 'dac.mode.init', 'result': 'Success'}
+{'data': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ 'name': 'dac.res',
+ 'result': 'Success'}
+{'data': 0, 'name': 'dac.status', 'result': 'Success'}
+{'data': 1, 'name': 'gpio[0].mode', 'result': 'Success'}
+{'data': 1, 'name': 'gpio[0].mode.init', 'result': 'Success'}
+{'data': 0, 'name': 'gpio[0].mode.io_type', 'result': 'Success'}
+{'data': 0, 'name': 'gpio[0].mode.level', 'result': 'Success'}
+{'data': 0, 'name': 'gpio[0].mode.pull', 'result': 'Success'}
+{'data': 0, 'name': 'gpio[0].mode.tick_div', 'result': 'Success'}
+{'data': [0], 'name': 'gpio[0].res', 'result': 'Success'}
+{'name': 'gpio[0].status', 'result': 'Success'}
+{'name': 'gpio[0].status.level', 'result': 'Success'}
+{'data': 1, 'name': 'gpio[1].mode', 'result': 'Success'}
+{'data': 1, 'name': 'gpio[1].mode.init', 'result': 'Success'}
+{'data': 0, 'name': 'gpio[1].mode.io_type', 'result': 'Success'}
+{'data': 0, 'name': 'gpio[1].mode.level', 'result': 'Success'}
+{'data': 0, 'name': 'gpio[1].mode.pull', 'result': 'Success'}
+{'data': 0, 'name': 'gpio[1].mode.tick_div', 'result': 'Success'}
+{'data': [0], 'name': 'gpio[1].res', 'result': 'Success'}
+{'name': 'gpio[1].status', 'result': 'Success'}
+{'name': 'gpio[1].status.level', 'result': 'Success'}
+{'data': 1, 'name': 'gpio[2].mode', 'result': 'Success'}
+{'data': 1, 'name': 'gpio[2].mode.init', 'result': 'Success'}
+{'data': 0, 'name': 'gpio[2].mode.io_type', 'result': 'Success'}
+{'data': 0, 'name': 'gpio[2].mode.level', 'result': 'Success'}
+{'data': 0, 'name': 'gpio[2].mode.pull', 'result': 'Success'}
+{'data': 0, 'name': 'gpio[2].mode.tick_div', 'result': 'Success'}
+{'data': [0], 'name': 'gpio[2].res', 'result': 'Success'}
+{'name': 'gpio[2].status', 'result': 'Success'}
+{'name': 'gpio[2].status.level', 'result': 'Success'}
+{'data': 0, 'name': 'i2c.clk_stretch_delay', 'result': 'Success'}
+{'data': 0, 'name': 'i2c.f_r_ticks', 'result': 'Success'}
+{'data': 0, 'name': 'i2c.f_w_ticks', 'result': 'Success'}
+{'data': 1, 'name': 'i2c.mode', 'result': 'Success'}
+{'data': 0, 'name': 'i2c.mode.addr_10_bit', 'result': 'Success'}
+{'data': 0, 'name': 'i2c.mode.disable', 'result': 'Success'}
+{'data': 0, 'name': 'i2c.mode.general_call', 'result': 'Success'}
+{'data': 1, 'name': 'i2c.mode.init', 'result': 'Success'}
+{'data': 0, 'name': 'i2c.mode.nack_data', 'result': 'Success'}
+{'data': 0, 'name': 'i2c.mode.no_clk_stretch', 'result': 'Success'}
+{'data': 0, 'name': 'i2c.mode.reg_16_big_endian', 'result': 'Success'}
+{'data': 0, 'name': 'i2c.mode.reg_16_bit', 'result': 'Success'}
+{'data': 0, 'name': 'i2c.r_count', 'result': 'Success'}
+{'data': 0, 'name': 'i2c.r_ticks', 'result': 'Success'}
+{'data': 0, 'name': 'i2c.reg_index', 'result': 'Success'}
+{'data': [0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0],
+ 'name': 'i2c.res',
+ 'result': 'Success'}
+{'data': 0, 'name': 'i2c.s_ticks', 'result': 'Success'}
+{'data': 85, 'name': 'i2c.slave_addr_1', 'result': 'Success'}
+{'data': 66, 'name': 'i2c.slave_addr_2', 'result': 'Success'}
+{'data': 0, 'name': 'i2c.start_reg_index', 'result': 'Success'}
+{'data': 0, 'name': 'i2c.state', 'result': 'Success'}
+{'data': 0, 'name': 'i2c.status', 'result': 'Success'}
+{'data': 0, 'name': 'i2c.status.af', 'result': 'Success'}
+{'data': 0, 'name': 'i2c.status.berr', 'result': 'Success'}
+{'data': 0, 'name': 'i2c.status.busy', 'result': 'Success'}
+{'data': 0, 'name': 'i2c.status.gencall', 'result': 'Success'}
+{'data': 0, 'name': 'i2c.status.ovr', 'result': 'Success'}
+{'data': 0, 'name': 'i2c.status.rsr', 'result': 'Success'}
+{'data': 0, 'name': 'i2c.w_count', 'result': 'Success'}
+{'data': 0, 'name': 'i2c.w_ticks', 'result': 'Success'}
+{'data': 5000, 'name': 'pwm.duty_cycle', 'result': 'Success'}
+{'data': 10000, 'name': 'pwm.h_ticks', 'result': 'Success'}
+{'data': 10000, 'name': 'pwm.l_ticks', 'result': 'Success'}
+{'data': 1, 'name': 'pwm.mode', 'result': 'Success'}
+{'data': 0, 'name': 'pwm.mode.disable', 'result': 'Success'}
+{'data': 1, 'name': 'pwm.mode.init', 'result': 'Success'}
+{'data': 20000, 'name': 'pwm.period', 'result': 'Success'}
+{'data': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ 'name': 'pwm.res',
+ 'result': 'Success'}
+{'data': 0, 'name': 'pwm.status', 'result': 'Success'}
+{'data': 139, 'msg': 'Unknown Error[139]', 'name': 'res', 'result': 'Error'}
+{'name': 'rtc.day', 'result': 'Success'}
+{'name': 'rtc.hour', 'result': 'Success'}
+{'name': 'rtc.minute', 'result': 'Success'}
+{'data': 1, 'name': 'rtc.mode', 'result': 'Success'}
+{'data': 0, 'name': 'rtc.mode.disable', 'result': 'Success'}
+{'data': 1, 'name': 'rtc.mode.init', 'result': 'Success'}
+{'data': [0, 0, 0, 0, 0], 'name': 'rtc.res', 'result': 'Success'}
+{'name': 'rtc.second', 'result': 'Success'}
+{'data': 0, 'name': 'rtc.set_day', 'result': 'Success'}
+{'data': 0, 'name': 'rtc.set_hour', 'result': 'Success'}
+{'data': 0, 'name': 'rtc.set_minute', 'result': 'Success'}
+{'data': 0, 'name': 'rtc.set_second', 'result': 'Success'}
+{'data': 0, 'name': 'spi.byte_ticks', 'result': 'Success'}
+{'data': 0, 'name': 'spi.frame_ticks', 'result': 'Success'}
+{'data': 1, 'name': 'spi.mode', 'result': 'Success'}
+{'data': 0, 'name': 'spi.mode.cpha', 'result': 'Success'}
+{'data': 0, 'name': 'spi.mode.cpol', 'result': 'Success'}
+{'data': 0, 'name': 'spi.mode.disable', 'result': 'Success'}
+{'data': 0, 'name': 'spi.mode.if_type', 'result': 'Success'}
+{'data': 1, 'name': 'spi.mode.init', 'result': 'Success'}
+{'data': 0, 'name': 'spi.mode.reg_16_big_endian', 'result': 'Success'}
+{'data': 0, 'name': 'spi.mode.reg_16_bit', 'result': 'Success'}
+{'data': 0, 'name': 'spi.prev_ticks', 'result': 'Success'}
+{'data': 0, 'name': 'spi.r_count', 'result': 'Success'}
+{'data': 0, 'name': 'spi.reg_index', 'result': 'Success'}
+{'data': [0, 0, 0, 0, 0, 0, 0, 0, 0], 'name': 'spi.res', 'result': 'Success'}
+{'data': 0, 'name': 'spi.start_reg_index', 'result': 'Success'}
+{'data': 0, 'name': 'spi.state', 'result': 'Success'}
+{'data': 16, 'name': 'spi.status', 'result': 'Success'}
+{'data': 0, 'name': 'spi.status.bsy', 'result': 'Success'}
+{'data': 1, 'name': 'spi.status.clk', 'result': 'Success'}
+{'data': 0, 'name': 'spi.status.end_clk', 'result': 'Success'}
+{'data': 0, 'name': 'spi.status.index_err', 'result': 'Success'}
+{'data': 0, 'name': 'spi.status.modf', 'result': 'Success'}
+{'data': 0, 'name': 'spi.status.ovr', 'result': 'Success'}
+{'data': 0, 'name': 'spi.status.start_clk', 'result': 'Success'}
+{'data': 0, 'name': 'spi.status.udr', 'result': 'Success'}
+{'data': 0, 'name': 'spi.transfer_count', 'result': 'Success'}
+{'data': 0, 'name': 'spi.w_count', 'result': 'Success'}
+{'name': 'sys.build_time.day_of_month', 'result': 'Success'}
+{'name': 'sys.build_time.day_of_week', 'result': 'Success'}
+{'name': 'sys.build_time.hour', 'result': 'Success'}
+{'name': 'sys.build_time.minute', 'result': 'Success'}
+{'name': 'sys.build_time.month', 'result': 'Success'}
+{'data': [0], 'name': 'sys.build_time.res', 'result': 'Success'}
+{'name': 'sys.build_time.second', 'result': 'Success'}
+{'name': 'sys.build_time.year', 'result': 'Success'}
+{'data': 17061, 'name': 'sys.device_num', 'result': 'Success'}
+{'data': [0, 10, 0, 1], 'name': 'sys.fw_rev', 'result': 'Success'}
+{'data': [0, 2, 0, 0], 'name': 'sys.if_rev', 'result': 'Success'}
+{'data': 1, 'name': 'sys.mode', 'result': 'Success'}
+{'data': 0, 'name': 'sys.mode.dut_rst', 'result': 'Success'}
+{'data': 1, 'name': 'sys.mode.init', 'result': 'Success'}
+{'data': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ 'name': 'sys.res',
+ 'result': 'Success'}
+{'name': 'sys.sn', 'result': 'Success'}
+{'name': 'sys.status', 'result': 'Success'}
+{'name': 'sys.status.board', 'result': 'Success'}
+{'data': 0, 'name': 'sys.status.update', 'result': 'Success'}
+{'data': 72000000, 'name': 'sys.sys_clk', 'result': 'Success'}
+{'name': 'sys.tick', 'result': 'Success'}
+{'data': 0, 'name': 'trace.index', 'result': 'Success'}
+{'data': [0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0],
+ 'name': 'trace.source',
+ 'result': 'Success'}
+{'data': [0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0],
+ 'name': 'trace.tick',
+ 'result': 'Success'}
+{'data': [0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0],
+ 'name': 'trace.tick_div',
+ 'result': 'Success'}
+{'data': [0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0],
+ 'name': 'trace.value',
+ 'result': 'Success'}
+{'data': 115200, 'name': 'uart.baud', 'result': 'Success'}
+{'data': 255, 'name': 'uart.mask_msb', 'result': 'Success'}
+{'data': 1, 'name': 'uart.mode', 'result': 'Success'}
+{'data': 0, 'name': 'uart.mode.data_bits', 'result': 'Success'}
+{'data': 0, 'name': 'uart.mode.disable', 'result': 'Success'}
+{'data': 0, 'name': 'uart.mode.if_type', 'result': 'Success'}
+{'data': 1, 'name': 'uart.mode.init', 'result': 'Success'}
+{'data': 0, 'name': 'uart.mode.parity', 'result': 'Success'}
+{'data': 0, 'name': 'uart.mode.rts', 'result': 'Success'}
+{'data': 0, 'name': 'uart.mode.stop_bits', 'result': 'Success'}
+{'data': [0, 0, 0, 0], 'name': 'uart.res', 'result': 'Success'}
+{'data': 0, 'name': 'uart.rx_count', 'result': 'Success'}
+{'data': 0, 'name': 'uart.status', 'result': 'Success'}
+{'data': 0, 'name': 'uart.status.cts', 'result': 'Success'}
+{'data': 0, 'name': 'uart.status.fe', 'result': 'Success'}
+{'data': 0, 'name': 'uart.status.nf', 'result': 'Success'}
+{'data': 0, 'name': 'uart.status.ore', 'result': 'Success'}
+{'data': 0, 'name': 'uart.status.pe', 'result': 'Success'}
+{'data': 0, 'name': 'uart.tx_count', 'result': 'Success'}
+{'data': [0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          79,
+          80,
+          81,
+          82,
+          83,
+          84,
+          85,
+          86,
+          87,
+          88,
+          89,
+          90,
+          91,
+          92,
+          93,
+          94,
+          95,
+          96,
+          97,
+          98,
+          99,
+          100,
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120,
+          121,
+          122,
+          123,
+          124,
+          125,
+          126,
+          127,
+          128,
+          129,
+          130,
+          131,
+          132,
+          133,
+          134,
+          135,
+          136,
+          137,
+          138,
+          139,
+          140,
+          141,
+          142,
+          143,
+          144,
+          145,
+          146,
+          147,
+          148,
+          149,
+          150,
+          151,
+          152,
+          153,
+          154,
+          155,
+          156,
+          157,
+          158,
+          159,
+          160,
+          161,
+          162,
+          163,
+          164,
+          165,
+          166,
+          167,
+          168,
+          169,
+          170,
+          171,
+          172,
+          173,
+          174,
+          175,
+          176,
+          177,
+          178,
+          179,
+          180,
+          181,
+          182,
+          183,
+          184,
+          185,
+          186,
+          187,
+          188,
+          189,
+          190,
+          191,
+          192,
+          193,
+          194,
+          195,
+          196,
+          197,
+          198,
+          199,
+          200,
+          201,
+          202,
+          203,
+          204,
+          205,
+          206,
+          207,
+          208,
+          209,
+          210,
+          211,
+          212,
+          213,
+          214,
+          215,
+          216,
+          217,
+          218,
+          219,
+          220,
+          221,
+          222,
+          223,
+          224,
+          225,
+          226,
+          227,
+          228,
+          229,
+          230,
+          231,
+          232,
+          233,
+          234,
+          235,
+          236,
+          237,
+          238,
+          239,
+          240,
+          241,
+          242,
+          243,
+          244,
+          245,
+          246,
+          247,
+          248,
+          249,
+          250,
+          251,
+          252,
+          253,
+          254,
+          255],
+ 'name': 'user_reg',
+ 'result': 'Success'}

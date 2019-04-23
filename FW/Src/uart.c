@@ -76,7 +76,8 @@ typedef struct {
 	UART_HandleTypeDef huart; /**< Handle for the uart device */
 	uart_t *reg; /**< uart live application registers */
 	uart_t *saved_reg; /**< uart saved application registers */
-	char str[UART_BUF_SIZE]; /**< String buffer */
+	char *str; /**< String buffer */
+	uint32_t buf_size; /**< String buffer size */
 	uint8_t access; /**< Access level of uart */
 } uart_dev_t;
 /** @} */
@@ -112,6 +113,9 @@ DMA_HandleTypeDef hdma_usart_dut_tx;
 /* Private variables ---------------------------------------------------------*/
 static uart_dev_t dut_uart;
 static uart_dev_t if_uart;
+static char if_str_buf[UART_IF_BUF_SIZE];
+static char dut_str_buf[UART_DUT_BUF_SIZE];
+
 
 /* Functions -----------------------------------------------------------------*/
 /**
@@ -124,7 +128,9 @@ static uart_dev_t if_uart;
  */
 void init_dut_uart(map_t *reg, map_t *saved_reg) {
 	dut_uart.access = PERIPH_ACCESS;
-	memset(dut_uart.str, 0, UART_BUF_SIZE);
+	dut_uart.str = dut_str_buf;
+	dut_uart.buf_size = sizeof(dut_str_buf)/sizeof(dut_str_buf[0]);
+	memset(dut_uart.str, 0, dut_uart.buf_size);
 
 	dut_uart.huart.Instance = DUT_UART;
 	dut_uart.huart.Init.Mode = UART_MODE_TX_RX;
@@ -138,7 +144,7 @@ void init_dut_uart(map_t *reg, map_t *saved_reg) {
 
 	_commit_uart(&dut_uart);
 
-	sprintf(dut_uart.str, "0, Initialized, Build Date: %s %s\n", __DATE__,
+	sprintf(dut_uart.str, "{\"build_date\":\"%s %s\",\"result\":0}\n", __DATE__,
 	__TIME__);
 	_tx_str(&dut_uart);
 }
@@ -150,7 +156,9 @@ void init_dut_uart(map_t *reg, map_t *saved_reg) {
  */
 void init_if_uart() {
 	if_uart.access = IF_ACCESS;
-	memset(if_uart.str, 0, UART_BUF_SIZE);
+	if_uart.str = if_str_buf;
+	if_uart.buf_size = sizeof(if_str_buf)/sizeof(if_str_buf[0]);
+	memset(if_uart.str, 0, if_uart.buf_size);
 
 	if_uart.reg = NULL;
 	if_uart.saved_reg = NULL;
@@ -166,8 +174,8 @@ void init_if_uart() {
 	if (HAL_UART_Init(&if_uart.huart) != HAL_OK) {
 		_Error_Handler(__FILE__, __LINE__);
 	}
-	sprintf(if_uart.str, "0, Initialized, Build Date: %s %s\n", __DATE__,
-	__TIME__);
+	sprintf(if_uart.str, "{\"build_date\":\"%s %s\",\"result\":0}\n", __DATE__,
+		__TIME__);
 	_tx_str(&if_uart);
 }
 
@@ -284,12 +292,13 @@ static error_t _poll_uart(uart_dev_t *dev) {
 					|| dev->saved_reg->mode.if_type != UART_IF_TYPE_TX)) {
 		err = _rx_str(dev);
 	} else if (huart->TxXferCount == 0) {
-		if (dev->str[UART_BUF_SIZE - 1] != 0) {
-			err = EMSGSIZE;
+		if (dev->str[dev->buf_size - 1] != 0) {
+
 			HAL_UART_AbortTransmit(huart);
 			HAL_UART_AbortReceive(huart);
-			memset(dev->str, 0, UART_BUF_SIZE);
-			sprintf(dev->str, "%d%s", err, TX_END_STR);
+			/* Parses the bufsize too big message */
+			parse_command(dev->str, dev->buf_size, dev->access);
+			dev->str[dev->buf_size - 1] = 0;
 			HAL_UART_Transmit_DMA(huart, (uint8_t*) dev->str, strlen(dev->str));
 		} else {
 			err = _xfer_complete(dev);
@@ -305,19 +314,19 @@ static error_t _xfer_complete(uart_dev_t *dev) {
 	HAL_StatusTypeDef status = HAL_ERROR;
 	error_t err = EUNKNOWN;
 
-	memset(str, 0, UART_BUF_SIZE);
+	memset(str, 0, dev->buf_size);
 	HAL_UART_AbortTransmit(huart);
 	HAL_UART_AbortReceive(huart);
 	if (dev->saved_reg != NULL) {
 		if (dev->saved_reg->mode.if_type == UART_IF_TYPE_TX) {
-			memset(str, 'a', UART_BUF_SIZE - 3);
-			str[UART_BUF_SIZE - 2] = '\n';
-			str[UART_BUF_SIZE - 1] = '\0';
+			memset(str, 'a', dev->buf_size - 3);
+			str[dev->buf_size - 2] = '\n';
+			str[dev->buf_size - 1] = '\0';
 			return _tx_str(dev);
 
 		}
 	}
-	status = HAL_UART_Receive_DMA(huart, (uint8_t*) str, UART_BUF_SIZE);
+	status = HAL_UART_Receive_DMA(huart, (uint8_t*) str, dev->buf_size);
 	if (status == HAL_BUSY) {
 		err = EBUSY;
 	}
@@ -369,7 +378,7 @@ static error_t _rx_str(uart_dev_t *dev) {
 			}
 		}
 		if (str[rx_amount - 1] == RX_END_CHAR
-				&& _get_rx_amount(dev) != UART_BUF_SIZE) {
+				&& _get_rx_amount(dev) != dev->buf_size) {
 
 			_update_rx_count(dev, strlen(str));
 			HAL_UART_AbortTransmit(huart);
@@ -380,7 +389,7 @@ static error_t _rx_str(uart_dev_t *dev) {
 			}
 			if (dev->saved_reg == NULL
 					|| dev->saved_reg->mode.if_type == UART_IF_TYPE_REG) {
-				err = parse_command(str, UART_BUF_SIZE, dev->access);
+				err = parse_command(str, dev->buf_size, dev->access);
 			} else if (dev->saved_reg->mode.if_type == UART_IF_TYPE_ECHO) {
 				err = EOK;
 			} else if (dev->saved_reg->mode.if_type == UART_IF_TYPE_ECHO_EXT) {
@@ -425,7 +434,7 @@ static error_t _tx_str(uart_dev_t *dev) {
 }
 
 static inline int32_t _get_rx_amount(uart_dev_t *dev) {
-	return (UART_BUF_SIZE - dev->huart.hdmarx->Instance->CNDTR);
+	return (dev->buf_size - dev->huart.hdmarx->Instance->CNDTR);
 }
 
 /* Interrupts ----------------------------------------------------------------*/

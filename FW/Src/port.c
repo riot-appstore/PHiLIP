@@ -378,8 +378,7 @@ void _Error_Handler(char *file, int line) {
 
 void init_periphs(void) {
 	/* Prevents i2c clk from toggling at init */
-	__HAL_RCC_I2C1_CLK_ENABLE()
-	;
+	__HAL_RCC_I2C1_CLK_ENABLE();
 
 	MX_DMA_Init();
 	MX_TIM1_Init();

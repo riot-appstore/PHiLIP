@@ -107,6 +107,7 @@
 
 /** @brief   Macro to check if command string matches */
 #define IS_COMMAND(x)	(memcmp(str, x, strlen(x)) == 0)
+
 /* Private function prototypes -----------------------------------------------*/
 static error_t _cmd_read_reg(char *str, uint16_t buf_size);
 static error_t _cmd_write_reg(char *str, uint16_t buf_size, uint8_t access);
@@ -120,6 +121,8 @@ static error_t _cmd_print_version(char *str);
 
 static error_t _valid_args(char *str, uint32_t *arg_count, uint16_t buf_size);
 static uint32_t _fast_atou(char **str, char terminator);
+
+static void _json_result(char *str, error_t result);
 
 /* Functions -----------------------------------------------------------------*/
 /**
@@ -144,6 +147,10 @@ static uint32_t _fast_atou(char **str, char terminator);
 error_t parse_command(char *str, uint16_t buf_size, uint8_t access) {
 	error_t err = EPROTONOSUPPORT;
 
+	if (str[buf_size - 1] != 0) {
+		_json_result(str, EMSGSIZE);
+	}
+
 	if (IS_COMMAND(READ_REG_CMD)) {
 		err = _cmd_read_reg(str, buf_size);
 	} else if (IS_COMMAND(WRITE_REG_CMD)) {
@@ -155,7 +162,7 @@ error_t parse_command(char *str, uint16_t buf_size, uint8_t access) {
 	} else if (IS_COMMAND(MEMORY_MAP_CMD)) {
 		err = _cmd_mm_print(str, buf_size);
 	} else if (IS_COMMAND(MM_SIZE_CMD)) {
-		sprintf(str, "%d,%d%s", EOK, MAP_T_NUM_OF_RECORDS, TX_END_STR);
+		sprintf(str, "{\"data\":%u,\"result\":0}\n", MAP_T_NUM_OF_RECORDS);
 		err = EOK;
 	} else if (IS_COMMAND(HELP_CMD)) {
 		err = _cmd_print_help(str);
@@ -180,7 +187,7 @@ error_t parse_command(char *str, uint16_t buf_size, uint8_t access) {
 	}
 
 	if (err != EOK) {
-		sprintf(str, "%d%s", err, TX_END_STR);
+		_json_result(str, err);
 	}
 
 	return err;
@@ -193,8 +200,6 @@ static error_t _cmd_read_reg(char *str, uint16_t buf_size) {
 
 	if (index == ATOU_ERROR) {
 		return EINVAL;
-	} else if (index >= get_reg_size()) {
-		return EOVERFLOW;
 	} else {
 		uint32_t size = _fast_atou(&arg_str, RX_END_CHAR);
 		if (size == ATOU_ERROR) {
@@ -202,29 +207,26 @@ static error_t _cmd_read_reg(char *str, uint16_t buf_size) {
 		} else if ((size * 2) + strlen(TX_END_STR) + strlen("0,0x")
 				>= buf_size) {
 			return ERANGE;
+		} else if (index + size >= get_reg_size()) {
+			return EOVERFLOW;
 		} else {
 			uint8_t data;
-			str += sprintf(str, "%d,0x", EOK);
-			index += size;
-			if (index > get_reg_size()) {
-				index -= get_reg_size();
-			}
-			while (size > 0) {
-				index--;
-				size--;
+			str += sprintf(str, "{\"data\":[");
+			while (size--) {
 				/* TODO: Make this a bit better, use helper functions */
-				read_reg(index, &data);
+				read_reg(index++, &data);
 
-				if (index == 0) {
-					index = get_reg_size();
-				}
-				if ((str - first_str) + 2 + strlen(TX_END_STR) < buf_size) {
-					str += sprintf(str, "%02X", data);
+				if ((str - first_str) + 4 + strlen("], \"result\":0}\n")
+						< buf_size) {
+					str += sprintf(str, "%u", data);
+					if (size) {
+						str += sprintf(str, ",");
+					}
 				} else {
 					return ERANGE;
 				}
 			}
-			sprintf(str, TX_END_STR);
+			sprintf(str, "], \"result\":0}\n");
 			return EOK;
 		}
 	}
@@ -266,7 +268,7 @@ static error_t _cmd_write_reg(char *str, uint16_t buf_size, uint8_t access) {
 				err = write_reg(index, val, access);
 				EN_INT;
 				if (err == EOK) {
-					sprintf(str, "%d%s", EOK, TX_END_STR);
+					_json_result(str, EOK);
 				}
 			}
 		}
@@ -293,7 +295,8 @@ static error_t _cmd_read_key(char *str, uint16_t buf_size) {
 	*arg_str = 0;
 	err = get_mm_val(str + strlen(READ_KEY_CMD), array_index, &data);
 	/* If error the print will be overwritten */
-	sprintf(str, "%d,0x%lX,%lu%s", EOK, data, data, TX_END_STR);
+	sprintf(str, "{\"data\":%lu,\"hex_data\":\"0x%lX\",\"result\":0}\n", data,
+			data);
 	return err;
 }
 
@@ -325,7 +328,7 @@ static error_t _cmd_write_key(char *str, uint16_t buf_size, uint8_t access) {
 
 	err = set_mm_val(str + strlen(WRITE_KEY_CMD), array_index, data, access);
 	/* If error the print will be overwritten */
-	sprintf(str, "%d%s", EOK, TX_END_STR);
+	_json_result(str, EOK);
 	return err;
 }
 
@@ -339,19 +342,21 @@ static error_t _cmd_mm_print(char *str, uint16_t buf_size) {
 static error_t _cmd_execute(char *str) {
 	error_t err = execute_reg_change();
 	if (err == EOK) {
-		sprintf(str, "%d%s", EOK, TX_END_STR);
+		_json_result(str, EOK);
 	}
 	return err;
 }
 
 static error_t _cmd_print_version(char *str) {
-	sprintf(str, "%u.%u.%u\n", IF_VERSION_MAJOR, IF_VERSION_MINOR,
-	IF_VERSION_PATCH);
+	sprintf(str, "{\"version\":\"%u.%u.%u\",\"result\":0}\n", IF_VERSION_MAJOR, IF_VERSION_MINOR,
+			IF_VERSION_PATCH);
+
 	return EOK;
 }
 
 static error_t _cmd_print_help(char *str) {
-	sprintf(str, "rr <reg_offset> <size> : Reads bytes\n\
+	sprintf(str,
+			"rr <reg_offset> <size> : Reads bytes\n\
 wr <reg_offest> <DATA0> [DATA1] ... [DATAn] : Writes bytes\n\
 r <reg_key> [array_index]: Reads register\n\
 w <reg_key> [array_index] <DATA> : Writes register\n\
@@ -436,4 +441,8 @@ uint32_t _fast_atou(char **str, char terminator) {
 	}
 	(*str)++;
 	return val;
+}
+
+static void _json_result(char *str, error_t result) {
+	sprintf(str, "{\"result\":%d}\n", result);
 }
