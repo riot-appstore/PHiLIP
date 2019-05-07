@@ -33,6 +33,30 @@
  ******************************************************************************
  */
 
+/** @mainpage
+ *
+ * @section Description
+ * PHiLIP is qualified open-source firmware for nucleo-f103rb or bluepill
+ * boards used for testing peripherals of other embedded devices. PHiLIP is
+ * a low-cost solution to allow detailed, corner case peripheral testing for
+ * both developers and CI systems. PHiLIP is aimed at getting salient
+ * information that would be gathered from an oscilloscope or logic analyzer
+ * as well as injecting specific peripheral behaviors. PHiLIP is designed for
+ * testing peripheral APIs for embedded operating systems and hardware
+ * abstraction layers but was built with an architecture that allows for easy
+ * extensions to other applications such as product qualification or
+ * simulation. PHiLIP can be used with a raw serial connection but also comes
+ * with a python interface that simplifies writing test scripts as well as a
+ * shell for developers to run manual tests.
+ *
+ * @section Architecture
+ * PHiLIP firmware is designed to easily add peripheral functionality. It
+ * separates out the peripherals from the communication and application logic
+ * and the memory map.
+ *
+ *  \image html PHiLIP_firmware_arch.png
+ */
+
 /* Includes ------------------------------------------------------------------*/
 #include <errno.h>
 #include <stdint.h>

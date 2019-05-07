@@ -4,8 +4,8 @@
  * @{
  * @file      PHiLIP_defaults.h
  * @author    Kevin Weiss
- * @version   0.0.2
- * @date      2019-04-21
+ * @version   0.0.3
+ * @date      2019-04-23
  * @details   Generated from the memory map manager version 0.0.9
  ******************************************************************************
  */

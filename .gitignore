@@ -10,6 +10,9 @@ NUCLEOF103RB/
 .settings
 .idea
 
+FW/NUCLEO-F103RB.xml
+FW/BLUEPILL.xml
+
 # Docs
 Docs/
 
