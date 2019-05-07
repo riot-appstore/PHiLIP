@@ -116,6 +116,9 @@ class PhilipShell(cmd.Cmd):
     def do_write_reg(self, arg):
         """Writes a register defined by the memory map
 
+        If writing to change a periph configuration the .mode.init bit should
+        be set to 0 for reinitialization to occur.
+
         Usage:
             write_reg <cmd_name> <data> [offset] [timeout]
 
@@ -169,7 +172,8 @@ class PhilipShell(cmd.Cmd):
     def do_execute_changes(self, arg):
         """Executes or commits device configuration changes
 
-        This will cause any changes in configuration to be applied.
+        This will cause any changes in configuration to be applied. For many
+        periphs the .mode.init must be set to 0 for the periph to reinitialize.
 
         Usage:
             execute_changes [timeout]

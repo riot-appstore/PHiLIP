@@ -209,7 +209,8 @@ class PhilipBaseIf():
     def execute_changes(self, timeout=None):
         """Executes or commits device configuration changes
 
-        This will cause any changes in configuration to be applied.
+        This will cause any changes in configuration to be applied.  For many
+        periphs the .mode.init must be set to 0 for the periph to reinitialize.
 
         Args:
             timeout: Optional timeout value for command specific timeouts

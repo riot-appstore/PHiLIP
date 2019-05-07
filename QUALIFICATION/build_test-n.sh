@@ -1,4 +1,4 @@
-cd ../../FW
+cd ../FW
 BOARD=NUCLEOF103RB make clean
 BOARD=NUCLEOF103RB make
 cp NUCLEOF103RB/PHiLIP.bin /media/${USER}/NODE_F103RB/
