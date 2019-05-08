@@ -294,7 +294,9 @@
                           'bit_offset': 1,
                           'bits': 2,
                           'default': '',
-                          'description': 'direction of io in/out0/out1/int',
+                          'description': '0:high impedance input - 1:push pull '
+                                         'output - 2:open drain output - '
+                                         '3:interrupts and saves event',
                           'flag': '',
                           'invalid': '',
                           'max': '',

@@ -4,8 +4,8 @@
  * @{
  * @file      PHiLIP_map.h
  * @author    Kevin Weiss
- * @version   0.0.3
- * @date      2019-04-23
+ * @version   1.0.0
+ * @date      2019-05-08
  * @details   Generated from the memory map manager version 0.0.9
  ******************************************************************************
  */
@@ -14,9 +14,9 @@
 #define PHILIP_MAP_H
 
 /* Defines -----------------------------------------------------------------*/
-#define IF_VERSION_MAJOR 0 /**< Major version of interface */
+#define IF_VERSION_MAJOR 1 /**< Major version of interface */
 #define IF_VERSION_MINOR 0 /**< Minor version of interface */
-#define IF_VERSION_PATCH 3 /**< Patch version of interface */
+#define IF_VERSION_PATCH 0 /**< Patch version of interface */
 
 /* Global variables --------------------------------------------------------*/
 extern const char* const PHILIP_TYPE_NAME[]; /** < type_name enum */

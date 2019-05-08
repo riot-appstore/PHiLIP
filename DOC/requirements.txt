@@ -1,9 +1,0 @@
-EclipseIDE: Version: Neon.3 Release (4.6.3)
-ST System Workbench: sw4stm32_linux_64bits-c2.4
-OS: Ubuntu 16.04
-Compiler: gcc version 7.2.1 20170904 (release) [ARM/embedded-7-branch revision 255204] (GNU Tools for Arm Embedded Processors 7-2017-q4-major)
-Assembler: GNU assembler version 2.29.51 (arm-none-eabi) using BFD version (GNU Tools for Arm Embedded Processors 7-2017-q4-major) 2.29.51.20171128
-Linker: GNU ld (GNU Tools for Arm Embedded Processors 7-2017-q4-major) 2.29.51.20171128
-memory-map-manager: 0.0.9
-riot_pal: 0.2.3
-STM32Cube V1.0: Version 4.26.0

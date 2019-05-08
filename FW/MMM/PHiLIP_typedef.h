@@ -4,8 +4,8 @@
  * @{
  * @file      PHiLIP_typedef.h
  * @author    Kevin Weiss
- * @version   0.0.3
- * @date      2019-04-23
+ * @version   1.0.0
+ * @date      2019-05-08
  * @details   Generated from the memory map manager version 0.0.9
  ******************************************************************************
  */

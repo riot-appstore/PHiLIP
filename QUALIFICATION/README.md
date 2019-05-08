@@ -1,5 +1,10 @@
 # Release Qualification Procedure for PHiLIP
-The following procedure must be performed before any release of PHiLIP.  All tests must be performed on both PHiLIP-N and PHiLIP-B unless specified.
+The qualification must be done to make PHiLIP a valid reference.
+This ensures things like i2c will reply with the proper response or fail when it should fail.
+The qualification usually involves both automated tests and verification with qualified instruments such as oscilloscopes.
+The following procedure must be performed before any release of PHiLIP.
+All tests must be performed on both PHiLIP-N and PHiLIP-B unless specified.
+The released firmware is available in the [releases](https://github.com/riot-appstore/PHiLIP/releases) section.
 
 # Tools and setup
 The following are all the tools and packages needed to run the tests
@@ -15,10 +20,10 @@ The following are all the tools and packages needed to run the tests
 
 
 ## 1. Interface Tests
-The interface tests check how philip uart protocol, memory map allocation, and the actual python interface for philip.  Since this test has regression for the memory maps it should be executed and updated first.
+The interface tests check how philip uart protocol, memory map allocation, and the actual python interface for philip.  Since this test has regression for the memory maps it should be executed and updated first.  Remember to connect `DUT_RST` to `DEBUG0` pin.
 
 1. Connect PHiLIP to the computer
-2. Run tests located in `IF/philip_pal/philip_pal` with `python3 setup.py test`
+2. Run tests located in `IF/philip_pal` with `python3 setup.py test`
 3. Evaluate any changes in regression testing
 4. If everything looks good then accept the changes with `python3 setup.py test --addopts --regtest-reset`
 

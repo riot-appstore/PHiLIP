@@ -1,4 +1,4 @@
-cd ../../FW
+cd ../FW
 BOARD=BLUEPILL make clean
 BOARD=BLUEPILL make
 cp BLUEPILL/PHiLIP.bin /media/${USER}/${FLASH_PORT}/

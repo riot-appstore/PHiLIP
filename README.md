@@ -13,20 +13,26 @@ PHiLIP (Primitive Hardware In the Loop Integration Product)
 <a name="c_gs_ci"></a>
 - [ Getting Started with CI Scripts ](#gs_ci)
 <a name="c_arch"></a>
-- [ PHiLIP Architecture ](#arch)
-<a name="c_qual"></a>
-- [Qualification of PHiLIP](#qual)
-<a name="c_map"></a>
-- [PHiLIP Memory Map](#map)
-<a name="c_proto"></a>
-- [PHiLIP Serial Protocol](#proto)
-<a name="c_inter"></a>
-- [PHiLIP Python Interface](#inter)
+- [ PHiLIP Infrastructure ](#arch)
 <a name="c_pinb"></a>
-- [PHiLIP-b Pinout](#pinb)
+- [ PHiLIP-b Pinout ](#pinb)
 <a name="c_pinn"></a>
-- [PHiLIP-n Pinout](#pinn)
-- [PHiLIP Firmware Documentation](https://mrkevinweiss.github.io/philip/doxygen/index.html)
+- [ PHiLIP-n Pinout ](#pinn)
+<a name="c_pind"></a>
+- [ Pin Descriptions ](#pind)
+<a name="c_testc"></a>
+- [ Test Capabilities ](#testc)
+<a name="c_map"></a>
+- [ PHiLIP Memory Map ](#map)
+<a name="c_faq"></a>
+- [ Design FAQs ](#faq)
+
+
+## Links
+- [PHiLIP Interface](IF/philip_pal)
+- [PHiLIP Firmware Documentation](FW)
+- [PHiLIP Firmware Doxygen Documentation](https://mrkevinweiss.github.io/philip/doxygen/index.html)
+- [Qualification of PHiLIP](QUALIFICATION)
 
 <a name="desc"></a>
 ## [Description](#c_desc)
@@ -50,16 +56,15 @@ The uart is needed for the basic interface but can also be used for ROM UART fla
 To flash the bluepill with SWD, connect the swd pins and reset `R - NRST` pin.
 
 #### 2. Flash PHiLIP to the device
-The qualified firmware for PHiLIP is stored in the [PHiLIP repo](QUALIFICATION/FW).
-The correct firmware is needed for the given board, either the [PHiLIP_BLUEPILL](QUALIFICATION/FW/PHiLIP-BLUEPILL-CURRENT.bin) or the [PHiLIP_NUCLEO-F103RB](QUALIFICATION/FW/PHiLIP-NUCLEO-F103RB-CURRENT.bin).
-Previous versions can also be browsed or installed but the _CURRENT_ version is recommended.
+The qualified firmware for PHiLIP is stored in the [PHiLIP Releases](https://github.com/riot-appstore/PHiLIP/releases).
+The correct firmware is needed for the given board, either the [PHiLIP_BLUEPILL](https://github.com/riot-appstore/PHiLIP/releases/download/v1.0.0/PHiLIP-BLUEPILL.bin) or the [PHiLIP_NUCLEO-F103RB](https://github.com/riot-appstore/PHiLIP/releases/download/v1.0.0/PHiLIP-NUCLEO-F103RB.bin).
 To flash the firmware on the nucleo-f103rb, drag and drop the .bin file to the nucleo device.
 There are many ways to flash the bluepill, either by connecting a swd connector or with the [ROM UART bootloader](https://medium.com/@paramaggarwal/programming-an-stm32f103-board-using-usb-port-blue-pill-953cec0dbc86).
 
 
 _HINT: If flashing a nucleo-f103rb use the following command_
 
-`wget -P /media/${USER}/NODE_F103RB/ https://github.com/riot-appstore/PHiLIP/raw/master/QUALIFICATION/FW/PHiLIP-NUCLEO-F103RB-CURRENT.bin
+`wget -P /media/${USER}/NODE_F103RB/ https://github.com/riot-appstore/PHiLIP/releases/download/v1.0.0/PHiLIP-NUCLEO-F103RB.bin
 `
 
 #### 3. Install the Python Interface (philip_pal)
@@ -146,6 +151,30 @@ data_filter on
 philip_reset
 ```
 
+14. Manually prepare the rtc time.
+```
+write_reg rtc.set_minute 4
+write_reg rtc.set_hour 14
+write_reg rtc.set_day 100
+```
+
+15. Clear the rtc.mode.init bit to reinitialize and set rtc values on execute.
+```
+write_reg rtc.mode.init 0
+```
+
+16. Execute the changes.
+```
+execute_changes
+```
+
+17. Read the new RTC time.
+```
+read_struct rtc
+```
+
+18. Notice that the second was reset to 0 because that is the default time.
+
 <a name="gs_ci"></a>
 ## [Getting Started with CI Scripts](#c_gs_ci)
 _First follow the [setup](#setup)_
@@ -186,8 +215,7 @@ print("Trace Results")
 print(trace)
 ```
 <a name="arch"></a>
-## [PHiLIP Architecture](#c_arch)
-#### PHiLIP Infrastructure
+## [PHiLIP Infrastructure](#c_arch)
 PHiLIP uses a combination of tools in order to work.
 The [memory_map_manager](https://github.com/riot-appstore/memory_map_manager) or MMM help maintain and coordinate the memory map used for the firmware, documentation, and interface.
 The [philip_pal](IF/philip_pal) wraps around the basic serial protocol so functionality can be implemented and handled with a higher level language and in a non-constrained environment.
@@ -198,22 +226,138 @@ The initial version used [STM32Cube](https://www.st.com/en/development-tools/stm
     <img src="RESOURCES/PHiLIP_infrastructure.png" alt="drawing" width="1024px"/>
 </a>
 
-#### PHiLIP Firmware Design
-PHiLIP firmware is designed to easily add peripheral functionality.
-It separates out the peripherals from the communication and application logic and the memory map.
+For the API check the docstring of [philip_shell.py](IF/philip_pal/philip_pal/philip_shell.py) or [philip_if.py](IF/philip_pal/philip_pal/philip_if.py)
 
-<a href="RESOURCES/PHiLIP_firmware_arch.png">
-    <img src="RESOURCES/PHiLIP_firmware_arch.png" alt="drawing" width="1024px"/>
+<a name="pinb"></a>
+## [PHiLIP-b Pinout](#c_pinb)
+Pinout for the PHiLIP on the [bluepill](https://hackaday.com/2017/03/30/the-2-32-bit-arduino-with-debugging/)
+
+<a href="RESOURCES/PHiLIP-BLUEPILL-PINOUT.png">
+    <img src="RESOURCES/PHiLIP-BLUEPILL-PINOUT.png" alt="drawing" width="1024px"/>
 </a>
 
-<a name="qual"></a>
-## [Qualification of PHiLIP](#c_qual)
-The qualification must be done to make PHiLIP a valid reference.
-When changes are made PHiLIP should undergo the [qualification procedure](QUALIFICATION/TESTS). This ensures things like i2c will reply with the proper response or fail when it should fail.
-The qualification is also a way to track the comparabilities of PHiLIP.
-The qualification usually involves both automated tests and verification with qualified instruments such as oscilloscopes.
+<a name="pinn"></a>
+## [PHiLIP-n Pinout](#c_pinn)
+Pinout for the PHiLIP on the [nucleo-f103rb](https://www.digikey.com/products/en?keywords=nucleo-f103rb)
 
-The released firmware is available in the [QUALIFIED FIRMWARE](QUALIFICATION/FW) section.
+<a href="RESOURCES/PHiLIP-NUCLEOF103RB-PINOUT.png">
+    <img src="RESOURCES/PHiLIP-NUCLEOF103RB-PINOUT.png" alt="drawing" width="1024px"/>
+</a>
+
+<a name="pind"></a>
+## [Pin Descriptions](#c_pind)
+
+Pin Name  | Description                                                                                            
+----------|--------------------------------------------------------------------------------------------------------
+DUT_RST   | Connects to the reset pin of the DUT, can put  it in a reset                                           
+USER_BTN  | User button if a test requires manual interaction, the pin can also be automated but the RPi in the CI
+TEST_FAIL | Goes high if a low level test failed                                                                   
+TEST_WARN | Goes high if a low level test has a warning                                                            
+TEST_PASS | Goes high if a low level test passed                                                                   
+DEBUG0    | A GPIO debug pin                                                                                       
+DEBUG1    | A GPIO debug pin                                                                                       
+DEBUG2    | A GPIO debug pin                                                                                       
+LED0      | Heartbeat connection to bluepill LED                                                                   
+PM_V_ADC  | Samples the voltage of the DUT (only when connected in external power mode)                            
+PM_HI_ADC | Course, mA range of current measurement (only when connected in external power mode)                   
+PM_LO_ADC | Fine, uA range of current measurement  (only when connected in external power mode)                    
+DUT_IC    | Input capture pin, this is used for timing measurements from the DUT                                   
+DUT_PWM   | Feeds a pwm signal to the DUT to confirm DUT receives correct timing                                   
+DUT_ADC   | Used to measure any analog out signals of the DUT                                                      
+DUT_RX    | The UART receive pin, connect to the DUT's TX pin                                                      
+DUT_TX    | The UART receive pin, connect to the DUT's RX pin                                                      
+DUT_RTS   | The UART Ready To Send pin, connect to the DUT's RTS pin                                               
+DUT_CTS   | The UART Clear To Send pin, connect to the DUT's CTS pin                                               
+DUT_NSS   | SPI Chip Select                                                                                        
+DUT_SCK   | SPI Clock                                                                                              
+DUT_MISO  | SPI Master In Slave Out                                                                                
+DUT_MOSI  | SPI Master Out Slave In                                                                                
+DUT_SCL   | I2C Clock                                                                                              
+DUT_SDA   | I2C Data                                                                                               
+
+<a name="testc"></a>
+## [Test Capabilities](#c_testc)
+Test should both test that certain conditions pass (eg. i2c_read_bytes actually reads the correct bytes) and the expected failures occur (eg. reading from a wrong i2c address should return the proper error code and not return a success)
+PHiLIP should allow the following tests to be implemented.
+### SPI
+#### Pass Cases
+- write to dummy register
+- read from dummy register
+- ensure a change has occurred
+- change to all 4 modes
+- 8/16 bit frame
+- speeds
+- stress test
+- send different dummy data
+
+#### Failure Cases
+- incorrect mode settings
+- incorrect pin configs
+- unsupported speeds
+- frame errors
+
+### I2C
+#### Pass Cases
+- check if slave present
+- write register
+- read register
+- change slave address
+- slave clock stretch
+- slave data not ready
+- speeds
+- stress tests
+- 10 bit and 7 bit addr
+- 8/16 bit registers
+
+#### Failure Cases
+- unterminated session
+- wrong slave address
+- incorrect pin configs
+- unsupported speeds
+- no pullup resistor
+- double acquire
+
+### UART
+#### Pass Cases
+- basic comms
+- modem support
+- change baudrate
+- parity
+- stop bit
+- stress rx
+- echo data
+- change data
+- ack data
+
+#### Failure Cases
+- wrong baudrate
+- wrong configs
+- incorrect pin configs
+
+### ADC
+#### Pass Cases
+- Linearity
+- speeds
+
+#### Failure Cases
+- incorrect pin configs
+- unsupported speeds
+
+### PWM
+#### Pass Cases
+- change duty cycle
+- change period
+- min/max bounds
+- disable/enable
+- timing test
+
+### DAC
+#### Pass Cases
+- linearity
+
+### Timers
+#### Pass Cases
+- time output clock is correct
 
 <a name="map"></a>
 ## [PHiLIP Memory Map](#c_map)
@@ -225,7 +369,7 @@ The current versioned memory maps is available [here](IF/philip_pal/philip_pal/m
 
 _Example of memory map_
 
-| name                            |     description                                                                                                                                                                                               |
+| Name                            |     Description                                                                                                                                                                                               |
 |---------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | user_reg                        |     Writable registers for user testing - Starts at 0 and increases by 1 each register by default                                                                                                             |
 | sys.sn                          |     Unique ID of the device                                                                                                                                                                                   |
@@ -367,48 +511,39 @@ _Example of memory map_
 | trace.value                     |     The value of the event - 0:falling edge interrupt - 1:rising edge interrupt                                                                                                                               |
 | trace.tick                      |     The tick when the event occured                                                                                                                                                                           |
 
+<a name="faq"></a>
+## [Design FAQs](#c_faq)
+### Why not use a tool (like buspirate) that does this already?
+- Standard test tools from DIOLAN and Total Phase require licenses and are expensive
+- Most tools don't achieve everything needed, that is why it would be good to customize firmware
 
-<a name="proto"></a>
-## [PHiLIP Serial Protocol](#c_proto)
-The communication medium for PHiLIP is a serial connection.It provides basic instructions that allows for extensibility from other interfaces or basic communication.
-Replies are given in standard json format with a `"result"` that corresponds to a `errno` code and `"data"` if data is present.
-For example reading bytes from a register would respond with `{"data":[0,1,2,3,4,5,6,7,8,9], "result":0}`
+### Why not just test against sensors?
+- Sensors and other slave devices cannot test all configurable modes (try to find a SPI MODE 3 or 4 device)
 
-Name           | Command                        | Description                                          | Example             | Example Description
----------------|--------------------------------|------------------------------------------------------|---------------------|------------------------------------------------------------------------------
-READ_REG_CMD   | `rr <index> <size_of_bytes>`   | Read application registers                           | `rr 0 10`           | Reads 10 bytes starting at register 0
-WRITE_REG_CMD  | `wr <index> [data0 ... datan]` | Write application registers                          | `wr 10 99 88 77`    | Writes 99, 88 and 77 starting at register 10
-EXECUTE_CMD    | `ex`                           | Execute and commit changes in the registers          |                     |
-RESET_CMD      | `mcu_rst`                      | Provide a software reset to PHiLIP                   |                     |
-VERSION_CMD    | `-v`                           | Prints the version of the interface                  |                     |
-HELP_CMD       | `help`                         | Prints a help menu                                   |                     |
-MEMORY_MAP_CMD | `mm <record_index>`            | Gives properties of the memory map for a given index | `mm 0`              | Gives the properties of the first entry of the memory map
-MM_SIZE_CMD    | `mm_size`                      | Gives the amount of records in the memory map        |                     |
-READ_KEY_CMD   | `r <reg_name> [array_index]`   | Reads values given a record name                     | `r user_reg 2`      | Reads the 3rd value of the user_reg
-WRITE_KEY_CMD  | `w <reg_name> <data>`          | Writes a value to a record name                      | `w i2c.mode.init 0` | Writes 0 to the i2c mode bit causing it to reinitialize the next `ex` command
+### Why not use a Raspberry Pi?
+- RPi does not support low level testing
+- RPi's drivers are not well certified
 
+### Why not use Arduino?
+- Standard Arduino extensions don't support all configurable features well
+- Arduino hardware doesn't support everything
 
+### Why not implement in RIOT or any other OS?
+- If the device is using RIOT then it shouldn't be tested on RIOT, it should be tested against an accepted reference
+- The tester should be minimal to not introduce unnecessary overhead
+- RIOT doesn't support many slave features
 
-<a name="inter"></a>
-## [PHiLIP Python Interface](#c_inter)
-PHiLIP has a python interface called [philip_pal](IF/philip_pal) which is available with `pip3 install philip_pal`.
-It provides a philip_shell which developers can use for manual tests and interacting with PHiLIP.
-For automated scripts, a Phil() class is provided.
+### Are the peripheral pins static or reassignable?
+- Pins are static, this makes them simple to wire and simple to develop
 
-For the API check the docstring of [philip_shell.py](IF/philip_pal/philip_pal/philip_shell.py) or [philip_if.py](IF/philip_pal/philip_pal/philip_if.py)
+### Why program the PHiLIP bare metal (or using STMCube)?
+- STMCube provides a standard reference to start so boilerplate code doesn't need to be implemented, tested, and debugged
+- Bare metal is used since the application features are generally simple and an RTOS is not needed
+- If alterations are made in the future it is not necessary to update or bring in a new RTOS
 
-<a name="pinb"></a>
-## [PHiLIP-b Pinout](#c_pinb)
-Pinout for the PHiLIP on the [bluepill](https://hackaday.com/2017/03/30/the-2-32-bit-arduino-with-debugging/)
+### How dependent is the PHiLIP on the library (STMCube and CMSIS)?
+- Slowly moving away from STMCube library, it was used for getting it started
 
-<a href="RESOURCES/PHiLIP-BLUEPILL-PINOUT.png">
-    <img src="RESOURCES/PHiLIP-BLUEPILL-PINOUT.png" alt="drawing" width="1024px"/>
-</a>
-
-<a name="pinn"></a>
-## [PHiLIP-n Pinout](#c_pinn)
-Pinout for the PHiLIP on the [nucleo-f103rb](https://www.digikey.com/products/en?keywords=nucleo-f103rb)
-
-<a href="RESOURCES/PHiLIP-NUCLEOF103RB-PINOUT.png">
-    <img src="RESOURCES/PHiLIP-NUCLEOF103RB-PINOUT.png" alt="drawing" width="1024px"/>
-</a>
+### What are the final thoughts?
+- The most efficient way to assist RIOT is to quickly deploy a usable system, so far this is the best/fastest/most reliable way to do so
+- Additional support for slave peripherals can be added after knowledge is gained from the baremetal development
