@@ -72,10 +72,12 @@ void init_sys(map_t *reg, map_t *saved_reg) {
 	sys_reg->fw_rev[1] = FW_REV_PATCH;
 	sys_reg->fw_rev[2] = FW_REV_MINOR;
 	sys_reg->fw_rev[3] = FW_REV_MAJOR;
+    sys_reg->fw_rev[0] = 0;
 
 	sys_reg->if_rev[1] = IF_VERSION_PATCH;
 	sys_reg->if_rev[2] = IF_VERSION_MINOR;
 	sys_reg->if_rev[3] = IF_VERSION_MAJOR;
+    sys_reg->if_rev[0] = 0;
 
 	sys_reg->build_time.second = BUILD_SEC;
 	sys_reg->build_time.minute = BUILD_MIN;
