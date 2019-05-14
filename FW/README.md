@@ -4,7 +4,7 @@ PHiLIP firmware is designed to easily add peripheral functionality.
 It separates out the peripherals from the communication and application logic and the memory map.
 More information on firmware design is available in the [doxygen docs](https://mrkevinweiss.github.io/philip/doxygen/index.html)
 
-<a href="RESOURCES/PHiLIP_firmware_arch.png">
+<a href="../RESOURCES/PHiLIP_firmware_arch.png">
     <img src="../RESOURCES/PHiLIP_firmware_arch.png" alt="drawing" width="1024px"/>
 </a>
 
