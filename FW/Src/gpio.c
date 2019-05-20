@@ -123,6 +123,8 @@ void init_gpio(map_t *reg, map_t *saved_reg) {
 	HAL_GPIO_Init(DUT_RTS_GPIO_Port, &GPIO_InitStruct);
 
 	GPIO_InitStruct.Pin = DUT_RST_Pin;
+	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
+	GPIO_InitStruct.Pull = GPIO_PULLUP;
 	HAL_GPIO_Init(DUT_RST_GPIO_Port, &GPIO_InitStruct);
 
 	/*Configure GPIO pin : DUT_CTS_Pin */
