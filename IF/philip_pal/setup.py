@@ -15,9 +15,9 @@ with open("README.md", "r") as fh:
 
 setup(
     name="philip_pal",
-    version="1.0.0",
-    author="Kevin Weiss",
-    author_email="weiss.kevin604@gmail.com",
+    version="1.1.0",
+    author="Kevin Weiss, Sebastian Meiling",
+    author_email="weiss.kevin604@gmail.com, s@mlng.net",
     license="MIT",
     description="Protocol abstraction and parser for PHiLIP",
     long_description=LONG_DESCRIPTION,
@@ -31,7 +31,7 @@ setup(
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
-        "Development Status :: 2 - Pre-Alpha",
+        "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers"
     ],
     setup_requires=["pytest-runner"],
