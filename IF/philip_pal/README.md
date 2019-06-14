@@ -53,3 +53,26 @@ optional arguments:
 Upon starting the shell use the `help` command to see what functionality is available.
 
 See the main page for more getting started and examples.
+
+### Running PHiLIP PAL from CLI
+Besides the full PHiLIP PAL Shell there is also CLI mode for simple one-shot
+access to PHiLIP interface functions. It allows to reset the PHiLIP MCU and
+the connected DUT.
+
+After connecting PHiLIP simply run `python3 -m philip_pal --help` to get the
+following full usage description:
+
+```
+usage: python3 -m philip_pal [-h] [--verbose] [--dut_reset] [--reset] [port]
+
+positional arguments:
+  port         PHiLIP serial port
+
+optional arguments:
+  -h, --help   show this help message and exit
+  --verbose    Enable more output
+  --dut_reset  Reset device-under-test (DUT)
+  --reset      Reset PHiLIP MCU
+```
+
+To get output use `--verbose`, otherwise commands will silently be executed.
