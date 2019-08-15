@@ -198,7 +198,7 @@ class PhilipShell(cmd.Cmd):
         """Get the version of the interface/memory map that is being used
 
         Usage:
-            philip_reset
+            get_version
         """
         arg = arg
         print(self.phil.if_version)
@@ -372,7 +372,7 @@ USER_BTN = B15 - |        | - NRST
             else:
                 print("""
 PHILIP-N -> NUCLEO-F103RB
-CN6                                               CN5
+CN6
 
                             DUT_SCL = PB8 = SCL/D15 -
                             DUT_SDA = PB9 = SDA/D14 -
@@ -384,18 +384,16 @@ CN6                                               CN5
 - 3V3                                    PWM/CS/D10 -
 - 5V                                         PWM/D9 -
 - GND                             DUT_TX = PA9 = D8 -
-- GND
+- GND                                           |CN5|
 - VIN                             DUT_IC = PA8 = D7 -
-                                             PWM/D6 -
+|CN6|                                        PWM/D6 -
 - A0 = PA0 = TEST_WARN        DEBUG1 = PB4 = PWM/D5 -
 - A1 = PA1 = TEST_FAIL            DEBUG2 = PB5 = D4 -
 - A2 = PA4 = TEST_PASS        DEBUG0 = PB3 = PWM/D3 -
 - A3 = PB0 = DUT_ADC             DUT_RX = PA10 = D2 -
 - A4 = PC1 = PM_HI_ADC          IF_TX = PA2 = TX/D1 -
 - A5 = PC0 = PM_V_ADC           IF_RX = PA3 = RX/D0 -
-
-
-          CN8                           CN9
+|CN8|                                          |CN10|
 
           -1 -                  DUT_DAC -1 - DUT_PWM
           -2 -                  DUT_SCL -2 -
@@ -416,6 +414,7 @@ CN6                                               CN5
           -17- DUT_ADC           DUT_RX -17-
 PM_LO_ADC -18- PM_HI_ADC          IF_TX -18-
           -19- PM_V_ADC           IF_RX -19-
+          |CN7|                         |CN10|
 """)
         except (ValueError) as exc:
             print(exc)

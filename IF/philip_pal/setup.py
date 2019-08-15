@@ -5,7 +5,7 @@
 # file LICENSE in the top level directory for more details.
 # SPDX-License-Identifier:    MIT
 """
-    Setup file for riot_pal.
+    Setup file for philip_pal.
 """
 from setuptools import setup, find_packages
 
@@ -15,7 +15,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="philip_pal",
-    version="1.1.0",
+    version="1.1.1",
     author="Kevin Weiss, Sebastian Meiling",
     author_email="weiss.kevin604@gmail.com, s@mlng.net",
     license="MIT",
