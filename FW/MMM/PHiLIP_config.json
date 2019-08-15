@@ -2502,7 +2502,7 @@
     "metadata": {
         "app_name": "PHiLIP",
         "author": "Kevin Weiss",
-        "version": "1.0.0"
+        "version": "1.0.1"
     },
     "typedefs": [
         {
@@ -2553,7 +2553,7 @@
                 {
                     "access": 0,
                     "array_size": 12,
-                    "description": "Writable registers for user testing - Starts at 0 and increases 1 each register by default",
+                    "description": "Unique ID of the device",
                     "name": "sn",
                     "type": "uint8_t"
                 },

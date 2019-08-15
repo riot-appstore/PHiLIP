@@ -4,8 +4,8 @@
  * @{
  * @file      PHiLIP_typedef.h
  * @author    Kevin Weiss
- * @version   1.0.0
- * @date      2019-05-08
+ * @version   1.0.1
+ * @date      2019-08-15
  * @details   Generated from the memory map manager version 0.0.9
  ******************************************************************************
  */
@@ -139,7 +139,7 @@ typedef union {
 /** @brief  System settings for PHiLIP */
 typedef union {
 	struct {
-		uint8_t sn[12]; /**< Writable registers for user testing - Starts at 0 and increases 1 each register by default */
+		uint8_t sn[12]; /**< Unique ID of the device */
 		uint8_t fw_rev[4]; /**< Firmware revision */
 		uint8_t if_rev[4]; /**< Interface revision - This corelates to the version of the memory map */
 		uint64_t tick; /**< Tick in ms - Updates with the sys tick register every few ms */

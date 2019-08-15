@@ -4,8 +4,8 @@
  * @{
  * @file      PHiLIP_map.c
  * @author    Kevin Weiss
- * @version   1.0.0
- * @date      2019-05-08
+ * @version   1.0.1
+ * @date      2019-08-15
  * @}
  * @details   Generated from the memory map manager version 0.0.9
  ******************************************************************************
