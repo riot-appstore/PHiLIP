@@ -103,6 +103,8 @@
 #define DUT_ADC_DEV			ADC2
 #define ADC_INT				ADC1_2_IRQHandler
 #define ADC_IRQ				ADC1_2_IRQn
+
+#define ADC_CHANNEL			ADC_CHANNEL_6
 #endif
 
 #ifdef NUCLEOF103RB
@@ -205,6 +207,8 @@
 #define DUT_ADC_DEV			ADC2
 #define ADC_INT				ADC1_2_IRQHandler
 #define ADC_IRQ				ADC1_2_IRQn
+
+#define ADC_CHANNEL			ADC_CHANNEL_8
 #endif
 
 #define USER_BTN USER_BTN_GPIO_Port, USER_BTN_Pin
