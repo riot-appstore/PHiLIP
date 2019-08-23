@@ -3,4 +3,4 @@
 {'cmd': 'rr 0 2', 'data': [0, 1], 'result': 'Success'}
 {'cmd': 'rr 0 2', 'data': [0, 1], 'result': 'Success'}
 {'cmd': 'help', 'result': 'Timeout'}
-{'cmd': 'version', 'result': 'Success', 'version': '1.0.0'}
+{'cmd': 'version', 'result': 'Success', 'version': '1.0.1'}
