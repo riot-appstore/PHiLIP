@@ -10,7 +10,7 @@
 
 #define FW_REV_MAJOR	(1)
 #define FW_REV_MINOR	(0)
-#define FW_REV_PATCH	(1)
+#define FW_REV_PATCH	(2)
 
 #define DEFAULT_UART_BAUDRATE	115200
 #define DEFAULT_UART_PARITY		BPT_PARITY_NONE

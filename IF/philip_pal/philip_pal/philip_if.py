@@ -508,7 +508,7 @@ class PhilipExtIf(PhilipBaseIf):
                                                timeout=timeout))
         return response
 
-    def read_trace(self):
+    def read_trace(self, to_ns=False):
         """Reads event trace from the dut
 
         Returns:
@@ -517,6 +517,7 @@ class PhilipExtIf(PhilipBaseIf):
         """
         clock_speed = self.read_reg('sys.sys_clk')['data']
         trace = []
+        response = {"cmd": "read_trace()", "result": self.RESULT_SUCCESS}
 
         for i in range(0, self.mem_map['trace.tick']['array_size']):
             trace_event = {}
@@ -528,7 +529,10 @@ class PhilipExtIf(PhilipBaseIf):
             trace_value = self.read_reg('trace.value', i, 1)['data'][0]
             total_tick = trace_tick << trace_tick_div
             time_sec = float(total_tick) / clock_speed
-            trace_event['time'] = round(time_sec, 10)
+            if to_ns:
+                trace_event['time'] = int(time_sec * 10000000000)
+            else:
+                trace_event['time'] = round(time_sec, 10)
             if trace_source == 1:
                 trace_event['source'] = 'DEBUG0'
             elif trace_source == 2:
@@ -540,4 +544,5 @@ class PhilipExtIf(PhilipBaseIf):
             trace_event['event'] = trace_value
             if trace_source != 0:
                 trace.append(trace_event)
-        return sorted(trace, key=lambda x: x['time'])
+        response['data'] = sorted(trace, key=lambda x: x['time'])
+        return response

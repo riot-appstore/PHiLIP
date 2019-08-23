@@ -165,8 +165,8 @@
 {'name': 'sys.build_time.second', 'result': 'Success'}
 {'name': 'sys.build_time.year', 'result': 'Success'}
 {'data': 17061, 'name': 'sys.device_num', 'result': 'Success'}
-{'data': [0, 0, 0, 1], 'name': 'sys.fw_rev', 'result': 'Success'}
-{'data': [0, 0, 0, 1], 'name': 'sys.if_rev', 'result': 'Success'}
+{'data': [0, 2, 0, 1], 'name': 'sys.fw_rev', 'result': 'Success'}
+{'data': [0, 1, 0, 1], 'name': 'sys.if_rev', 'result': 'Success'}
 {'data': 1, 'name': 'sys.mode', 'result': 'Success'}
 {'data': 0, 'name': 'sys.mode.dut_rst', 'result': 'Success'}
 {'data': 1, 'name': 'sys.mode.init', 'result': 'Success'}

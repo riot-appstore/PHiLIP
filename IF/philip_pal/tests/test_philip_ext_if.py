@@ -67,5 +67,5 @@ def test_philip_ext_misc_commands(phil_ex, regtest):
     traces = phil_ex.read_trace()
     if len(traces) == 0:
         raise IndexError("Could not get traces, connect DUT_RST to DEBUG0")
-    sec_diff = traces[1]['time'] - traces[0]['time']
+    sec_diff = traces['data'][1]['time'] - traces['data'][0]['time']
     assert sec_diff > 0.1 and sec_diff < 0.5

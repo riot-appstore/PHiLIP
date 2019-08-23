@@ -23,6 +23,8 @@ def main():
                         help='Reset device-under-test (DUT)')
     parser.add_argument('--reset', action='store_true',
                         help='Reset PHiLIP MCU')
+    parser.add_argument('--fw', '-f', action='store_true',
+                        help='Gets the firmware version')
     parser.add_argument('port', action='store', type=str, nargs='?',
                         help='PHiLIP serial port')
     args = parser.parse_args()
@@ -37,6 +39,9 @@ def main():
     else:
         philip = Phil()
 
+    if args.fw:
+        rev = philip.read_reg('sys.fw_rev')['data']
+        print("{\"version\": \"%r.%r.%r\"}" % (rev[3], rev[2], rev[1]))
     if args.reset:
         logging.info(". reset")
         philip.reset_mcu()

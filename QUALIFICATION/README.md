@@ -20,7 +20,9 @@ The following are all the tools and packages needed to run the tests
 
 
 ## 1. Interface Tests
-The interface tests check how philip uart protocol, memory map allocation, and the actual python interface for philip.  Since this test has regression for the memory maps it should be executed and updated first.  Remember to connect `DUT_RST` to `DEBUG0` pin.
+The interface tests check how philip uart protocol, memory map allocation, and the actual python interface for philip.
+Since this test has regression for the memory maps it should be executed and updated first.
+Remember to connect `DUT_RST` to `DEBUG0` pin and pullup the to 3.3V.
 
 1. Connect PHiLIP to the computer
 2. Run tests located in `IF/philip_pal` with `python3 setup.py test`
@@ -28,7 +30,8 @@ The interface tests check how philip uart protocol, memory map allocation, and t
 4. If everything looks good then accept the changes with `python3 setup.py test --addopts --regtest-reset`
 
 ## 2. Build Tests
-PHiLIP must be able to build in all configurations with both Eclipse and Makefiles.  The CI performs the build tests on the Makefiles which are release versions of PHiLIP (O3 optimization), however, manual verification should be used for all configurations.
+PHiLIP must be able to build in all configurations with both Eclipse and Makefiles.
+The CI performs the build tests on the Makefiles which are release versions of PHiLIP (O3 optimization), however, manual verification should be used for all configurations.
 
 1. Connect PHiLIP-n
 2. Run `./build_test-n.sh`

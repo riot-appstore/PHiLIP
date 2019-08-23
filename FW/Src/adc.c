@@ -98,7 +98,7 @@ void init_dut_adc(map_t *reg, map_t *saved_reg) {
 
 	/* For Rank 1 to 6 */
     MODIFY_REG(adc_inst->SQR3, ADC_SQR3_RK(ADC_SQR3_SQ1, ADC_REGULAR_RANK_1),
-    	ADC_SQR3_RK(ADC_CHANNEL_8, ADC_REGULAR_RANK_1));
+    	ADC_SQR3_RK(ADC_CHANNEL, ADC_REGULAR_RANK_1));
 
     commit_dut_adc();
 }
@@ -116,13 +116,13 @@ error_t commit_dut_adc() {
 	/* For channels 0 to 9 */
 	if (dut_adc.reg->mode.fast_sample) {
 		MODIFY_REG(adc_inst->SQR3,
-			ADC_SMPR2(ADC_SMPR2_SMP0, ADC_CHANNEL_8),
-			ADC_SMPR2(ADC_SAMPLETIME_1CYCLE_5, ADC_CHANNEL_8));
+			ADC_SMPR2(ADC_SMPR2_SMP0, ADC_CHANNEL),
+			ADC_SMPR2(ADC_SAMPLETIME_1CYCLE_5, ADC_CHANNEL));
 	}
 	else {
 		MODIFY_REG(adc_inst->SMPR2,
-			ADC_SMPR2(ADC_SMPR2_SMP0, ADC_CHANNEL_8),
-			ADC_SMPR2(ADC_SAMPLETIME_239CYCLES_5, ADC_CHANNEL_8));
+			ADC_SMPR2(ADC_SMPR2_SMP0, ADC_CHANNEL),
+			ADC_SMPR2(ADC_SAMPLETIME_239CYCLES_5, ADC_CHANNEL));
 	}
 
 	adc_inst->CR2 |= ADC_CR2_ADON;

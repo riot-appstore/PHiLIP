@@ -55,16 +55,17 @@ See the [PHiLIP-b pinout](RESOURCES/PHiLIP-BLUEPILL-PINOUT.png) for more informa
 The uart is needed for the basic interface but can also be used for ROM UART flashing.
 To flash the bluepill with SWD, connect the swd pins and reset `R - NRST` pin.
 
+
 #### 2. Flash PHiLIP to the device
 The qualified firmware for PHiLIP is stored in the [PHiLIP Releases](https://github.com/riot-appstore/PHiLIP/releases).
 The correct firmware is needed for the given board, either the [PHiLIP_BLUEPILL](https://github.com/riot-appstore/PHiLIP/releases/download/v1.0.0/PHiLIP-BLUEPILL.bin) or the [PHiLIP_NUCLEO-F103RB](https://github.com/riot-appstore/PHiLIP/releases/download/v1.0.0/PHiLIP-NUCLEO-F103RB.bin).
 To flash the firmware on the nucleo-f103rb, drag and drop the .bin file to the nucleo device.
 There are many ways to flash the bluepill, either by connecting a swd connector or with the [ROM UART bootloader](https://medium.com/@paramaggarwal/programming-an-stm32f103-board-using-usb-port-blue-pill-953cec0dbc86).
+After flashing PHiLIP should be blinking the firmware revision pattern (_1 + the firmware number, so firmware revision 1.0.3 would blink 2, 1, 4 times_).
 
+_HINT: If flashing a nucleo-f103rb with a ubuntu machine use the following command_
 
-_HINT: If flashing a nucleo-f103rb use the following command_
-
-`wget -P /media/${USER}/NODE_F103RB/ https://github.com/riot-appstore/PHiLIP/releases/download/v1.0.0/PHiLIP-NUCLEO-F103RB.bin
+`wget -P /media/${USER}/NODE_F103RB/ https://github.com/riot-appstore/PHiLIP/releases/download/v1.0.2/PHiLIP-NUCLEO-F103RB.bin
 `
 
 #### 3. Install the Python Interface (philip_pal)
@@ -78,13 +79,21 @@ _First follow the [setup](#setup)_
 
 To use PHiLIP as a developer, an interface shell `philip_shell` is provided with the [philip_pal package](IF/philip_pal).
 The philip_shell has a connect wizard, command history, and auto-completion.
-If in doubt, try pressing tab a few times.
+If in doubt, try pressing tab a few times or typing in `help`.
 
 The following is an example of PHiLIP running and evaluating a toggling pin.
+This should show how to use the different functionalities of PHiLIP such as:
+- Reading different parameters
+- Setting configurations with a single command
+- Prepared multiple configuration changes then executing
+
 This should provide a way to get started using PHiLIP.
 Run the philip shell with `philip_shell` _(use the -h to view additional args)_
 
-1. Check available commands.
+#### 1. Exploring the philip_shell
+
+1. Check available commands with `help`, this shows each of the commands.
+For information of each of the commands type `help <topic>`
 ```
 PHiLIP: help
 Documented commands (type help <topic>):
@@ -96,25 +105,30 @@ execute_changes  help         print_map         read_trace   write_reg
 
 2. Check the description of the memory map.
 This should help explain what each register is responsible for.
+The registers or memory map records are the primary way to configure and get data.
 ```
 info_record_type description
 ```
 
 3. Check the pinout of the philip.
+This give an idea on where the connect pins on the board.
 ```
 show_pinout
 ```
 
 4. Connect the `DUT_RST` to the `DEBUG0` pin.
 5. Check what the `gpio[0].mode.io_type` register does.
+This shows the functionality of the register, in this case allowing us to set the type of GPIO pin mode.
 ```
 print_map gpio[0].mode.io_type
 ```
 6. Enable the `DEBUG0` or gpio0 pin to interrupt mode so traces can be collected.
+Since traces can capture events from the interrupt we must enable the interrupt.
 ```
 write_and_execute gpio[0].mode.io_type 3
 ```
 7. Use the `DUT_RST` pin to toggle events on the `DEBUG0` pin.
+By toggling the `DUT_RST` pin the trace events get logged.
 ```
 dut_reset
 ```
@@ -125,11 +139,14 @@ read_trace
 ```
 
 9. Read the basic tick registers of the trace.
+The is the basic register information without any processing.
+Many register values can be interrogated in this way.
 ```
 read_reg trace.tick
 ```
 
 10. Only read the first two elements of the array.
+This shows how read registers with arrays.
 ```
 read_reg trace.tick 0 2
 ```
@@ -152,6 +169,7 @@ philip_reset
 ```
 
 14. Manually prepare the rtc time.
+This shows how to prepare the data that must be executed at the same time.
 ```
 write_reg rtc.set_minute 4
 write_reg rtc.set_hour 14
@@ -164,16 +182,26 @@ write_reg rtc.mode.init 0
 ```
 
 16. Execute the changes.
+The first checks to see if the module needs to be reinitialized then performs the initialization when executed.
 ```
 execute_changes
 ```
 
-17. Read the new RTC time.
+17. Read the new RTC time and confirm changes propagated.
 ```
 read_struct rtc
 ```
 
 18. Notice that the second was reset to 0 because that is the default time.
+
+#### 2. The  Process of Update Runtime Configuration of PHiLIP
+
+To actually change the PHiLIP configuration a number of step must occur:
+1. Write the register intended to change
+2. Set the module init bit to 0
+3. Execute changes
+
+or use the `write_and_execute` command that does all of the following steps.
 
 <a name="gs_ci"></a>
 ## [Getting Started with CI Scripts](#c_gs_ci)
@@ -183,7 +211,8 @@ To use the python interface in a CI, a Phil class is provided.
 Create a python script for the CI to run and import Phil to use.
 Refer to the [philip_if.py](/IF/philip_pal/philip_pal/philip_if.py) for more information.
 
-Example of python test script tests the trace function, connect the `DUT_RST` to the `DEBUG0` pin.
+Example of python test script that tests the trace function.
+_connect the `DUT_RST` to the `DEBUG0` pin._
 
 ```python
 from philip_pal import Phil
@@ -257,9 +286,9 @@ TEST_PASS | Goes high if a low level test passed
 DEBUG0    | A GPIO debug pin                                                                                       
 DEBUG1    | A GPIO debug pin                                                                                       
 DEBUG2    | A GPIO debug pin                                                                                       
-LED0      | Heartbeat connection to bluepill LED                                                                   
+LED0      | Heartbeat connection PHiLIP LED                                                                        
 PM_V_ADC  | Samples the voltage of the DUT (only when connected in external power mode)                            
-PM_HI_ADC | Course, mA range of current measurement (only when connected in external power mode)                   
+PM_HI_ADC | Coarse, mA range of current measurement (only when connected in external power mode)                   
 PM_LO_ADC | Fine, uA range of current measurement  (only when connected in external power mode)                    
 DUT_IC    | Input capture pin, this is used for timing measurements from the DUT                                   
 DUT_PWM   | Feeds a pwm signal to the DUT to confirm DUT receives correct timing                                   
@@ -277,13 +306,13 @@ DUT_SDA   | I2C Data
 
 <a name="testc"></a>
 ## [Test Capabilities](#c_testc)
-Test should both test that certain conditions pass (eg. i2c_read_bytes actually reads the correct bytes) and the expected failures occur (eg. reading from a wrong i2c address should return the proper error code and not return a success)
+Test should test that certain conditions pass (eg. i2c_read_bytes actually reads the correct bytes) and the expected failures occur (eg. reading from a wrong i2c address should return the proper error code and not return a success)
 PHiLIP should allow the following tests to be implemented.
 ### SPI
 #### Pass Cases
 - write to dummy register
 - read from dummy register
-- ensure a change has occurred
+- ensure a mode change has occurred
 - change to all 4 modes
 - 8/16 bit frame
 - speeds
