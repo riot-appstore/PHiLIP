@@ -58,7 +58,7 @@ To flash the bluepill with SWD, connect the swd pins and reset `R - NRST` pin.
 
 #### 2. Flash PHiLIP to the device
 The qualified firmware for PHiLIP is stored in the [PHiLIP Releases](https://github.com/riot-appstore/PHiLIP/releases).
-The correct firmware is needed for the given board, either the [PHiLIP_BLUEPILL](https://github.com/riot-appstore/PHiLIP/releases/download/v1.0.0/PHiLIP-BLUEPILL.bin) or the [PHiLIP_NUCLEO-F103RB](https://github.com/riot-appstore/PHiLIP/releases/download/v1.0.0/PHiLIP-NUCLEO-F103RB.bin).
+The correct firmware is needed for the given board, either the [PHiLIP_BLUEPILL](https://github.com/riot-appstore/PHiLIP/releases/download/v1.0.2/PHiLIP-BLUEPILL.bin) or the [PHiLIP_NUCLEO-F103RB](https://github.com/riot-appstore/PHiLIP/releases/download/v1.0.2/PHiLIP-NUCLEO-F103RB.bin).
 To flash the firmware on the nucleo-f103rb, drag and drop the .bin file to the nucleo device.
 There are many ways to flash the bluepill, either by connecting a swd connector or with the [ROM UART bootloader](https://medium.com/@paramaggarwal/programming-an-stm32f103-board-using-usb-port-blue-pill-953cec0dbc86).
 After flashing PHiLIP should be blinking the firmware revision pattern (_1 + the firmware number, so firmware revision 1.0.3 would blink 2, 1, 4 times_).
