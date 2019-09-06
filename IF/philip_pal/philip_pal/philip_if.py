@@ -12,6 +12,7 @@ import errno
 import os
 import json
 import csv
+import sys
 import time
 from ast import literal_eval
 from pathlib import Path
@@ -286,7 +287,11 @@ class PhilipExtIf(PhilipBaseIf):
 
         super().__init__(*args, **kwargs)
 
-        self.if_version = self.get_version()['version']
+        version_msg = self.get_version()
+        if not 'version' in version_msg:
+            sys.exit("Failed to receive version (Result: {})".format(
+                version_msg['result']))
+        self.if_version = version_msg['version']
 
         if map_path != '':
             self.mem_map = self.import_mm_from_csv(map_path)
