@@ -35,7 +35,7 @@ setup(
         "Intended Audience :: Developers"
     ],
     setup_requires=["pytest-runner"],
-    tests_require=["pytest", "pytest-regtest", "pprint"],
+    tests_require=["pytest", "pytest-regtest"],
     install_requires=['pyserial'],
     entry_points={
         'console_scripts': ['philip_shell=philip_pal.philip_shell:main'],
