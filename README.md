@@ -194,14 +194,14 @@ read_struct rtc
 
 18. Notice that the second was reset to 0 because that is the default time.
 
-#### 2. The  Process of Update Runtime Configuration of PHiLIP
+#### 2. The Process of Updating the Runtime Configuration of PHiLIP
 
-To actually change the PHiLIP configuration a number of step must occur:
+To actually change the PHiLIP configuration, a number of steps must occur:
 1. Write the register intended to change
 2. Set the module init bit to 0
 3. Execute changes
 
-or use the `write_and_execute` command that does all of the following steps.
+or use the `write_and_execute` command that does all of the listed steps.
 
 <a name="gs_ci"></a>
 ## [Getting Started with CI Scripts](#c_gs_ci)
