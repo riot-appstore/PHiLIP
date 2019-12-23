@@ -52,7 +52,7 @@ def test_write_bytes_fail(phil_base):
 
 
 def test_read_bits_success(phil_base, regtest):
-    """Tests various read bits and compares with regession"""
+    """Tests various read bits and compares with regression"""
     phil_base.write_bytes(0, [0x91, 0x1F, 0, 0, 0, 0, 0, 0])
     _regtest(regtest, phil_base.read_bits(0, 0, 1))
     _regtest(regtest, phil_base.read_bits(0, 0, 1, 0.1))

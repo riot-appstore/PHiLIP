@@ -25,7 +25,7 @@ typedef struct {
 
 /** @brief  System status */
 typedef struct {
-	uint8_t update : 1; /**< 1:register configuration requires exceution for changes - 0:nothing to update */
+	uint8_t update : 1; /**< 1:register configuration requires execution for changes - 0:nothing to update */
 	uint8_t board : 1; /**< 1:board is a bluepill - 0:board is a nucleo-f103rb */
 } sys_status_t;
 
@@ -57,7 +57,7 @@ typedef struct {
 	uint8_t disable : 1; /**< 0:periph is enabled - 1:periph is disabled */
 	uint8_t cpha : 1; /**< 0:CK to 0 when idle - 1:CK to 1 when idle */
 	uint8_t cpol : 1; /**< 0:the first clock transition is the first data capture edge - 1:the second clock transition is the first data capture edge */
-	uint8_t if_type : 2; /**< Sets spi modes since slave cannot repsond immediatly - 0:access registers with spi - 1:preloads reg address to 0 for high speed tests - 2:echos SPI bytes - 3:always output user reg 0 (use for timing) */
+	uint8_t if_type : 2; /**< Sets spi modes since slave cannot repsond immediately - 0:access registers with spi - 1:preloads reg address to 0 for high speed tests - 2:echos SPI bytes - 3:always output user reg 0 (use for timing) */
 	uint8_t reg_16_bit : 1; /**< 0:8 bit register access - 1:16 bit register access mode */
 	uint8_t reg_16_big_endian : 1; /**< 0:little endian for 16 bit mode - 1:big endian for 16 bit mode */
 } spi_mode_t;
@@ -141,7 +141,7 @@ typedef union {
 	struct {
 		uint8_t sn[12]; /**< Unique ID of the device */
 		uint8_t fw_rev[4]; /**< Firmware revision */
-		uint8_t if_rev[4]; /**< Interface revision - This corelates to the version of the memory map */
+		uint8_t if_rev[4]; /**< Interface revision - This correlates to the version of the memory map */
 		uint64_t tick; /**< Tick in ms - Updates with the sys tick register every few ms */
 		timestamp_t build_time; /**< time of build */
 		uint32_t device_num; /**< The philip device designator - A constant number to identify philip firmware */
@@ -161,14 +161,14 @@ typedef union {
 		uint16_t clk_stretch_delay; /**< Clock stretch the first byte in us */
 		uint16_t slave_addr_1; /**< Primary slave address */
 		uint16_t slave_addr_2; /**< Secondary slave address */
-		uint16_t state; /**< Current state of the spi bus - 0:initialized - 1:NSS pin just lowered - 2:writing to reg - 3:reading reg - 4:transfering data - 5:NSS up and finished */
+		uint16_t state; /**< Current state of the spi bus - 0:initialized - 1:NSS pin just lowered - 2:writing to reg - 3:reading reg - 4:transferring data - 5:NSS up and finished */
 		uint16_t reg_index; /**< Current index of reg pointer */
 		uint16_t start_reg_index; /**< Start index of reg pointer */
 		uint8_t r_count; /**< Last read frame byte count */
 		uint8_t w_count; /**< Last write frame byte count - only in reg if_type 0 */
 		uint32_t r_ticks; /**< Ticks for read byte - only in reg if_type 0 */
 		uint32_t w_ticks; /**< Ticks for write byte */
-		uint32_t s_ticks; /**< Holder when the start occured */
+		uint32_t s_ticks; /**< Holder when the start occurred */
 		uint32_t f_r_ticks; /**< Ticks for full read frame after the address is acked */
 		uint32_t f_w_ticks; /**< Ticks for full write frame */
 		uint8_t res[28]; /**< Reserved bytes */
@@ -181,7 +181,7 @@ typedef union {
 	struct {
 		spi_mode_t mode; /**< Specific spi modes */
 		spi_status_t status; /**< Spi status register */
-		uint16_t state; /**< Current state of i2c frame - 0:initialized - 1:reading data - 2-write address recieved - 3-1st reg byte recieved - 4-writing data - 5-NACK - 6-stopped */
+		uint16_t state; /**< Current state of i2c frame - 0:initialized - 1:reading data - 2-write address received - 3-1st reg byte received - 4-writing data - 5-NACK - 6-stopped */
 		uint16_t reg_index; /**< current index of i2c pointer */
 		uint16_t start_reg_index; /**< start index of i2c pointer */
 		uint8_t r_count; /**< Last read frame byte count */
@@ -283,7 +283,7 @@ typedef union {
 		uint8_t tick_div[32]; /**< The tick divisor of the event - max should be 16 for interface */
 		uint8_t source[32]; /**< The event source of the event - 0:no source selected - 1:DEBUG0 pin - 2:DEBUG1 pin - 3:DEBUG2 pin */
 		uint16_t value[32]; /**< The value of the event - 0:falling edge interrupt - 1:rising edge interrupt */
-		uint32_t tick[32]; /**< The tick when the event occured */
+		uint32_t tick[32]; /**< The tick when the event occurred */
 	};
 	uint8_t data8[260];/**< array for padding */
 } trace_t;

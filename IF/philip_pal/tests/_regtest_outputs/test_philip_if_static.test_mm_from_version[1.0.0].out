@@ -1000,8 +1000,8 @@
                'bits': '',
                'default': '',
                'description': 'Current state of i2c frame - 0:initialized - '
-                              '1:reading data - 2-write address recieved - '
-                              '3-1st reg byte recieved - 4-writing data - '
+                              '1:reading data - 2-write address received - '
+                              '3-1st reg byte received - 4-writing data - '
                               '5-NACK - 6-stopped',
                'flag': '',
                'invalid': '',
@@ -1728,7 +1728,7 @@
                'default': '',
                'description': 'Current state of the spi bus - 0:initialized - '
                               '1:NSS pin just lowered - 2:writing to reg - '
-                              '3:reading reg - 4:transfering data - 5:NSS up '
+                              '3:reading reg - 4:transferring data - 5:NSS up '
                               'and finished',
                'flag': '',
                'invalid': '',
@@ -2063,7 +2063,7 @@
                 'bit_offset': '',
                 'bits': '',
                 'default': '',
-                'description': 'Interface revision - This corelates to the '
+                'description': 'Interface revision - This correlates to the '
                                'version of the memory map',
                 'flag': '',
                 'invalid': '',

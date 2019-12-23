@@ -1,4 +1,4 @@
-"""Tests Static Methods for the PHiLIP inteface for philip pal
+"""Tests Static Methods for the PHiLIP interface for philip pal
 
 """
 import pytest
@@ -41,7 +41,7 @@ def test_try_data_to_int(byte_list, expected):
 
 
 def test_write_byte_arg_to_string(regtest):
-    """Tests writing different varients of bytes to the write byte cmd"""
+    """Tests writing different variants of bytes to the write byte cmd"""
     args_list = [(0, 1),
                  (0, 2),
                  (0, 3),

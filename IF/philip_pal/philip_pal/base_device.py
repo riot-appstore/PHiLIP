@@ -5,7 +5,7 @@
 # SPDX-License-Identifier:    MIT
 """Abstract Base Device for philip_pal
 This module is the abstract device that interfaces to a driver.  It handles the
-selection and initialzation of the driver.
+selection and initialization of the driver.
 
 Example:
     class ApplicationDevice(BaseDevice):

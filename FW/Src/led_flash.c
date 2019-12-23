@@ -91,7 +91,7 @@ void flash_fw_version() {
 	flash_tick++;
 	if (flash_tick >= FLASH_TIME_MS) {
 		flash_tick = 0;
-		/* since we dont want to flash during all wait periods, and they are
+		/* since we don't want to flash during all wait periods, and they are
 		 * all even numbers we take advantage.  Though writing this makes it
 		 * a bit pointless...
 		 */
