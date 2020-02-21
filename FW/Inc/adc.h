@@ -57,6 +57,10 @@ void init_dut_adc(map_t *reg, map_t *saved_reg);
  */
 error_t commit_dut_adc();
 
+/**
+ * @brief		Updates the adc input levels.
+ */
+void update_dut_adc_inputs();
 
 #endif /* ADC_H_ */
 /** @} */

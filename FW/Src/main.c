@@ -127,6 +127,7 @@ static void _super_loop() {
 												update_dut_spi_inputs,
 												update_dut_i2c_inputs,
 												update_dut_uart_inputs,
+												update_dut_adc_inputs,
 												update_rtc};
 	static uint32_t fxn_index = 0;
 	if (_is_tick()) {

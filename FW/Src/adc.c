@@ -48,6 +48,8 @@
 #include "app_defaults.h"
 #include "app_reg.h"
 
+#include "gpio.h"
+
 #include "adc.h"
 
 /* Private enums/structs -----------------------------------------------------*/
@@ -109,6 +111,7 @@ error_t commit_dut_adc() {
 	if (dut_adc.reg->mode.init) {
 		return ENOACTION;
 	}
+	__HAL_RCC_ADC2_CLK_ENABLE();
 
 	CLEAR_BIT(adc_inst->CR2, (ADC_CR2_ADON));
 	while ((dut_adc.adc_inst->CR2 & ADC_CR2_ADON));
@@ -132,11 +135,17 @@ error_t commit_dut_adc() {
 
 	if (dut_adc.reg->mode.enable) {
 		adc_inst->CR1 |= ADC_IT_EOC;
+		adc_inst->CR2 |= (ADC_CR2_SWSTART | ADC_CR2_EXTTRIG);
 	}
 	else {
 		adc_inst->CR1 &= ~ADC_IT_EOC;
+		__HAL_RCC_ADC2_CLK_DISABLE();
+		HAL_GPIO_DeInit(DUT_ADC);
+		if (init_basic_gpio(dut_adc.reg->dut_adc, DUT_ADC) != EOK) {
+			return EINVAL;
+		}
 	}
-	adc_inst->CR2 |= (ADC_CR2_SWSTART | ADC_CR2_EXTTRIG);
+
 
 	dut_adc.reg->mode.init = 1;
 	dut_adc.reg->current_sum = 0;
@@ -148,6 +157,9 @@ error_t commit_dut_adc() {
 	return EOK;
 }
 
+void update_dut_adc_inputs() {
+	dut_adc.reg->dut_adc.level = HAL_GPIO_ReadPin(DUT_ADC);
+}
 /* Interrupts ----------------------------------------------------------------*/
 /**
  * @brief This function handles an ADC interrupt
