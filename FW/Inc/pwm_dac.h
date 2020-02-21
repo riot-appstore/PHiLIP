@@ -72,6 +72,16 @@ error_t commit_dut_pwm();
  */
 error_t commit_dut_dac();
 
+/**
+ * @brief		Updates the pwm input levels.
+ */
+void update_dut_pwm_inputs();
+
+/**
+ * @brief		Updates the dac input levels.
+ */
+void update_dut_dac_inputs();
+
 #endif /* PWM_DAC_H_ */
 /** @} */
 

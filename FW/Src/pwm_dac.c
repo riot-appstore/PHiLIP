@@ -46,6 +46,8 @@
 #include "app_common.h"
 #include "app_defaults.h"
 
+#include "gpio.h"
+
 #include "pwm_dac.h"
 
 /* Private enums/structs -----------------------------------------------------*/
@@ -131,8 +133,18 @@ error_t commit_dut_pwm() {
 
 	if (dut_pwm.reg->mode.disable) {
 		dut_pwm.hoc.OCMode = TIM_OCMODE_INACTIVE;
+		HAL_GPIO_DeInit(DUT_PWM);
+		if (init_basic_gpio(dut_pwm.reg->dut_pwm, DUT_PWM) != EOK) {
+			return EINVAL;
+		}
 	}
 	else {
+		GPIO_InitTypeDef GPIO_InitStruct;
+		GPIO_InitStruct.Pin = DUT_PWM_Pin;
+		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+		HAL_GPIO_Init(DUT_PWM_GPIO_Port, &GPIO_InitStruct);
+
 		dut_pwm.reg->period = dut_pwm.reg->h_ticks + dut_pwm.reg->l_ticks;
 		uint16_t div;
 		dut_pwm.hoc.OCMode = TIM_OCMODE_PWM1;
@@ -159,6 +171,10 @@ error_t commit_dut_pwm() {
 	return EOK;
 }
 
+void update_dut_pwm_inputs() {
+	dut_pwm.reg->dut_pwm.level = HAL_GPIO_ReadPin(DUT_PWM);
+}
+
 /**
  * @brief		Commits the dut dac registers and executes operations.
  *
@@ -181,9 +197,18 @@ error_t commit_dut_dac() {
 		return EINVAL;
 	}
 	if (reg->mode.disable) {
+		HAL_GPIO_DeInit(DUT_DAC);
+		if (init_basic_gpio(dut_dac.reg->dut_dac, DUT_DAC) != EOK) {
+			return EINVAL;
+		}
 		dut_dac.hoc.OCMode = TIM_OCMODE_INACTIVE;
 	}
 	else {
+		GPIO_InitTypeDef GPIO_InitStruct;
+		GPIO_InitStruct.Pin = DUT_DAC_Pin;
+		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+		HAL_GPIO_Init(DUT_DAC_GPIO_Port, &GPIO_InitStruct);
 		dut_dac.hoc.OCMode = TIM_OCMODE_PWM1;
 	}
 
@@ -191,4 +216,8 @@ error_t commit_dut_dac() {
 	HAL_TIM_PWM_ConfigChannel(htmr, &dut_dac.hoc, TIM_CHANNEL_4);
 	HAL_TIM_PWM_Start(htmr, TIM_CHANNEL_4);
 	return EOK;
+}
+
+void update_dut_dac_inputs() {
+	dut_dac.reg->dut_dac.level = HAL_GPIO_ReadPin(DUT_DAC);
 }

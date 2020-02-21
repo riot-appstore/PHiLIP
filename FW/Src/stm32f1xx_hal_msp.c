@@ -503,7 +503,7 @@ void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef* htim) {
 #ifdef NUCLEOF103RB
 	if (htim->Instance == TIM3) {
 		/* Peripheral clock enable */
-		__HAL_RCC_TIM4_CLK_ENABLE()
+		__HAL_RCC_TIM3_CLK_ENABLE()
 		;
 
 	}
@@ -576,7 +576,7 @@ void HAL_TIM_PWM_MspDeInit(TIM_HandleTypeDef* htim) {
 	}
 #endif
 #ifdef NUCLEOF103RB
-	if (htim->Instance == TIM4) {
+	if (htim->Instance == TIM3) {
 		/* Peripheral clock disable */
 		__HAL_RCC_TIM3_CLK_DISABLE();
 	}
