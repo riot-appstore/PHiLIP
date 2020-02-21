@@ -9,8 +9,8 @@
 #define APP_DEFAULTS_H_
 
 #define FW_REV_MAJOR	(1)
-#define FW_REV_MINOR	(0)
-#define FW_REV_PATCH	(2)
+#define FW_REV_MINOR	(1)
+#define FW_REV_PATCH	(0)
 
 #define DEFAULT_UART_BAUDRATE	115200
 #define DEFAULT_UART_PARITY		BPT_PARITY_NONE
