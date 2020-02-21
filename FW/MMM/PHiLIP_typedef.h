@@ -4,8 +4,8 @@
  * @{
  * @file      PHiLIP_typedef.h
  * @author    Kevin Weiss
- * @version   1.0.1
- * @date      2019-08-15
+ * @version   1.0.2
+ * @date      2020-02-21
  * @details   Generated from the memory map manager version 0.0.9
  ******************************************************************************
  */
@@ -103,6 +103,14 @@ typedef struct {
 	uint16_t tick_div : 5; /**< for trace tick divisor - max should be 16 for interface */
 } gpio_mode_t;
 
+/** @brief  Simplified GPIO for periph GPIO control */
+typedef struct {
+	uint8_t io_type : 2; /**< 0:high impedance input - 1:push pull output - 2:open drain output */
+	uint8_t pull : 2; /**< pull of the resistor - 0:none - 1:pullup - 2:pulldown */
+	uint8_t set_level : 1; /**< If output sets gpio level - 0:low - 1:high */
+	uint8_t level : 1; /**< Current value of gpio - 0:low - 1:high */
+} basic_gpio_t;
+
 /** @brief  IO pin status */
 typedef struct {
 	uint8_t level : 1; /**< The io level of the pin - 0:low - 1:high */
@@ -158,6 +166,8 @@ typedef union {
 	struct {
 		i2c_mode_t mode; /**< Specific modes for I2C */
 		i2c_status_t status; /**< Specific status for I2C */
+		basic_gpio_t dut_sda; /**<  */
+		basic_gpio_t dut_scl; /**<  */
 		uint16_t clk_stretch_delay; /**< Clock stretch the first byte in us */
 		uint16_t slave_addr_1; /**< Primary slave address */
 		uint16_t slave_addr_2; /**< Secondary slave address */
@@ -171,7 +181,7 @@ typedef union {
 		uint32_t s_ticks; /**< Holder when the start occured */
 		uint32_t f_r_ticks; /**< Ticks for full read frame after the address is acked */
 		uint32_t f_w_ticks; /**< Ticks for full write frame */
-		uint8_t res[28]; /**< Reserved bytes */
+		uint8_t res[26]; /**< Reserved bytes */
 	};
 	uint8_t data8[64];/**< array for padding */
 } i2c_t;
@@ -181,6 +191,10 @@ typedef union {
 	struct {
 		spi_mode_t mode; /**< Specific spi modes */
 		spi_status_t status; /**< Spi status register */
+		basic_gpio_t dut_mosi; /**<  */
+		basic_gpio_t dut_miso; /**<  */
+		basic_gpio_t dut_sck; /**<  */
+		basic_gpio_t dut_nss; /**<  */
 		uint16_t state; /**< Current state of i2c frame - 0:initialized - 1:reading data - 2-write address recieved - 3-1st reg byte recieved - 4-writing data - 5-NACK - 6-stopped */
 		uint16_t reg_index; /**< current index of i2c pointer */
 		uint16_t start_reg_index; /**< start index of i2c pointer */
@@ -190,7 +204,7 @@ typedef union {
 		uint32_t frame_ticks; /**< Ticks per frame */
 		uint32_t byte_ticks; /**< Ticks per byte */
 		uint32_t prev_ticks; /**< Holder for previous byte ticks */
-		uint8_t res[9]; /**< Reserved bytes */
+		uint8_t res[5]; /**< Reserved bytes */
 	};
 	uint8_t data8[32];/**< array for padding */
 } spi_t;
@@ -199,12 +213,15 @@ typedef union {
 typedef union {
 	struct {
 		uart_mode_t mode; /**< UART mode register */
+		basic_gpio_t dut_rx; /**<  */
+		basic_gpio_t dut_tx; /**<  */
+		basic_gpio_t dut_cts; /**<  */
+		basic_gpio_t dut_rts; /**<  */
 		uint32_t baud; /**< Baudrate */
 		uint8_t mask_msb; /**< Masks the data coming in if 7 bit mode */
 		uint16_t rx_count; /**< Number of received bytes */
 		uint16_t tx_count; /**< Number of transmitted bytes */
 		uart_status_t status; /**< UART status register */
-		uint8_t res[4]; /**< Reserved bytes */
 	};
 	uint8_t data8[16];/**< array for padding */
 } uart_t;
@@ -213,13 +230,14 @@ typedef union {
 typedef union {
 	struct {
 		adc_mode_t mode; /**< Mode settings for the ADC */
+		basic_gpio_t dut_adc; /**<  */
 		uint32_t num_of_samples; /**< Number of sample in the sum */
-		uint8_t counter; /**< Sum counter increases when available */
 		uint32_t index; /**< Sample index increases when new sample read */
 		uint16_t sample; /**< Current 12 bit sample value */
 		uint32_t sum; /**< Sum of the last num_of_samples */
 		uint32_t current_sum; /**< Current collection of the sums */
-		uint8_t res[12]; /**< Reserved bytes */
+		uint8_t counter; /**< Sum counter increases when available */
+		uint8_t res[11]; /**< Reserved bytes */
 	};
 	uint8_t data8[32];/**< array for padding */
 } adc_t;
@@ -228,7 +246,7 @@ typedef union {
 typedef union {
 	struct {
 		basic_mode_t mode; /**< basic mode for pwm settings */
-		uint8_t status; /**< Unimplemented status for padding */
+		basic_gpio_t dut_pwm; /**<  */
 		uint16_t duty_cycle; /**< The calculated duty cycle in percent/100 */
 		uint32_t period; /**< The calculated period in ticks */
 		uint32_t h_ticks; /**< Settable high time in sys clock ticks */
@@ -242,7 +260,7 @@ typedef union {
 typedef union {
 	struct {
 		basic_mode_t mode; /**< basic mode for dac settings */
-		uint8_t status; /**< Unimplemented status for padding */
+		basic_gpio_t dut_dac; /**<  */
 		uint16_t level; /**< The percent/100 of output level */
 		uint8_t res[12]; /**< Reserved bytes */
 	};

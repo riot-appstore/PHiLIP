@@ -314,6 +314,33 @@
             "type_name": "gpio_mode_t"
         },
         {
+            "description": "Simplified GPIO for periph GPIO control",
+            "elements": [
+                {
+                    "bits": 2,
+                    "description": "0:high impedance input - 1:push pull output - 2:open drain output",
+                    "name": "io_type"
+                },
+                {
+                    "bits": 2,
+                    "description": "pull of the resistor - 0:none - 1:pullup - 2:pulldown",
+                    "name": "pull"
+                },
+                {
+                    "bits": 1,
+                    "description": "If output sets gpio level - 0:low - 1:high",
+                    "name": "set_level"
+                },
+                {
+                    "bits": 1,
+                    "description": "Current value of gpio - 0:low - 1:high",
+                    "name": "level"
+                }
+            ],
+            "type": "uint8_t",
+            "type_name": "basic_gpio_t"
+        },
+        {
             "description": "IO pin status",
             "elements": [
                 {
@@ -857,12 +884,136 @@
                 },
                 {
                     "access": 1,
+                    "name": [
+                        "i2c",
+                        "dut_sda"
+                    ],
+                    "offset": 322,
+                    "type": "basic_gpio_t",
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 0,
+                    "bits": 2,
+                    "description": "0:high impedance input - 1:push pull output - 2:open drain output",
+                    "name": [
+                        "i2c",
+                        "dut_sda",
+                        "io_type"
+                    ],
+                    "offset": 322,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 2,
+                    "bits": 2,
+                    "description": "pull of the resistor - 0:none - 1:pullup - 2:pulldown",
+                    "name": [
+                        "i2c",
+                        "dut_sda",
+                        "pull"
+                    ],
+                    "offset": 322,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 4,
+                    "bits": 1,
+                    "description": "If output sets gpio level - 0:low - 1:high",
+                    "name": [
+                        "i2c",
+                        "dut_sda",
+                        "set_level"
+                    ],
+                    "offset": 322,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 5,
+                    "bits": 1,
+                    "description": "Current value of gpio - 0:low - 1:high",
+                    "name": [
+                        "i2c",
+                        "dut_sda",
+                        "level"
+                    ],
+                    "offset": 322,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "name": [
+                        "i2c",
+                        "dut_scl"
+                    ],
+                    "offset": 323,
+                    "type": "basic_gpio_t",
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 0,
+                    "bits": 2,
+                    "description": "0:high impedance input - 1:push pull output - 2:open drain output",
+                    "name": [
+                        "i2c",
+                        "dut_scl",
+                        "io_type"
+                    ],
+                    "offset": 323,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 2,
+                    "bits": 2,
+                    "description": "pull of the resistor - 0:none - 1:pullup - 2:pulldown",
+                    "name": [
+                        "i2c",
+                        "dut_scl",
+                        "pull"
+                    ],
+                    "offset": 323,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 4,
+                    "bits": 1,
+                    "description": "If output sets gpio level - 0:low - 1:high",
+                    "name": [
+                        "i2c",
+                        "dut_scl",
+                        "set_level"
+                    ],
+                    "offset": 323,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 5,
+                    "bits": 1,
+                    "description": "Current value of gpio - 0:low - 1:high",
+                    "name": [
+                        "i2c",
+                        "dut_scl",
+                        "level"
+                    ],
+                    "offset": 323,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
                     "description": "Clock stretch the first byte in us",
                     "name": [
                         "i2c",
                         "clk_stretch_delay"
                     ],
-                    "offset": 322,
+                    "offset": 324,
                     "type": "uint16_t",
                     "type_size": 2
                 },
@@ -877,7 +1028,7 @@
                         "i2c",
                         "slave_addr_1"
                     ],
-                    "offset": 324,
+                    "offset": 326,
                     "type": "uint16_t",
                     "type_size": 2
                 },
@@ -892,7 +1043,7 @@
                         "i2c",
                         "slave_addr_2"
                     ],
-                    "offset": 326,
+                    "offset": 328,
                     "type": "uint16_t",
                     "type_size": 2
                 },
@@ -903,7 +1054,7 @@
                         "i2c",
                         "state"
                     ],
-                    "offset": 328,
+                    "offset": 330,
                     "type": "uint16_t",
                     "type_size": 2
                 },
@@ -914,7 +1065,7 @@
                         "i2c",
                         "reg_index"
                     ],
-                    "offset": 330,
+                    "offset": 332,
                     "type": "uint16_t",
                     "type_size": 2
                 },
@@ -925,7 +1076,7 @@
                         "i2c",
                         "start_reg_index"
                     ],
-                    "offset": 332,
+                    "offset": 334,
                     "type": "uint16_t",
                     "type_size": 2
                 },
@@ -936,7 +1087,7 @@
                         "i2c",
                         "r_count"
                     ],
-                    "offset": 334,
+                    "offset": 336,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -947,7 +1098,7 @@
                         "i2c",
                         "w_count"
                     ],
-                    "offset": 335,
+                    "offset": 337,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -958,7 +1109,7 @@
                         "i2c",
                         "r_ticks"
                     ],
-                    "offset": 336,
+                    "offset": 338,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -969,7 +1120,7 @@
                         "i2c",
                         "w_ticks"
                     ],
-                    "offset": 340,
+                    "offset": 342,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -980,7 +1131,7 @@
                         "i2c",
                         "s_ticks"
                     ],
-                    "offset": 344,
+                    "offset": 346,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -991,7 +1142,7 @@
                         "i2c",
                         "f_r_ticks"
                     ],
-                    "offset": 348,
+                    "offset": 350,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -1002,20 +1153,20 @@
                         "i2c",
                         "f_w_ticks"
                     ],
-                    "offset": 352,
+                    "offset": 354,
                     "type": "uint32_t",
                     "type_size": 4
                 },
                 {
                     "access": 0,
-                    "array_size": 28,
+                    "array_size": 26,
                     "description": "Reserved bytes",
                     "name": [
                         "i2c",
                         "res"
                     ],
-                    "offset": 356,
-                    "total_size": 28,
+                    "offset": 358,
+                    "total_size": 26,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -1237,13 +1388,261 @@
                     "type_size": 1
                 },
                 {
+                    "access": 1,
+                    "name": [
+                        "spi",
+                        "dut_mosi"
+                    ],
+                    "offset": 386,
+                    "type": "basic_gpio_t",
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 0,
+                    "bits": 2,
+                    "description": "0:high impedance input - 1:push pull output - 2:open drain output",
+                    "name": [
+                        "spi",
+                        "dut_mosi",
+                        "io_type"
+                    ],
+                    "offset": 386,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 2,
+                    "bits": 2,
+                    "description": "pull of the resistor - 0:none - 1:pullup - 2:pulldown",
+                    "name": [
+                        "spi",
+                        "dut_mosi",
+                        "pull"
+                    ],
+                    "offset": 386,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 4,
+                    "bits": 1,
+                    "description": "If output sets gpio level - 0:low - 1:high",
+                    "name": [
+                        "spi",
+                        "dut_mosi",
+                        "set_level"
+                    ],
+                    "offset": 386,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 5,
+                    "bits": 1,
+                    "description": "Current value of gpio - 0:low - 1:high",
+                    "name": [
+                        "spi",
+                        "dut_mosi",
+                        "level"
+                    ],
+                    "offset": 386,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "name": [
+                        "spi",
+                        "dut_miso"
+                    ],
+                    "offset": 387,
+                    "type": "basic_gpio_t",
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 0,
+                    "bits": 2,
+                    "description": "0:high impedance input - 1:push pull output - 2:open drain output",
+                    "name": [
+                        "spi",
+                        "dut_miso",
+                        "io_type"
+                    ],
+                    "offset": 387,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 2,
+                    "bits": 2,
+                    "description": "pull of the resistor - 0:none - 1:pullup - 2:pulldown",
+                    "name": [
+                        "spi",
+                        "dut_miso",
+                        "pull"
+                    ],
+                    "offset": 387,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 4,
+                    "bits": 1,
+                    "description": "If output sets gpio level - 0:low - 1:high",
+                    "name": [
+                        "spi",
+                        "dut_miso",
+                        "set_level"
+                    ],
+                    "offset": 387,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 5,
+                    "bits": 1,
+                    "description": "Current value of gpio - 0:low - 1:high",
+                    "name": [
+                        "spi",
+                        "dut_miso",
+                        "level"
+                    ],
+                    "offset": 387,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "name": [
+                        "spi",
+                        "dut_sck"
+                    ],
+                    "offset": 388,
+                    "type": "basic_gpio_t",
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 0,
+                    "bits": 2,
+                    "description": "0:high impedance input - 1:push pull output - 2:open drain output",
+                    "name": [
+                        "spi",
+                        "dut_sck",
+                        "io_type"
+                    ],
+                    "offset": 388,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 2,
+                    "bits": 2,
+                    "description": "pull of the resistor - 0:none - 1:pullup - 2:pulldown",
+                    "name": [
+                        "spi",
+                        "dut_sck",
+                        "pull"
+                    ],
+                    "offset": 388,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 4,
+                    "bits": 1,
+                    "description": "If output sets gpio level - 0:low - 1:high",
+                    "name": [
+                        "spi",
+                        "dut_sck",
+                        "set_level"
+                    ],
+                    "offset": 388,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 5,
+                    "bits": 1,
+                    "description": "Current value of gpio - 0:low - 1:high",
+                    "name": [
+                        "spi",
+                        "dut_sck",
+                        "level"
+                    ],
+                    "offset": 388,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "name": [
+                        "spi",
+                        "dut_nss"
+                    ],
+                    "offset": 389,
+                    "type": "basic_gpio_t",
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 0,
+                    "bits": 2,
+                    "description": "0:high impedance input - 1:push pull output - 2:open drain output",
+                    "name": [
+                        "spi",
+                        "dut_nss",
+                        "io_type"
+                    ],
+                    "offset": 389,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 2,
+                    "bits": 2,
+                    "description": "pull of the resistor - 0:none - 1:pullup - 2:pulldown",
+                    "name": [
+                        "spi",
+                        "dut_nss",
+                        "pull"
+                    ],
+                    "offset": 389,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 4,
+                    "bits": 1,
+                    "description": "If output sets gpio level - 0:low - 1:high",
+                    "name": [
+                        "spi",
+                        "dut_nss",
+                        "set_level"
+                    ],
+                    "offset": 389,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 5,
+                    "bits": 1,
+                    "description": "Current value of gpio - 0:low - 1:high",
+                    "name": [
+                        "spi",
+                        "dut_nss",
+                        "level"
+                    ],
+                    "offset": 389,
+                    "type_size": 1
+                },
+                {
                     "access": 0,
                     "description": "Current state of the spi bus - 0:initialized - 1:NSS pin just lowered - 2:writing to reg - 3:reading reg - 4:transfering data - 5:NSS up and finished",
                     "name": [
                         "spi",
                         "state"
                     ],
-                    "offset": 386,
+                    "offset": 390,
                     "type": "uint16_t",
                     "type_size": 2
                 },
@@ -1254,7 +1653,7 @@
                         "spi",
                         "reg_index"
                     ],
-                    "offset": 388,
+                    "offset": 392,
                     "type": "uint16_t",
                     "type_size": 2
                 },
@@ -1265,7 +1664,7 @@
                         "spi",
                         "start_reg_index"
                     ],
-                    "offset": 390,
+                    "offset": 394,
                     "type": "uint16_t",
                     "type_size": 2
                 },
@@ -1276,7 +1675,7 @@
                         "spi",
                         "r_count"
                     ],
-                    "offset": 392,
+                    "offset": 396,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -1287,7 +1686,7 @@
                         "spi",
                         "w_count"
                     ],
-                    "offset": 393,
+                    "offset": 397,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -1298,7 +1697,7 @@
                         "spi",
                         "transfer_count"
                     ],
-                    "offset": 394,
+                    "offset": 398,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -1309,7 +1708,7 @@
                         "spi",
                         "frame_ticks"
                     ],
-                    "offset": 395,
+                    "offset": 399,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -1320,7 +1719,7 @@
                         "spi",
                         "byte_ticks"
                     ],
-                    "offset": 399,
+                    "offset": 403,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -1331,20 +1730,20 @@
                         "spi",
                         "prev_ticks"
                     ],
-                    "offset": 403,
+                    "offset": 407,
                     "type": "uint32_t",
                     "type_size": 4
                 },
                 {
                     "access": 0,
-                    "array_size": 9,
+                    "array_size": 5,
                     "description": "Reserved bytes",
                     "name": [
                         "spi",
                         "res"
                     ],
-                    "offset": 407,
-                    "total_size": 9,
+                    "offset": 411,
+                    "total_size": 5,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -1452,12 +1851,260 @@
                 },
                 {
                     "access": 1,
+                    "name": [
+                        "uart",
+                        "dut_rx"
+                    ],
+                    "offset": 418,
+                    "type": "basic_gpio_t",
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 0,
+                    "bits": 2,
+                    "description": "0:high impedance input - 1:push pull output - 2:open drain output",
+                    "name": [
+                        "uart",
+                        "dut_rx",
+                        "io_type"
+                    ],
+                    "offset": 418,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 2,
+                    "bits": 2,
+                    "description": "pull of the resistor - 0:none - 1:pullup - 2:pulldown",
+                    "name": [
+                        "uart",
+                        "dut_rx",
+                        "pull"
+                    ],
+                    "offset": 418,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 4,
+                    "bits": 1,
+                    "description": "If output sets gpio level - 0:low - 1:high",
+                    "name": [
+                        "uart",
+                        "dut_rx",
+                        "set_level"
+                    ],
+                    "offset": 418,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 5,
+                    "bits": 1,
+                    "description": "Current value of gpio - 0:low - 1:high",
+                    "name": [
+                        "uart",
+                        "dut_rx",
+                        "level"
+                    ],
+                    "offset": 418,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "name": [
+                        "uart",
+                        "dut_tx"
+                    ],
+                    "offset": 419,
+                    "type": "basic_gpio_t",
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 0,
+                    "bits": 2,
+                    "description": "0:high impedance input - 1:push pull output - 2:open drain output",
+                    "name": [
+                        "uart",
+                        "dut_tx",
+                        "io_type"
+                    ],
+                    "offset": 419,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 2,
+                    "bits": 2,
+                    "description": "pull of the resistor - 0:none - 1:pullup - 2:pulldown",
+                    "name": [
+                        "uart",
+                        "dut_tx",
+                        "pull"
+                    ],
+                    "offset": 419,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 4,
+                    "bits": 1,
+                    "description": "If output sets gpio level - 0:low - 1:high",
+                    "name": [
+                        "uart",
+                        "dut_tx",
+                        "set_level"
+                    ],
+                    "offset": 419,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 5,
+                    "bits": 1,
+                    "description": "Current value of gpio - 0:low - 1:high",
+                    "name": [
+                        "uart",
+                        "dut_tx",
+                        "level"
+                    ],
+                    "offset": 419,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "name": [
+                        "uart",
+                        "dut_cts"
+                    ],
+                    "offset": 420,
+                    "type": "basic_gpio_t",
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 0,
+                    "bits": 2,
+                    "description": "0:high impedance input - 1:push pull output - 2:open drain output",
+                    "name": [
+                        "uart",
+                        "dut_cts",
+                        "io_type"
+                    ],
+                    "offset": 420,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 2,
+                    "bits": 2,
+                    "description": "pull of the resistor - 0:none - 1:pullup - 2:pulldown",
+                    "name": [
+                        "uart",
+                        "dut_cts",
+                        "pull"
+                    ],
+                    "offset": 420,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 4,
+                    "bits": 1,
+                    "description": "If output sets gpio level - 0:low - 1:high",
+                    "name": [
+                        "uart",
+                        "dut_cts",
+                        "set_level"
+                    ],
+                    "offset": 420,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 5,
+                    "bits": 1,
+                    "description": "Current value of gpio - 0:low - 1:high",
+                    "name": [
+                        "uart",
+                        "dut_cts",
+                        "level"
+                    ],
+                    "offset": 420,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "name": [
+                        "uart",
+                        "dut_rts"
+                    ],
+                    "offset": 421,
+                    "type": "basic_gpio_t",
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 0,
+                    "bits": 2,
+                    "description": "0:high impedance input - 1:push pull output - 2:open drain output",
+                    "name": [
+                        "uart",
+                        "dut_rts",
+                        "io_type"
+                    ],
+                    "offset": 421,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 2,
+                    "bits": 2,
+                    "description": "pull of the resistor - 0:none - 1:pullup - 2:pulldown",
+                    "name": [
+                        "uart",
+                        "dut_rts",
+                        "pull"
+                    ],
+                    "offset": 421,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 4,
+                    "bits": 1,
+                    "description": "If output sets gpio level - 0:low - 1:high",
+                    "name": [
+                        "uart",
+                        "dut_rts",
+                        "set_level"
+                    ],
+                    "offset": 421,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 5,
+                    "bits": 1,
+                    "description": "Current value of gpio - 0:low - 1:high",
+                    "name": [
+                        "uart",
+                        "dut_rts",
+                        "level"
+                    ],
+                    "offset": 421,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
                     "description": "Baudrate",
                     "name": [
                         "uart",
                         "baud"
                     ],
-                    "offset": 418,
+                    "offset": 422,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -1468,7 +2115,7 @@
                         "uart",
                         "mask_msb"
                     ],
-                    "offset": 422,
+                    "offset": 426,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -1479,7 +2126,7 @@
                         "uart",
                         "rx_count"
                     ],
-                    "offset": 423,
+                    "offset": 427,
                     "type": "uint16_t",
                     "type_size": 2
                 },
@@ -1490,7 +2137,7 @@
                         "uart",
                         "tx_count"
                     ],
-                    "offset": 425,
+                    "offset": 429,
                     "type": "uint16_t",
                     "type_size": 2
                 },
@@ -1501,7 +2148,7 @@
                         "uart",
                         "status"
                     ],
-                    "offset": 427,
+                    "offset": 431,
                     "type": "uart_status_t",
                     "type_size": 1
                 },
@@ -1515,7 +2162,7 @@
                         "status",
                         "cts"
                     ],
-                    "offset": 427,
+                    "offset": 431,
                     "type_size": 1
                 },
                 {
@@ -1528,7 +2175,7 @@
                         "status",
                         "pe"
                     ],
-                    "offset": 427,
+                    "offset": 431,
                     "type_size": 1
                 },
                 {
@@ -1541,7 +2188,7 @@
                         "status",
                         "fe"
                     ],
-                    "offset": 427,
+                    "offset": 431,
                     "type_size": 1
                 },
                 {
@@ -1554,7 +2201,7 @@
                         "status",
                         "nf"
                     ],
-                    "offset": 427,
+                    "offset": 431,
                     "type_size": 1
                 },
                 {
@@ -1567,20 +2214,7 @@
                         "status",
                         "ore"
                     ],
-                    "offset": 427,
-                    "type_size": 1
-                },
-                {
-                    "access": 0,
-                    "array_size": 4,
-                    "description": "Reserved bytes",
-                    "name": [
-                        "uart",
-                        "res"
-                    ],
-                    "offset": 428,
-                    "total_size": 4,
-                    "type": "uint8_t",
+                    "offset": 431,
                     "type_size": 1
                 },
                 {
@@ -1789,6 +2423,68 @@
                 },
                 {
                     "access": 1,
+                    "name": [
+                        "adc",
+                        "dut_adc"
+                    ],
+                    "offset": 449,
+                    "type": "basic_gpio_t",
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 0,
+                    "bits": 2,
+                    "description": "0:high impedance input - 1:push pull output - 2:open drain output",
+                    "name": [
+                        "adc",
+                        "dut_adc",
+                        "io_type"
+                    ],
+                    "offset": 449,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 2,
+                    "bits": 2,
+                    "description": "pull of the resistor - 0:none - 1:pullup - 2:pulldown",
+                    "name": [
+                        "adc",
+                        "dut_adc",
+                        "pull"
+                    ],
+                    "offset": 449,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 4,
+                    "bits": 1,
+                    "description": "If output sets gpio level - 0:low - 1:high",
+                    "name": [
+                        "adc",
+                        "dut_adc",
+                        "set_level"
+                    ],
+                    "offset": 449,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 5,
+                    "bits": 1,
+                    "description": "Current value of gpio - 0:low - 1:high",
+                    "name": [
+                        "adc",
+                        "dut_adc",
+                        "level"
+                    ],
+                    "offset": 449,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
                     "default": 1024,
                     "description": "Number of sample in the sum",
                     "max": 1048575,
@@ -1797,20 +2493,9 @@
                         "adc",
                         "num_of_samples"
                     ],
-                    "offset": 449,
+                    "offset": 450,
                     "type": "uint32_t",
                     "type_size": 4
-                },
-                {
-                    "access": 0,
-                    "description": "Sum counter increases when available",
-                    "name": [
-                        "adc",
-                        "counter"
-                    ],
-                    "offset": 453,
-                    "type": "uint8_t",
-                    "type_size": 1
                 },
                 {
                     "access": 0,
@@ -1858,14 +2543,25 @@
                 },
                 {
                     "access": 0,
-                    "array_size": 12,
+                    "description": "Sum counter increases when available",
+                    "name": [
+                        "adc",
+                        "counter"
+                    ],
+                    "offset": 468,
+                    "type": "uint8_t",
+                    "type_size": 1
+                },
+                {
+                    "access": 0,
+                    "array_size": 11,
                     "description": "Reserved bytes",
                     "name": [
                         "adc",
                         "res"
                     ],
-                    "offset": 468,
-                    "total_size": 12,
+                    "offset": 469,
+                    "total_size": 11,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -1907,14 +2603,65 @@
                     "type_size": 1
                 },
                 {
-                    "access": 0,
-                    "description": "Unimplemented status for padding",
+                    "access": 1,
                     "name": [
                         "pwm",
-                        "status"
+                        "dut_pwm"
                     ],
                     "offset": 481,
-                    "type": "uint8_t",
+                    "type": "basic_gpio_t",
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 0,
+                    "bits": 2,
+                    "description": "0:high impedance input - 1:push pull output - 2:open drain output",
+                    "name": [
+                        "pwm",
+                        "dut_pwm",
+                        "io_type"
+                    ],
+                    "offset": 481,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 2,
+                    "bits": 2,
+                    "description": "pull of the resistor - 0:none - 1:pullup - 2:pulldown",
+                    "name": [
+                        "pwm",
+                        "dut_pwm",
+                        "pull"
+                    ],
+                    "offset": 481,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 4,
+                    "bits": 1,
+                    "description": "If output sets gpio level - 0:low - 1:high",
+                    "name": [
+                        "pwm",
+                        "dut_pwm",
+                        "set_level"
+                    ],
+                    "offset": 481,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 5,
+                    "bits": 1,
+                    "description": "Current value of gpio - 0:low - 1:high",
+                    "name": [
+                        "pwm",
+                        "dut_pwm",
+                        "level"
+                    ],
+                    "offset": 481,
                     "type_size": 1
                 },
                 {
@@ -2014,14 +2761,65 @@
                     "type_size": 1
                 },
                 {
-                    "access": 0,
-                    "description": "Unimplemented status for padding",
+                    "access": 1,
                     "name": [
                         "dac",
-                        "status"
+                        "dut_dac"
                     ],
                     "offset": 513,
-                    "type": "uint8_t",
+                    "type": "basic_gpio_t",
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 0,
+                    "bits": 2,
+                    "description": "0:high impedance input - 1:push pull output - 2:open drain output",
+                    "name": [
+                        "dac",
+                        "dut_dac",
+                        "io_type"
+                    ],
+                    "offset": 513,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 2,
+                    "bits": 2,
+                    "description": "pull of the resistor - 0:none - 1:pullup - 2:pulldown",
+                    "name": [
+                        "dac",
+                        "dut_dac",
+                        "pull"
+                    ],
+                    "offset": 513,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 4,
+                    "bits": 1,
+                    "description": "If output sets gpio level - 0:low - 1:high",
+                    "name": [
+                        "dac",
+                        "dut_dac",
+                        "set_level"
+                    ],
+                    "offset": 513,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 5,
+                    "bits": 1,
+                    "description": "Current value of gpio - 0:low - 1:high",
+                    "name": [
+                        "dac",
+                        "dut_dac",
+                        "level"
+                    ],
+                    "offset": 513,
                     "type_size": 1
                 },
                 {
@@ -2502,7 +3300,7 @@
     "metadata": {
         "app_name": "PHiLIP",
         "author": "Kevin Weiss",
-        "version": "1.0.1"
+        "version": "1.0.2"
     },
     "typedefs": [
         {
@@ -2625,6 +3423,14 @@
                     "type": "i2c_status_t"
                 },
                 {
+                    "name": "dut_sda",
+                    "type": "basic_gpio_t"
+                },
+                {
+                    "name": "dut_scl",
+                    "type": "basic_gpio_t"
+                },
+                {
                     "description": "Clock stretch the first byte in us",
                     "name": "clk_stretch_delay",
                     "type": "uint16_t"
@@ -2718,6 +3524,22 @@
                     "type": "spi_status_t"
                 },
                 {
+                    "name": "dut_mosi",
+                    "type": "basic_gpio_t"
+                },
+                {
+                    "name": "dut_miso",
+                    "type": "basic_gpio_t"
+                },
+                {
+                    "name": "dut_sck",
+                    "type": "basic_gpio_t"
+                },
+                {
+                    "name": "dut_nss",
+                    "type": "basic_gpio_t"
+                },
+                {
                     "access": 0,
                     "description": "Current state of i2c frame - 0:initialized - 1:reading data - 2-write address recieved - 3-1st reg byte recieved - 4-writing data - 5-NACK - 6-stopped",
                     "name": "state",
@@ -2784,6 +3606,22 @@
                     "type": "uart_mode_t"
                 },
                 {
+                    "name": "dut_rx",
+                    "type": "basic_gpio_t"
+                },
+                {
+                    "name": "dut_tx",
+                    "type": "basic_gpio_t"
+                },
+                {
+                    "name": "dut_cts",
+                    "type": "basic_gpio_t"
+                },
+                {
+                    "name": "dut_rts",
+                    "type": "basic_gpio_t"
+                },
+                {
                     "description": "Baudrate",
                     "name": "baud",
                     "type": "uint32_t"
@@ -2825,18 +3663,16 @@
                     "type": "adc_mode_t"
                 },
                 {
+                    "name": "dut_adc",
+                    "type": "basic_gpio_t"
+                },
+                {
                     "default": 1024,
                     "description": "Number of sample in the sum",
                     "max": 1048575,
                     "min": 0,
                     "name": "num_of_samples",
                     "type": "uint32_t"
-                },
-                {
-                    "access": 0,
-                    "description": "Sum counter increases when available",
-                    "name": "counter",
-                    "type": "uint8_t"
                 },
                 {
                     "access": 0,
@@ -2861,6 +3697,12 @@
                     "description": "Current collection of the sums",
                     "name": "current_sum",
                     "type": "uint32_t"
+                },
+                {
+                    "access": 0,
+                    "description": "Sum counter increases when available",
+                    "name": "counter",
+                    "type": "uint8_t"
                 }
             ],
             "type_name": "adc_t",
@@ -2875,10 +3717,8 @@
                     "type": "basic_mode_t"
                 },
                 {
-                    "access": 0,
-                    "description": "Unimplemented status for padding",
-                    "name": "status",
-                    "type": "uint8_t"
+                    "name": "dut_pwm",
+                    "type": "basic_gpio_t"
                 },
                 {
                     "access": 0,
@@ -2917,10 +3757,8 @@
                     "type": "basic_mode_t"
                 },
                 {
-                    "access": 0,
-                    "description": "Unimplemented status for padding",
-                    "name": "status",
-                    "type": "uint8_t"
+                    "name": "dut_dac",
+                    "type": "basic_gpio_t"
                 },
                 {
                     "default": 5000,
