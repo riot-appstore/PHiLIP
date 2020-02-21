@@ -322,12 +322,12 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* hspi) {
 		 */
 		GPIO_InitStruct.Pin = DUT_NSS_Pin;
 		GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-		GPIO_InitStruct.Pull = GPIO_NOPULL;
+		GPIO_InitStruct.Pull = GPIO_PULLUP;
 		HAL_GPIO_Init(DUT_NSS_GPIO_Port, &GPIO_InitStruct);
 
 		GPIO_InitStruct.Pin = DUT_SCK_Pin | DUT_MOSI_Pin;
 		GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-		GPIO_InitStruct.Pull = GPIO_NOPULL;
+		GPIO_InitStruct.Pull = GPIO_PULLUP;
 		HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
 		GPIO_InitStruct.Pin = DUT_MISO_Pin;
@@ -355,10 +355,14 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* hspi) {
 		 PB14     ------> SPI2_MISO
 		 PB15     ------> SPI2_MOSI
 		 */
-		//GPIO_InitStruct.Pin = DUT_NSS_Pin | DUT_SCK_Pin | DUT_MOSI_Pin;
+		GPIO_InitStruct.Pin = DUT_NSS_Pin;
+		GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+		GPIO_InitStruct.Pull = GPIO_PULLUP;
+		HAL_GPIO_Init(DUT_NSS_GPIO_Port, &GPIO_InitStruct);
+
 		GPIO_InitStruct.Pin = DUT_SCK_Pin | DUT_MOSI_Pin;
 		GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-		GPIO_InitStruct.Pull = GPIO_NOPULL;
+		GPIO_InitStruct.Pull = GPIO_PULLUP;
 		HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
 		GPIO_InitStruct.Pin = DUT_MISO_Pin;
