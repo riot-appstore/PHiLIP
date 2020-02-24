@@ -73,3 +73,5 @@ if [[ $LANG == "c,py" ]] || [[ $LANG == "c" ]]; then
   BOARD=NUCLEOF103RB make clean
   cd ..
 fi
+
+exit $FAIL_OCCURED
