@@ -146,7 +146,7 @@ def test_two_stopbits(phil, tester):
 
 
 def test_ext_echo(phil, tester):
-    """Tests extended echo mode that adds one to the data recieved"""
+    """Tests extended echo mode that adds one to the data received"""
     _setup_phil(phil, if_type=1)
     data_set = b'\x30\x30\x0a'
     tester.write(data_set)

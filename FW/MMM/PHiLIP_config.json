@@ -22,7 +22,7 @@
             "elements": [
                 {
                     "bits": 1,
-                    "description": "1:register configuration requires exceution for changes - 0:nothing to update",
+                    "description": "1:register configuration requires execution for changes - 0:nothing to update",
                     "name": "update"
                 },
                 {
@@ -143,7 +143,7 @@
                 },
                 {
                     "bits": 2,
-                    "description": "Sets spi modes since slave cannot repsond immediatly - 0:access registers with spi - 1:preloads reg address to 0 for high speed tests - 2:echos SPI bytes - 3:always output user reg 0 (use for timing)",
+                    "description": "Sets spi modes since slave cannot repsond immediately - 0:access registers with spi - 1:preloads reg address to 0 for high speed tests - 2:echos SPI bytes - 3:always output user reg 0 (use for timing)",
                     "name": "if_type"
                 },
                 {
@@ -439,7 +439,7 @@
                 {
                     "access": 0,
                     "array_size": 4,
-                    "description": "Interface revision - This corelates to the version of the memory map",
+                    "description": "Interface revision - This correlates to the version of the memory map",
                     "name": [
                         "sys",
                         "if_rev"
@@ -605,7 +605,7 @@
                     "access": 0,
                     "bit_offset": 0,
                     "bits": 1,
-                    "description": "1:register configuration requires exceution for changes - 0:nothing to update",
+                    "description": "1:register configuration requires execution for changes - 0:nothing to update",
                     "name": [
                         "sys",
                         "status",
@@ -1049,7 +1049,7 @@
                 },
                 {
                     "access": 0,
-                    "description": "Current state of i2c frame - 0:initialized - 1:reading data - 2-write address recieved - 3-1st reg byte recieved - 4-writing data - 5-NACK - 6-stopped",
+                    "description": "Current state of i2c frame - 0:initialized - 1:reading data - 2-write address received - 3-1st reg byte received - 4-writing data - 5-NACK - 6-stopped",
                     "name": [
                         "i2c",
                         "state"
@@ -1637,7 +1637,7 @@
                 },
                 {
                     "access": 0,
-                    "description": "Current state of the spi bus - 0:initialized - 1:NSS pin just lowered - 2:writing to reg - 3:reading reg - 4:transfering data - 5:NSS up and finished",
+                    "description": "Current state of the spi bus - 0:initialized - 1:NSS pin just lowered - 2:writing to reg - 3:reading reg - 4:transferring data - 5:NSS up and finished",
                     "name": [
                         "spi",
                         "state"
@@ -3272,7 +3272,7 @@
                 {
                     "access": 0,
                     "array_size": 32,
-                    "description": "The tick when the event occured",
+                    "description": "The tick when the event occurred",
                     "name": [
                         "trace",
                         "tick"
@@ -3365,7 +3365,7 @@
                 {
                     "access": 0,
                     "array_size": 4,
-                    "description": "Interface revision - This corelates to the version of the memory map",
+                    "description": "Interface revision - This correlates to the version of the memory map",
                     "name": "if_rev",
                     "type": "uint8_t"
                 },
@@ -3447,7 +3447,7 @@
                 },
                 {
                     "access": 0,
-                    "description": "Current state of the spi bus - 0:initialized - 1:NSS pin just lowered - 2:writing to reg - 3:reading reg - 4:transfering data - 5:NSS up and finished",
+                    "description": "Current state of the spi bus - 0:initialized - 1:NSS pin just lowered - 2:writing to reg - 3:reading reg - 4:transferring data - 5:NSS up and finished",
                     "name": "state",
                     "type": "uint16_t"
                 },
@@ -3489,7 +3489,7 @@
                 },
                 {
                     "access": 0,
-                    "description": "Holder when the start occured",
+                    "description": "Holder when the start occurred",
                     "name": "s_ticks",
                     "type": "uint32_t"
                 },
@@ -3541,7 +3541,7 @@
                 },
                 {
                     "access": 0,
-                    "description": "Current state of i2c frame - 0:initialized - 1:reading data - 2-write address recieved - 3-1st reg byte recieved - 4-writing data - 5-NACK - 6-stopped",
+                    "description": "Current state of i2c frame - 0:initialized - 1:reading data - 2-write address received - 3-1st reg byte received - 4-writing data - 5-NACK - 6-stopped",
                     "name": "state",
                     "type": "uint16_t"
                 },
@@ -3893,7 +3893,7 @@
                 {
                     "access": 0,
                     "array_size": 32,
-                    "description": "The tick when the event occured",
+                    "description": "The tick when the event occurred",
                     "name": "tick",
                     "type": "uint32_t"
                 }

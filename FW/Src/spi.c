@@ -57,7 +57,7 @@ enum SPI_STATE {
 	SPI_FRAME_STARTED, /**< spi NSS pin just lowered */
 	SPI_WRITING, /**< spi writing to reg */
 	SPI_READING, /**< spi reading reg */
-	SPI_TRANSFERING, /**< spi transfering data */
+	SPI_TRANSFERING, /**< spi transferring data */
 	SPI_FRAME_FINISHED /**< spi cs pin up and finished */
 };
 

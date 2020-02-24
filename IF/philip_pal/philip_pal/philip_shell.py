@@ -132,7 +132,7 @@ class PhilipShell(cmd.Cmd):
             To write to user register 0 the data 42 we can do this
             write_reg user_reg 42 0
 
-            To write many bytes the data must not be seperated by spaces
+            To write many bytes the data must not be separated by spaces
             write_reg user_reg [1,2,3,4,5,6] 0
         """
         self._print_func_result(self.phil.write_reg, arg)
