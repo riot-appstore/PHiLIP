@@ -125,6 +125,11 @@ static void _super_loop() {
 	void (* const fxn_to_ex_per_tick[])(void) = {update_tick,
 												update_debug_inputs,
 												update_dut_spi_inputs,
+												update_dut_i2c_inputs,
+												update_dut_uart_inputs,
+												update_dut_adc_inputs,
+												update_dut_pwm_inputs,
+												update_dut_dac_inputs,
 												update_rtc};
 	static uint32_t fxn_index = 0;
 	if (_is_tick()) {

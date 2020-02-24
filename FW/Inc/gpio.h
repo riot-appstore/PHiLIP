@@ -38,6 +38,8 @@
 #ifndef GPIO_H_
 #define GPIO_H_
 
+
+
 /* Function prototypes -------------------------------------------------------*/
 /**
  * @brief		Initializes gpio directions, states and interrupt settings.
@@ -60,6 +62,20 @@ error_t commit_debug();
  * @brief		Updates the DEBUG input levels.
  */
 void update_debug_inputs();
+
+
+/**
+ * @brief		Initializes a basic gpio.
+ *
+ * @param[in]	gpio	Parameters of GPIO such as input with pullup
+ * @param[in]	port	...GPIO port
+ * @param[in]	pin		...GPIO pin
+ *
+ * @return      EOK if init occurred
+ * @return      EINVAL if invalid setting
+ */
+error_t init_basic_gpio(basic_gpio_t gpio,
+		GPIO_TypeDef *port, uint32_t pin);
 
 /* Interrupts ----------------------------------------------------------------*/
 /**

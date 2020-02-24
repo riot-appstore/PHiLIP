@@ -58,5 +58,10 @@ void init_dut_i2c(map_t *reg, map_t *saved_reg);
  */
 error_t commit_dut_i2c();
 
+/**
+ * @brief		Updates the i2c input levels.
+ */
+void update_dut_i2c_inputs();
+
 #endif /* I2C_H_ */
 /** @} */

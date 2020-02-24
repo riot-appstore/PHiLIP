@@ -109,6 +109,10 @@ error_t poll_dut_uart();
 error_t poll_if_uart();
 
 /**
+ * @brief		Updates the uart input levels.
+ */
+void update_dut_uart_inputs();
+/**
  * @brief This function handles dut_cts event interrupt.
  */
 void dut_cts_int();

@@ -47,6 +47,8 @@
 #include "app_shell_if.h"
 #include "app_reg.h"
 
+#include "gpio.h"
+
 #include "uart.h"
 
 /* Private enums/structs -----------------------------------------------------*/
@@ -223,15 +225,33 @@ static error_t _commit_uart(uart_dev_t *dev) {
 			huart_inst->Init.Parity = UART_PARITY_NONE;
 			huart_inst->Init.WordLength = UART_WORDLENGTH_8B;
 		}
-		if (HAL_UART_Init(&dut_uart.huart) != HAL_OK) {
-			_Error_Handler(__FILE__, __LINE__);
-		}
 
 		if (uart->mode.rts) {
 			HAL_GPIO_WritePin(DUT_RTS_GPIO_Port, DUT_RTS_Pin, GPIO_PIN_SET);
 		} else {
 			HAL_GPIO_WritePin(DUT_RTS_GPIO_Port, DUT_RTS_Pin, GPIO_PIN_RESET);
 		}
+		if (!dev->reg->mode.disable) {
+			if (HAL_UART_Init(&dut_uart.huart) != HAL_OK) {
+				_Error_Handler(__FILE__, __LINE__);
+			}
+		}
+		else {
+			HAL_UART_DeInit(huart_inst);
+			if (init_basic_gpio(dev->reg->dut_tx, DUT_TX) != EOK) {
+				return EINVAL;
+			}
+			if (init_basic_gpio(dev->reg->dut_rx, DUT_RX) != EOK) {
+				return EINVAL;
+			}
+			if (init_basic_gpio(dev->reg->dut_cts, DUT_CTS) != EOK) {
+				return EINVAL;
+			}
+			if (init_basic_gpio(dev->reg->dut_rts, DUT_RTS) != EOK) {
+				return EINVAL;
+			}
+		}
+
 
 		uart->rx_count = 0;
 		uart->tx_count = 0;
@@ -243,6 +263,13 @@ static error_t _commit_uart(uart_dev_t *dev) {
 		return EOK;
 	}
 	return ENOACTION;
+}
+
+void update_dut_uart_inputs() {
+	dut_uart.reg->dut_tx.level = HAL_GPIO_ReadPin(DUT_TX);
+	dut_uart.reg->dut_rx.level = HAL_GPIO_ReadPin(DUT_RX);
+	dut_uart.reg->dut_cts.level = HAL_GPIO_ReadPin(DUT_CTS);
+	dut_uart.reg->dut_rts.level = HAL_GPIO_ReadPin(DUT_RTS);
 }
 
 /**

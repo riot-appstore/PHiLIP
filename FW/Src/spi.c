@@ -46,6 +46,7 @@
 #include "app_common.h"
 #include "app_defaults.h"
 #include "app_reg.h"
+#include "gpio.h"
 
 #include "spi.h"
 
@@ -177,7 +178,21 @@ static inline error_t _commit_spi(spi_dev *dev) {
 			__HAL_SPI_ENABLE_IT(hspi_inst,
 					SPI_IT_RXNE | SPI_CR2_ERRIE | SPI_CR2_TXEIE);
 		}
-
+		else {
+			HAL_SPI_DeInit(hspi_inst);
+			if (init_basic_gpio(dev->reg->dut_miso, DUT_MISO) != EOK) {
+				return EINVAL;
+			}
+			if (init_basic_gpio(dev->reg->dut_mosi, DUT_MOSI) != EOK) {
+				return EINVAL;
+			}
+			if (init_basic_gpio(dev->reg->dut_nss, DUT_NSS) != EOK) {
+				return EINVAL;
+			}
+			if (init_basic_gpio(dev->reg->dut_sck, DUT_SCK) != EOK) {
+				return EINVAL;
+			}
+		}
 		return EOK;
 	}
 	return ENOACTION;
@@ -188,6 +203,10 @@ static inline error_t _commit_spi(spi_dev *dev) {
  */
 void update_dut_spi_inputs() {
 	dut_spi.reg->status.clk = HAL_GPIO_ReadPin(DUT_SCK);
+	dut_spi.reg->dut_miso.level = HAL_GPIO_ReadPin(DUT_MISO);
+	dut_spi.reg->dut_mosi.level = HAL_GPIO_ReadPin(DUT_MOSI);
+	dut_spi.reg->dut_nss.level = HAL_GPIO_ReadPin(DUT_NSS);
+	dut_spi.reg->dut_sck.level = HAL_GPIO_ReadPin(DUT_SCK);
 }
 /* Interrupts ----------------------------------------------------------------*/
 /**

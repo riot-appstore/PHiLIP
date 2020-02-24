@@ -59,6 +59,7 @@ enum GPIO_IO_TYPE {
 	GPIO_INTERRUPT /**< gpio interrupts and saves event */
 };
 
+
 /** @brief				Parameters for gpio control. */
 typedef struct {
 	GPIO_InitTypeDef hgpio; /**< handle for HAL gpio */
@@ -230,6 +231,29 @@ static error_t _commit_gpio(gpio_dev *dev) {
 	dev->reg->mode.init = 1;
 	copy_until_same(dev->saved_reg, dev->reg, sizeof(*(dev->saved_reg)));
 	HAL_GPIO_Init(dev->port, &dev->hgpio);
+	return EOK;
+}
+
+error_t init_basic_gpio(basic_gpio_t gpio, GPIO_TypeDef *port, uint32_t pin) {
+	GPIO_InitTypeDef hgpio = {0};
+	hgpio.Speed = GPIO_SPEED_FREQ_LOW;
+	hgpio.Pin = pin;
+	if (gpio.pull > GPIO_PULLDOWN) {
+		return EINVAL;
+	}
+	if (gpio.io_type == GPIO_OUT_PP) {
+		HAL_GPIO_WritePin(port, pin, gpio.set_level);
+		hgpio.Mode = GPIO_MODE_OUTPUT_PP;
+	} else if (gpio.io_type == GPIO_OUT_OD) {
+		HAL_GPIO_WritePin(port, pin, gpio.set_level);
+		hgpio.Mode = GPIO_MODE_OUTPUT_OD;
+	} else if (gpio.io_type == GPIO_IN) {
+		hgpio.Mode = GPIO_MODE_INPUT;
+		hgpio.Pull = gpio.pull;
+	} else {
+		return EINVAL;
+	}
+	HAL_GPIO_Init(port, &hgpio);
 	return EOK;
 }
 

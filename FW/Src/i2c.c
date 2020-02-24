@@ -47,6 +47,8 @@
 #include "app_defaults.h"
 #include "app_reg.h"
 
+#include "gpio.h"
+
 #include "i2c.h"
 
 /* Private enums/structs -----------------------------------------------------*/
@@ -156,6 +158,12 @@ static inline error_t _commit_i2c(i2c_dev *dev) {
 
 		if (dev->reg->mode.disable) {
 			HAL_I2C_DeInit(hi2c_inst);
+			if (init_basic_gpio(dev->reg->dut_sda, DUT_SDA) != EOK) {
+				return EINVAL;
+			}
+			if (init_basic_gpio(dev->reg->dut_scl, DUT_SCL) != EOK) {
+				return EINVAL;
+			}
 		}
 		else {
 			HAL_I2C_Init(hi2c_inst);
@@ -170,6 +178,10 @@ static inline error_t _commit_i2c(i2c_dev *dev) {
 	return ENOACTION;
 }
 
+void update_dut_i2c_inputs() {
+	dut_i2c.reg->dut_sda.level = HAL_GPIO_ReadPin(DUT_SDA);
+	dut_i2c.reg->dut_scl.level = HAL_GPIO_ReadPin(DUT_SCL);
+}
 /* Interrupts ----------------------------------------------------------------*/
 /**
  * @brief This function handles i2c_dut event interrupt.
