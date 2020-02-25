@@ -133,7 +133,7 @@ error_t commit_dut_adc() {
 
 	WRITE_REG(adc_inst->SR, ~(ADC_FLAG_EOC));
 
-	if (dut_adc.reg->mode.enable) {
+	if (!dut_adc.reg->mode.disable) {
 		adc_inst->CR1 |= ADC_IT_EOC;
 		adc_inst->CR2 |= (ADC_CR2_SWSTART | ADC_CR2_EXTTRIG);
 	}
