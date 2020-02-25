@@ -1,6 +1,6 @@
 Configuration	PHiLIP-BLUEPILL
-STM32CubeMX 	4.26.0
-Date	08/23/2018
+STM32CubeMX 	5.6.0
+Date	02/25/2020
 MCU	STM32F103C8Tx
 
 
@@ -33,8 +33,6 @@ USART1	Asynchronous	USART1_RX	PA10
 USART1	Asynchronous	USART1_TX	PA9
 USART3	Asynchronous	USART3_RX	PB11
 USART3	Asynchronous	USART3_TX	PB10
-USB	Device (FS)	USB_DM	PA11
-USB	Device (FS)	USB_DP	PA12
 
 
 
@@ -63,8 +61,72 @@ Pin Nb	PINs	FUNCTIONs	LABELs
 29	PA8	TIM1_CH1	DUT_IC
 30	PA9	USART1_TX	IF_TX
 31	PA10	USART1_RX	IF_RX
-32	PA11	USB_DM	
-33	PA12	USB_DP	
+34	PA13	SYS_JTMS-SWDIO	
+37	PA14	SYS_JTCK-SWCLK	
+38	PA15	SPI1_NSS	DUT_NSS
+39	PB3	SPI1_SCK	DUT_SCK
+40	PB4	SPI1_MISO	DUT_MISO
+41	PB5	SPI1_MOSI	DUT_MOSI
+42	PB6	I2C1_SCL	DUT_SCL
+43	PB7	I2C1_SDA	DUT_SDA
+45	PB8	TIM4_CH3	DUT_PWM
+46	PB9	TIM4_CH4	DUT_DAC
+PERIPHERALS	MODES	FUNCTIONS	PINS
+ADC1	IN7	ADC1_IN7	PA7
+ADC1	IN8	ADC1_IN8	PB0
+ADC1	IN9	ADC1_IN9	PB1
+ADC2	IN6	ADC2_IN6	PA6
+I2C1	I2C	I2C1_SCL	PB6
+I2C1	I2C	I2C1_SDA	PB7
+RCC	Crystal/Ceramic Resonator	RCC_OSC_IN	PD0-OSC_IN
+RCC	Crystal/Ceramic Resonator	RCC_OSC_OUT	PD1-OSC_OUT
+RCC	Crystal/Ceramic Resonator	RCC_OSC32_IN	PC14-OSC32_IN
+RCC	Crystal/Ceramic Resonator	RCC_OSC32_OUT	PC15-OSC32_OUT
+RTC	Activate Clock Source	RTC_VS_RTC_Activate	VP_RTC_VS_RTC_Activate
+RTC	Activate Calendar	RTC_VS_RTC_Calendar	VP_RTC_VS_RTC_Calendar
+RTC	No RTC Output	RTC_No_RTC_Output	VP_RTC_No_RTC_Output
+SPI1	Full-Duplex Slave	SPI1_MISO	PB4
+SPI1	Full-Duplex Slave	SPI1_MOSI	PB5
+SPI1	Full-Duplex Slave	SPI1_SCK	PB3
+SPI1	Hardware NSS Input Signal	SPI1_NSS	PA15
+SYS	Serial Wire	SYS_JTCK-SWCLK	PA14
+SYS	Serial Wire	SYS_JTMS-SWDIO	PA13
+SYS	SysTick	SYS_VS_Systick	VP_SYS_VS_Systick
+TIM1	Input Capture direct mode	TIM1_CH1	PA8
+TIM4	PWM Generation CH3	TIM4_CH3	PB8
+TIM4	PWM Generation CH4	TIM4_CH4	PB9
+USART1	Asynchronous	USART1_RX	PA10
+USART1	Asynchronous	USART1_TX	PA9
+USART3	Asynchronous	USART3_RX	PB11
+USART3	Asynchronous	USART3_TX	PB10
+
+
+
+Pin Nb	PINs	FUNCTIONs	LABELs
+2	PC13-TAMPER-RTC	GPIO_Output	LED0
+3	PC14-OSC32_IN	RCC_OSC32_IN	
+4	PC15-OSC32_OUT	RCC_OSC32_OUT	
+5	PD0-OSC_IN	RCC_OSC_IN	
+6	PD1-OSC_OUT	RCC_OSC_OUT	
+10	PA0-WKUP	GPIO_Output	DEBUG0
+11	PA1	GPIO_Output	DEBUG1
+12	PA2	GPIO_Output	DEBUG2
+13	PA3	GPIO_Output	TEST_PASS
+14	PA4	GPIO_Output	TEST_WARN
+15	PA5	GPIO_Output	TEST_FAIL
+16	PA6	ADC2_IN6	DUT_ADC
+17	PA7	ADC1_IN7	PM_LO_ADC
+18	PB0	ADC1_IN8	PM_HI_ADC
+19	PB1	ADC1_IN9	PM_V_ADC
+21	PB10	USART3_TX	DUT_TX
+22	PB11	USART3_RX	DUT_RX
+25	PB12	GPIO_Output	DUT_RST
+26	PB13	GPIO_EXTI13	DUT_CTS
+27	PB14	GPIO_Output	DUT_RTS
+28	PB15	GPIO_Input	USER_BTN
+29	PA8	TIM1_CH1	DUT_IC
+30	PA9	USART1_TX	IF_TX
+31	PA10	USART1_RX	IF_RX
 34	PA13	SYS_JTMS-SWDIO	
 37	PA14	SYS_JTCK-SWCLK	
 38	PA15	SPI1_NSS	DUT_NSS
@@ -84,11 +146,11 @@ Project Settings :
 Project Name : PHiLIP-BLUEPILL
 Project Folder : /home/kevinweiss/WorkingDirectory/PHiLIP/STMCUBE_GENERATION/PHiLIP-BLUEPILL
 Toolchain / IDE : SW4STM32
-Firmware Package Name and Version : STM32Cube FW_F1 V1.6.1
+Firmware Package Name and Version : STM32Cube FW_F1 V1.8.0
 
 
 Code Generation Settings : 
-STM32Cube Firmware Library Package : Copy only the necessary library files
+STM32Cube MCU packages and embedded software packs : Copy only the necessary library files
 Generate peripheral initialization as a pair of '.c/.h' files per peripheral : No
 Backup previously generated files when re-generating : No
 Delete previously generated files when not re-generated : Yes
