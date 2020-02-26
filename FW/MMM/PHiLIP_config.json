@@ -362,8 +362,8 @@
                 },
                 {
                     "bits": 1,
-                    "description": "0:periph is disabled - 1:periph is enabled",
-                    "name": "enable"
+                    "description": "0:periph is enabled - 1:periph is disabled",
+                    "name": "disable"
                 },
                 {
                     "bits": 1,
@@ -2399,11 +2399,11 @@
                     "access": 1,
                     "bit_offset": 1,
                     "bits": 1,
-                    "description": "0:periph is disabled - 1:periph is enabled",
+                    "description": "0:periph is enabled - 1:periph is disabled",
                     "name": [
                         "adc",
                         "mode",
-                        "enable"
+                        "disable"
                     ],
                     "offset": 448,
                     "type_size": 1

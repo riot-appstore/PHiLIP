@@ -5,7 +5,7 @@
  * @file      PHiLIP_typedef.h
  * @author    Kevin Weiss
  * @version   1.0.2
- * @date      2020-02-24
+ * @date      2020-02-25
  * @details   Generated from the memory map manager version 0.0.9
  ******************************************************************************
  */
@@ -119,7 +119,7 @@ typedef struct {
 /** @brief  ADC mode settings */
 typedef struct {
 	uint8_t init : 1; /**< 0:periph will initialize on execute - 1:periph initialized */
-	uint8_t enable : 1; /**< 0:periph is disabled - 1:periph is enabled */
+	uint8_t disable : 1; /**< 0:periph is enabled - 1:periph is disabled */
 	uint8_t fast_sample : 1; /**< 0:slow sample rate - 1:fast sample rate */
 } adc_mode_t;
 

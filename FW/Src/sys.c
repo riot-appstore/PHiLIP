@@ -38,6 +38,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include <errno.h>
 #include <stdint.h>
+#include <string.h>
 
 #include "stm32f1xx_hal.h"
 #include "build_defs.h"
@@ -68,7 +69,12 @@ void init_sys(map_t *reg, map_t *saved_reg) {
 	sys_reg = &(reg->sys);
 	saved_sys_reg = &(saved_reg->sys);
 
-	HAL_GetUID((uint32_t*) sys_reg->sn);
+	uint32_t tmp[3];
+	tmp[0] = HAL_GetUIDw0();
+	tmp[1] = HAL_GetUIDw1();
+	tmp[2] = HAL_GetUIDw2();
+	memcpy(sys_reg->sn, tmp, sizeof(tmp));
+
 	sys_reg->fw_rev[1] = FW_REV_PATCH;
 	sys_reg->fw_rev[2] = FW_REV_MINOR;
 	sys_reg->fw_rev[3] = FW_REV_MAJOR;

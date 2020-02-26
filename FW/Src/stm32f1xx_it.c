@@ -42,7 +42,6 @@
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
-extern DMA_HandleTypeDef hdma_adc_pm;
 /** @brief		For input capture. */
 extern TIM_HandleTypeDef htim_ic;
 
@@ -184,118 +183,6 @@ void SysTick_Handler(void) {
 /* For the available peripheral interrupt handler names,                      */
 /* please refer to the startup file (startup_stm32f1xx.s).                    */
 /******************************************************************************/
-
-/**
- * @brief This function handles DMA1 channel1 global interrupt.
- */
-void DMA1_Channel1_IRQHandler(void) {
-	/* USER CODE BEGIN DMA1_Channel1_IRQn 0 */
-
-	/* USER CODE END DMA1_Channel1_IRQn 0 */
-	HAL_DMA_IRQHandler(&hdma_adc_pm);
-	/* USER CODE BEGIN DMA1_Channel1_IRQn 1 */
-
-	/* USER CODE END DMA1_Channel1_IRQn 1 */
-}
-
-#if 0
-/**
- * @brief This function handles DMA1 channel2 global interrupt.
- */
-void DMA1_Channel2_IRQHandler(void) {
-	/* USER CODE BEGIN DMA1_Channel2_IRQn 0 */
-
-	/* USER CODE END DMA1_Channel2_IRQn 0 */
-#ifdef BLUEPILL
-	HAL_DMA_IRQHandler(&hdma_usart_dut_tx);
-#endif
-	/* USER CODE BEGIN DMA1_Channel2_IRQn 1 */
-
-	/* USER CODE END DMA1_Channel2_IRQn 1 */
-}
-
-/**
- * @brief This function handles DMA1 channel3 global interrupt.
- */
-void DMA1_Channel3_IRQHandler(void) {
-	/* USER CODE BEGIN DMA1_Channel3_IRQn 0 */
-
-	/* USER CODE END DMA1_Channel3_IRQn 0 */
-#ifdef BLUEPILL
-	HAL_DMA_IRQHandler(&hdma_usart_dut_rx);
-#endif
-	/* USER CODE BEGIN DMA1_Channel3_IRQn 1 */
-
-	/* USER CODE END DMA1_Channel3_IRQn 1 */
-}
-
-/**
- * @brief This function handles DMA1 channel4 global interrupt.
- */
-void DMA1_Channel4_IRQHandler(void) {
-	/* USER CODE BEGIN DMA1_Channel4_IRQn 0 */
-
-	/* USER CODE END DMA1_Channel4_IRQn 0 */
-#ifdef BLUEPILL
-	HAL_DMA_IRQHandler(&hdma_usart_if_tx);
-#endif
-#ifdef NUCLEOF103RB
-	HAL_DMA_IRQHandler(&hdma_usart_dut_tx);
-#endif
-	/* USER CODE BEGIN DMA1_Channel4_IRQn 1 */
-
-	/* USER CODE END DMA1_Channel4_IRQn 1 */
-}
-
-/**
- * @brief This function handles DMA1 channel5 global interrupt.
- */
-void DMA1_Channel5_IRQHandler(void) {
-	/* USER CODE BEGIN DMA1_Channel5_IRQn 0 */
-
-	/* USER CODE END DMA1_Channel5_IRQn 0 */
-#ifdef BLUEPILL
-	HAL_DMA_IRQHandler(&hdma_usart_if_rx);
-#endif
-
-#ifdef NUCLEOF103RB
-	HAL_DMA_IRQHandler(&hdma_usart_dut_rx);
-#endif
-	/* USER CODE BEGIN DMA1_Channel5_IRQn 1 */
-
-	/* USER CODE END DMA1_Channel5_IRQn 1 */
-}
-
-/**
- * @brief This function handles DMA1 channel6 global interrupt.
- */
-void DMA1_Channel6_IRQHandler(void) {
-	/* USER CODE BEGIN DMA1_Channel6_IRQn 0 */
-
-	/* USER CODE END DMA1_Channel6_IRQn 0 */
-#ifdef NUCLEOF103RB
-	HAL_DMA_IRQHandler(&hdma_usart_if_rx);
-#endif
-	/* USER CODE BEGIN DMA1_Channel6_IRQn 1 */
-
-	/* USER CODE END DMA1_Channel6_IRQn 1 */
-}
-
-/**
- * @brief This function handles DMA1 channel7 global interrupt.
- */
-void DMA1_Channel7_IRQHandler(void) {
-	/* USER CODE BEGIN DMA1_Channel7_IRQn 0 */
-
-	/* USER CODE END DMA1_Channel7_IRQn 0 */
-#ifdef NUCLEOF103RB
-	HAL_DMA_IRQHandler(&hdma_usart_if_tx);
-#endif
-	/* USER CODE BEGIN DMA1_Channel7_IRQn 1 */
-
-	/* USER CODE END DMA1_Channel7_IRQn 1 */
-}
-#endif
 
 /**
  * @brief This function handles TIM1 update interrupt.

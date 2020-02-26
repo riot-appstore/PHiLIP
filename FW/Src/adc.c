@@ -34,153 +34,167 @@
  ******************************************************************************
  */
 
-/* Includes ------------------------------------------------------------------*/
-#include <string.h>
+/* Includes *******************************************************************/
 #include <errno.h>
 
 #include "stm32f1xx_hal.h"
 
 #include "PHiLIP_typedef.h"
 #include "port.h"
-#include "app_errno.h"
-#include "app_access.h"
-#include "app_common.h"
-#include "app_defaults.h"
-#include "app_reg.h"
-
 #include "gpio.h"
 
 #include "adc.h"
 
-/* Private enums/structs -----------------------------------------------------*/
+/* Private enums/structs ******************************************************/
 /** @brief					The parameters for adc control */
 typedef struct {
-	ADC_TypeDef *adc_inst; /**< Handle for the adc device */
+	ADC_HandleTypeDef hadc; /**< Handle for the adc device */
 	adc_t *reg; /**< adc live application registers */
-	adc_t *saved_reg; /**< adc saved application registers */
-} adc_dev;
+	adc_mode_t mode; /**< current mode settings */
+	uint32_t num_of_samples; /**< current number of adc samples in sum */
+
+} adc_dev_t;
+
+static adc_dev_t dut_adc; /**< DUT ADC module instance */
 /** @} */
 
-/* Private function prototypes -----------------------------------------------*/
-static void _adc_it(adc_dev *dev);
+/* Private function prototypes ************************************************/
+static void _init_periph_adc();
+static void _init_dut_adc_reg(map_t *map);
 
-/* Private variables ---------------------------------------------------------*/
-static adc_dev dut_adc;
+/******************************************************************************/
+/*           Initialization                                                   */
+/******************************************************************************/
+void init_dut_adc(map_t *map) {
+	_init_periph_adc();
+	_init_dut_adc_reg(map);
+	commit_dut_adc();
+}
 
-/* Functions -----------------------------------------------------------------*/
-#if 1
-void init_dut_adc(map_t *reg, map_t *saved_reg) {
-	dut_adc.adc_inst = ADC2;
-	ADC_TypeDef *adc_inst = dut_adc.adc_inst;
-	dut_adc.reg = &(reg->adc);
-	dut_adc.saved_reg = &(saved_reg->adc);
+/******************************************************************************/
+static void _init_periph_adc() {
+	ADC_HandleTypeDef *hadc = &(dut_adc.hadc);
 
-	__HAL_RCC_ADC2_CLK_ENABLE();
-	GPIO_InitTypeDef GPIO_InitStruct;
+	hadc->Instance = DUT_ADC_INST;
+
+	hadc->Init.ScanConvMode = ADC_SCAN_ENABLE;
+	hadc->Init.ContinuousConvMode = ENABLE;
+	hadc->Init.DiscontinuousConvMode = DISABLE;
+	hadc->Init.ExternalTrigConv = ADC_SOFTWARE_START;
+	hadc->Init.DataAlign = ADC_DATAALIGN_RIGHT;
+	hadc->Init.NbrOfConversion = 1;
+
+}
+
+void init_dut_adc_msp() {
+	GPIO_InitTypeDef GPIO_InitStruct = {0};
+	/* Peripheral clock enable */
+	DUT_ADC_CLK_EN();
+	DUT_ADC_GPIO_CLK_EN();
+
 	GPIO_InitStruct.Pin = DUT_ADC_Pin;
 	GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
 	HAL_GPIO_Init(DUT_ADC_GPIO_Port, &GPIO_InitStruct);
 
+#ifdef DUT_ADC_ENABLE_INT
 	HAL_NVIC_SetPriority(ADC_IRQ, 0, 0);
 	HAL_NVIC_EnableIRQ(ADC_IRQ);
-
-	CLEAR_BIT(adc_inst->CR2, (ADC_CR2_ADON));
-	while ((adc_inst->CR2 & ADC_CR2_ADON));
-
-	adc_inst->CR2 |= ADC_DATAALIGN_RIGHT | ADC_SOFTWARE_START | ADC_CR2_CONTINUOUS(ENABLE);
-
-#if 0
-	if (READ_BIT(adc_inst->CR2,
-		~(ADC_CR2_ADON | ADC_CR2_DMA |ADC_CR2_SWSTART | ADC_CR2_JSWSTART |
-		ADC_CR2_JEXTTRIG | ADC_CR2_JEXTSEL | ADC_CR2_TSVREFE)) == tmp_cr2)
-	{
-	/* Maybe keep retrying until good? */
-	}
 #endif
-
-	/* For Rank 1 to 6 */
-    MODIFY_REG(adc_inst->SQR3, ADC_SQR3_RK(ADC_SQR3_SQ1, ADC_REGULAR_RANK_1),
-    	ADC_SQR3_RK(ADC_CHANNEL, ADC_REGULAR_RANK_1));
-
-    commit_dut_adc();
 }
-#endif
 
+void deinit_dut_adc_msp() {
+	DUT_ADC_CLK_DIS();
+	HAL_GPIO_DeInit(DUT_ADC);
+}
+
+/******************************************************************************/
+static void _init_dut_adc_reg(map_t *map) {
+	dut_adc.reg = &(map->adc);
+}
+
+/******************************************************************************/
+/*           Functions                                                        */
+/******************************************************************************/
 error_t commit_dut_adc() {
-	ADC_TypeDef *adc_inst = dut_adc.adc_inst;
-	if (dut_adc.reg->mode.init) {
-		return ENOACTION;
+	ADC_HandleTypeDef *hadc = &(dut_adc.hadc);
+	adc_t *reg = dut_adc.reg;
+	ADC_ChannelConfTypeDef sConfig;
+
+	static int calibrate_adc = 1;
+
+	if (reg->mode.init) {
+		return 0;
 	}
-	__HAL_RCC_ADC2_CLK_ENABLE();
 
-	CLEAR_BIT(adc_inst->CR2, (ADC_CR2_ADON));
-	while ((dut_adc.adc_inst->CR2 & ADC_CR2_ADON));
+	dut_adc.mode.disable = reg->mode.disable;
+	if (dut_adc.reg->mode.disable) {
+		if (HAL_ADC_DeInit(hadc) != HAL_OK) {
+			_Error_Handler(__FILE__, __LINE__);
+		}
+		if (init_basic_gpio(reg->dut_adc, DUT_ADC) != 0) {
+			return -EINVAL;
+		}
+		return 0;
+	}
+	if (HAL_ADC_Init(hadc) != HAL_OK) {
+		_Error_Handler(__FILE__, __LINE__);
+	}
+	if (calibrate_adc) {
+		HAL_ADCEx_Calibration_Start(hadc);
+		calibrate_adc = 0;
+	}
 
-	/* For channels 0 to 9 */
-	if (dut_adc.reg->mode.fast_sample) {
-		MODIFY_REG(adc_inst->SQR3,
-			ADC_SMPR2(ADC_SMPR2_SMP0, ADC_CHANNEL),
-			ADC_SMPR2(ADC_SAMPLETIME_1CYCLE_5, ADC_CHANNEL));
+	sConfig.Channel = ADC_CHANNEL;
+	sConfig.Rank = ADC_REGULAR_RANK_1;
+	if (reg->mode.fast_sample) {
+		sConfig.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
 	}
 	else {
-		MODIFY_REG(adc_inst->SMPR2,
-			ADC_SMPR2(ADC_SMPR2_SMP0, ADC_CHANNEL),
-			ADC_SMPR2(ADC_SAMPLETIME_239CYCLES_5, ADC_CHANNEL));
+		sConfig.SamplingTime = ADC_SAMPLETIME_239CYCLES_5;
+	}
+	if (HAL_ADC_ConfigChannel(hadc, &sConfig) != HAL_OK) {
+		_Error_Handler(__FILE__, __LINE__);
 	}
 
-	adc_inst->CR2 |= ADC_CR2_ADON;
-	while (!(adc_inst->CR2 & ADC_CR2_ADON));
+	reg->mode.init = 1;
+	reg->current_sum = 0;
+	reg->index = 0;
+	reg->sum = 0;
+	dut_adc.num_of_samples = reg->num_of_samples;
 
-	WRITE_REG(adc_inst->SR, ~(ADC_FLAG_EOC));
+	HAL_ADC_Start(hadc);
 
-	if (dut_adc.reg->mode.enable) {
-		adc_inst->CR1 |= ADC_IT_EOC;
-		adc_inst->CR2 |= (ADC_CR2_SWSTART | ADC_CR2_EXTTRIG);
+	return 0;
+}
+
+/******************************************************************************/
+void poll_dut_adc() {
+	adc_t *reg = dut_adc.reg;
+	if (dut_adc.mode.disable) {
+		dut_adc.reg->dut_adc.level = HAL_GPIO_ReadPin(DUT_ADC);
 	}
-	else {
-		adc_inst->CR1 &= ~ADC_IT_EOC;
-		__HAL_RCC_ADC2_CLK_DISABLE();
-		HAL_GPIO_DeInit(DUT_ADC);
-		if (init_basic_gpio(dut_adc.reg->dut_adc, DUT_ADC) != EOK) {
-			return EINVAL;
+	else if (ADC_DATA_READY(dut_adc.hadc)) {
+		uint32_t val = HAL_ADC_GetValue(&dut_adc.hadc);
+		reg->sample = val;
+		reg->current_sum += val;
+		reg->index++;
+		if (reg->index >= dut_adc.num_of_samples) {
+			reg->sum = reg->current_sum;
+			reg->index = 0;
+			reg->current_sum = 0;
+			reg->counter++;
 		}
 	}
-
-
-	dut_adc.reg->mode.init = 1;
-	dut_adc.reg->current_sum = 0;
-	dut_adc.reg->index = 0;
-	dut_adc.reg->sum = 0;
-
-	copy_until_same(&dut_adc.saved_reg, &dut_adc.reg, sizeof(dut_adc.saved_reg));
-
-	return EOK;
 }
 
-void update_dut_adc_inputs() {
-	dut_adc.reg->dut_adc.level = HAL_GPIO_ReadPin(DUT_ADC);
-}
-/* Interrupts ----------------------------------------------------------------*/
+/******************************************************************************/
+/*           Interrupt Handling                                               */
+/******************************************************************************/
+#ifdef DUT_ADC_ENABLE_INT
 /**
  * @brief This function handles an ADC interrupt
  */
-#if 1
-void ADC_INT(void) {
-	if (dut_adc.adc_inst->SR & ADC_FLAG_EOC) {
-		_adc_it(&dut_adc);
-		//HAL_ADC_IRQHandler(&dut_adc);
-	}
-}
+void ADC_INT() {
 
-static void _adc_it(adc_dev *dev) {
-	dev->reg->sample = dev->adc_inst->DR;
-	dev->reg->current_sum += dev->reg->sample;
-	dev->reg->index++;
-	if (dev->reg->index >= dev->saved_reg->num_of_samples) {
-		dev->reg->sum = dev->reg->current_sum;
-		dev->reg->index = 0;
-		dev->reg->current_sum = 0;
-		dev->reg->counter++;
-	}
 }
 #endif

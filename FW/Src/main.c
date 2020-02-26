@@ -109,7 +109,7 @@ int main(void) {
 	init_dut_i2c(&reg, &saved_reg);
 	init_dut_spi(&reg, &saved_reg);
 	init_rtc(&reg);
-	init_dut_adc(&reg, &saved_reg);
+	init_dut_adc(&reg);
 	init_sys(&reg, &saved_reg);
 	init_wdt();
 	EN_INT;
@@ -123,20 +123,27 @@ int main(void) {
 
 static void _super_loop() {
 	void (* const fxn_to_ex_per_tick[])(void) = {update_tick,
-												update_debug_inputs,
-												update_dut_spi_inputs,
-												update_dut_i2c_inputs,
-												update_dut_uart_inputs,
-												update_dut_adc_inputs,
-												update_dut_pwm_inputs,
-												update_dut_dac_inputs,
-												update_rtc};
+		update_debug_inputs,
+		update_dut_spi_inputs,
+		update_dut_i2c_inputs,
+		update_dut_uart_inputs,
+		update_dut_pwm_inputs,
+		update_dut_dac_inputs,
+		update_rtc };
+	void (* const fxn_to_ex[])(void) = {poll_dut_adc };
+	static uint32_t fxn_index_tick = 0;
 	static uint32_t fxn_index = 0;
 	if (_is_tick()) {
 		flash_fw_version();
 		reset_wdt();
-		(fxn_to_ex_per_tick[fxn_index++])();
-		if (fxn_index >= sizeof(fxn_to_ex_per_tick)/sizeof(fxn_to_ex_per_tick[0])) {
+		(fxn_to_ex_per_tick[fxn_index_tick++])();
+		if (fxn_index_tick
+				>= sizeof(fxn_to_ex_per_tick) / sizeof(fxn_to_ex_per_tick[0])) {
+			fxn_index_tick = 0;
+		}
+	} else {
+		(fxn_to_ex[fxn_index++])();
+		if (fxn_index >= sizeof(fxn_to_ex) / sizeof(fxn_to_ex[0])) {
 			fxn_index = 0;
 		}
 	}

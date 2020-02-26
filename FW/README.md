@@ -43,3 +43,4 @@ Assembler           | GNU assembler version 2.29.51 (arm-none-eabi) using BFD ve
 Linker              | GNU ld (GNU Tools for Arm Embedded Processors 7-2017-q4-major) 2.29.51.20171128
 memory-map-manager  | 0.0.9
 STM32Cube V1.0      | 4.26.0
+STM32Cube FW_F1     | V1.6.1
