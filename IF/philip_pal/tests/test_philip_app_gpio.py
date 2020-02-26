@@ -4,7 +4,7 @@ Tests for the extended PHiLIP interface
 from time import sleep
 
 GPIO_NAME_LIST = [
-    # {"adc": ["dut_adc"]},
+    {"adc": ["dut_adc"]},
     {"i2c": ["dut_sda", "dut_scl"]},
     {"pwm": ["dut_pwm"]},
     {"dac": ["dut_dac"]},

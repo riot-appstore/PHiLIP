@@ -4,14 +4,19 @@
  *  Created on: Jul 18, 2018
  *      Author: kevinweiss
  */
+#include <errno.h>
+
 #include "stm32f1xx_hal.h"
+
+#include "PHiLIP_typedef.h"
+
 #include "app_common.h"
+
+#include "adc.h"
+
 #include "port.h"
 
 extern void _Error_Handler(char *, int);
-
-ADC_HandleTypeDef hadc_pm;
-DMA_HandleTypeDef hdma_adc_pm;
 
 I2C_HandleTypeDef hi2c_dut;
 
@@ -19,50 +24,6 @@ TIM_HandleTypeDef htim_ic;
 TIM_HandleTypeDef htim_pwm;
 
 #ifdef BLUEPILL
-/* ADC1 init function */
-static void MX_ADC1_Init(void) {
-
-	ADC_ChannelConfTypeDef sConfig;
-
-	/**Common config
-	 */
-	hadc_pm.Instance = ADC1;
-	hadc_pm.Init.ScanConvMode = ADC_SCAN_ENABLE;
-	hadc_pm.Init.ContinuousConvMode = ENABLE;
-	hadc_pm.Init.DiscontinuousConvMode = DISABLE;
-	hadc_pm.Init.ExternalTrigConv = ADC_SOFTWARE_START;
-	hadc_pm.Init.DataAlign = ADC_DATAALIGN_RIGHT;
-	hadc_pm.Init.NbrOfConversion = 3;
-	if (HAL_ADC_Init(&hadc_pm) != HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-	/**Configure Regular Channel
-	 */
-	sConfig.Channel = ADC_CHANNEL_9;
-	sConfig.Rank = ADC_REGULAR_RANK_1;
-	sConfig.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
-	if (HAL_ADC_ConfigChannel(&hadc_pm, &sConfig) != HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-	/**Configure Regular Channel
-	 */
-	sConfig.Channel = ADC_CHANNEL_8;
-	sConfig.Rank = ADC_REGULAR_RANK_2;
-	if (HAL_ADC_ConfigChannel(&hadc_pm, &sConfig) != HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-	/**Configure Regular Channel
-	 */
-	sConfig.Channel = ADC_CHANNEL_7;
-	sConfig.Rank = ADC_REGULAR_RANK_3;
-	if (HAL_ADC_ConfigChannel(&hadc_pm, &sConfig) != HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-}
 
 /* TIM1 init function */
 static void MX_TIM1_Init(void) {
@@ -186,50 +147,6 @@ void SystemClock_Config(void) {
 #endif
 
 #ifdef NUCLEOF103RB
-/* ADC1 init function */
-static void MX_ADC1_Init(void) {
-
-	ADC_ChannelConfTypeDef sConfig;
-
-	/**Common config
-	 */
-	hadc_pm.Instance = ADC1;
-	hadc_pm.Init.ScanConvMode = ADC_SCAN_ENABLE;
-	hadc_pm.Init.ContinuousConvMode = ENABLE;
-	hadc_pm.Init.DiscontinuousConvMode = DISABLE;
-	hadc_pm.Init.ExternalTrigConv = ADC_SOFTWARE_START;
-	hadc_pm.Init.DataAlign = ADC_DATAALIGN_RIGHT;
-	hadc_pm.Init.NbrOfConversion = 3;
-	if (HAL_ADC_Init(&hadc_pm) != HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-	/**Configure Regular Channel
-	 */
-	sConfig.Channel = ADC_CHANNEL_10;
-	sConfig.Rank = ADC_REGULAR_RANK_1;
-	sConfig.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
-	if (HAL_ADC_ConfigChannel(&hadc_pm, &sConfig) != HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-	/**Configure Regular Channel
-	 */
-	sConfig.Channel = ADC_CHANNEL_11;
-	sConfig.Rank = ADC_REGULAR_RANK_2;
-	if (HAL_ADC_ConfigChannel(&hadc_pm, &sConfig) != HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-	/**Configure Regular Channel
-	 */
-	sConfig.Channel = ADC_CHANNEL_12;
-	sConfig.Rank = ADC_REGULAR_RANK_3;
-	if (HAL_ADC_ConfigChannel(&hadc_pm, &sConfig) != HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-}
 
 /* TIM1 init function */
 static void MX_TIM1_Init(void) {
@@ -362,6 +279,19 @@ void SystemClock_Config(void) {
 }
 #endif
 
+void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc) {
+	if (hadc->Instance == DUT_ADC_INST) {
+		init_dut_adc_msp();
+	}
+
+}
+
+void HAL_ADC_MspDeInit(ADC_HandleTypeDef* hadc) {
+	if (hadc->Instance == DUT_ADC_INST) {
+		deinit_dut_adc_msp();
+	}
+}
+
 /**
  * @brief  This function is executed in case of error occurrence.
  * @param  file: The file name as string.
@@ -382,7 +312,6 @@ void init_periphs(void) {
 
 	MX_DMA_Init();
 	MX_TIM1_Init();
-	MX_ADC1_Init();
 }
 
 void init_clock(void) {

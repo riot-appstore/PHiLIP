@@ -127,14 +127,23 @@
 /******************************************************************************/
 /************************************ ADC defines *****************************/
 /******************************************************************************/
-#define DUT_ADC_DEV			ADC2
+#define DUT_ADC_INST		ADC2
+#define ADC_CHANNEL			ADC_CHANNEL_6
+
+#define DUT_ADC_CLK_EN()		__HAL_RCC_ADC2_CLK_ENABLE()
+#define DUT_ADC_GPIO_CLK_EN()	__HAL_RCC_GPIOA_CLK_ENABLE()
+
+#define DUT_ADC_CLK_DIS()		__HAL_RCC_ADC2_CLK_DISABLE()
+
 #define ADC_INT				ADC1_2_IRQHandler
 #define ADC_IRQ				ADC1_2_IRQn
 
-#define ADC_CHANNEL			ADC_CHANNEL_6
+#define ADC_DATA_READY(x)	(x.Instance->SR & ADC_FLAG_EOC)
+
 #endif
 
 #ifdef NUCLEOF103RB
+/******************************************************************************/
 /******************************* Pin and Ports defines ************************/
 /******************************************************************************/
 #define LED0_Pin GPIO_PIN_5
@@ -251,13 +260,24 @@
 #define PWM_DAC_REMAP		__HAL_AFIO_REMAP_TIM3_ENABLE()
 #define EN_RCC_DUT_PWM_DAC_CLK	__HAL_RCC_TIM3_CLK_ENABLE()
 
-#define DUT_ADC_DEV			ADC2
+/******************************************************************************/
+/************************************ ADC defines *****************************/
+/******************************************************************************/
+#define DUT_ADC_INST		ADC2
+#define ADC_CHANNEL			ADC_CHANNEL_8
+
+#define DUT_ADC_CLK_EN()		__HAL_RCC_ADC2_CLK_ENABLE()
+#define DUT_ADC_GPIO_CLK_EN()	__HAL_RCC_GPIOA_CLK_ENABLE()
+
+#define DUT_ADC_CLK_DIS()		__HAL_RCC_ADC2_CLK_DISABLE()
+
 #define ADC_INT				ADC1_2_IRQHandler
 #define ADC_IRQ				ADC1_2_IRQn
 
-#define ADC_CHANNEL			ADC_CHANNEL_8
-#endif
+#define ADC_DATA_READY(x)	(x.Instance->SR & ADC_FLAG_EOC)
 
+#endif
+/******************************************************************************/
 /******************************* Pin and Ports defines ************************/
 /******************************************************************************/
 #define LED0 LED0_GPIO_Port, LED0_Pin
@@ -302,5 +322,6 @@
 
 void init_periphs(void);
 void init_clock(void);
+void _Error_Handler(char *file, int line);
 
 #endif /* PORT_H_ */

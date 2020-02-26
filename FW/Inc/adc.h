@@ -37,30 +37,41 @@
 
 /* Function prototypes -------------------------------------------------------*/
 /**
- * @brief		Initializes adc registers.
+ * @brief		Initializes adc registers and peripheral.
  *
  * @param[in]	reg			Pointer to live register memory map
- * @param[in]	saved_reg	Pointer to saved register memory map
- * @note		Populates adc defaults registers and assigns i2c register
- * 				pointers.
+ * @note		Instantiates the dut_adc module device.
  */
-void init_dut_adc(map_t *reg, map_t *saved_reg);
+void init_dut_adc(map_t *reg);
+
+/**
+ * @brief		Only for use with the STM32xxxx_HAL_Driver.
+ */
+void init_dut_adc_msp();
+
+/**
+ * @brief		Only for use with the STM32xxxx_HAL_Driver.
+ */
+void deinit_dut_adc_msp();
 
 /**
  * @brief		Commits the adc registers and executes operations.
  *
  * @pre			adc must first be initialized with init_adc()
- * @return      EOK if init occurred
- * @return      ENOACTION if no init was triggered
+ * @return      0 		success
+ * @return      -EINVAL	invalid value
  *
- * @note		Only executes actions if the adc.mode.init is set.
+ * @note		Only executes actions if the adc.mode.init == 0.
  */
 error_t commit_dut_adc();
 
 /**
- * @brief		Updates the adc input levels.
+ * @brief		Updated the map with ADC values.
+ *
+ * @note		Since the adc_t does not interact with any interrupts
+ * 				protections are not needed or used.
  */
-void update_dut_adc_inputs();
+void poll_dut_adc();
 
 #endif /* ADC_H_ */
 /** @} */
