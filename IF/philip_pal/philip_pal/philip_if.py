@@ -84,7 +84,7 @@ class PhilipBaseIf():
             dict:
             The return hold dict values in the following keys::
             msg - The message from the response, only used for information.
-            cmd - The command sent, used to track what has occured.
+            cmd - The command sent, used to track what has occurred.
             data - Parsed information of the data requested.
             result - Either success, error or timeout.
         """
@@ -460,7 +460,7 @@ class PhilipExtIf(PhilipBaseIf):
         """
         response = []
         for cmd in self.mem_map.keys():
-            # Supress unused variable warning
+            # Suppress unused variable warning
 
             if cmd.startswith(cmd_name):
                 response.append(self.read_reg(cmd, timeout=timeout))
@@ -479,7 +479,7 @@ class PhilipExtIf(PhilipBaseIf):
             see send_and_parse_cmd()
         """
         response = []
-        # could be better, now it assumes everying stuct has mode.init
+        # could be better, now it assumes everying struct has mode.init
         if '.' in cmd_name:
             struct_name = cmd_name.split('.')[0]
             struct_name = struct_name + '.mode.init'

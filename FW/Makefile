@@ -9,6 +9,7 @@
 #	2017-02-10 - Several enhancements + project update mode
 #   2015-07-22 - first version
 # ------------------------------------------------
+MAKEFLAGS += --quiet
 
 BOARD ?= BLUEPILL
 

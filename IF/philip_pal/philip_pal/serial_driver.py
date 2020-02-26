@@ -102,7 +102,7 @@ class SerialDriver:
         # Gets rid of leading zeros caused by reset
         response = response.strip('\0')
         if response == "":
-            # try to reconnect if timout occurs
+            # try to reconnect if timeout occurs
             self.close()
             self._connect(*self._args, **self._kwargs)
             raise TimeoutError("Timeout during serial readline")

@@ -86,7 +86,7 @@ Not tested:
 The spi tests should be done with a scope or logic analyzer and another spi master device. Connect the spi master, probes and PHiLIP `DUT_MOSI`, `DUT_MISO`, `DUT_SCK` and `DUT_NSS` pins.  _NOTE: The SCLK pin can sometimes wring depending on cable lengths, a resistor or capacitor or even a extra wire._
 
 Evaluate the following:
-- 16 bit modes and endianess
+- 16 bit modes and endianness
 - different if types
 - disable works
 - different modes (4)
