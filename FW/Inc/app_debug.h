@@ -1,4 +1,12 @@
 /*
+ * Copyright 2020 Kevin Weiss for HAW Hamburg
+ *
+ * This file is subject to the terms and conditions of the MIT License. See the
+ * file LICENSE in the top level directory for more details.
+ * SPDX-License-Identifier:    MIT
+ */
+
+/*
  * app_debug.h
  *
  *  Created on: May 19, 2018

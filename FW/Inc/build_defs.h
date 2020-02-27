@@ -2,7 +2,8 @@
  * build_defs.h
  *
  *  Created on: May 17, 2018
- *      Author: kevinweiss
+ *      Author: steveha from stackoverflow.com
+ *         URL: https://stackoverflow.com/questions/11697820/how-to-use-date-and-time-predefined-macros-in-as-two-integers-then-stri
  */
 
 #ifndef BUILD_DEFS_H_
