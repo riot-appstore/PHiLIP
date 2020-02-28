@@ -54,12 +54,16 @@ def test_write_byte_arg_to_string(regtest):
                  (0x10000000000, 6),
                  (0x1000000000000, 7),
                  (0x100000000000000, 8),
-                 ([1, 2, 3, 4], 0),
-                 ([1, 2], 0),
-                 ([1, 2, 3], 0),
-                 ([1, 2, 3, 4, 5], 0),
-                 ([1, 2, 3, 4, 6, 7, 8, 9, 10], 0),
-                 ([1, 0, 0, 0], 0)]
+                 ([1, 2, 3, 4], 1),
+                 ([1, 2], 1),
+                 ([1, 2, 3], 1),
+                 ([1, 2, 3, 4, 5], 1),
+                 ([1, 2, 3, 4, 6, 7, 8, 9, 10], 1),
+                 ([1, 0, 0, 0], 1),
+                 ([0x123], 1),
+                 ([0x123], 2),
+                 ([-1, -2], 1),
+                 ([-1, -2], 2)]
     for args in args_list:
         result = PhilipBaseIf()._write_byte_arg_to_string(*args)
         regtest.write('data={}, size={}, result="{}"\n'.format(args[0],
@@ -73,14 +77,14 @@ def test_mm_from_version(regtest, version_str):
     regtest.write(pformat(PhilipExtIf().mm_from_version(version_str)))
 
 
-@pytest.mark.parametrize("data, type_size, expected", [
-    ([0], 1, [0]),
-    ([0, 0, 0, 0], 2, [0, 0]),
-    ([1], 1, [1]),
-    ([0, 1], 2, [0x0100]),
-    ([0, 1, 1, 1], 2, [0x0100, 0x0101]),
-    ([0, 0, 0, 1, 1, 0, 0, 1], 4, [0x01000000, 0x01000001]),
-    ([1, 2, 3, 4, 5, 6, 7, 8], 8, [0x0807060504030201])])
-def test_parse_array(data, type_size, expected):
+@pytest.mark.parametrize("data, type_size, prim_type, expected", [
+    ([0], 1, "uint8_t", [0]),
+    ([0, 0, 0, 0], 2, "uint16_t", [0, 0]),
+    ([1], 1, "uint8_t", [1]),
+    ([0, 1], 2, "uint16_t", [0x0100]),
+    ([0, 1, 1, 1], 2, "uint16_t", [0x0100, 0x0101]),
+    ([0, 0, 0, 1, 1, 0, 0, 1], 4, "uint32_t", [0x01000000, 0x01000001]),
+    ([1, 2, 3, 4, 5, 6, 7, 8], 8, "uint64_t", [0x0807060504030201])])
+def test_parse_array(data, type_size, prim_type, expected):
     """Tests parsing an array with various sizes"""
-    assert PhilipExtIf()._parse_array(data, type_size) == expected
+    assert PhilipExtIf()._parse_array(data, type_size, prim_type) == expected

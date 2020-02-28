@@ -31,6 +31,7 @@ optional arguments:
                         what is needed (default: False)
 ```
 """
+import os
 import cmd
 from json import dumps
 import logging
@@ -393,7 +394,7 @@ CN6
 - A3 = PB0 = DUT_ADC             DUT_RX = PA10 = D2 -
 - A4 = PC1 = PM_HI_ADC          IF_TX = PA2 = TX/D1 -
 - A5 = PC0 = PM_V_ADC           IF_RX = PA3 = RX/D0 -
-|CN8|                                          |CN10|
+|CN8|                                          |CN9|
 
           -1 -                  DUT_DAC -1 - DUT_PWM
           -2 -                  DUT_SCL -2 -
@@ -417,6 +418,27 @@ PM_LO_ADC -18- PM_HI_ADC          IF_TX -18-
           |CN7|                         |CN10|
 """)
         except (ValueError) as exc:
+            print(exc)
+
+    def do_run_script(self, arg):
+        """Runs a number of commands from a file.
+        Example:
+            example.txt
+            write_and_execute i2c.slave_addr_1 99
+            read_reg i2c.slave_addr_1
+            (in the shell)
+            PHiLIP: run_script example.txt
+        Usage:
+            run_script <filename>
+        Args:
+            filename: This is the name of the file that contains the commands
+        """
+        try:
+            with open(os.path.join(os.getcwd(), arg), 'r') as fin:
+                script = fin.readlines()
+                for line in script:
+                    self.onecmd(line)
+        except (FileNotFoundError) as exc:
             print(exc)
 
     def do_exit(self, arg):

@@ -1,5 +1,5 @@
 {'cmd': 'wr 0 9 8 7', 'result': 'Success'}
-{'cmd': 'wr 3 99 0 0 0', 'result': 'Success'}
-{'cmd': 'wr 7 88 0 0 0', 'result': 'Success'}
-{'cmd': 'rr 0 8', 'data': [9, 8, 7, 99, 0, 0, 0, 88], 'result': 'Success'}
-{'cmd': 'rr 0 8', 'data': [9, 8, 7, 99, 0, 0, 0, 88], 'result': 'Success'}
+{'cmd': 'wr 3 99', 'result': 'Success'}
+{'cmd': 'wr 7 88', 'result': 'Success'}
+{'cmd': 'rr 0 8', 'data': [9, 8, 7, 99, 4, 5, 6, 88], 'result': 'Success'}
+{'cmd': 'rr 0 8', 'data': [9, 8, 7, 99, 4, 5, 6, 88], 'result': 'Success'}

@@ -62,6 +62,7 @@ def test_philip_ext_misc_commands(phil_ex, regtest):
     Note: Connect the dut_rst to DEBUG0 pin to test traces
     """
     _regtest(regtest, phil_ex.read_struct("trace"))
+    phil_ex.write_and_execute('gpio[0].mode.pull', 1)
     phil_ex.write_and_execute('gpio[0].mode.io_type', 3)
     phil_ex.dut_reset(0.3)
     traces = phil_ex.read_trace()

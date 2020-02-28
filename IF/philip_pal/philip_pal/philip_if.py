@@ -13,6 +13,7 @@ import os
 import json
 import csv
 import time
+from ctypes import c_uint8, c_uint16, c_uint32, c_int8, c_int16, c_int32
 from ast import literal_eval
 from pathlib import Path
 from .base_device import BaseDevice
@@ -151,13 +152,15 @@ class PhilipBaseIf():
         ret_str = ''
         if isinstance(data, list):
             for data_byte in data:
-                ret_str += ' {}'.format(literal_eval(str(data_byte)))
+                for i in range(0, size):
+                    ret_str += ' {}'.format(
+                        (int(data_byte) >> ((i) * 8)) & 0xFF)
         else:
             for i in range(0, size):
                 ret_str += ' {}'.format((int(data) >> ((i) * 8)) & 0xFF)
         return ret_str
 
-    def write_bytes(self, index, data, size=4, timeout=None):
+    def write_bytes(self, index, data, size=1, timeout=None):
         """Writes bytes in the register map
         Args:
             index: Index of the memory map (address or offset of bytes)
@@ -285,8 +288,12 @@ class PhilipExtIf(PhilipBaseIf):
             use_dev_map = kwargs.pop('use_dev_map')
 
         super().__init__(*args, **kwargs)
-
-        self.if_version = self.get_version()['version']
+        try:
+            self.if_version = self.get_version()['version']
+        except (TimeoutError, KeyError):
+            logging.debug("No device detected, functionality will be limited")
+            self.if_version = "UNKNOWN"
+            return
 
         if map_path != '':
             self.mem_map = self.import_mm_from_csv(map_path)
@@ -363,14 +370,30 @@ class PhilipExtIf(PhilipBaseIf):
         return mem_map
 
     @staticmethod
-    def _parse_array(data, type_size):
+    def _c_cast(num, prim_type):
+        if prim_type == "uint8_t":
+            num = c_uint8(num).value
+        if prim_type == "int8_t":
+            num = c_int8(num).value
+        if prim_type == "uint16_t":
+            num = c_uint16(num).value
+        if prim_type == "int16_t":
+            num = c_int16(num).value
+        if prim_type == "uint32_t":
+            num = c_uint32(num).value
+        if prim_type == "int32_t":
+            num = c_int32(num).value
+        return num
+
+    @staticmethod
+    def _parse_array(data, type_size, prim_type):
         parsed_data = []
         try:
             elements = int(len(data)/type_size)
             for i in range(0, elements):
                 num = int.from_bytes(data[i*type_size:(i+1)*type_size],
                                      byteorder='little')
-                parsed_data.append(num)
+                parsed_data.append(PhilipExtIf._c_cast(num, prim_type))
         except (ValueError, TypeError):
             return data
         return parsed_data
@@ -410,9 +433,12 @@ class PhilipExtIf(PhilipBaseIf):
             offset += int(cmd['offset'])
             response = self.read_bytes(offset, size, True, timeout)
             response['data'] = self._parse_array(response['data'],
-                                                 cmd['type_size'])
+                                                 cmd['type_size'],
+                                                 cmd['type'])
         else:
             response = self.read_bytes(cmd['offset'], size, to_byte_array)
+            if 'data' in response:
+                response['data'] = self._c_cast(response['data'], cmd['type'])
         response['cmd'] = ['read_reg({},{},{})'.format(cmd_name, offset, size),
                            response['cmd']]
         return response
@@ -439,7 +465,8 @@ class PhilipExtIf(PhilipBaseIf):
             offset = int(offset)
             offset *= int(cmd['type_size'])
             offset += int(cmd['offset'])
-            response = self.write_bytes(offset, data, timeout=timeout)
+            response = self.write_bytes(offset, data,
+                                        int(cmd['type_size']), timeout=timeout)
         else:
             response = self.write_bytes(cmd['offset'], data,
                                         int(cmd['type_size']), timeout=timeout)
@@ -462,7 +489,7 @@ class PhilipExtIf(PhilipBaseIf):
         for cmd in self.mem_map.keys():
             # Suppress unused variable warning
 
-            if cmd.startswith(cmd_name):
+            if cmd.startswith(cmd_name) and not cmd.endswith('.res'):
                 response.append(self.read_reg(cmd, timeout=timeout))
                 if data_has_name:
                     response[-1]['data'] = {cmd: response[-1]['data']}
