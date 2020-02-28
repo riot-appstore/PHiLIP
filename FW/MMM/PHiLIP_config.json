@@ -1975,6 +1975,7 @@
                 },
                 {
                     "access": 1,
+                    "flag": "VOLATILE",
                     "name": [
                         "uart",
                         "dut_cts"
@@ -2027,6 +2028,7 @@
                     "bit_offset": 5,
                     "bits": 1,
                     "description": "Current value of gpio - 0:low - 1:high",
+                    "flag": "VOLATILE",
                     "name": [
                         "uart",
                         "dut_cts",
@@ -2037,6 +2039,7 @@
                 },
                 {
                     "access": 1,
+                    "flag": "VOLATILE",
                     "name": [
                         "uart",
                         "dut_rts"
@@ -2089,6 +2092,7 @@
                     "bit_offset": 5,
                     "bits": 1,
                     "description": "Current value of gpio - 0:low - 1:high",
+                    "flag": "VOLATILE",
                     "name": [
                         "uart",
                         "dut_rts",
@@ -2500,6 +2504,7 @@
                 {
                     "access": 0,
                     "description": "Sample index increases when new sample read",
+                    "flag": "VOLATILE",
                     "name": [
                         "adc",
                         "index"
@@ -2511,6 +2516,7 @@
                 {
                     "access": 0,
                     "description": "Current 12 bit sample value",
+                    "flag": "VOLATILE",
                     "name": [
                         "adc",
                         "sample"
@@ -2522,6 +2528,7 @@
                 {
                     "access": 0,
                     "description": "Sum of the last num_of_samples",
+                    "flag": "VOLATILE",
                     "name": [
                         "adc",
                         "sum"
@@ -2533,6 +2540,7 @@
                 {
                     "access": 0,
                     "description": "Current collection of the sums",
+                    "flag": "VOLATILE",
                     "name": [
                         "adc",
                         "current_sum"
@@ -2544,6 +2552,7 @@
                 {
                     "access": 0,
                     "description": "Sum counter increases when available",
+                    "flag": "VOLATILE",
                     "name": [
                         "adc",
                         "counter"
@@ -2604,6 +2613,7 @@
                 },
                 {
                     "access": 1,
+                    "flag": "VOLATILE",
                     "name": [
                         "pwm",
                         "dut_pwm"
@@ -2656,6 +2666,7 @@
                     "bit_offset": 5,
                     "bits": 1,
                     "description": "Current value of gpio - 0:low - 1:high",
+                    "flag": "VOLATILE",
                     "name": [
                         "pwm",
                         "dut_pwm",
@@ -2762,6 +2773,7 @@
                 },
                 {
                     "access": 1,
+                    "flag": "VOLATILE",
                     "name": [
                         "dac",
                         "dut_dac"
@@ -2814,6 +2826,7 @@
                     "bit_offset": 5,
                     "bits": 1,
                     "description": "Current value of gpio - 0:low - 1:high",
+                    "flag": "VOLATILE",
                     "name": [
                         "dac",
                         "dut_dac",
