@@ -1,16 +1,26 @@
-{'data': 0, 'name': 'adc.counter', 'result': 'Success'}
-{'data': 0, 'name': 'adc.current_sum', 'result': 'Success'}
-{'data': 0, 'name': 'adc.index', 'result': 'Success'}
+{'name': 'adc.counter', 'result': 'Success'}
+{'name': 'adc.current_sum', 'result': 'Success'}
+{'data': 0, 'name': 'adc.dut_adc', 'result': 'Success'}
+{'data': 0, 'name': 'adc.dut_adc.io_type', 'result': 'Success'}
+{'data': 0, 'name': 'adc.dut_adc.level', 'result': 'Success'}
+{'data': 0, 'name': 'adc.dut_adc.pull', 'result': 'Success'}
+{'data': 0, 'name': 'adc.dut_adc.set_level', 'result': 'Success'}
+{'name': 'adc.index', 'result': 'Success'}
 {'data': 1, 'name': 'adc.mode', 'result': 'Success'}
-{'data': 0, 'name': 'adc.mode.enable', 'result': 'Success'}
+{'data': 0, 'name': 'adc.mode.disable', 'result': 'Success'}
 {'data': 0, 'name': 'adc.mode.fast_sample', 'result': 'Success'}
 {'data': 1, 'name': 'adc.mode.init', 'result': 'Success'}
 {'data': 1024, 'name': 'adc.num_of_samples', 'result': 'Success'}
-{'data': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+{'data': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
  'name': 'adc.res',
  'result': 'Success'}
-{'data': 0, 'name': 'adc.sample', 'result': 'Success'}
-{'data': 0, 'name': 'adc.sum', 'result': 'Success'}
+{'name': 'adc.sample', 'result': 'Success'}
+{'name': 'adc.sum', 'result': 'Success'}
+{'name': 'dac.dut_dac', 'result': 'Success'}
+{'data': 0, 'name': 'dac.dut_dac.io_type', 'result': 'Success'}
+{'name': 'dac.dut_dac.level', 'result': 'Success'}
+{'data': 0, 'name': 'dac.dut_dac.pull', 'result': 'Success'}
+{'data': 0, 'name': 'dac.dut_dac.set_level', 'result': 'Success'}
 {'data': 5000, 'name': 'dac.level', 'result': 'Success'}
 {'data': 0, 'name': 'dac.mode', 'result': 'Success'}
 {'data': 0, 'name': 'dac.mode.disable', 'result': 'Success'}
@@ -18,7 +28,6 @@
 {'data': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
  'name': 'dac.res',
  'result': 'Success'}
-{'data': 0, 'name': 'dac.status', 'result': 'Success'}
 {'data': 1, 'name': 'gpio[0].mode', 'result': 'Success'}
 {'data': 1, 'name': 'gpio[0].mode.init', 'result': 'Success'}
 {'data': 0, 'name': 'gpio[0].mode.io_type', 'result': 'Success'}
@@ -47,6 +56,16 @@
 {'name': 'gpio[2].status', 'result': 'Success'}
 {'name': 'gpio[2].status.level', 'result': 'Success'}
 {'data': 0, 'name': 'i2c.clk_stretch_delay', 'result': 'Success'}
+{'data': 32, 'name': 'i2c.dut_scl', 'result': 'Success'}
+{'data': 0, 'name': 'i2c.dut_scl.io_type', 'result': 'Success'}
+{'data': 1, 'name': 'i2c.dut_scl.level', 'result': 'Success'}
+{'data': 0, 'name': 'i2c.dut_scl.pull', 'result': 'Success'}
+{'data': 0, 'name': 'i2c.dut_scl.set_level', 'result': 'Success'}
+{'data': 32, 'name': 'i2c.dut_sda', 'result': 'Success'}
+{'data': 0, 'name': 'i2c.dut_sda.io_type', 'result': 'Success'}
+{'data': 1, 'name': 'i2c.dut_sda.level', 'result': 'Success'}
+{'data': 0, 'name': 'i2c.dut_sda.pull', 'result': 'Success'}
+{'data': 0, 'name': 'i2c.dut_sda.set_level', 'result': 'Success'}
 {'data': 0, 'name': 'i2c.f_r_ticks', 'result': 'Success'}
 {'data': 0, 'name': 'i2c.f_w_ticks', 'result': 'Success'}
 {'data': 1, 'name': 'i2c.mode', 'result': 'Success'}
@@ -62,8 +81,6 @@
 {'data': 0, 'name': 'i2c.r_ticks', 'result': 'Success'}
 {'data': 0, 'name': 'i2c.reg_index', 'result': 'Success'}
 {'data': [0,
-          0,
-          0,
           0,
           0,
           0,
@@ -105,6 +122,11 @@
 {'data': 0, 'name': 'i2c.status.rsr', 'result': 'Success'}
 {'data': 0, 'name': 'i2c.w_count', 'result': 'Success'}
 {'data': 0, 'name': 'i2c.w_ticks', 'result': 'Success'}
+{'name': 'pwm.dut_pwm', 'result': 'Success'}
+{'data': 0, 'name': 'pwm.dut_pwm.io_type', 'result': 'Success'}
+{'name': 'pwm.dut_pwm.level', 'result': 'Success'}
+{'data': 0, 'name': 'pwm.dut_pwm.pull', 'result': 'Success'}
+{'data': 0, 'name': 'pwm.dut_pwm.set_level', 'result': 'Success'}
 {'data': 5000, 'name': 'pwm.duty_cycle', 'result': 'Success'}
 {'data': 10000, 'name': 'pwm.h_ticks', 'result': 'Success'}
 {'data': 10000, 'name': 'pwm.l_ticks', 'result': 'Success'}
@@ -115,8 +137,232 @@
 {'data': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
  'name': 'pwm.res',
  'result': 'Success'}
-{'data': 0, 'name': 'pwm.status', 'result': 'Success'}
-{'data': 139, 'msg': 'Unknown Error[139]', 'name': 'res', 'result': 'Error'}
+{'data': [0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0],
+ 'name': 'res',
+ 'result': 'Success'}
 {'name': 'rtc.day', 'result': 'Success'}
 {'name': 'rtc.hour', 'result': 'Success'}
 {'name': 'rtc.minute', 'result': 'Success'}
@@ -130,6 +376,26 @@
 {'data': 0, 'name': 'rtc.set_minute', 'result': 'Success'}
 {'data': 0, 'name': 'rtc.set_second', 'result': 'Success'}
 {'data': 0, 'name': 'spi.byte_ticks', 'result': 'Success'}
+{'data': 32, 'name': 'spi.dut_miso', 'result': 'Success'}
+{'data': 0, 'name': 'spi.dut_miso.io_type', 'result': 'Success'}
+{'data': 1, 'name': 'spi.dut_miso.level', 'result': 'Success'}
+{'data': 0, 'name': 'spi.dut_miso.pull', 'result': 'Success'}
+{'data': 0, 'name': 'spi.dut_miso.set_level', 'result': 'Success'}
+{'data': 32, 'name': 'spi.dut_mosi', 'result': 'Success'}
+{'data': 0, 'name': 'spi.dut_mosi.io_type', 'result': 'Success'}
+{'data': 1, 'name': 'spi.dut_mosi.level', 'result': 'Success'}
+{'data': 0, 'name': 'spi.dut_mosi.pull', 'result': 'Success'}
+{'data': 0, 'name': 'spi.dut_mosi.set_level', 'result': 'Success'}
+{'data': 32, 'name': 'spi.dut_nss', 'result': 'Success'}
+{'data': 0, 'name': 'spi.dut_nss.io_type', 'result': 'Success'}
+{'data': 1, 'name': 'spi.dut_nss.level', 'result': 'Success'}
+{'data': 0, 'name': 'spi.dut_nss.pull', 'result': 'Success'}
+{'data': 0, 'name': 'spi.dut_nss.set_level', 'result': 'Success'}
+{'data': 32, 'name': 'spi.dut_sck', 'result': 'Success'}
+{'data': 0, 'name': 'spi.dut_sck.io_type', 'result': 'Success'}
+{'data': 1, 'name': 'spi.dut_sck.level', 'result': 'Success'}
+{'data': 0, 'name': 'spi.dut_sck.pull', 'result': 'Success'}
+{'data': 0, 'name': 'spi.dut_sck.set_level', 'result': 'Success'}
 {'data': 0, 'name': 'spi.frame_ticks', 'result': 'Success'}
 {'data': 1, 'name': 'spi.mode', 'result': 'Success'}
 {'data': 0, 'name': 'spi.mode.cpha', 'result': 'Success'}
@@ -142,7 +408,7 @@
 {'data': 0, 'name': 'spi.prev_ticks', 'result': 'Success'}
 {'data': 0, 'name': 'spi.r_count', 'result': 'Success'}
 {'data': 0, 'name': 'spi.reg_index', 'result': 'Success'}
-{'data': [0, 0, 0, 0, 0, 0, 0, 0, 0], 'name': 'spi.res', 'result': 'Success'}
+{'data': [0, 0, 0, 0, 0], 'name': 'spi.res', 'result': 'Success'}
 {'data': 0, 'name': 'spi.start_reg_index', 'result': 'Success'}
 {'data': 0, 'name': 'spi.state', 'result': 'Success'}
 {'data': 16, 'name': 'spi.status', 'result': 'Success'}
@@ -165,8 +431,8 @@
 {'name': 'sys.build_time.second', 'result': 'Success'}
 {'name': 'sys.build_time.year', 'result': 'Success'}
 {'data': 17061, 'name': 'sys.device_num', 'result': 'Success'}
-{'data': [0, 2, 0, 1], 'name': 'sys.fw_rev', 'result': 'Success'}
-{'data': [0, 1, 0, 1], 'name': 'sys.if_rev', 'result': 'Success'}
+{'data': [0, 0, 1, 1], 'name': 'sys.fw_rev', 'result': 'Success'}
+{'data': [0, 2, 0, 1], 'name': 'sys.if_rev', 'result': 'Success'}
 {'data': 1, 'name': 'sys.mode', 'result': 'Success'}
 {'data': 0, 'name': 'sys.mode.dut_rst', 'result': 'Success'}
 {'data': 1, 'name': 'sys.mode.init', 'result': 'Success'}
@@ -317,6 +583,26 @@
  'name': 'trace.value',
  'result': 'Success'}
 {'data': 115200, 'name': 'uart.baud', 'result': 'Success'}
+{'name': 'uart.dut_cts', 'result': 'Success'}
+{'data': 0, 'name': 'uart.dut_cts.io_type', 'result': 'Success'}
+{'name': 'uart.dut_cts.level', 'result': 'Success'}
+{'data': 0, 'name': 'uart.dut_cts.pull', 'result': 'Success'}
+{'data': 0, 'name': 'uart.dut_cts.set_level', 'result': 'Success'}
+{'name': 'uart.dut_rts', 'result': 'Success'}
+{'data': 0, 'name': 'uart.dut_rts.io_type', 'result': 'Success'}
+{'name': 'uart.dut_rts.level', 'result': 'Success'}
+{'data': 0, 'name': 'uart.dut_rts.pull', 'result': 'Success'}
+{'data': 0, 'name': 'uart.dut_rts.set_level', 'result': 'Success'}
+{'data': 32, 'name': 'uart.dut_rx', 'result': 'Success'}
+{'data': 0, 'name': 'uart.dut_rx.io_type', 'result': 'Success'}
+{'data': 1, 'name': 'uart.dut_rx.level', 'result': 'Success'}
+{'data': 0, 'name': 'uart.dut_rx.pull', 'result': 'Success'}
+{'data': 0, 'name': 'uart.dut_rx.set_level', 'result': 'Success'}
+{'data': 32, 'name': 'uart.dut_tx', 'result': 'Success'}
+{'data': 0, 'name': 'uart.dut_tx.io_type', 'result': 'Success'}
+{'data': 1, 'name': 'uart.dut_tx.level', 'result': 'Success'}
+{'data': 0, 'name': 'uart.dut_tx.pull', 'result': 'Success'}
+{'data': 0, 'name': 'uart.dut_tx.set_level', 'result': 'Success'}
 {'data': 255, 'name': 'uart.mask_msb', 'result': 'Success'}
 {'data': 1, 'name': 'uart.mode', 'result': 'Success'}
 {'data': 0, 'name': 'uart.mode.data_bits', 'result': 'Success'}
@@ -326,7 +612,6 @@
 {'data': 0, 'name': 'uart.mode.parity', 'result': 'Success'}
 {'data': 0, 'name': 'uart.mode.rts', 'result': 'Success'}
 {'data': 0, 'name': 'uart.mode.stop_bits', 'result': 'Success'}
-{'data': [0, 0, 0, 0], 'name': 'uart.res', 'result': 'Success'}
 {'data': 0, 'name': 'uart.rx_count', 'result': 'Success'}
 {'data': 0, 'name': 'uart.status', 'result': 'Success'}
 {'data': 0, 'name': 'uart.status.cts', 'result': 'Success'}

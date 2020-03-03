@@ -191,7 +191,7 @@ static error_t _cmd_read_reg(char *str, uint16_t buf_size) {
 		} else if ((size * 2) + strlen(TX_END_STR) + strlen("0,0x")
 				>= buf_size) {
 			return ERANGE;
-		} else if (index + size >= get_reg_size()) {
+		} else if (index + size > get_reg_size()) {
 			return EOVERFLOW;
 		} else {
 			uint8_t data;

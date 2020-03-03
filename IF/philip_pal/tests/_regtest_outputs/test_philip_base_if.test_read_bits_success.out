@@ -10,4 +10,6 @@
 {'cmd': ['read_bits(0,8,1)', 'rr 0 2'], 'data': 1, 'result': 'Success'}
 {'cmd': ['read_bits(0,8,8)', 'rr 0 2'], 'data': 31, 'result': 'Success'}
 {'cmd': ['read_bits(0,0,16)', 'rr 0 2'], 'data': 8081, 'result': 'Success'}
-{'cmd': ['read_bits(0,0,64)', 'rr 0 8'], 'data': 8081, 'result': 'Success'}
+{'cmd': ['read_bits(0,0,64)', 'rr 0 8'],
+ 'data': 72057594037936017,
+ 'result': 'Success'}

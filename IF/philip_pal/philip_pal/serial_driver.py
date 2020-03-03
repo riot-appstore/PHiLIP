@@ -6,7 +6,6 @@
 """Serial Driver for philip_pal
 This module handles generic connection and IO to the serial driver.
 """
-import os
 import logging
 import time
 from serial import Serial, serial_for_url, SerialException
@@ -22,9 +21,6 @@ class SerialDriver:
     defaults.  Automatically opens the serial port on initialize.  If nothing
     is specified the port is set to the first available port.
 
-    env_vars:
-        PHILIP_BAUD: Baudrate of the philip devices (eg. 115200)
-        PHILIP_PORT: Port of the philip device (eg. /dev/ttyACM0)
     Args:
         (*args, **kwargs) -> See pyserial for documentation of args
     """
@@ -36,23 +32,20 @@ class SerialDriver:
         # Used to clear the cpu and mcu buffer from startup junk data
         time.sleep(0.05)
         self.writeline('')
-        self.readline(0.1)
+        try:
+            self.readline(0.3)
+        except TimeoutError:
+            pass
 
     def _connect(self, *args, **kwargs):
         if 'timeout' not in kwargs:
             kwargs['timeout'] = self.DEFAULT_TIMEOUT
         if len(args) < 2:
             if 'baudrate' not in kwargs:
-                if 'PHILIP_BAUD' in os.environ:
-                    kwargs['baudrate'] = os.environ['PHILIP_BAUD']
-                else:
-                    kwargs['baudrate'] = self.DEFAULT_BAUDRATE
+                kwargs['baudrate'] = self.DEFAULT_BAUDRATE
         if len(args) == 0:
             if 'port' not in kwargs:
-                if 'PHILIP_PORT' in os.environ:
-                    kwargs['port'] = os.environ['PHILIP_PORT']
-                else:
-                    kwargs['port'] = list_ports.comports()[0][0]
+                kwargs['port'] = list_ports.comports()[0][0]
         logging.debug("Serial connection args %r -- %r", args, kwargs)
         try:
             self._dev = Serial(*args, **kwargs)
@@ -64,9 +57,6 @@ class SerialDriver:
     def open(self, *args, **kwargs):
         """Open a Serial Connection
 
-        env_vars:
-            PHILIP_BAUD: Baudrate of the philip devices (eg. 115200)
-            PHILIP_PORT: Port of the philip device (eg. /dev/ttyACM0)
         Args:
             (*args, **kwargs) -> See pyserial for documentation of args
         """
