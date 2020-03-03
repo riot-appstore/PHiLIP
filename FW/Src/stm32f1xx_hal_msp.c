@@ -217,7 +217,7 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* hspi) {
 
 		GPIO_InitStruct.Pin = DUT_MISO_Pin;
 		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_MEDIUM;
 		HAL_GPIO_Init(DUT_MISO_GPIO_Port, &GPIO_InitStruct);
 
 		/* SPI2 interrupt Init */
