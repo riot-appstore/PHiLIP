@@ -5,7 +5,7 @@
  * @file      PHiLIP_defaults.c
  * @author    Kevin Weiss
  * @version   1.0.2
- * @date      2020-02-28
+ * @date      2020-03-05
  * @}
  * @details   Generated from the memory map manager version 0.0.9
  ******************************************************************************
@@ -28,5 +28,6 @@ void init_defaults_map_t(map_t *init) {
 	init->pwm.h_ticks = DEFAULT_PWM_H_TICKS;
 	init->pwm.l_ticks = DEFAULT_PWM_L_TICKS;
 	init->dac.level = DEFAULT_DAC_LEVEL;
+	init->tmr.min_tick = DEFAULT_TMR_MIN_TICK;
 }
 

@@ -5,7 +5,7 @@
  * @file      PHiLIP_map.h
  * @author    Kevin Weiss
  * @version   1.0.2
- * @date      2020-02-28
+ * @date      2020-03-05
  * @details   Generated from the memory map manager version 0.0.9
  ******************************************************************************
  */
@@ -22,7 +22,7 @@
 extern const char* const PHILIP_TYPE_NAME[]; /** < type_name enum */
 extern const uint8_t  PHILIP_TYPE_SIZE[]; /** <  type_size const array */
 
-#define MAP_T_NUM_OF_RECORDS 231 /**< Number of records in the map */
+#define MAP_T_NUM_OF_RECORDS 243 /**< Number of records in the map */
 
 extern const char* const MAP_T_NAME[]; /** < name const array */
 extern const uint16_t MAP_T_OFFSET[]; /** < offset const array */

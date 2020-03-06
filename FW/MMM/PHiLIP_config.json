@@ -375,6 +375,28 @@
             "type_name": "adc_mode_t"
         },
         {
+            "description": "Timer mode settings",
+            "elements": [
+                {
+                    "bits": 1,
+                    "description": "0:periph will initialize on execute - 1:periph initialized",
+                    "name": "init"
+                },
+                {
+                    "bits": 1,
+                    "description": "0:periph is enabled - 1:periph is disabled",
+                    "name": "disable"
+                },
+                {
+                    "bits": 2,
+                    "description": "0:both - 1:rising - 2:falling",
+                    "name": "trig_edge"
+                }
+            ],
+            "type": "uint8_t",
+            "type_name": "tmr_mode_t"
+        },
+        {
             "description": "Basic mode settings",
             "elements": [
                 {
@@ -2862,13 +2884,159 @@
                 },
                 {
                     "access": 1,
+                    "description": "basic mode for dac settings",
+                    "name": [
+                        "tmr",
+                        "mode"
+                    ],
+                    "offset": 528,
+                    "type": "tmr_mode_t",
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 0,
+                    "bits": 1,
+                    "description": "0:periph will initialize on execute - 1:periph initialized",
+                    "name": [
+                        "tmr",
+                        "mode",
+                        "init"
+                    ],
+                    "offset": 528,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 1,
+                    "bits": 1,
+                    "description": "0:periph is enabled - 1:periph is disabled",
+                    "name": [
+                        "tmr",
+                        "mode",
+                        "disable"
+                    ],
+                    "offset": 528,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 2,
+                    "bits": 2,
+                    "description": "0:both - 1:rising - 1:falling",
+                    "name": [
+                        "tmr",
+                        "mode",
+                        "trig_edge"
+                    ],
+                    "offset": 528,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "name": [
+                        "tmr",
+                        "dut_ic"
+                    ],
+                    "offset": 529,
+                    "type": "basic_gpio_t",
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 0,
+                    "bits": 2,
+                    "description": "0:high impedance input - 1:push pull output - 2:open drain output",
+                    "name": [
+                        "tmr",
+                        "dut_ic",
+                        "io_type"
+                    ],
+                    "offset": 529,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 2,
+                    "bits": 2,
+                    "description": "pull of the resistor - 0:none - 1:pullup - 2:pulldown",
+                    "name": [
+                        "tmr",
+                        "dut_ic",
+                        "pull"
+                    ],
+                    "offset": 529,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 4,
+                    "bits": 1,
+                    "description": "If output sets gpio level - 0:low - 1:high",
+                    "name": [
+                        "tmr",
+                        "dut_ic",
+                        "set_level"
+                    ],
+                    "offset": 529,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 5,
+                    "bits": 1,
+                    "description": "Current value of gpio - 0:low - 1:high",
+                    "name": [
+                        "tmr",
+                        "dut_ic",
+                        "level"
+                    ],
+                    "offset": 529,
+                    "type_size": 1
+                },
+                {
+                    "access": 0,
+                    "description": "The minimum amount of time to wait before triggering another event in ns",
+                    "name": [
+                        "tmr",
+                        "min_holdoff"
+                    ],
+                    "offset": 530,
+                    "type": "uint16_t",
+                    "type_size": 2
+                },
+                {
+                    "access": 0,
+                    "default": 4294967295,
+                    "description": "Minimum tick difference",
+                    "name": [
+                        "tmr",
+                        "min_tick"
+                    ],
+                    "offset": 532,
+                    "type": "uint32_t",
+                    "type_size": 4
+                },
+                {
+                    "access": 0,
+                    "description": "Maximum tick difference",
+                    "name": [
+                        "tmr",
+                        "max_tick"
+                    ],
+                    "offset": 536,
+                    "type": "uint32_t",
+                    "type_size": 4
+                },
+                {
+                    "access": 1,
                     "description": "The selected GPIO mode",
                     "name": [
                         "gpio",
                         "0",
                         "mode"
                     ],
-                    "offset": 528,
+                    "offset": 540,
                     "type": "gpio_mode_t",
                     "type_size": 2
                 },
@@ -2883,7 +3051,7 @@
                         "mode",
                         "init"
                     ],
-                    "offset": 528,
+                    "offset": 540,
                     "type_size": 2
                 },
                 {
@@ -2897,7 +3065,7 @@
                         "mode",
                         "io_type"
                     ],
-                    "offset": 528,
+                    "offset": 540,
                     "type_size": 2
                 },
                 {
@@ -2911,7 +3079,7 @@
                         "mode",
                         "level"
                     ],
-                    "offset": 528,
+                    "offset": 540,
                     "type_size": 2
                 },
                 {
@@ -2925,7 +3093,7 @@
                         "mode",
                         "pull"
                     ],
-                    "offset": 528,
+                    "offset": 540,
                     "type_size": 2
                 },
                 {
@@ -2939,7 +3107,7 @@
                         "mode",
                         "tick_div"
                     ],
-                    "offset": 528,
+                    "offset": 540,
                     "type_size": 2
                 },
                 {
@@ -2951,7 +3119,7 @@
                         "0",
                         "status"
                     ],
-                    "offset": 530,
+                    "offset": 542,
                     "type": "gpio_status_t",
                     "type_size": 1
                 },
@@ -2967,7 +3135,7 @@
                         "status",
                         "level"
                     ],
-                    "offset": 530,
+                    "offset": 542,
                     "type_size": 1
                 },
                 {
@@ -2979,7 +3147,7 @@
                         "0",
                         "res"
                     ],
-                    "offset": 531,
+                    "offset": 543,
                     "total_size": 1,
                     "type": "uint8_t",
                     "type_size": 1
@@ -2992,7 +3160,7 @@
                         "1",
                         "mode"
                     ],
-                    "offset": 532,
+                    "offset": 544,
                     "type": "gpio_mode_t",
                     "type_size": 2
                 },
@@ -3007,7 +3175,7 @@
                         "mode",
                         "init"
                     ],
-                    "offset": 532,
+                    "offset": 544,
                     "type_size": 2
                 },
                 {
@@ -3021,7 +3189,7 @@
                         "mode",
                         "io_type"
                     ],
-                    "offset": 532,
+                    "offset": 544,
                     "type_size": 2
                 },
                 {
@@ -3035,7 +3203,7 @@
                         "mode",
                         "level"
                     ],
-                    "offset": 532,
+                    "offset": 544,
                     "type_size": 2
                 },
                 {
@@ -3049,7 +3217,7 @@
                         "mode",
                         "pull"
                     ],
-                    "offset": 532,
+                    "offset": 544,
                     "type_size": 2
                 },
                 {
@@ -3063,7 +3231,7 @@
                         "mode",
                         "tick_div"
                     ],
-                    "offset": 532,
+                    "offset": 544,
                     "type_size": 2
                 },
                 {
@@ -3075,7 +3243,7 @@
                         "1",
                         "status"
                     ],
-                    "offset": 534,
+                    "offset": 546,
                     "type": "gpio_status_t",
                     "type_size": 1
                 },
@@ -3091,7 +3259,7 @@
                         "status",
                         "level"
                     ],
-                    "offset": 534,
+                    "offset": 546,
                     "type_size": 1
                 },
                 {
@@ -3103,7 +3271,7 @@
                         "1",
                         "res"
                     ],
-                    "offset": 535,
+                    "offset": 547,
                     "total_size": 1,
                     "type": "uint8_t",
                     "type_size": 1
@@ -3116,7 +3284,7 @@
                         "2",
                         "mode"
                     ],
-                    "offset": 536,
+                    "offset": 548,
                     "type": "gpio_mode_t",
                     "type_size": 2
                 },
@@ -3131,7 +3299,7 @@
                         "mode",
                         "init"
                     ],
-                    "offset": 536,
+                    "offset": 548,
                     "type_size": 2
                 },
                 {
@@ -3145,7 +3313,7 @@
                         "mode",
                         "io_type"
                     ],
-                    "offset": 536,
+                    "offset": 548,
                     "type_size": 2
                 },
                 {
@@ -3159,7 +3327,7 @@
                         "mode",
                         "level"
                     ],
-                    "offset": 536,
+                    "offset": 548,
                     "type_size": 2
                 },
                 {
@@ -3173,7 +3341,7 @@
                         "mode",
                         "pull"
                     ],
-                    "offset": 536,
+                    "offset": 548,
                     "type_size": 2
                 },
                 {
@@ -3187,7 +3355,7 @@
                         "mode",
                         "tick_div"
                     ],
-                    "offset": 536,
+                    "offset": 548,
                     "type_size": 2
                 },
                 {
@@ -3199,7 +3367,7 @@
                         "2",
                         "status"
                     ],
-                    "offset": 538,
+                    "offset": 550,
                     "type": "gpio_status_t",
                     "type_size": 1
                 },
@@ -3215,7 +3383,7 @@
                         "status",
                         "level"
                     ],
-                    "offset": 538,
+                    "offset": 550,
                     "type_size": 1
                 },
                 {
@@ -3227,7 +3395,7 @@
                         "2",
                         "res"
                     ],
-                    "offset": 539,
+                    "offset": 551,
                     "total_size": 1,
                     "type": "uint8_t",
                     "type_size": 1
@@ -3239,71 +3407,71 @@
                         "trace",
                         "index"
                     ],
-                    "offset": 540,
+                    "offset": 552,
                     "type": "uint32_t",
                     "type_size": 4
                 },
                 {
                     "access": 0,
-                    "array_size": 32,
+                    "array_size": 128,
                     "description": "The tick divisor of the event - max should be 16 for interface",
                     "name": [
                         "trace",
                         "tick_div"
                     ],
-                    "offset": 544,
-                    "total_size": 32,
+                    "offset": 556,
+                    "total_size": 128,
                     "type": "uint8_t",
                     "type_size": 1
                 },
                 {
                     "access": 0,
-                    "array_size": 32,
+                    "array_size": 128,
                     "description": "The event source of the event - 0:no source selected - 1:DEBUG0 pin - 2:DEBUG1 pin - 3:DEBUG2 pin",
                     "name": [
                         "trace",
                         "source"
                     ],
-                    "offset": 576,
-                    "total_size": 32,
+                    "offset": 684,
+                    "total_size": 128,
                     "type": "uint8_t",
                     "type_size": 1
                 },
                 {
                     "access": 0,
-                    "array_size": 32,
+                    "array_size": 128,
                     "description": "The value of the event - 0:falling edge interrupt - 1:rising edge interrupt",
                     "name": [
                         "trace",
                         "value"
                     ],
-                    "offset": 608,
-                    "total_size": 64,
+                    "offset": 812,
+                    "total_size": 256,
                     "type": "uint16_t",
                     "type_size": 2
                 },
                 {
                     "access": 0,
-                    "array_size": 32,
+                    "array_size": 128,
                     "description": "The tick when the event occurred",
                     "name": [
                         "trace",
                         "tick"
                     ],
-                    "offset": 672,
-                    "total_size": 128,
+                    "offset": 1068,
+                    "total_size": 512,
                     "type": "uint32_t",
                     "type_size": 4
                 },
                 {
                     "access": 0,
-                    "array_size": 224,
+                    "array_size": 468,
                     "description": "Reserved bytes",
                     "name": [
                         "res"
                     ],
-                    "offset": 800,
-                    "total_size": 224,
+                    "offset": 1580,
+                    "total_size": 468,
                     "type": "uint8_t",
                     "type_size": 1
                 }
@@ -3784,6 +3952,40 @@
             "type_size": 16
         },
         {
+            "description": "Controls timer input capture values",
+            "elements": [
+                {
+                    "description": "basic mode for dac settings",
+                    "name": "mode",
+                    "type": "tmr_mode_t"
+                },
+                {
+                    "name": "dut_ic",
+                    "type": "basic_gpio_t"
+                },
+                {
+                    "access": 0,
+                    "description": "The minimum amount of time to wait before triggering another event in ns",
+                    "name": "min_holdoff",
+                    "type": "uint16_t"
+                },
+                {
+                    "access": 0,
+                    "default": 4294967295,
+                    "description": "Minimum tick difference",
+                    "name": "min_tick",
+                    "type": "uint32_t"
+                },
+                {
+                    "access": 0,
+                    "description": "Maximum tick difference",
+                    "name": "max_tick",
+                    "type": "uint32_t"
+                }
+            ],
+            "type_name": "tmr_t"
+        },
+        {
             "description": "Controls the RTC",
             "elements": [
                 {
@@ -3884,28 +4086,28 @@
                 },
                 {
                     "access": 0,
-                    "array_size": 32,
+                    "array_size": 128,
                     "description": "The tick divisor of the event - max should be 16 for interface",
                     "name": "tick_div",
                     "type": "uint8_t"
                 },
                 {
                     "access": 0,
-                    "array_size": 32,
-                    "description": "The event source of the event - 0:no source selected - 1:DEBUG0 pin - 2:DEBUG1 pin - 3:DEBUG2 pin",
+                    "array_size": 128,
+                    "description": "The event source of the event - 0:no source selected - 1:DEBUG0 pin - 2:DEBUG1 pin - 3:DEBUG2 pin - 4:DUT_IC",
                     "name": "source",
                     "type": "uint8_t"
                 },
                 {
                     "access": 0,
-                    "array_size": 32,
+                    "array_size": 128,
                     "description": "The value of the event - 0:falling edge interrupt - 1:rising edge interrupt",
                     "name": "value",
                     "type": "uint16_t"
                 },
                 {
                     "access": 0,
-                    "array_size": 32,
+                    "array_size": 128,
                     "description": "The tick when the event occurred",
                     "name": "tick",
                     "type": "uint32_t"
@@ -3964,6 +4166,11 @@
                     "type": "dac_t"
                 },
                 {
+                    "description": "TMR configuration",
+                    "name": "tmr",
+                    "type": "tmr_t"
+                },
+                {
                     "array_size": 3,
                     "description": "GPIO pins available",
                     "name": "gpio",
@@ -3977,7 +4184,7 @@
             ],
             "generate_mem_map": true,
             "type_name": "map_t",
-            "type_size": 1024
+            "type_size": 2048
         }
     ]
 }
