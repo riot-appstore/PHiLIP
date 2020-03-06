@@ -132,6 +132,29 @@
 #define EN_RCC_DUT_PWM_DAC_CLK	__HAL_RCC_TIM4_CLK_ENABLE()
 
 /******************************************************************************/
+/************************************ IC defines ******************************/
+/******************************************************************************/
+#define DUT_IC_INST			TIM1
+#define DUT_IC_CHANNEL		TIM_CHANNEL_1
+
+#define DUT_IC_CLK_EN()			__HAL_RCC_TIM1_CLK_ENABLE()
+#define DUT_IC_GPIO_CLK_EN()	__HAL_RCC_GPIOA_CLK_ENABLE()
+
+#define DUT_IC_CLK_DIS()		__HAL_RCC_TIM1_CLK_DISABLE()
+
+#define DUT_IC_DMA_CHANNEL		DMA1_Channel2
+#define DUT_IC_DMA_ID			TIM_DMA_ID_CC1
+
+#define DUT_IC_DMA_INT			DMA1_Channel2_IRQHandler
+#define DUT_IC_DMA_IRQ			DMA1_Channel2_IRQn
+#define DUT_IC_GPIO_INT			EXTI9_5_IRQHandler
+#define DUT_IC_GPIO_IRQ			EXTI9_5_IRQn
+
+#define DUT_IC_REMAINING_BUF(x)	(x.Instance->CNDTR)
+#define DUT_IC_OV_OCCURED(x)	(x->Instance->SR & TIM_SR_UIF)
+#define DUT_IC_OV_CLEAR(x)		x->Instance->SR &= ~(TIM_SR_UIF)
+
+/******************************************************************************/
 /************************************ ADC defines *****************************/
 /******************************************************************************/
 #define DUT_ADC_INST		ADC2
@@ -266,6 +289,28 @@
 #define PWM_DAC_REMAP		__HAL_AFIO_REMAP_TIM3_ENABLE()
 #define EN_RCC_DUT_PWM_DAC_CLK	__HAL_RCC_TIM3_CLK_ENABLE()
 
+/******************************************************************************/
+/************************************ IC defines ******************************/
+/******************************************************************************/
+#define DUT_IC_INST			TIM1
+#define DUT_IC_CHANNEL		TIM_CHANNEL_1
+
+#define DUT_IC_CLK_EN()			__HAL_RCC_TIM1_CLK_ENABLE()
+#define DUT_IC_GPIO_CLK_EN()	__HAL_RCC_GPIOA_CLK_ENABLE()
+
+#define DUT_IC_CLK_DIS()		__HAL_RCC_TIM1_CLK_DISABLE()
+
+#define DUT_IC_DMA_CHANNEL		DMA1_Channel2
+#define DUT_IC_DMA_ID			TIM_DMA_ID_CC1
+
+#define DUT_IC_DMA_INT			DMA1_Channel2_IRQHandler
+#define DUT_IC_DMA_IRQ			DMA1_Channel2_IRQn
+#define DUT_IC_GPIO_INT			EXTI9_5_IRQHandler
+#define DUT_IC_GPIO_IRQ			EXTI9_5_IRQn
+
+#define DUT_IC_REMAINING_BUF(x)	(x.Instance->CNDTR)
+#define DUT_IC_OV_OCCURED(x)	(x->Instance->SR & TIM_SR_UIF)
+#define DUT_IC_OV_CLEAR(x)		x->Instance->SR &= ~(TIM_SR_UIF)
 /******************************************************************************/
 /************************************ ADC defines *****************************/
 /******************************************************************************/

@@ -36,15 +36,6 @@
 #include "stm32f1xx.h"
 #include "stm32f1xx_it.h"
 
-/* USER CODE BEGIN 0 */
-#include "PHiLIP_typedef.h"
-#include "app_access.h"
-/* USER CODE END 0 */
-
-/* External variables --------------------------------------------------------*/
-/** @brief		For input capture. */
-extern TIM_HandleTypeDef htim_ic;
-
 /******************************************************************************/
 /*            Cortex-M3 Processor Interruption and Exception Handlers         */
 /******************************************************************************/
@@ -164,7 +155,6 @@ void PendSV_Handler(void) {
 /**
  * @brief This function handles System tick timer.
  */
-#if 1
 void SysTick_Handler(void) {
 	/* USER CODE BEGIN SysTick_IRQn 0 */
 
@@ -175,29 +165,4 @@ void SysTick_Handler(void) {
 
 	/* USER CODE END SysTick_IRQn 1 */
 }
-#endif
-
-/******************************************************************************/
-/* STM32F1xx Peripheral Interrupt Handlers                                    */
-/* Add here the Interrupt Handlers for the used peripherals.                  */
-/* For the available peripheral interrupt handler names,                      */
-/* please refer to the startup file (startup_stm32f1xx.s).                    */
-/******************************************************************************/
-
-/**
- * @brief This function handles TIM1 update interrupt.
- */
-void TIM1_UP_IRQHandler(void) {
-	/* USER CODE BEGIN TIM1_UP_IRQn 0 */
-
-	/* USER CODE END TIM1_UP_IRQn 0 */
-	HAL_TIM_IRQHandler(&htim_ic);
-	/* USER CODE BEGIN TIM1_UP_IRQn 1 */
-
-	/* USER CODE END TIM1_UP_IRQn 1 */
-}
-
-/* USER CODE BEGIN 1 */
-
-/* USER CODE END 1 */
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

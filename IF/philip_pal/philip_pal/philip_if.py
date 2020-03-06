@@ -566,6 +566,8 @@ class PhilipExtIf(PhilipBaseIf):
                 trace_event['source'] = 'DEBUG1'
             elif trace_source == 3:
                 trace_event['source'] = 'DEBUG2'
+            elif trace_source == 4:
+                trace_event['source'] = 'DUT_IC'
             else:
                 trace_event['source'] = trace_source
             trace_event['event'] = trace_value

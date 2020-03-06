@@ -21,6 +21,7 @@
 #include "app_common.h"
 
 #include "adc.h"
+#include "tmr.h"
 
 #include "port.h"
 
@@ -300,6 +301,100 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* hadc) {
 	if (hadc->Instance == DUT_ADC_INST) {
 		deinit_dut_adc_msp();
 	}
+}
+
+/******************************************************************************/
+void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base) {
+	if (htim_base->Instance == DUT_IC_INST) {
+		init_dut_ic_msp();
+	}
+#ifdef BLUEPILL
+	else if(htim_base->Instance==TIM4)
+	{
+		/* Peripheral clock enable */
+		__HAL_RCC_TIM4_CLK_ENABLE();
+	}
+#endif
+#ifdef NUCLEOF103RB
+	else if (htim_base->Instance == TIM3) {
+		/* Peripheral clock enable */
+		__HAL_RCC_TIM3_CLK_ENABLE();
+	}
+#endif
+}
+
+void HAL_TIM_IC_MspInit(TIM_HandleTypeDef* htim) {
+	if (htim->Instance == DUT_IC_INST) {
+			init_dut_ic_msp();
+	}
+}
+
+void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef* htim) {
+#ifdef BLUEPILL
+	if (htim->Instance == TIM4) {
+		/* Peripheral clock enable */
+		__HAL_RCC_TIM4_CLK_ENABLE();
+	}
+#endif
+#ifdef NUCLEOF103RB
+	if (htim->Instance == TIM3) {
+		/* Peripheral clock enable */
+		__HAL_RCC_TIM3_CLK_ENABLE();
+	}
+#endif
+}
+
+void HAL_TIM_MspPostInit(TIM_HandleTypeDef* htim) {
+
+	GPIO_InitTypeDef GPIO_InitStruct;
+#ifdef BLUEPILL
+	if (htim->Instance == TIM4) {
+
+		/**TIM4 GPIO Configuration
+		 PB8     ------> TIM4_CH3
+		 PB9     ------> TIM4_CH4
+		 */
+		GPIO_InitStruct.Pin = DUT_DAC_Pin | DUT_PWM_Pin;
+		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+		HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+	}
+#endif
+#ifdef NUCLEOF103RB
+	if (htim->Instance == TIM3) {
+
+		/**TIM3 GPIO Configuration
+		 PC8     ------> TIM3_CH3
+		 PC9     ------> TIM3_CH4
+		 */
+		GPIO_InitStruct.Pin = DUT_PWM_Pin | DUT_DAC_Pin;
+		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+		HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+		__HAL_AFIO_REMAP_TIM3_ENABLE();
+	}
+#endif
+}
+
+void HAL_TIM_IC_MspDeInit(TIM_HandleTypeDef* htim) {
+	if (htim->Instance == DUT_IC_INST) {
+		deinit_dut_ic_msp();
+	}
+}
+
+void HAL_TIM_PWM_MspDeInit(TIM_HandleTypeDef* htim) {
+#ifdef BLUEPILL
+	if (htim->Instance == TIM4) {
+		/* Peripheral clock disable */
+		__HAL_RCC_TIM4_CLK_DISABLE();
+	}
+#endif
+#ifdef NUCLEOF103RB
+	if (htim->Instance == TIM3) {
+		/* Peripheral clock disable */
+		__HAL_RCC_TIM3_CLK_DISABLE();
+	}
+#endif
 }
 
 /**
