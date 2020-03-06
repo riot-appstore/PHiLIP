@@ -54,7 +54,6 @@
 extern DMA_HandleTypeDef hdma_usart_if_rx;
 extern DMA_HandleTypeDef hdma_usart_if_tx;
 extern DMA_HandleTypeDef hdma_usart_dut_rx;
-extern DMA_HandleTypeDef hdma_usart_dut_tx;
 
 extern void _Error_Handler(char *, int);
 /* USER CODE BEGIN 0 */
@@ -518,24 +517,6 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart) {
 		}
 
 		__HAL_LINKDMA(huart, hdmarx, hdma_usart_dut_rx);
-
-		/* USART3_TX Init */
-		hdma_usart_dut_tx.Instance = DMA1_Channel2;
-		hdma_usart_dut_tx.Init.Direction = DMA_MEMORY_TO_PERIPH;
-		hdma_usart_dut_tx.Init.PeriphInc = DMA_PINC_DISABLE;
-		hdma_usart_dut_tx.Init.MemInc = DMA_MINC_ENABLE;
-		hdma_usart_dut_tx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
-		hdma_usart_dut_tx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
-		hdma_usart_dut_tx.Init.Mode = DMA_NORMAL;
-		hdma_usart_dut_tx.Init.Priority = DMA_PRIORITY_LOW;
-		if (HAL_DMA_Init(&hdma_usart_dut_tx) != HAL_OK) {
-			_Error_Handler(__FILE__, __LINE__);
-		}
-
-		__HAL_LINKDMA(huart, hdmatx, hdma_usart_dut_tx);
-
-		/* USART3 interrupt Init */
-		HAL_NVIC_SetPriority(USART3_IRQn, DEFAULT_INT_PRIO, 0);
 		HAL_NVIC_EnableIRQ(USART3_IRQn);
 	}
 #endif
@@ -574,21 +555,6 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart) {
 		}
 
 		__HAL_LINKDMA(huart, hdmarx, hdma_usart_dut_rx);
-
-		/* USART1_TX Init */
-		hdma_usart_dut_tx.Instance = DMA1_Channel4;
-		hdma_usart_dut_tx.Init.Direction = DMA_MEMORY_TO_PERIPH;
-		hdma_usart_dut_tx.Init.PeriphInc = DMA_PINC_DISABLE;
-		hdma_usart_dut_tx.Init.MemInc = DMA_MINC_ENABLE;
-		hdma_usart_dut_tx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
-		hdma_usart_dut_tx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
-		hdma_usart_dut_tx.Init.Mode = DMA_NORMAL;
-		hdma_usart_dut_tx.Init.Priority = DMA_PRIORITY_LOW;
-		if (HAL_DMA_Init(&hdma_usart_dut_tx) != HAL_OK) {
-			_Error_Handler(__FILE__, __LINE__);
-		}
-
-		__HAL_LINKDMA(huart, hdmatx, hdma_usart_dut_tx);
 
 		/* USART1 interrupt Init */
 		HAL_NVIC_SetPriority(USART1_IRQn, DEFAULT_INT_PRIO, 0);

@@ -116,7 +116,6 @@
 
 #define DUT_UART			USART3
 #define DUT_UART_DMA_RX_INT	DMA1_Channel3_IRQHandler
-#define DUT_UART_DMA_TX_INT	DMA1_Channel2_IRQHandler
 #define DUT_UART_INT		USART3_IRQHandler
 
 #define IF_UART				USART1
@@ -252,7 +251,6 @@
 
 #define DUT_UART			USART1
 #define DUT_UART_DMA_RX_INT	DMA1_Channel5_IRQHandler
-#define DUT_UART_DMA_TX_INT	DMA1_Channel4_IRQHandler
 #define DUT_UART_INT		USART1_IRQHandler
 
 #define IF_UART				USART2

@@ -65,6 +65,7 @@ typedef struct {
 	uart_t *saved_reg; /**< uart saved application registers */
 	char *str; /**< String buffer */
 	uint32_t buf_size; /**< String buffer size */
+	HAL_StatusTypeDef (*tx_data_fxn)(UART_HandleTypeDef*, uint8_t*, uint16_t); /**< Function pointer to the tx (either DMA or INT) */
 	uint8_t access; /**< Access level of uart */
 } uart_dev_t;
 /** @} */
@@ -94,9 +95,6 @@ DMA_HandleTypeDef hdma_usart_if_tx;
 /** @brief	dma handle for dut receive */
 DMA_HandleTypeDef hdma_usart_dut_rx;
 
-/** @brief	dma handle for dut transmit */
-DMA_HandleTypeDef hdma_usart_dut_tx;
-
 /* Private variables ---------------------------------------------------------*/
 static uart_dev_t dut_uart;
 static uart_dev_t if_uart;
@@ -114,6 +112,7 @@ static char dut_str_buf[UART_DUT_BUF_SIZE];
  * 				pointers.
  */
 void init_dut_uart(map_t *reg, map_t *saved_reg) {
+	dut_uart.tx_data_fxn = HAL_UART_Transmit_IT;
 	dut_uart.access = PERIPH_ACCESS;
 	dut_uart.str = dut_str_buf;
 	dut_uart.buf_size = sizeof(dut_str_buf)/sizeof(dut_str_buf[0]);
@@ -142,6 +141,7 @@ void init_dut_uart(map_t *reg, map_t *saved_reg) {
  * @note		Populates dut uart defaults registers, uart register are NULL.
  */
 void init_if_uart() {
+	if_uart.tx_data_fxn = HAL_UART_Transmit_DMA;
 	if_uart.access = IF_ACCESS;
 	if_uart.str = if_str_buf;
 	if_uart.buf_size = sizeof(if_str_buf)/sizeof(if_str_buf[0]);
@@ -311,7 +311,7 @@ static error_t _poll_uart(uart_dev_t *dev) {
 			/* Parses the bufsize too big message */
 			parse_command(dev->str, dev->buf_size, dev->access);
 			dev->str[dev->buf_size - 1] = 0;
-			HAL_UART_Transmit_DMA(huart, (uint8_t*) dev->str, strlen(dev->str));
+			dev->tx_data_fxn(huart, (uint8_t*) dev->str, strlen(dev->str));
 		} else {
 			err = _xfer_complete(dev);
 		}
@@ -414,7 +414,7 @@ static error_t _rx_str(uart_dev_t *dev) {
 				err = EPROTONOSUPPORT;
 			}
 			_update_tx_count(dev, strlen(str));
-			HAL_UART_Transmit_DMA(huart, (uint8_t*) str, strlen(str));
+			dev->tx_data_fxn(huart, (uint8_t*) str, strlen(str));
 
 		}
 	}
@@ -425,13 +425,13 @@ static error_t _tx_str(uart_dev_t *dev) {
 	char *str = dev->str;
 	UART_HandleTypeDef *huart = &(dev->huart);
 	error_t err = EUNKNOWN;
-	HAL_StatusTypeDef status = HAL_UART_Transmit_DMA(huart, (uint8_t*) str,
+	HAL_StatusTypeDef status = dev->tx_data_fxn(huart, (uint8_t*) str,
 			strlen(str));
 
 	if (status == HAL_BUSY) {
 		HAL_UART_AbortTransmit(huart);
 		HAL_UART_AbortReceive(huart);
-		status = HAL_UART_Transmit_DMA(huart, (uint8_t*) str, strlen(str));
+		status = dev->tx_data_fxn(huart, (uint8_t*) str, strlen(str));
 		if (status == HAL_BUSY) {
 			err = EBUSY;
 		}
@@ -450,13 +450,6 @@ static inline int32_t _get_rx_amount(uart_dev_t *dev) {
 }
 
 /* Interrupts ----------------------------------------------------------------*/
-/**
- * @brief This function handles dut_dma_tx event interrupt.
- */
-void DUT_UART_DMA_TX_INT(void) {
-	HAL_DMA_IRQHandler(&hdma_usart_dut_tx);
-}
-
 /**
  * @brief This function handles dut_dma_rx event interrupt.
  */
