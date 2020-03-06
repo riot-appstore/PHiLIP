@@ -161,8 +161,8 @@
 #define DEBUG0_GPIO_Port GPIOB
 #define DEBUG1_Pin GPIO_PIN_4
 #define DEBUG1_GPIO_Port GPIOB
-#define DEBUG2_Pin GPIO_PIN_5
-#define DEBUG2_GPIO_Port GPIOB
+#define DEBUG2_Pin GPIO_PIN_2
+#define DEBUG2_GPIO_Port GPIOD
 
 /******************************************************************************/
 #define TEST_PASS_Pin GPIO_PIN_4
@@ -238,11 +238,11 @@
 #define GPIO_NSS_CTS_IRQ	EXTI15_10_IRQn
 #define GPIO_DEBUG0_IRQ		EXTI3_IRQn
 #define GPIO_DEBUG1_IRQ		EXTI4_IRQn
-#define GPIO_DEBUG2_IRQ		EXTI9_5_IRQn
+#define GPIO_DEBUG2_IRQ		EXTI2_IRQn
 #define GPIO_NSS_CTS_INT	EXTI15_10_IRQHandler
 #define GPIO_DEBUG0_INT		EXTI3_IRQHandler
 #define GPIO_DEBUG1_INT		EXTI4_IRQHandler
-#define GPIO_DEBUG2_INT		EXTI9_5_IRQHandler
+#define GPIO_DEBUG2_INT		EXTI2_IRQHandler
 
 
 #define DUT_I2C				I2C1
