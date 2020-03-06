@@ -87,15 +87,12 @@ void HAL_MspInit(void) {
 	/* PendSV_IRQn interrupt configuration */
 	HAL_NVIC_SetPriority(PendSV_IRQn, 0, 0);
 	/* SysTick_IRQn interrupt configuration */
-	HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
+	HAL_NVIC_SetPriority(SysTick_IRQn, DEFAULT_INT_PRIO, 0);
 
 	/**NOJTAG: JTAG-DP Disabled and SW-DP Enabled
 	 */
-	__HAL_AFIO_REMAP_SWJ_NOJTAG()
-	;
+	__HAL_AFIO_REMAP_SWJ_NOJTAG();
 }
-
-
 
 void HAL_I2C_MspInit(I2C_HandleTypeDef* hi2c) {
 
@@ -119,9 +116,9 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef* hi2c) {
 		__HAL_RCC_I2C1_CLK_ENABLE()
 		;
 		/* I2C1 interrupt Init */
-		HAL_NVIC_SetPriority(I2C1_EV_IRQn, 0, 0);
+		HAL_NVIC_SetPriority(I2C1_EV_IRQn, DEFAULT_INT_PRIO, 0);
 		HAL_NVIC_EnableIRQ(I2C1_EV_IRQn);
-		HAL_NVIC_SetPriority(I2C1_ER_IRQn, 0, 0);
+		HAL_NVIC_SetPriority(I2C1_ER_IRQn, DEFAULT_INT_PRIO, 0);
 		HAL_NVIC_EnableIRQ(I2C1_ER_IRQn);
 		/* USER CODE BEGIN I2C1_MspInit 1 */
 
@@ -189,7 +186,7 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* hspi) {
 		;
 
 		/* SPI1 interrupt Init */
-		HAL_NVIC_SetPriority(SPI1_IRQn, 0, 0);
+		HAL_NVIC_SetPriority(SPI1_IRQn, DEFAULT_INT_PRIO, 0);
 		HAL_NVIC_EnableIRQ(SPI1_IRQn);
 	}
 #endif
@@ -221,7 +218,7 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* hspi) {
 		HAL_GPIO_Init(DUT_MISO_GPIO_Port, &GPIO_InitStruct);
 
 		/* SPI2 interrupt Init */
-		HAL_NVIC_SetPriority(SPI2_IRQn, 0, 0);
+		HAL_NVIC_SetPriority(SPI2_IRQn, DEFAULT_INT_PRIO, 0);
 		HAL_NVIC_EnableIRQ(SPI2_IRQn);
 	}
 #endif
@@ -538,7 +535,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart) {
 		__HAL_LINKDMA(huart, hdmatx, hdma_usart_dut_tx);
 
 		/* USART3 interrupt Init */
-		HAL_NVIC_SetPriority(USART3_IRQn, 0, 0);
+		HAL_NVIC_SetPriority(USART3_IRQn, DEFAULT_INT_PRIO, 0);
 		HAL_NVIC_EnableIRQ(USART3_IRQn);
 	}
 #endif
@@ -594,7 +591,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart) {
 		__HAL_LINKDMA(huart, hdmatx, hdma_usart_dut_tx);
 
 		/* USART1 interrupt Init */
-		HAL_NVIC_SetPriority(USART1_IRQn, 0, 0);
+		HAL_NVIC_SetPriority(USART1_IRQn, DEFAULT_INT_PRIO, 0);
 		HAL_NVIC_EnableIRQ(USART1_IRQn);
 	} else if (huart->Instance == USART2) {
 		/* Peripheral clock enable */

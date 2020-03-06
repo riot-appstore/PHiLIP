@@ -328,6 +328,7 @@
 #define DUT_PWM DUT_PWM_GPIO_Port, DUT_PWM_Pin
 #define DUT_DAC DUT_DAC_GPIO_Port, DUT_DAC_Pin
 
+#define DEFAULT_INT_PRIO	1
 void init_periphs(void);
 void init_clock(void);
 void _Error_Handler(char *file, int line);
