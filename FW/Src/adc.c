@@ -81,7 +81,7 @@ void init_dut_adc_msp() {
 	HAL_GPIO_Init(DUT_ADC_GPIO_Port, &GPIO_InitStruct);
 
 #ifdef DUT_ADC_ENABLE_INT
-	HAL_NVIC_SetPriority(ADC_IRQ, 0, 0);
+	HAL_NVIC_SetPriority(ADC_IRQ, DEFAULT_INT_PRIO, 0);
 	HAL_NVIC_EnableIRQ(ADC_IRQ);
 #endif
 }

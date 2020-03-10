@@ -116,7 +116,6 @@
 
 #define DUT_UART			USART3
 #define DUT_UART_DMA_RX_INT	DMA1_Channel3_IRQHandler
-#define DUT_UART_DMA_TX_INT	DMA1_Channel2_IRQHandler
 #define DUT_UART_INT		USART3_IRQHandler
 
 #define IF_UART				USART1
@@ -131,6 +130,29 @@
 #define DUT_DAC_TMR			TIM4
 #define PWM_DAC_REMAP
 #define EN_RCC_DUT_PWM_DAC_CLK	__HAL_RCC_TIM4_CLK_ENABLE()
+
+/******************************************************************************/
+/************************************ IC defines ******************************/
+/******************************************************************************/
+#define DUT_IC_INST			TIM1
+#define DUT_IC_CHANNEL		TIM_CHANNEL_1
+
+#define DUT_IC_CLK_EN()			__HAL_RCC_TIM1_CLK_ENABLE()
+#define DUT_IC_GPIO_CLK_EN()	__HAL_RCC_GPIOA_CLK_ENABLE()
+
+#define DUT_IC_CLK_DIS()		__HAL_RCC_TIM1_CLK_DISABLE()
+
+#define DUT_IC_DMA_CHANNEL		DMA1_Channel2
+#define DUT_IC_DMA_ID			TIM_DMA_ID_CC1
+
+#define DUT_IC_DMA_INT			DMA1_Channel2_IRQHandler
+#define DUT_IC_DMA_IRQ			DMA1_Channel2_IRQn
+#define DUT_IC_GPIO_INT			EXTI9_5_IRQHandler
+#define DUT_IC_GPIO_IRQ			EXTI9_5_IRQn
+
+#define DUT_IC_REMAINING_BUF(x)	(x.Instance->CNDTR)
+#define DUT_IC_OV_OCCURED(x)	(x->Instance->SR & TIM_SR_UIF)
+#define DUT_IC_OV_CLEAR(x)		x->Instance->SR &= ~(TIM_SR_UIF)
 
 /******************************************************************************/
 /************************************ ADC defines *****************************/
@@ -161,8 +183,8 @@
 #define DEBUG0_GPIO_Port GPIOB
 #define DEBUG1_Pin GPIO_PIN_4
 #define DEBUG1_GPIO_Port GPIOB
-#define DEBUG2_Pin GPIO_PIN_5
-#define DEBUG2_GPIO_Port GPIOB
+#define DEBUG2_Pin GPIO_PIN_2
+#define DEBUG2_GPIO_Port GPIOD
 
 /******************************************************************************/
 #define TEST_PASS_Pin GPIO_PIN_4
@@ -238,11 +260,11 @@
 #define GPIO_NSS_CTS_IRQ	EXTI15_10_IRQn
 #define GPIO_DEBUG0_IRQ		EXTI3_IRQn
 #define GPIO_DEBUG1_IRQ		EXTI4_IRQn
-#define GPIO_DEBUG2_IRQ		EXTI9_5_IRQn
+#define GPIO_DEBUG2_IRQ		EXTI2_IRQn
 #define GPIO_NSS_CTS_INT	EXTI15_10_IRQHandler
 #define GPIO_DEBUG0_INT		EXTI3_IRQHandler
 #define GPIO_DEBUG1_INT		EXTI4_IRQHandler
-#define GPIO_DEBUG2_INT		EXTI9_5_IRQHandler
+#define GPIO_DEBUG2_INT		EXTI2_IRQHandler
 
 
 #define DUT_I2C				I2C1
@@ -252,7 +274,6 @@
 
 #define DUT_UART			USART1
 #define DUT_UART_DMA_RX_INT	DMA1_Channel5_IRQHandler
-#define DUT_UART_DMA_TX_INT	DMA1_Channel4_IRQHandler
 #define DUT_UART_INT		USART1_IRQHandler
 
 #define IF_UART				USART2
@@ -268,6 +289,28 @@
 #define PWM_DAC_REMAP		__HAL_AFIO_REMAP_TIM3_ENABLE()
 #define EN_RCC_DUT_PWM_DAC_CLK	__HAL_RCC_TIM3_CLK_ENABLE()
 
+/******************************************************************************/
+/************************************ IC defines ******************************/
+/******************************************************************************/
+#define DUT_IC_INST			TIM1
+#define DUT_IC_CHANNEL		TIM_CHANNEL_1
+
+#define DUT_IC_CLK_EN()			__HAL_RCC_TIM1_CLK_ENABLE()
+#define DUT_IC_GPIO_CLK_EN()	__HAL_RCC_GPIOA_CLK_ENABLE()
+
+#define DUT_IC_CLK_DIS()		__HAL_RCC_TIM1_CLK_DISABLE()
+
+#define DUT_IC_DMA_CHANNEL		DMA1_Channel2
+#define DUT_IC_DMA_ID			TIM_DMA_ID_CC1
+
+#define DUT_IC_DMA_INT			DMA1_Channel2_IRQHandler
+#define DUT_IC_DMA_IRQ			DMA1_Channel2_IRQn
+#define DUT_IC_GPIO_INT			EXTI9_5_IRQHandler
+#define DUT_IC_GPIO_IRQ			EXTI9_5_IRQn
+
+#define DUT_IC_REMAINING_BUF(x)	(x.Instance->CNDTR)
+#define DUT_IC_OV_OCCURED(x)	(x->Instance->SR & TIM_SR_UIF)
+#define DUT_IC_OV_CLEAR(x)		x->Instance->SR &= ~(TIM_SR_UIF)
 /******************************************************************************/
 /************************************ ADC defines *****************************/
 /******************************************************************************/
@@ -328,6 +371,7 @@
 #define DUT_PWM DUT_PWM_GPIO_Port, DUT_PWM_Pin
 #define DUT_DAC DUT_DAC_GPIO_Port, DUT_DAC_Pin
 
+#define DEFAULT_INT_PRIO	1
 void init_periphs(void);
 void init_clock(void);
 void _Error_Handler(char *file, int line);

@@ -130,10 +130,10 @@ void init_gpio(map_t *reg, map_t *saved_reg) {
 	HAL_GPIO_Init(DUT_PWM_GPIO_Port, &GPIO_InitStruct);
 	PWM_DAC_REMAP;
 
-	HAL_NVIC_SetPriority(GPIO_NSS_CTS_IRQ, 0, 0);
-	HAL_NVIC_SetPriority(GPIO_DEBUG0_IRQ, 0, 0);
-	HAL_NVIC_SetPriority(GPIO_DEBUG1_IRQ, 0, 0);
-	HAL_NVIC_SetPriority(GPIO_DEBUG2_IRQ, 0, 0);
+	HAL_NVIC_SetPriority(GPIO_NSS_CTS_IRQ, DEFAULT_INT_PRIO, 0);
+	HAL_NVIC_SetPriority(GPIO_DEBUG0_IRQ, DEFAULT_INT_PRIO, 0);
+	HAL_NVIC_SetPriority(GPIO_DEBUG1_IRQ, DEFAULT_INT_PRIO, 0);
+	HAL_NVIC_SetPriority(GPIO_DEBUG2_IRQ, DEFAULT_INT_PRIO, 0);
 
 	debug_gpio[0].port = DEBUG0_GPIO_Port;
 	debug_gpio[0].hgpio.Pin = DEBUG0_Pin;

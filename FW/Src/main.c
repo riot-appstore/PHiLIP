@@ -63,6 +63,7 @@
 #include "sys.h"
 #include "led_flash.h"
 #include "wdt.h"
+#include "tmr.h"
 #include "port.h"
 
 /* Private function prototypes -----------------------------------------------*/
@@ -94,10 +95,10 @@ int main(void) {
 	init_dut_spi(&reg, &saved_reg);
 	init_rtc(&reg);
 	init_dut_adc(&reg);
+	init_dut_ic(&reg);
 	init_sys(&reg, &saved_reg);
 	init_wdt();
 	EN_INT;
-
 	while (1) {
 		_super_loop();
 		poll_dut_uart();
@@ -113,8 +114,10 @@ static void _super_loop() {
 		update_dut_uart_inputs,
 		update_dut_pwm_inputs,
 		update_dut_dac_inputs,
+		update_dut_ic_inputs,
 		update_rtc };
-	void (* const fxn_to_ex[])(void) = {poll_dut_adc };
+	void (* const fxn_to_ex[])(void) = {poll_dut_adc,
+										poll_dut_ic};
 	static uint32_t fxn_index_tick = 0;
 	static uint32_t fxn_index = 0;
 	if (_is_tick()) {

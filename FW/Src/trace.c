@@ -43,18 +43,22 @@ void init_trace(map_t *reg) {
 	trace = &(reg->trace);
 }
 
-/**
- * @brief		Stores an gpio toggle event.
- *
- * @param[in]	tick_div	Divides ticks by power of 2
- * @param[in]	source		The source of the event
- * @param[in]	value		The value from the event
- */
 void store_gpio_trace(uint8_t tick_div, uint8_t source, uint16_t value) {
 	trace->source[trace->index] = source;
 	trace->tick_div[trace->index] = tick_div;
 	trace->value[trace->index] = value;
 	trace->tick[trace->index] = get_tick32_div(tick_div);
+	trace->index++;
+	if (trace->index >= NUM_OF_TRACES) {
+		trace->index = 0;
+	}
+}
+
+void store_tick_from_buf(uint8_t source, uint16_t value, uint32_t tick) {
+	trace->source[trace->index] = source;
+	trace->tick_div[trace->index] = 0;
+	trace->value[trace->index] = value;
+	trace->tick[trace->index] = tick;
 	trace->index++;
 	if (trace->index >= NUM_OF_TRACES) {
 		trace->index = 0;

@@ -5,7 +5,7 @@
  * @file      PHiLIP_defaults.h
  * @author    Kevin Weiss
  * @version   1.0.2
- * @date      2020-02-28
+ * @date      2020-03-05
  * @details   Generated from the memory map manager version 0.0.9
  ******************************************************************************
  */
@@ -28,6 +28,8 @@
 #define DEFAULT_PWM_L_TICKS 10000
 /** @brief default for dac.level: The percent/100 of output level */
 #define DEFAULT_DAC_LEVEL 5000
+/** @brief default for tmr.min_tick: Minimum tick difference */
+#define DEFAULT_TMR_MIN_TICK 4294967295
 
 /** @brief Assign defaults for map_t */
 void init_defaults_map_t(map_t *init);

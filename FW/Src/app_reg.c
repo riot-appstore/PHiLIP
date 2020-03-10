@@ -39,6 +39,7 @@
 #include "pwm_dac.h"
 #include "rtc.h"
 #include "adc.h"
+#include "tmr.h"
 #include "sys.h"
 
 /* Private variables ---------------------------------------------------------*/
@@ -80,6 +81,7 @@ error_t execute_reg_change() {
 	commit_rtc();
 	commit_dut_adc();
 	commit_sys();
+	commit_dut_ic();
 
 	return EOK;
 }

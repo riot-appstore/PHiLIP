@@ -5,7 +5,7 @@
  * @file      PHiLIP_typedef.h
  * @author    Kevin Weiss
  * @version   1.0.2
- * @date      2020-02-28
+ * @date      2020-03-05
  * @details   Generated from the memory map manager version 0.0.9
  ******************************************************************************
  */
@@ -122,6 +122,13 @@ typedef struct {
 	uint8_t disable : 1; /**< 0:periph is enabled - 1:periph is disabled */
 	uint8_t fast_sample : 1; /**< 0:slow sample rate - 1:fast sample rate */
 } adc_mode_t;
+
+/** @brief  Timer mode settings */
+typedef struct {
+	uint8_t init : 1; /**< 0:periph will initialize on execute - 1:periph initialized */
+	uint8_t disable : 1; /**< 0:periph is enabled - 1:periph is disabled */
+	uint8_t trig_edge : 2; /**< 0:both - 1:rising - 2:falling */
+} tmr_mode_t;
 
 /** @brief  Basic mode settings */
 typedef struct {
@@ -267,6 +274,18 @@ typedef union {
 	uint8_t data8[16];/**< array for padding */
 } dac_t;
 
+/** @brief  Controls timer input capture values */
+typedef union {
+	struct {
+		tmr_mode_t mode; /**< basic mode for dac settings */
+		basic_gpio_t dut_ic; /**<  */
+		uint16_t min_holdoff; /**< The minimum amount of time to wait before triggering another event in ns */
+		uint32_t min_tick; /**< Minimum tick difference */
+		uint32_t max_tick; /**< Maximum tick difference */
+	};
+	uint8_t data8[12];/**< array for padding */
+} tmr_t;
+
 /** @brief  Controls the RTC */
 typedef union {
 	struct {
@@ -298,12 +317,12 @@ typedef union {
 typedef union {
 	struct {
 		uint32_t index; /**< Index of the current trace */
-		uint8_t tick_div[32]; /**< The tick divisor of the event - max should be 16 for interface */
-		uint8_t source[32]; /**< The event source of the event - 0:no source selected - 1:DEBUG0 pin - 2:DEBUG1 pin - 3:DEBUG2 pin */
-		uint16_t value[32]; /**< The value of the event - 0:falling edge interrupt - 1:rising edge interrupt */
-		uint32_t tick[32]; /**< The tick when the event occurred */
+		uint8_t tick_div[128]; /**< The tick divisor of the event - max should be 16 for interface */
+		uint8_t source[128]; /**< The event source of the event - 0:no source selected - 1:DEBUG0 pin - 2:DEBUG1 pin - 3:DEBUG2 pin - 4:DUT_IC */
+		uint16_t value[128]; /**< The value of the event - 0:falling edge interrupt - 1:rising edge interrupt */
+		uint32_t tick[128]; /**< The tick when the event occurred */
 	};
-	uint8_t data8[260];/**< array for padding */
+	uint8_t data8[1028];/**< array for padding */
 } trace_t;
 
 /** @brief  The memory map */
@@ -318,11 +337,12 @@ typedef union {
 		adc_t adc; /**< ADC configuration */
 		pwm_t pwm; /**< PWM configuration */
 		dac_t dac; /**< DAC configuration */
+		tmr_t tmr; /**< TMR configuration */
 		gpio_t gpio[3]; /**< GPIO pins available */
 		trace_t trace; /**< Saved timestamps and events */
-		uint8_t res[224]; /**< Reserved bytes */
+		uint8_t res[468]; /**< Reserved bytes */
 	};
-	uint8_t data8[1024];/**< array for padding */
+	uint8_t data8[2048];/**< array for padding */
 } map_t;
 
 #pragma pack()
