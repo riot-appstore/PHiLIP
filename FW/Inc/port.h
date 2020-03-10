@@ -135,14 +135,6 @@
 #define DUT_I2C_ERR_INT		I2C1_ER_IRQHandler
 #define EN_RCC_DUT_I2C_CLK	__HAL_RCC_I2C1_CLK_ENABLE()
 
-#define DUT_UART			USART3
-#define DUT_UART_DMA_RX_INT	DMA1_Channel3_IRQHandler
-#define DUT_UART_INT		USART3_IRQHandler
-
-#define IF_UART				USART1
-#define IF_UART_DMA_RX_INT	DMA1_Channel5_IRQHandler
-#define IF_UART_DMA_TX_INT	DMA1_Channel4_IRQHandler
-
 #define DUT_SPI				SPI1
 #define DUT_SPI_INT			SPI1_IRQHandler
 
@@ -153,43 +145,78 @@
 #define EN_RCC_DUT_PWM_DAC_CLK	__HAL_RCC_TIM4_CLK_ENABLE()
 
 /******************************************************************************/
-/************************************ IC defines ******************************/
+/* UART defines ***************************************************************/
 /******************************************************************************/
-#define DUT_IC_INST			TIM1
-#define DUT_IC_CHANNEL		TIM_CHANNEL_1
+#define DUT_UART_INST			USART3
+
+#define DUT_UART_CLK_EN()		__HAL_RCC_USART3_CLK_ENABLE()
+#define DUT_UART_CLK_DIS()		__HAL_RCC_USART3_CLK_DISABLE()
+#define DUT_UART_GPIO_CLK_EN()	__HAL_RCC_GPIOB_CLK_ENABLE()
+
+#define DUT_UART_INT			USART3_IRQHandler
+#define DUT_UART_IRQ			USART3_IRQn
+
+#define DUT_UART_RX_DMA_INST	DMA1_Channel3
+#define DUT_UART_DMA_RX_INT		DMA1_Channel3_IRQHandler
+#define DUT_UART_DMA_RX_IRQ		DMA1_Channel3_IRQn
+
+/******************************************************************************/
+#define IF_UART_INST			USART1
+
+#define IF_UART_CLK_EN()		__HAL_RCC_USART1_CLK_ENABLE()
+#define IF_UART_CLK_DIS()		__HAL_RCC_USART1_CLK_DISABLE()
+#define IF_UART_CLK_GPIO_EN()	__HAL_RCC_GPIOA_CLK_ENABLE()
+
+#define IF_UART_INT				USART1_IRQHandler
+#define IF_UART_IRQ				USART1_IRQn
+
+#define IF_UART_DMA_RX_INST		DMA1_Channel5
+#define IF_UART_DMA_RX_INT		DMA1_Channel5_IRQHandler
+#define IF_UART_DMA_RX_IRQ		DMA1_Channel5_IRQn
+
+#define IF_UART_DMA_TX_INST		DMA1_Channel4
+#define IF_UART_DMA_TX_INT		DMA1_Channel4_IRQHandler
+#define IF_UART_DMA_TX_IRQ		DMA1_Channel4_IRQn
+
+
+
+
+
+
+
+
+
+/******************************************************************************/
+/* IC defines *****************************************************************/
+/******************************************************************************/
+#define DUT_IC_INST				TIM1
+#define DUT_IC_CHANNEL			TIM_CHANNEL_1
 
 #define DUT_IC_CLK_EN()			__HAL_RCC_TIM1_CLK_ENABLE()
+#define DUT_IC_CLK_DIS()		__HAL_RCC_TIM1_CLK_DISABLE()
 #define DUT_IC_GPIO_CLK_EN()	__HAL_RCC_GPIOA_CLK_ENABLE()
 
-#define DUT_IC_CLK_DIS()		__HAL_RCC_TIM1_CLK_DISABLE()
-
-#define DUT_IC_DMA_CHANNEL		DMA1_Channel2
-#define DUT_IC_DMA_ID			TIM_DMA_ID_CC1
-
-#define DUT_IC_DMA_INT			DMA1_Channel2_IRQHandler
-#define DUT_IC_DMA_IRQ			DMA1_Channel2_IRQn
 #define DUT_IC_GPIO_INT			EXTI9_5_IRQHandler
 #define DUT_IC_GPIO_IRQ			EXTI9_5_IRQn
 
-#define DUT_IC_REMAINING_BUF(x)	(x.Instance->CNDTR)
-#define DUT_IC_OV_OCCURED(x)	(x->Instance->SR & TIM_SR_UIF)
-#define DUT_IC_OV_CLEAR(x)		x->Instance->SR &= ~(TIM_SR_UIF)
+#define DUT_IC_DMA_INST			DMA1_Channel2
+#define DUT_IC_DMA_ID			TIM_DMA_ID_CC1
+#define DUT_IC_DMA_INT			DMA1_Channel2_IRQHandler
+#define DUT_IC_DMA_IRQ			DMA1_Channel2_IRQn
 
 /******************************************************************************/
-/************************************ ADC defines *****************************/
+/* ADC defines ****************************************************************/
 /******************************************************************************/
-#define DUT_ADC_INST		ADC2
-#define ADC_CHANNEL			ADC_CHANNEL_6
+#define DUT_ADC_INST			ADC2
+#define ADC_CHANNEL				ADC_CHANNEL_6
 
 #define DUT_ADC_CLK_EN()		__HAL_RCC_ADC2_CLK_ENABLE()
 #define DUT_ADC_GPIO_CLK_EN()	__HAL_RCC_GPIOA_CLK_ENABLE()
 
 #define DUT_ADC_CLK_DIS()		__HAL_RCC_ADC2_CLK_DISABLE()
 
-#define ADC_INT				ADC1_2_IRQHandler
-#define ADC_IRQ				ADC1_2_IRQn
-
-#define ADC_DATA_READY(x)	(x.Instance->SR & ADC_FLAG_EOC)
+#define ADC_INT					ADC1_2_IRQHandler
+#define ADC_IRQ					ADC1_2_IRQn
 
 #endif
 
@@ -311,17 +338,60 @@
 #define EN_RCC_DUT_PWM_DAC_CLK	__HAL_RCC_TIM3_CLK_ENABLE()
 
 /******************************************************************************/
+/* UART defines ***************************************************************/
+/******************************************************************************/
+#define DUT_UART_INST			USART1
+
+#define DUT_UART_CLK_EN()		__HAL_RCC_USART1_CLK_ENABLE()
+#define DUT_UART_CLK_DIS()		__HAL_RCC_USART1_CLK_DISABLE()
+#define DUT_UART_GPIO_CLK_EN()	__HAL_RCC_GPIOA_CLK_ENABLE()
+
+#define DUT_UART_INT			USART1_IRQHandler
+#define DUT_UART_IRQ			USART1_IRQn
+
+#define DUT_UART_RX_DMA_INST	DMA1_Channel5
+#define DUT_UART_DMA_RX_INT		DMA1_Channel5_IRQHandler
+#define DUT_UART_DMA_RX_IRQ		DMA1_Channel5_IRQn
+
+/******************************************************************************/
+#define IF_UART_INST			USART2
+
+#define IF_UART_CLK_EN()		__HAL_RCC_USART2_CLK_ENABLE()
+#define IF_UART_CLK_DIS()		__HAL_RCC_USART2_CLK_DISABLE()
+#define IF_UART_CLK_GPIO_EN()	__HAL_RCC_GPIOA_CLK_ENABLE()
+
+#define IF_UART_INT				USART2_IRQHandler
+#define IF_UART_IRQ				USART2_IRQn
+
+#define IF_UART_DMA_RX_INST		DMA1_Channel6
+#define IF_UART_DMA_RX_INT		DMA1_Channel6_IRQHandler
+#define IF_UART_DMA_RX_IRQ		DMA1_Channel6_IRQn
+
+#define IF_UART_DMA_TX_INST		DMA1_Channel7
+#define IF_UART_DMA_TX_INT		DMA1_Channel7_IRQHandler
+#define IF_UART_DMA_TX_IRQ		DMA1_Channel7_IRQn
+
+
+
+
+
+
+
+
+
+
+/******************************************************************************/
 /************************************ IC defines ******************************/
 /******************************************************************************/
-#define DUT_IC_INST			TIM1
-#define DUT_IC_CHANNEL		TIM_CHANNEL_1
+#define DUT_IC_INST				TIM1
+#define DUT_IC_CHANNEL			TIM_CHANNEL_1
 
 #define DUT_IC_CLK_EN()			__HAL_RCC_TIM1_CLK_ENABLE()
 #define DUT_IC_GPIO_CLK_EN()	__HAL_RCC_GPIOA_CLK_ENABLE()
 
 #define DUT_IC_CLK_DIS()		__HAL_RCC_TIM1_CLK_DISABLE()
 
-#define DUT_IC_DMA_CHANNEL		DMA1_Channel2
+#define DUT_IC_DMA_INST			DMA1_Channel2
 #define DUT_IC_DMA_ID			TIM_DMA_ID_CC1
 
 #define DUT_IC_DMA_INT			DMA1_Channel2_IRQHandler
@@ -329,9 +399,6 @@
 #define DUT_IC_GPIO_INT			EXTI9_5_IRQHandler
 #define DUT_IC_GPIO_IRQ			EXTI9_5_IRQn
 
-#define DUT_IC_REMAINING_BUF(x)	(x.Instance->CNDTR)
-#define DUT_IC_OV_OCCURED(x)	(x->Instance->SR & TIM_SR_UIF)
-#define DUT_IC_OV_CLEAR(x)		x->Instance->SR &= ~(TIM_SR_UIF)
 /******************************************************************************/
 /************************************ ADC defines *****************************/
 /******************************************************************************/
@@ -346,11 +413,10 @@
 #define ADC_INT				ADC1_2_IRQHandler
 #define ADC_IRQ				ADC1_2_IRQn
 
-#define ADC_DATA_READY(x)	(x.Instance->SR & ADC_FLAG_EOC)
-
 #endif
+
 /******************************************************************************/
-/******************************* Pin and Ports defines ************************/
+/* Pin and ports defines ******************************************************/
 /******************************************************************************/
 #define LED0 LED0_GPIO_Port, LED0_Pin
 
@@ -392,7 +458,18 @@
 #define DUT_PWM DUT_PWM_GPIO_Port, DUT_PWM_Pin
 #define DUT_DAC DUT_DAC_GPIO_Port, DUT_DAC_Pin
 
+/******************************************************************************/
+/* CPU Macros *****************************************************************/
+/******************************************************************************/
+#define DUT_IC_REMAINING_BUF(x)	(x.Instance->CNDTR)
+#define DUT_IC_OV_OCCURED(x)	(x->Instance->SR & TIM_SR_UIF)
+#define DUT_IC_OV_CLEAR(x)		x->Instance->SR &= ~(TIM_SR_UIF)
+
+#define ADC_DATA_READY(x)	(x.Instance->SR & ADC_FLAG_EOC)
+
 #define DEFAULT_INT_PRIO	1
+
+/******************************************************************************/
 void init_periphs(void);
 void init_clock(void);
 void _Error_Handler(char *file, int line);

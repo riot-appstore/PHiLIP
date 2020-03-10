@@ -21,7 +21,7 @@
 #ifndef UART_H_
 #define UART_H_
 
-/* Defines -------------------------------------------------------------------*/
+/* Defines ********************************************************************/
 /** @brief	Size allocated for if uart buffer */
 #define UART_IF_BUF_SIZE	(1024)
 
@@ -29,21 +29,18 @@
 #define UART_DUT_BUF_SIZE	(128)
 
 
-/* Function prototypes -------------------------------------------------------*/
+/* Function prototypes ********************************************************/
 /**
  * @brief		Initializes dut uart registers.
  *
  * @param[in]	reg			Pointer to live register memory map
- * @param[in]	saved_reg	Pointer to saved register memory map
  * @note		Populates dut uart defaults registers and assigns uart register
  * 				pointers.
  */
-void init_dut_uart(map_t *reg, map_t *saved_reg);
+void init_dut_uart(map_t *reg);
 
 /**
  * @brief		Initializes interface uart registers.
- *
- * @note		Populates dut uart defaults registers, uart register are NULL.
  */
 void init_if_uart();
 
@@ -71,7 +68,6 @@ error_t commit_dut_uart();
  * @return 		EOVERFLOW invalid address
  * @return 		ERANGE invalid number range
  * @return 		ENODATA not enough data
- * @return 		EUNKNOWN
  */
 error_t poll_dut_uart();
 
@@ -88,7 +84,6 @@ error_t poll_dut_uart();
  * @return 		EOVERFLOW invalid address
  * @return 		ERANGE invalid number range
  * @return 		ENODATA not enough data
- * @return 		EUNKNOWN
  */
 error_t poll_if_uart();
 
@@ -96,10 +91,31 @@ error_t poll_if_uart();
  * @brief		Updates the uart input levels.
  */
 void update_dut_uart_inputs();
+
 /**
  * @brief This function handles dut_cts event interrupt.
  */
 void dut_cts_int();
+
+/**
+ * @brief		Only for use with the STM32xxxx_HAL_Driver.
+ */
+void init_dut_uart_msp();
+
+/**
+ * @brief		Only for use with the STM32xxxx_HAL_Driver.
+ */
+void deinit_dut_uart_msp();
+
+/**
+ * @brief		Only for use with the STM32xxxx_HAL_Driver.
+ */
+void init_if_uart_msp();
+
+/**
+ * @brief		Only for use with the STM32xxxx_HAL_Driver.
+ */
+void deinit_if_uart_msp();
 
 #endif /* UART_H_ */
 /** @} */

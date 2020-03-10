@@ -22,6 +22,7 @@
 
 #include "adc.h"
 #include "tmr.h"
+#include "uart.h"
 
 #include "port.h"
 
@@ -397,6 +398,23 @@ void HAL_TIM_PWM_MspDeInit(TIM_HandleTypeDef* htim) {
 #endif
 }
 
+void HAL_UART_MspInit(UART_HandleTypeDef* huart) {
+	if (huart->Instance == IF_UART_INST) {
+		init_if_uart_msp();
+	}
+	else if (huart->Instance == DUT_UART_INST) {
+		init_dut_uart_msp();
+	}
+}
+
+void HAL_UART_MspDeInit(UART_HandleTypeDef* huart) {
+	if (huart->Instance == IF_UART_INST) {
+			deinit_if_uart_msp();
+	}
+	else if (huart->Instance == DUT_UART_INST) {
+		deinit_dut_uart_msp();
+	}
+}
 /**
  * @brief  This function is executed in case of error occurrence.
  * @param  file: The file name as string.
