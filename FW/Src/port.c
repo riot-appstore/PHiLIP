@@ -23,6 +23,7 @@
 #include "adc.h"
 #include "tmr.h"
 #include "uart.h"
+#include "i2c.h"
 
 #include "port.h"
 
@@ -435,11 +436,27 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart) {
 
 void HAL_UART_MspDeInit(UART_HandleTypeDef* huart) {
 	if (huart->Instance == IF_UART_INST) {
-			deinit_if_uart_msp();
+		deinit_if_uart_msp();
 	}
 	else if (huart->Instance == DUT_UART_INST) {
 		deinit_dut_uart_msp();
 	}
+}
+
+
+void HAL_I2C_MspInit(I2C_HandleTypeDef* hi2c) {
+	if (hi2c->Instance == DUT_I2C_INST) {
+		init_dut_i2c_msp();
+	}
+
+}
+
+void HAL_I2C_MspDeInit(I2C_HandleTypeDef* hi2c) {
+
+	if (hi2c->Instance == DUT_I2C_INST) {
+		deinit_dut_i2c_msp();
+	}
+
 }
 /**
  * @brief  This function is executed in case of error occurrence.

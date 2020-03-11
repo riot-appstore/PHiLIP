@@ -130,10 +130,7 @@
 #define GPIO_DEBUG1_INT		EXTI1_IRQHandler
 #define GPIO_DEBUG2_INT		EXTI2_IRQHandler
 
-#define DUT_I2C				I2C1
-#define DUT_I2C_EV_INT		I2C1_EV_IRQHandler
-#define DUT_I2C_ERR_INT		I2C1_ER_IRQHandler
-#define EN_RCC_DUT_I2C_CLK	__HAL_RCC_I2C1_CLK_ENABLE()
+
 
 #define DUT_SPI				SPI1
 #define DUT_SPI_INT			SPI1_IRQHandler
@@ -143,6 +140,22 @@
 #define DUT_DAC_TMR			TIM4
 #define PWM_DAC_REMAP
 #define EN_RCC_DUT_PWM_DAC_CLK	__HAL_RCC_TIM4_CLK_ENABLE()
+
+/******************************************************************************/
+/* I2C defines ****************************************************************/
+/******************************************************************************/
+#define DUT_I2C_INST			I2C1
+
+#define DUT_I2C_CLK_EN()		__HAL_RCC_I2C1_CLK_ENABLE()
+#define DUT_I2C_CLK_DIS()		__HAL_RCC_I2C1_CLK_DISABLE()
+#define DUT_I2C_GPIO_CLK_EN()	__HAL_RCC_GPIOB_CLK_ENABLE()
+
+#define DUT_I2C_GPIO_AF_REMAP()
+
+#define DUT_I2C_EV_INT			I2C1_EV_IRQHandler
+#define DUT_I2C_EV_IRQ			I2C1_EV_IRQn
+#define DUT_I2C_ERR_INT			I2C1_ER_IRQHandler
+#define DUT_I2C_ERR_IRQ			I2C1_ER_IRQn
 
 /******************************************************************************/
 /* UART defines ***************************************************************/
@@ -177,14 +190,6 @@
 #define IF_UART_DMA_TX_INST		DMA1_Channel4
 #define IF_UART_DMA_TX_INT		DMA1_Channel4_IRQHandler
 #define IF_UART_DMA_TX_IRQ		DMA1_Channel4_IRQn
-
-
-
-
-
-
-
-
 
 /******************************************************************************/
 /* IC defines *****************************************************************/
@@ -314,12 +319,6 @@
 #define GPIO_DEBUG1_INT		EXTI4_IRQHandler
 #define GPIO_DEBUG2_INT		EXTI2_IRQHandler
 
-
-#define DUT_I2C				I2C1
-#define DUT_I2C_EV_INT		I2C1_EV_IRQHandler
-#define DUT_I2C_ERR_INT		I2C1_ER_IRQHandler
-#define EN_RCC_DUT_I2C_CLK	__HAL_RCC_I2C1_CLK_ENABLE()
-
 #define DUT_UART			USART1
 #define DUT_UART_DMA_RX_INT	DMA1_Channel5_IRQHandler
 #define DUT_UART_INT		USART1_IRQHandler
@@ -336,6 +335,22 @@
 #define DUT_DAC_TMR			TIM3
 #define PWM_DAC_REMAP		__HAL_AFIO_REMAP_TIM3_ENABLE()
 #define EN_RCC_DUT_PWM_DAC_CLK	__HAL_RCC_TIM3_CLK_ENABLE()
+
+/******************************************************************************/
+/* I2C defines ****************************************************************/
+/******************************************************************************/
+#define DUT_I2C_INST			I2C1
+
+#define DUT_I2C_CLK_EN()		__HAL_RCC_I2C1_CLK_ENABLE()
+#define DUT_I2C_CLK_DIS()		__HAL_RCC_I2C1_CLK_DISABLE()
+#define DUT_I2C_GPIO_CLK_EN()	__HAL_RCC_GPIOB_CLK_ENABLE()
+
+#define DUT_I2C_GPIO_AF_REMAP()	__HAL_AFIO_REMAP_I2C1_ENABLE()
+
+#define DUT_I2C_EV_INT			I2C1_EV_IRQHandler
+#define DUT_I2C_EV_IRQ			I2C1_EV_IRQn
+#define DUT_I2C_ERR_INT			I2C1_ER_IRQHandler
+#define DUT_I2C_ERR_IRQ			I2C1_ER_IRQn
 
 /******************************************************************************/
 /* UART defines ***************************************************************/
@@ -370,15 +385,6 @@
 #define IF_UART_DMA_TX_INST		DMA1_Channel7
 #define IF_UART_DMA_TX_INT		DMA1_Channel7_IRQHandler
 #define IF_UART_DMA_TX_IRQ		DMA1_Channel7_IRQn
-
-
-
-
-
-
-
-
-
 
 /******************************************************************************/
 /************************************ IC defines ******************************/

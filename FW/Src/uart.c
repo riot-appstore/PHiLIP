@@ -37,7 +37,7 @@
 
 #include "uart.h"
 
-/* Private enums/structs -----------------------------------------------------*/
+/* Private enums/structs ******************************************************/
 /** @brief  				The type of interface mode the uart is using */
 enum UART_IF_TYPE {
 	UART_IF_TYPE_ECHO, /**< uart echos */
@@ -59,7 +59,6 @@ enum APP_UART_PARITY {
 	APP_UART_PARITY_ODD /**< Odd parity */
 };
 
-
 /** @brief						The parameters for uart control */
 typedef struct {
 	UART_HandleTypeDef huart; /**< Handle for the uart device */
@@ -73,7 +72,7 @@ typedef struct {
 } uart_dev_t;
 /** @} */
 
-/* Private defines -----------------------------------------------------------*/
+/* Private macros *************************************************************/
 /** @brief	Checks the uart register to see if any data is waiting */
 #define IS_RX_WAITING(x)	(HAL_IS_BIT_SET(x, USART_CR3_DMAR))
 
@@ -89,7 +88,7 @@ static inline void _update_rx_count(uart_dev_t* dev, uint16_t rx_amount);
 /* Global functions ***********************************************************/
 extern void _Error_Handler(char *, int);
 
-/* Private function prototypes ************************************************/
+/* Private variables **********************************************************/
 static uart_dev_t dut_uart = {0};
 static uart_dev_t if_uart = {0};
 
