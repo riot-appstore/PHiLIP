@@ -26,6 +26,8 @@
 #include <stdint.h>
 #include <string.h>
 
+#include "stm32f1xx_hal.h"
+
 #include "PHiLIP_typedef.h"
 #include "PHiLIP_map.h"
 #include "app_access.h"
