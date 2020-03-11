@@ -170,8 +170,8 @@ void init_dut_uart_msp() {
 void deinit_dut_uart_msp() {
 	UART_HandleTypeDef* huart = &dut_uart.huart;
 	DUT_UART_CLK_DIS();
-	HAL_GPIO_DeInit(DUT_RX_GPIO_Port, DUT_RX_Pin);
-	HAL_GPIO_DeInit(DUT_TX_GPIO_Port, DUT_TX_Pin);
+	HAL_GPIO_DeInit(DUT_RX);
+	HAL_GPIO_DeInit(DUT_TX);
 	HAL_DMA_DeInit(huart->hdmarx);
 	HAL_NVIC_DisableIRQ(DUT_UART_IRQ);
 }
@@ -342,7 +342,6 @@ void deinit_if_uart_msp() {
 /******************************************************************************/
 /*           Functions                                                        */
 /******************************************************************************/
-
 error_t poll_dut_uart() {
 	return _poll_uart(&dut_uart);
 }
@@ -528,6 +527,13 @@ void DUT_UART_INT(void) {
 	} else if (dut_uart.huart.ErrorCode & HAL_UART_ERROR_ORE) {
 		dut_uart_reg->status.ore = 1;
 	}
+}
+
+/**
+ * @brief This function handles if_uart event interrupt.
+ */
+void IF_UART_INT(void) {
+	HAL_UART_IRQHandler(&if_uart.huart);
 }
 
 /**
