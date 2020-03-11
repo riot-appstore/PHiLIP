@@ -124,11 +124,6 @@ void init_gpio(map_t *reg, map_t *saved_reg) {
 	GPIO_InitStruct.Pull = GPIO_PULLUP;
 	HAL_GPIO_Init(DUT_NSS_GPIO_Port, &GPIO_InitStruct);
 
-	GPIO_InitStruct.Pin = DUT_PWM_Pin | DUT_DAC_Pin;
-	GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-	HAL_GPIO_Init(DUT_PWM_GPIO_Port, &GPIO_InitStruct);
-	PWM_DAC_REMAP;
 
 	HAL_NVIC_SetPriority(GPIO_NSS_CTS_IRQ, DEFAULT_INT_PRIO, 0);
 	HAL_NVIC_SetPriority(GPIO_DEBUG0_IRQ, DEFAULT_INT_PRIO, 0);

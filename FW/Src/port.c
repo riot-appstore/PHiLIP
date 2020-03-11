@@ -25,16 +25,11 @@
 #include "uart.h"
 #include "i2c.h"
 #include "spi.h"
+#include "pwm_dac.h"
 
 #include "port.h"
 
 extern void _Error_Handler(char *, int);
-
-I2C_HandleTypeDef hi2c_dut;
-
-TIM_HandleTypeDef htim_ic;
-TIM_HandleTypeDef htim_pwm;
-
 
 /**
  * Initializes the Global MSP.
@@ -62,41 +57,6 @@ void HAL_MspInit(void) {
 }
 
 #ifdef BLUEPILL
-
-/* TIM1 init function */
-static void MX_TIM1_Init(void) {
-
-	TIM_MasterConfigTypeDef sMasterConfig;
-	TIM_IC_InitTypeDef sConfigIC;
-
-	htim_ic.Instance = TIM1;
-	htim_ic.Init.Prescaler = 0;
-	htim_ic.Init.CounterMode = TIM_COUNTERMODE_UP;
-	htim_ic.Init.Period = 0;
-	htim_ic.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-	htim_ic.Init.RepetitionCounter = 0;
-	htim_ic.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-	if (HAL_TIM_IC_Init(&htim_ic) != HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-	sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-	sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-	if (HAL_TIMEx_MasterConfigSynchronization(&htim_ic, &sMasterConfig)
-			!= HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-	sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
-	sConfigIC.ICSelection = TIM_ICSELECTION_DIRECTTI;
-	sConfigIC.ICPrescaler = TIM_ICPSC_DIV1;
-	sConfigIC.ICFilter = 0;
-	if (HAL_TIM_IC_ConfigChannel(&htim_ic, &sConfigIC, TIM_CHANNEL_1) != HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-}
-
 /**
  * Enable DMA controller clock
  */
@@ -185,51 +145,6 @@ void SystemClock_Config(void) {
 #endif
 
 #ifdef NUCLEOF103RB
-
-/* TIM1 init function */
-static void MX_TIM1_Init(void) {
-
-	TIM_ClockConfigTypeDef sClockSourceConfig;
-	TIM_MasterConfigTypeDef sMasterConfig;
-	TIM_IC_InitTypeDef sConfigIC;
-
-	htim_ic.Instance = TIM1;
-	htim_ic.Init.Prescaler = 0;
-	htim_ic.Init.CounterMode = TIM_COUNTERMODE_UP;
-	htim_ic.Init.Period = 0;
-	htim_ic.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-	htim_ic.Init.RepetitionCounter = 0;
-	htim_ic.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-	if (HAL_TIM_Base_Init(&htim_ic) != HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-	sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-	if (HAL_TIM_ConfigClockSource(&htim_ic, &sClockSourceConfig) != HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-	if (HAL_TIM_IC_Init(&htim_ic) != HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-	sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-	sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-	if (HAL_TIMEx_MasterConfigSynchronization(&htim_ic, &sMasterConfig)
-			!= HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-	sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
-	sConfigIC.ICSelection = TIM_ICSELECTION_DIRECTTI;
-	sConfigIC.ICPrescaler = TIM_ICPSC_DIV1;
-	sConfigIC.ICFilter = 0;
-	if (HAL_TIM_IC_ConfigChannel(&htim_ic, &sConfigIC, TIM_CHANNEL_1)
-			!= HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-}
 
 /**
  * Enable DMA controller clock
@@ -337,72 +252,25 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base) {
 	if (htim_base->Instance == DUT_IC_INST) {
 		init_dut_ic_msp();
 	}
-#ifdef BLUEPILL
-	else if(htim_base->Instance==TIM4)
-	{
-		/* Peripheral clock enable */
-		__HAL_RCC_TIM4_CLK_ENABLE();
+	else if (htim_base->Instance == DUT_PWM_DAC_INST) {
+		init_dut_pwm_dac_msp();
 	}
-#endif
-#ifdef NUCLEOF103RB
-	else if (htim_base->Instance == TIM3) {
-		/* Peripheral clock enable */
-		__HAL_RCC_TIM3_CLK_ENABLE();
-	}
-#endif
 }
 
+void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim_base) {
+	if (htim_base->Instance == DUT_IC_INST) {
+		deinit_dut_ic_msp();
+	}
+	else if (htim_base->Instance == DUT_PWM_DAC_INST) {
+		deinit_dut_pwm_dac_msp();
+	}
+}
+
+/******************************************************************************/
 void HAL_TIM_IC_MspInit(TIM_HandleTypeDef* htim) {
 	if (htim->Instance == DUT_IC_INST) {
 			init_dut_ic_msp();
 	}
-}
-
-void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef* htim) {
-#ifdef BLUEPILL
-	if (htim->Instance == TIM4) {
-		/* Peripheral clock enable */
-		__HAL_RCC_TIM4_CLK_ENABLE();
-	}
-#endif
-#ifdef NUCLEOF103RB
-	if (htim->Instance == TIM3) {
-		/* Peripheral clock enable */
-		__HAL_RCC_TIM3_CLK_ENABLE();
-	}
-#endif
-}
-
-void HAL_TIM_MspPostInit(TIM_HandleTypeDef* htim) {
-
-	GPIO_InitTypeDef GPIO_InitStruct;
-#ifdef BLUEPILL
-	if (htim->Instance == TIM4) {
-
-		/**TIM4 GPIO Configuration
-		 PB8     ------> TIM4_CH3
-		 PB9     ------> TIM4_CH4
-		 */
-		GPIO_InitStruct.Pin = DUT_DAC_Pin | DUT_PWM_Pin;
-		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-		HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-	}
-#endif
-#ifdef NUCLEOF103RB
-	if (htim->Instance == TIM3) {
-
-		/**TIM3 GPIO Configuration
-		 PC8     ------> TIM3_CH3
-		 PC9     ------> TIM3_CH4
-		 */
-		GPIO_InitStruct.Pin = DUT_PWM_Pin | DUT_DAC_Pin;
-		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-		HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-		__HAL_AFIO_REMAP_TIM3_ENABLE();
-	}
-#endif
 }
 
 void HAL_TIM_IC_MspDeInit(TIM_HandleTypeDef* htim) {
@@ -411,21 +279,26 @@ void HAL_TIM_IC_MspDeInit(TIM_HandleTypeDef* htim) {
 	}
 }
 
-void HAL_TIM_PWM_MspDeInit(TIM_HandleTypeDef* htim) {
-#ifdef BLUEPILL
-	if (htim->Instance == TIM4) {
-		/* Peripheral clock disable */
-		__HAL_RCC_TIM4_CLK_DISABLE();
+/******************************************************************************/
+void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef* htim) {
+	if (htim->Instance == DUT_PWM_DAC_INST) {
+		init_dut_pwm_dac_msp();
 	}
-#endif
-#ifdef NUCLEOF103RB
-	if (htim->Instance == TIM3) {
-		/* Peripheral clock disable */
-		__HAL_RCC_TIM3_CLK_DISABLE();
-	}
-#endif
 }
 
+void HAL_TIM_MspPostInit(TIM_HandleTypeDef* htim) {
+	if (htim->Instance == DUT_PWM_DAC_INST) {
+		postinit_dut_pwm_dac_msp();
+	}
+}
+
+void HAL_TIM_PWM_MspDeInit(TIM_HandleTypeDef* htim) {
+	if (htim->Instance == DUT_PWM_DAC_INST) {
+		deinit_dut_pwm_dac_msp();
+	}
+}
+
+/******************************************************************************/
 void HAL_UART_MspInit(UART_HandleTypeDef* huart) {
 	if (huart->Instance == IF_UART_INST) {
 		init_if_uart_msp();
@@ -444,7 +317,7 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* huart) {
 	}
 }
 
-
+/******************************************************************************/
 void HAL_I2C_MspInit(I2C_HandleTypeDef* hi2c) {
 	if (hi2c->Instance == DUT_I2C_INST) {
 		init_dut_i2c_msp();
@@ -459,6 +332,7 @@ void HAL_I2C_MspDeInit(I2C_HandleTypeDef* hi2c) {
 
 }
 
+/******************************************************************************/
 void HAL_SPI_MspInit(SPI_HandleTypeDef* hspi) {
 	if (hspi->Instance == DUT_SPI_INST) {
 		init_dut_spi_msp();
@@ -470,6 +344,8 @@ void HAL_SPI_MspDeInit(SPI_HandleTypeDef* hspi) {
 		deinit_dut_spi_msp();
 	}
 }
+
+/******************************************************************************/
 /**
  * @brief  This function is executed in case of error occurrence.
  * @param  file: The file name as string.
@@ -489,7 +365,6 @@ void init_periphs(void) {
 	__HAL_RCC_I2C1_CLK_ENABLE();
 
 	MX_DMA_Init();
-	MX_TIM1_Init();
 }
 
 void init_clock(void) {

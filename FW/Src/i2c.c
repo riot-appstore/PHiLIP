@@ -112,8 +112,8 @@ void init_dut_i2c_msp() {
 }
 
 void deinit_dut_i2c_msp() {
-	HAL_GPIO_DeInit(DUT_SCL_GPIO_Port, DUT_SCL_Pin);
-	HAL_GPIO_DeInit(DUT_SDA_GPIO_Port, DUT_SDA_Pin);
+	HAL_GPIO_DeInit(DUT_SCL);
+	HAL_GPIO_DeInit(DUT_SDA);
 
 	HAL_NVIC_DisableIRQ(DUT_I2C_EV_IRQ);
 	HAL_NVIC_DisableIRQ(DUT_I2C_ERR_IRQ);

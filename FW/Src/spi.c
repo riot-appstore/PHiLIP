@@ -124,10 +124,10 @@ void init_dut_spi_msp() {
 void deinit_dut_spi_msp() {
 	DUT_SPI_CLK_DIS();
 
-	HAL_GPIO_DeInit(DUT_NSS_GPIO_Port, DUT_NSS_Pin);
-	HAL_GPIO_DeInit(DUT_SCK_GPIO_Port, DUT_SCK_Pin);
-	HAL_GPIO_DeInit(DUT_MISO_GPIO_Port, DUT_MISO_Pin);
-	HAL_GPIO_DeInit(DUT_MOSI_GPIO_Port, DUT_MOSI_Pin);
+	HAL_GPIO_DeInit(DUT_NSS);
+	HAL_GPIO_DeInit(DUT_SCK);
+	HAL_GPIO_DeInit(DUT_MISO);
+	HAL_GPIO_DeInit(DUT_MOSI);
 
 	HAL_NVIC_DisableIRQ(DUT_SPI_IRQ);
 }

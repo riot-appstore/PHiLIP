@@ -28,6 +28,8 @@
  * <MODULE>_CLK_DIS
  * <MODULE>_GPIO_CLK_EN
  *
+ * <MODULE>_GPIO_AF_REMAP
+ *
  * <MODULE>_INT
  * <MODULE>_IRQ
  *
@@ -129,12 +131,6 @@
 #define GPIO_NSS_CTS_IRQ		EXTI15_10_IRQn
 #define GPIO_NSS_CTS_INT		EXTI15_10_IRQHandler
 
-#define DUT_PWM_TMR			TIM4
-
-#define DUT_DAC_TMR			TIM4
-#define PWM_DAC_REMAP
-#define EN_RCC_DUT_PWM_DAC_CLK	__HAL_RCC_TIM4_CLK_ENABLE()
-
 /******************************************************************************/
 /* SPI defines ****************************************************************/
 /******************************************************************************/
@@ -198,6 +194,19 @@
 #define IF_UART_DMA_TX_INST		DMA1_Channel4
 #define IF_UART_DMA_TX_INT		DMA1_Channel4_IRQHandler
 #define IF_UART_DMA_TX_IRQ		DMA1_Channel4_IRQn
+
+/******************************************************************************/
+/* PWM_DAC defines ************************************************************/
+/******************************************************************************/
+#define DUT_PWM_DAC_INST			TIM4
+#define DUT_PWM_TMR					DUT_PWM_DAC_INST
+#define DUT_DAC_TMR					DUT_PWM_DAC_INST
+
+#define DUT_PWM_DAC_CLK_EN()		__HAL_RCC_TIM4_CLK_ENABLE()
+#define DUT_PWM_DAC_CLK_DIS()		__HAL_RCC_TIM4_CLK_DISABLE()
+#define DUT_PWM_DAC_GPIO_CLK_EN()	__HAL_RCC_GPIOB_CLK_ENABLE()
+
+#define DUT_PWM_DAC_GPIO_AF_REMAP()
 
 /******************************************************************************/
 /* IC defines *****************************************************************/
@@ -326,12 +335,6 @@
 #define GPIO_DEBUG1_INT		EXTI4_IRQHandler
 #define GPIO_DEBUG2_INT		EXTI2_IRQHandler
 
-#define DUT_PWM_TMR			TIM3
-
-#define DUT_DAC_TMR			TIM3
-#define PWM_DAC_REMAP		__HAL_AFIO_REMAP_TIM3_ENABLE()
-#define EN_RCC_DUT_PWM_DAC_CLK	__HAL_RCC_TIM3_CLK_ENABLE()
-
 /******************************************************************************/
 /* SPI defines ****************************************************************/
 /******************************************************************************/
@@ -395,6 +398,19 @@
 #define IF_UART_DMA_TX_INST		DMA1_Channel7
 #define IF_UART_DMA_TX_INT		DMA1_Channel7_IRQHandler
 #define IF_UART_DMA_TX_IRQ		DMA1_Channel7_IRQn
+
+/******************************************************************************/
+/* PWM_DAC defines ************************************************************/
+/******************************************************************************/
+#define DUT_PWM_DAC_INST			TIM3
+#define DUT_PWM_TMR					DUT_PWM_DAC_INST
+#define DUT_DAC_TMR					DUT_PWM_DAC_INST
+
+#define DUT_PWM_DAC_CLK_EN()		__HAL_RCC_TIM3_CLK_ENABLE()
+#define DUT_PWM_DAC_CLK_DIS()		__HAL_RCC_TIM3_CLK_DISABLE()
+#define DUT_PWM_DAC_GPIO_CLK_EN()	__HAL_RCC_GPIOC_CLK_ENABLE()
+
+#define DUT_PWM_DAC_GPIO_AF_REMAP()	__HAL_AFIO_REMAP_TIM3_ENABLE();
 
 /******************************************************************************/
 /************************************ IC defines ******************************/

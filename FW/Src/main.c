@@ -88,7 +88,7 @@ int main(void) {
 	init_gpio(&reg, &saved_reg);
 	init_app_reg(&reg, &saved_reg);
 	init_trace(&reg);
-	init_dut_pwm_dac(&reg, &saved_reg);
+	init_dut_pwm_dac(&reg);
 	init_dut_uart(&reg);
 	init_if_uart();
 	init_dut_i2c(&reg);

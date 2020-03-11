@@ -160,7 +160,7 @@ void deinit_dut_ic_msp() {
 	TIM_HandleTypeDef *htmr = &(dut_ic.htmr);
 
 	DUT_IC_CLK_DIS();
-	HAL_GPIO_DeInit(DUT_IC_GPIO_Port, DUT_IC_Pin);
+	HAL_GPIO_DeInit(DUT_IC);
 	HAL_DMA_DeInit(htmr->hdma[DUT_IC_DMA_ID]);
 
     HAL_NVIC_DisableIRQ(DUT_IC_DMA_IRQ);
