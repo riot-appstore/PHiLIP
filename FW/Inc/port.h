@@ -131,6 +131,8 @@
 #define GPIO_NSS_CTS_IRQ		EXTI15_10_IRQn
 #define GPIO_NSS_CTS_INT		EXTI15_10_IRQHandler
 
+#define RCC_HSE_STATE		RCC_HSE_ON
+
 /******************************************************************************/
 /* SPI defines ****************************************************************/
 /******************************************************************************/
@@ -334,6 +336,8 @@
 #define GPIO_DEBUG0_INT		EXTI3_IRQHandler
 #define GPIO_DEBUG1_INT		EXTI4_IRQHandler
 #define GPIO_DEBUG2_INT		EXTI2_IRQHandler
+
+#define RCC_HSE_STATE		RCC_HSE_BYPASS
 
 /******************************************************************************/
 /* SPI defines ****************************************************************/

@@ -164,7 +164,11 @@ void init_dut_uart_msp() {
 
 	__HAL_LINKDMA(huart, hdmarx, hdma_usart_dut_rx);
 
+	HAL_NVIC_SetPriority(DUT_UART_IRQ, DEFAULT_INT_PRIO, 0);
 	HAL_NVIC_EnableIRQ(DUT_UART_IRQ);
+
+    HAL_NVIC_SetPriority(DUT_UART_DMA_RX_IRQ, DEFAULT_INT_PRIO, 0);
+    HAL_NVIC_EnableIRQ(DUT_UART_DMA_RX_IRQ);
 }
 
 void deinit_dut_uart_msp() {
@@ -327,7 +331,13 @@ void init_if_uart_msp() {
 	}
 	__HAL_LINKDMA(huart, hdmatx, (*huart_tx_dma));
 
+	HAL_NVIC_SetPriority(IF_UART_IRQ, DEFAULT_INT_PRIO, 0);
 	HAL_NVIC_EnableIRQ(IF_UART_IRQ);
+
+	HAL_NVIC_SetPriority(IF_UART_DMA_RX_IRQ, DEFAULT_INT_PRIO, 0);
+	HAL_NVIC_EnableIRQ(IF_UART_DMA_RX_IRQ);
+	HAL_NVIC_SetPriority(IF_UART_DMA_TX_IRQ, DEFAULT_INT_PRIO, 0);
+	HAL_NVIC_EnableIRQ(IF_UART_DMA_TX_IRQ);
 }
 
 void deinit_if_uart_msp() {
