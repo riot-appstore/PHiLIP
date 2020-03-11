@@ -96,7 +96,7 @@ int main(void) {
 	init_rtc(&reg);
 	init_dut_adc(&reg);
 	init_dut_ic(&reg);
-	init_sys(&reg, &saved_reg);
+	init_sys(&reg);
 	init_wdt();
 	EN_INT;
 	while (1) {
