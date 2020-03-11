@@ -92,7 +92,7 @@ int main(void) {
 	init_dut_uart(&reg);
 	init_if_uart();
 	init_dut_i2c(&reg);
-	init_dut_spi(&reg, &saved_reg);
+	init_dut_spi(&reg);
 	init_rtc(&reg);
 	init_dut_adc(&reg);
 	init_dut_ic(&reg);

@@ -17,7 +17,7 @@
  ******************************************************************************
  */
 
-/* Includes ------------------------------------------------------------------*/
+/* Includes *******************************************************************/
 #include <string.h>
 #include <errno.h>
 
@@ -25,16 +25,14 @@
 
 #include "PHiLIP_typedef.h"
 #include "port.h"
-#include "app_errno.h"
 #include "app_access.h"
 #include "app_common.h"
-#include "app_defaults.h"
 #include "app_reg.h"
 #include "gpio.h"
 
 #include "spi.h"
 
-/* Private enums/structs -----------------------------------------------------*/
+/* Private enums/structs ******************************************************/
 /** @brief  							The state settings of the SPI */
 enum SPI_STATE {
 	SPI_INITIALIZED, /**< spi has been initialized */
@@ -57,39 +55,31 @@ enum SPI_IF_TYPE {
 typedef struct {
 	SPI_HandleTypeDef hspi; /**< Handle for the spi device */
 	spi_t *reg; /**< spi live application registers */
-	spi_t *saved_reg; /**< spi saved application registers */
 	void (*if_mode_int)(void); /**< Interrupt function pointer */
 	uint8_t initial_byte; /**< The byte that is output first */
 } spi_dev;
 /** @} */
 
-/* Private function prototypes -----------------------------------------------*/
-static inline error_t _commit_spi(spi_dev *dev);
+/* Private defines ************************************************************/
+/** @brief	Checks the write direction */
+#define SPI_ADDR_MASK	(0x80)
+
+/* Private function prototypes ************************************************/
 static void _spi_echo_int();
 static void _spi_hs_int();
 static void _spi_reg_int();
 static void _spi_const_int();
 
-/* Private defines -----------------------------------------------------------*/
-/** @brief	Checks the write direction */
-#define SPI_ADDR_MASK	(0x80)
-
-/* Private variables ---------------------------------------------------------*/
+/* Private variables **********************************************************/
 static spi_dev dut_spi;
 
-/* Functions -----------------------------------------------------------------*/
-/**
- * @brief		Initializes spi registers.
- *
- * @param[in]	reg			Pointer to live register memory map
- * @param[in]	saved_reg	Pointer to saved register memory map
- * @note		Populates spi defaults registers and assigns spi register
- * 				pointers.
- */
-void init_dut_spi(map_t *reg, map_t *saved_reg) {
+/******************************************************************************/
+/*           Initialization                                                   */
+/******************************************************************************/
+void init_dut_spi(map_t *reg) {
 	SPI_HandleTypeDef *hspi = &dut_spi.hspi;
 
-	hspi->Instance = DUT_SPI;
+	hspi->Instance = DUT_SPI_INST;
 	hspi->Init.Mode = SPI_MODE_SLAVE;
 	hspi->Init.Direction = SPI_DIRECTION_2LINES;
 	hspi->Init.DataSize = SPI_DATASIZE_8BIT;
@@ -98,93 +88,115 @@ void init_dut_spi(map_t *reg, map_t *saved_reg) {
 	hspi->Init.FirstBit = SPI_FIRSTBIT_MSB;
 	hspi->Init.TIMode = SPI_TIMODE_DISABLE;
 	hspi->Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-	hspi->Init.CRCPolynomial = -0;
+	hspi->Init.CRCPolynomial = 0;
 
 	dut_spi.reg = &(reg->spi);
-	dut_spi.saved_reg = &(saved_reg->spi);
 	commit_dut_spi();
 }
 
-/**
- * @brief		Commits the spi registers and executes operations.
- *
- * @pre			spi must first be initialized with init_dut_spi()
- * @return      EOK if init occurred
- * @return      ENOACTION if no init was triggered
- *
- * @note		Only executes actions if the spi.mode.init is set.
- */
+/******************************************************************************/
+void init_dut_spi_msp() {
+	GPIO_InitTypeDef GPIO_InitStruct = {0};
+	DUT_SPI_CLK_EN();
+
+	GPIO_InitStruct.Pin = DUT_NSS_Pin;
+	GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+	GPIO_InitStruct.Pull = GPIO_PULLUP;
+	HAL_GPIO_Init(DUT_NSS_GPIO_Port, &GPIO_InitStruct);
+
+	GPIO_InitStruct.Pin = DUT_SCK_Pin;
+	HAL_GPIO_Init(DUT_SCK_GPIO_Port, &GPIO_InitStruct);
+
+	GPIO_InitStruct.Pin = DUT_MOSI_Pin;
+	HAL_GPIO_Init(DUT_MOSI_GPIO_Port, &GPIO_InitStruct);
+
+	GPIO_InitStruct.Pin = DUT_MISO_Pin;
+	GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+	HAL_GPIO_Init(DUT_MISO_GPIO_Port, &GPIO_InitStruct);
+
+	DUT_SPI_GPIO_AF_REMAP();
+
+	HAL_NVIC_SetPriority(DUT_SPI_IRQ, DEFAULT_INT_PRIO, 0);
+	HAL_NVIC_EnableIRQ(DUT_SPI_IRQ);
+}
+
+void deinit_dut_spi_msp() {
+	DUT_SPI_CLK_DIS();
+
+	HAL_GPIO_DeInit(DUT_NSS_GPIO_Port, DUT_NSS_Pin);
+	HAL_GPIO_DeInit(DUT_SCK_GPIO_Port, DUT_SCK_Pin);
+	HAL_GPIO_DeInit(DUT_MISO_GPIO_Port, DUT_MISO_Pin);
+	HAL_GPIO_DeInit(DUT_MOSI_GPIO_Port, DUT_MOSI_Pin);
+
+	HAL_NVIC_DisableIRQ(DUT_SPI_IRQ);
+}
+
+/******************************************************************************/
 error_t commit_dut_spi() {
-	return _commit_spi(&dut_spi);
-}
+	SPI_HandleTypeDef *hspi = &dut_spi.hspi;
+	spi_t *reg = dut_spi.reg;
 
-static inline error_t _commit_spi(spi_dev *dev) {
-	SPI_HandleTypeDef *hspi_inst = &dev->hspi;
-	spi_t *spi = dev->reg;
-
-	if (!spi->mode.init) {
-		__HAL_SPI_DISABLE_IT(hspi_inst,
-				SPI_IT_RXNE | SPI_CR2_ERRIE | SPI_CR2_TXEIE);
-
-		hspi_inst->Init.CLKPhase = SPI_PHASE_1EDGE;
-		if (spi->mode.cpha) {
-			hspi_inst->Init.CLKPhase = SPI_PHASE_2EDGE;
-		}
-
-		hspi_inst->Init.CLKPolarity = SPI_POLARITY_LOW;
-		if (spi->mode.cpol) {
-			hspi_inst->Init.CLKPolarity = SPI_POLARITY_HIGH;
-		}
-		dut_spi.reg->frame_ticks = 0;
-		dut_spi.reg->prev_ticks = 0;
-        spi->w_count = 0;
-        spi->r_count = 0;
-		dev->initial_byte = SPI_NO_DATA_BYTE;
-		if (spi->mode.if_type == SPI_IF_TYPE_REG) {
-			dev->if_mode_int = _spi_reg_int;
-		} else if (spi->mode.if_type == SPI_IF_TYPE_HS) {
-			dev->if_mode_int = _spi_hs_int;
-		} else if (spi->mode.if_type == SPI_IF_TYPE_ECHO) {
-			dev->if_mode_int = _spi_echo_int;
-		} else {
-			read_reg(0, &(dev->initial_byte));
-			dev->if_mode_int = _spi_const_int;
-		}
-
-		spi->mode.init = 1;
-		copy_until_same(dev->saved_reg, dev->reg, sizeof(*(dev->saved_reg)));
-
-		__HAL_SPI_DISABLE(hspi_inst);
-		if (!dev->reg->mode.disable) {
-			HAL_SPI_Init(hspi_inst);
-			__HAL_SPI_ENABLE(hspi_inst);
-			hspi_inst->Instance->DR = dev->initial_byte;
-			__HAL_SPI_ENABLE_IT(hspi_inst,
-					SPI_IT_RXNE | SPI_CR2_ERRIE | SPI_CR2_TXEIE);
-		}
-		else {
-			HAL_SPI_DeInit(hspi_inst);
-			if (init_basic_gpio(dev->reg->dut_miso, DUT_MISO) != EOK) {
-				return EINVAL;
-			}
-			if (init_basic_gpio(dev->reg->dut_mosi, DUT_MOSI) != EOK) {
-				return EINVAL;
-			}
-			if (init_basic_gpio(dev->reg->dut_nss, DUT_NSS) != EOK) {
-				return EINVAL;
-			}
-			if (init_basic_gpio(dev->reg->dut_sck, DUT_SCK) != EOK) {
-				return EINVAL;
-			}
-		}
-		return EOK;
+	if (reg->mode.init) {
+		return 0;
 	}
-	return ENOACTION;
+	__HAL_SPI_DISABLE_IT(hspi, SPI_IT_RXNE | SPI_CR2_ERRIE | SPI_CR2_TXEIE);
+
+	hspi->Init.CLKPhase = SPI_PHASE_1EDGE;
+	if (reg->mode.cpha) {
+		hspi->Init.CLKPhase = SPI_PHASE_2EDGE;
+	}
+
+	hspi->Init.CLKPolarity = SPI_POLARITY_LOW;
+	if (reg->mode.cpol) {
+		hspi->Init.CLKPolarity = SPI_POLARITY_HIGH;
+	}
+	reg->frame_ticks = 0;
+	reg->prev_ticks = 0;
+	reg->w_count = 0;
+	reg->r_count = 0;
+	dut_spi.initial_byte = SPI_NO_DATA_BYTE;
+	if (reg->mode.if_type == SPI_IF_TYPE_REG) {
+		dut_spi.if_mode_int = _spi_reg_int;
+	} else if (reg->mode.if_type == SPI_IF_TYPE_HS) {
+		dut_spi.if_mode_int = _spi_hs_int;
+	} else if (reg->mode.if_type == SPI_IF_TYPE_ECHO) {
+		dut_spi.if_mode_int = _spi_echo_int;
+	} else {
+		read_reg(0, &(dut_spi.initial_byte));
+		dut_spi.if_mode_int = _spi_const_int;
+	}
+
+	reg->mode.init = 1;
+
+	__HAL_SPI_DISABLE(hspi);
+	if (!reg->mode.disable) {
+		HAL_SPI_Init(hspi);
+		__HAL_SPI_ENABLE(hspi);
+		hspi->Instance->DR = dut_spi.initial_byte;
+		__HAL_SPI_ENABLE_IT(hspi, SPI_IT_RXNE | SPI_CR2_ERRIE | SPI_CR2_TXEIE);
+	}
+	else {
+		HAL_SPI_DeInit(hspi);
+		if (init_basic_gpio(reg->dut_miso, DUT_MISO) != 0) {
+			return EINVAL;
+		}
+		if (init_basic_gpio(reg->dut_mosi, DUT_MOSI) != 0) {
+			return EINVAL;
+		}
+		if (init_basic_gpio(reg->dut_nss, DUT_NSS) != 0) {
+			return EINVAL;
+		}
+		if (init_basic_gpio(reg->dut_sck, DUT_SCK) != 0) {
+			return EINVAL;
+		}
+	}
+	return 0;
 }
 
-/**
- * @brief		Updates the spi input levels.
- */
+/******************************************************************************/
+/*           Functions                                                        */
+/******************************************************************************/
 void update_dut_spi_inputs() {
 	dut_spi.reg->status.clk = HAL_GPIO_ReadPin(DUT_SCK);
 	dut_spi.reg->dut_miso.level = HAL_GPIO_ReadPin(DUT_MISO);
@@ -192,7 +204,10 @@ void update_dut_spi_inputs() {
 	dut_spi.reg->dut_nss.level = HAL_GPIO_ReadPin(DUT_NSS);
 	dut_spi.reg->dut_sck.level = HAL_GPIO_ReadPin(DUT_SCK);
 }
-/* Interrupts ----------------------------------------------------------------*/
+
+/******************************************************************************/
+/*           Interrupt Handling                                               */
+/******************************************************************************/
 /**
  * @brief This function handles DUT_SPI global interrupt.
  */
@@ -200,6 +215,7 @@ void DUT_SPI_INT(void) {
 	dut_spi.if_mode_int();
 }
 
+/******************************************************************************/
 static void _spi_reg_int() {
 	SPI_HandleTypeDef *hspi = &(dut_spi.hspi);
 	spi_t *spi = dut_spi.reg;

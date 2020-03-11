@@ -120,26 +120,34 @@
 #define LED_OFF				GPIO_PIN_SET
 
 /******************************************************************************/
-
-#define GPIO_NSS_CTS_IRQ	EXTI15_10_IRQn
 #define GPIO_DEBUG0_IRQ		EXTI0_IRQn
 #define GPIO_DEBUG1_IRQ		EXTI1_IRQn
 #define GPIO_DEBUG2_IRQ		EXTI2_IRQn
-#define GPIO_NSS_CTS_INT	EXTI15_10_IRQHandler
 #define GPIO_DEBUG0_INT		EXTI0_IRQHandler
 #define GPIO_DEBUG1_INT		EXTI1_IRQHandler
 #define GPIO_DEBUG2_INT		EXTI2_IRQHandler
-
-
-
-#define DUT_SPI				SPI1
-#define DUT_SPI_INT			SPI1_IRQHandler
+#define GPIO_NSS_CTS_IRQ		EXTI15_10_IRQn
+#define GPIO_NSS_CTS_INT		EXTI15_10_IRQHandler
 
 #define DUT_PWM_TMR			TIM4
 
 #define DUT_DAC_TMR			TIM4
 #define PWM_DAC_REMAP
 #define EN_RCC_DUT_PWM_DAC_CLK	__HAL_RCC_TIM4_CLK_ENABLE()
+
+/******************************************************************************/
+/* SPI defines ****************************************************************/
+/******************************************************************************/
+#define DUT_SPI_INST			SPI1
+
+#define DUT_SPI_CLK_EN()		__HAL_RCC_SPI1_CLK_ENABLE()
+#define DUT_SPI_CLK_DIS()		__HAL_RCC_SPI1_CLK_DISABLE()
+#define DUT_SPI_GPIO_CLK_EN()	__HAL_RCC_GPIOB_CLK_ENABLE();__HAL_RCC_GPIOA_CLK_ENABLE()
+
+#define DUT_SPI_GPIO_AF_REMAP()	__HAL_AFIO_REMAP_SPI1_ENABLE()
+
+#define DUT_SPI_INT				SPI1_IRQHandler
+#define DUT_SPI_IRQ				SPI1_IRQn
 
 /******************************************************************************/
 /* I2C defines ****************************************************************/
@@ -309,7 +317,6 @@
 #define LED_OFF 			GPIO_PIN_RESET
 
 /******************************************************************************/
-
 #define GPIO_NSS_CTS_IRQ	EXTI15_10_IRQn
 #define GPIO_DEBUG0_IRQ		EXTI3_IRQn
 #define GPIO_DEBUG1_IRQ		EXTI4_IRQn
@@ -319,22 +326,25 @@
 #define GPIO_DEBUG1_INT		EXTI4_IRQHandler
 #define GPIO_DEBUG2_INT		EXTI2_IRQHandler
 
-#define DUT_UART			USART1
-#define DUT_UART_DMA_RX_INT	DMA1_Channel5_IRQHandler
-#define DUT_UART_INT		USART1_IRQHandler
-
-#define IF_UART				USART2
-#define IF_UART_DMA_RX_INT	DMA1_Channel6_IRQHandler
-#define IF_UART_DMA_TX_INT	DMA1_Channel7_IRQHandler
-
-#define DUT_SPI				SPI2
-#define DUT_SPI_INT			SPI2_IRQHandler
-
 #define DUT_PWM_TMR			TIM3
 
 #define DUT_DAC_TMR			TIM3
 #define PWM_DAC_REMAP		__HAL_AFIO_REMAP_TIM3_ENABLE()
 #define EN_RCC_DUT_PWM_DAC_CLK	__HAL_RCC_TIM3_CLK_ENABLE()
+
+/******************************************************************************/
+/* SPI defines ****************************************************************/
+/******************************************************************************/
+#define DUT_SPI_INST			SPI2
+
+#define DUT_SPI_CLK_EN()		__HAL_RCC_SPI2_CLK_ENABLE()
+#define DUT_SPI_CLK_DIS()		__HAL_RCC_SPI2_CLK_DISABLE()
+#define DUT_SPI_GPIO_CLK_EN()	__HAL_RCC_GPIOB_CLK_ENABLE()
+
+#define DUT_SPI_GPIO_AF_REMAP()
+
+#define DUT_SPI_INT				SPI2_IRQHandler
+#define DUT_SPI_IRQ				SPI2_IRQn
 
 /******************************************************************************/
 /* I2C defines ****************************************************************/

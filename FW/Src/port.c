@@ -24,6 +24,7 @@
 #include "tmr.h"
 #include "uart.h"
 #include "i2c.h"
+#include "spi.h"
 
 #include "port.h"
 
@@ -452,11 +453,22 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef* hi2c) {
 }
 
 void HAL_I2C_MspDeInit(I2C_HandleTypeDef* hi2c) {
-
 	if (hi2c->Instance == DUT_I2C_INST) {
 		deinit_dut_i2c_msp();
 	}
 
+}
+
+void HAL_SPI_MspInit(SPI_HandleTypeDef* hspi) {
+	if (hspi->Instance == DUT_SPI_INST) {
+		init_dut_spi_msp();
+	}
+}
+
+void HAL_SPI_MspDeInit(SPI_HandleTypeDef* hspi) {
+	if (hspi->Instance == DUT_SPI_INST) {
+		deinit_dut_spi_msp();
+	}
 }
 /**
  * @brief  This function is executed in case of error occurrence.

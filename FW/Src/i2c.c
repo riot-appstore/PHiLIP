@@ -13,11 +13,11 @@
  * @file			i2c.c
  * @author			Kevin Weiss
  * @date			13.02.2019
- * @brief			Controls the reg peripheral.
+ * @brief			Controls the i2c peripheral.
  ******************************************************************************
  */
 
-/* Includes ------------------------------------------------------------------*/
+/* Includes *******************************************************************/
 #include <string.h>
 #include <errno.h>
 
@@ -76,7 +76,7 @@ static void _i2c_err(i2c_dev *dev);
 static i2c_dev dut_i2c;
 
 /******************************************************************************/
-/*           Initialization DUT_I2C                                           */
+/*           Initialization                                                   */
 /******************************************************************************/
 void init_dut_i2c(map_t *reg) {
 	dut_i2c.reg = &(reg->i2c);
@@ -174,11 +174,17 @@ error_t commit_dut_i2c() {
 	return 0;
 }
 
+/******************************************************************************/
+/*           Functions                                                        */
+/******************************************************************************/
 void update_dut_i2c_inputs() {
 	dut_i2c.reg->dut_sda.level = HAL_GPIO_ReadPin(DUT_SDA);
 	dut_i2c.reg->dut_scl.level = HAL_GPIO_ReadPin(DUT_SCL);
 }
-/* Interrupts ----------------------------------------------------------------*/
+
+/******************************************************************************/
+/*           Interrupt Handling                                               */
+/******************************************************************************/
 /**
  * @brief This function handles i2c_dut event interrupt.
  */
@@ -193,6 +199,7 @@ void DUT_I2C_ERR_INT(void) {
 	_i2c_err(&dut_i2c);
 }
 
+/******************************************************************************/
 static void _i2c_slave_addr(i2c_dev *dev) {
 	I2C_HandleTypeDef *hi2c = &(dev->hi2c);
 	i2c_t *reg = dev->reg;
