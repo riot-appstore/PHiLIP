@@ -86,7 +86,7 @@ int main(void) {
 	DIS_INT;
 	init_periphs();
 	init_gpio(&reg, &saved_reg);
-	init_app_reg(&reg, &saved_reg);
+	init_app_reg(&reg);
 	init_trace(&reg);
 	init_dut_pwm_dac(&reg);
 	init_dut_uart(&reg);
