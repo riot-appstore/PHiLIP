@@ -240,3 +240,13 @@ void init_periphs() {
 
 	__HAL_RCC_DMA1_CLK_ENABLE();
 }
+
+/**
+ * @brief This function handles System tick timer.
+ */
+void SysTick_Handler(void) {
+
+	HAL_IncTick();
+	HAL_SYSTICK_IRQHandler();
+
+}
