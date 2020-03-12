@@ -19,13 +19,12 @@
  ******************************************************************************
  */
 
-/* Includes ------------------------------------------------------------------*/
+/* Includes *******************************************************************/
 #include <errno.h>
 
 #include "stm32f1xx_hal.h"
 
 #include "PHiLIP_typedef.h"
-#include "app_errno.h"
 #include "app_common.h"
 #include "port.h"
 #include "trace.h"
@@ -34,7 +33,7 @@
 
 #include "gpio.h"
 
-/* Private enums/structs -----------------------------------------------------*/
+/* Private enums/structs ******************************************************/
 /** @brief  			enum for the type of gpio setting. */
 enum GPIO_IO_TYPE {
 	GPIO_IN, /**< gpio is high impedance input */
@@ -43,30 +42,25 @@ enum GPIO_IO_TYPE {
 	GPIO_INTERRUPT /**< gpio interrupts and saves event */
 };
 
-
 /** @brief				Parameters for gpio control. */
 typedef struct {
 	GPIO_InitTypeDef hgpio; /**< handle for HAL gpio */
-	gpio_t *reg; /**< gpio live application registers */
-	gpio_t *saved_reg; /**< gpio saved application registers */
+	gpio_t *reg; /**< gpio application registers */
+	gpio_mode_t mode; /**< gpio mode */
 	GPIO_TypeDef *port; /**< port of gpio */
 } gpio_dev;
 /** @} */
 
-/* Private function prototypes -----------------------------------------------*/
+/* Private function prototypes ************************************************/
 static error_t _commit_gpio(gpio_dev *dev);
 
-/* Private variables ---------------------------------------------------------*/
+/* Private variables **********************************************************/
 static gpio_dev debug_gpio[3];
 
-/* Functions -----------------------------------------------------------------*/
-/**
- * @brief		Initializes gpio directions, states and interrupt settings.
- * @param[in]	reg			Pointer to live register memory map
- * @param[in]	saved_reg	Pointer to saved register memory map
- * @note		Populates gpio defaults registers.
- */
-void init_gpio(map_t *reg, map_t *saved_reg) {
+/******************************************************************************/
+/*           Initialization                                                   */
+/******************************************************************************/
+void init_gpio(map_t *reg) {
 	GPIO_InitTypeDef GPIO_InitStruct;
 	/* GPIO Ports Clock Enable */
 	__HAL_RCC_GPIOC_CLK_ENABLE();
@@ -134,47 +128,35 @@ void init_gpio(map_t *reg, map_t *saved_reg) {
 	debug_gpio[0].hgpio.Pin = DEBUG0_Pin;
 	debug_gpio[0].hgpio.Speed = GPIO_SPEED_FREQ_HIGH;
 	debug_gpio[0].reg = &(reg->gpio[0]);
-	debug_gpio[0].saved_reg = &(saved_reg->gpio[0]);
 
 	debug_gpio[1].port = DEBUG1_GPIO_Port;
 	debug_gpio[1].hgpio.Pin = DEBUG1_Pin;
 	debug_gpio[1].hgpio.Speed = GPIO_SPEED_FREQ_HIGH;
 	debug_gpio[1].reg = &(reg->gpio[1]);
-	debug_gpio[1].saved_reg = &(saved_reg->gpio[1]);
 
 	debug_gpio[2].port = DEBUG2_GPIO_Port;
 	debug_gpio[2].hgpio.Pin = DEBUG2_Pin;
 	debug_gpio[2].hgpio.Speed = GPIO_SPEED_FREQ_HIGH;
 	debug_gpio[2].reg = &(reg->gpio[2]);
-	debug_gpio[2].saved_reg = &(saved_reg->gpio[2]);
 
 	commit_debug();
 	HAL_NVIC_EnableIRQ(GPIO_NSS_CTS_IRQ);
 
 }
 
-/**
- * @brief		Commits the gpio registers and executes operations.
- *
- * @pre			gpio must first be initialized with init_gpio()
- * @return      EOK if init occurred
- * @return      EINVAL if invalid setting
- * @return      ENOACTION if no init was triggered
- *
- * @note		Only executes actions if the spi.mode.init is set.
- */
+/******************************************************************************/
 error_t commit_debug() {
-	error_t err = EOK;
+	error_t err = 0;
 	HAL_NVIC_DisableIRQ(GPIO_DEBUG0_IRQ);
 	HAL_NVIC_DisableIRQ(GPIO_DEBUG1_IRQ);
 	HAL_NVIC_DisableIRQ(GPIO_DEBUG2_IRQ);
 
 	err = _commit_gpio(&debug_gpio[0]);
-	if (err != EOK && err != ENOACTION) {
+	if (err != 0) {
 		return err;
 	}
 	err = _commit_gpio(&debug_gpio[1]);
-	if (err != EOK && err != ENOACTION) {
+	if (err != 0) {
 		return err;
 	}
 	err = _commit_gpio(&debug_gpio[2]);
@@ -187,7 +169,7 @@ error_t commit_debug() {
 
 static error_t _commit_gpio(gpio_dev *dev) {
 	if (dev->reg->mode.init) {
-		return ENOACTION;
+		return 0;
 	}
 	if (dev->reg->mode.pull > GPIO_PULLDOWN) {
 		return EINVAL;
@@ -207,12 +189,16 @@ static error_t _commit_gpio(gpio_dev *dev) {
 	} else {
 		return EINVAL;
 	}
+	dev->mode.io_type = dev->reg->mode.io_type;
+	dev->mode.tick_div = dev->reg->mode.tick_div;
+
 	dev->reg->mode.init = 1;
-	copy_until_same(dev->saved_reg, dev->reg, sizeof(*(dev->saved_reg)));
+
 	HAL_GPIO_Init(dev->port, &dev->hgpio);
-	return EOK;
+	return 0;
 }
 
+/******************************************************************************/
 error_t init_basic_gpio(basic_gpio_t gpio, GPIO_TypeDef *port, uint32_t pin) {
 	GPIO_InitTypeDef hgpio = {0};
 	hgpio.Speed = GPIO_SPEED_FREQ_LOW;
@@ -233,22 +219,24 @@ error_t init_basic_gpio(basic_gpio_t gpio, GPIO_TypeDef *port, uint32_t pin) {
 		return EINVAL;
 	}
 	HAL_GPIO_Init(port, &hgpio);
-	return EOK;
+	return 0;
 }
 
-/**
- * @brief		Updates the DEBUG input levels.
- */
+/******************************************************************************/
+/*           Functions                                                        */
+/******************************************************************************/
 void update_debug_inputs() {
 	for (int i = 0; i < 3; i++) {
-		if (debug_gpio[i].saved_reg->mode.io_type == GPIO_IN) {
+		if (debug_gpio[i].mode.io_type == GPIO_IN) {
 			debug_gpio[i].reg->status.level =
 				HAL_GPIO_ReadPin(debug_gpio[i].port,
 							     debug_gpio[i].hgpio.Pin);
 		}
 	}
 }
-/* Interrupts ----------------------------------------------------------------*/
+/******************************************************************************/
+/*           Interrupt Handling                                               */
+/******************************************************************************/
 /**
  * @brief 	Interrupt for NSS and CTS triggering
  * @note 	This is a shared interrupt, both functions being used at the same
@@ -272,7 +260,7 @@ void GPIO_NSS_CTS_INT() {
  * @brief 	Interrupt for the DEBUG0 triggering when interrupt mode set
  */
 void GPIO_DEBUG0_INT() {
-	store_gpio_trace(debug_gpio[0].saved_reg->mode.tick_div, SOURCE_DEBUG0,
+	store_gpio_trace(debug_gpio[0].mode.tick_div, SOURCE_DEBUG0,
 			HAL_GPIO_ReadPin(DEBUG0));
 	EXTI->PR = DEBUG0_Pin;
 }
@@ -281,7 +269,7 @@ void GPIO_DEBUG0_INT() {
  * @brief 	Interrupt for the DEBUG1 triggering when interrupt mode set
  */
 void GPIO_DEBUG1_INT() {
-	store_gpio_trace(debug_gpio[1].saved_reg->mode.tick_div, SOURCE_DEBUG1,
+	store_gpio_trace(debug_gpio[1].mode.tick_div, SOURCE_DEBUG1,
 			HAL_GPIO_ReadPin(DEBUG1));
 	EXTI->PR = DEBUG1_Pin;
 }
@@ -290,7 +278,7 @@ void GPIO_DEBUG1_INT() {
  * @brief 	Interrupt for the DEBUG2 triggering when interrupt mode set
  */
 void GPIO_DEBUG2_INT() {
-	store_gpio_trace(debug_gpio[2].saved_reg->mode.tick_div, SOURCE_DEBUG2,
+	store_gpio_trace(debug_gpio[2].mode.tick_div, SOURCE_DEBUG2,
 			HAL_GPIO_ReadPin(DEBUG2));
 	EXTI->PR = DEBUG2_Pin;
 }

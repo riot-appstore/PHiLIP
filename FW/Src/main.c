@@ -73,7 +73,6 @@ static void _super_loop();
 /** @brief  The application entry point. */
 int main(void) {
 	map_t reg = { 0 };
-	map_t saved_reg = { 0 };
 
 	/* Reset of all peripherals, Initializes the Flash interface and Systick. */
 	HAL_Init();
@@ -85,7 +84,7 @@ int main(void) {
 	/* Initialize all configured peripherals */
 	DIS_INT;
 	init_periphs();
-	init_gpio(&reg, &saved_reg);
+	init_gpio(&reg);
 	init_app_reg(&reg);
 	init_trace(&reg);
 	init_dut_pwm_dac(&reg);
