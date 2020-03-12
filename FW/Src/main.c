@@ -41,7 +41,7 @@
  *  \image html PHiLIP_firmware_arch.png
  */
 
-/* Includes ------------------------------------------------------------------*/
+/* Includes *******************************************************************/
 #include <errno.h>
 #include <stdint.h>
 
@@ -66,10 +66,13 @@
 #include "tmr.h"
 #include "port.h"
 
-/* Private function prototypes -----------------------------------------------*/
+/* Private function prototypes ************************************************/
 static uint32_t _is_tick();
 static void _super_loop();
 
+/******************************************************************************/
+/*           Functions                                                        */
+/******************************************************************************/
 /** @brief  The application entry point. */
 int main(void) {
 	map_t reg = { 0 };
@@ -105,6 +108,7 @@ int main(void) {
 	}
 }
 
+/******************************************************************************/
 static void _super_loop() {
 	void (* const fxn_to_ex_per_tick[])(void) = {update_tick,
 		update_debug_inputs,
@@ -135,6 +139,7 @@ static void _super_loop() {
 	}
 }
 
+/******************************************************************************/
 static uint32_t _is_tick() {
 	static uint32_t tick = 0;
 	if (tick != HAL_GetTick()) {
