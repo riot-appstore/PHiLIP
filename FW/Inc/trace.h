@@ -19,7 +19,7 @@
 #ifndef TRACE_H_
 #define TRACE_H_
 
-/* Defines -------------------------------------------------------------------*/
+/* Defines ********************************************************************/
 /** @brief  	The sources of an event. */
 enum EVENT_SOURCES {
 	SOURCE_NONE, /**< No source selected, should be invalid */
@@ -35,8 +35,7 @@ enum EVENT_TYPE {
 	EVENT_TYPE_RISING /**< Rising edge interrupt */
 };
 
-
-/* Function prototypes -------------------------------------------------------*/
+/* Function prototypes ********************************************************/
 /**
  * @brief		Initializes trace register.
  *

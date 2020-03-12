@@ -17,7 +17,8 @@
  * @}
  ******************************************************************************
  */
-/* Includes ------------------------------------------------------------------*/
+
+/* Includes *******************************************************************/
 #include <string.h>
 #include <stdint.h>
 
@@ -26,23 +27,23 @@
 
 #include "trace.h"
 
-/* Private variables ---------------------------------------------------------*/
+/* Private macros *************************************************************/
 /** @brief		Gets the buffer size of the number of traces. */
 #define NUM_OF_TRACES	(sizeof(((map_t*)0)->trace.tick)/sizeof(((map_t*)0)->trace.tick[0]))
 
-/* Private variables ---------------------------------------------------------*/
+/* Private variables **********************************************************/
 static trace_t *trace;
 
-/**
- * @brief		Initializes trace register.
- *
- * @param[in]	reg			Pointer to live register memory map
- * @note		No saved reg is needed since nothing is configurable
- */
+/******************************************************************************/
+/*           Initialization                                                   */
+/******************************************************************************/
 void init_trace(map_t *reg) {
 	trace = &(reg->trace);
 }
 
+/******************************************************************************/
+/*           Functions                                                        */
+/******************************************************************************/
 void store_gpio_trace(uint8_t tick_div, uint8_t source, uint16_t value) {
 	trace->source[trace->index] = source;
 	trace->tick_div[trace->index] = tick_div;
