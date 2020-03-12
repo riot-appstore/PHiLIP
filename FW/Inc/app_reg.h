@@ -53,7 +53,7 @@ uint32_t get_reg_size();
  * @param[in]	index 	The index of the register map to start to read
  * @param[out]	data	Pointer to data that was read
  *
- * @return      EOK on success
+ * @return      0 on success
  * @return      EOVERFLOW if trying to read out of range
  *
  * @details		This is a direct read from the register without any protection,
@@ -70,7 +70,7 @@ void unprotected_read_uint8(uint32_t index, uint8_t *data);
  * @param[in]	index 	The index of the register map to start to read
  * @param[out]	data	Pointer to data that was read
  *
- * @return      EOK on success
+ * @return      0 on success
  * @return      EOVERFLOW if trying to read out of range
  *
  */
@@ -83,7 +83,7 @@ error_t read_reg(uint32_t index, uint8_t *data);
  * @param[out]	data	Pointer to data that was read
  * @param[in]	size 	The amount of bytes to read
  *
- * @return      EOK on success
+ * @return      0 on success
  * @return      EOVERFLOW if trying to read out of range
  *
  * @warning		Multiple writes to data may occur so don't pass hardware
@@ -98,7 +98,7 @@ error_t read_regs(uint32_t index, uint8_t *data, uint16_t size);
  * @param[out]	data	Pointer to data that was write
  * @param[in]	access 	The access level of the caller
  *
- * @return      EOK on success
+ * @return      0 on success
  * @return      EOVERFLOW if trying to read out of range
  * @return      EACCESS caller does not have write access
  *
@@ -114,7 +114,7 @@ error_t write_reg(uint32_t index, uint8_t data, uint8_t access);
  * @param[in]	size 	The amount of bytes to write
  * @param[in]	access 	The access level of the caller
  *
- * @return      EOK on success
+ * @return      0 on success
  * @return      EOVERFLOW if trying to read out of range
  * @return      EACCESS caller does not have write access
  *

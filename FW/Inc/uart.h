@@ -48,8 +48,7 @@ void init_if_uart();
  * @brief		Commits the dut uart registers and executes operations.
  *
  * @pre			uart must first be initialized with init_dut_uart()
- * @return      EOK if init occurred
- * @return      ENOACTION if no init was triggered
+ * @return      0 Success
  *
  * @note		Only executes actions if the uart.mode.init is set.
  */
@@ -59,8 +58,7 @@ error_t commit_dut_uart();
  * @brief		Polls for any commands from the dut uart.
  *
  * @pre			uart must first be initialized with init_dut_uart()
- * @return      EOK on success
- * @return      ENOACTION no action occurred
+ * @return      0 Success
  * @return 		EPROTONOSUPPORT command not supported
  * @return 		EACCES caller doesn't have access
  * @return 		EMSGSIZE message size too big
@@ -75,8 +73,7 @@ error_t poll_dut_uart();
  * @brief		Polls for any commands from the interface uart.
  *
  * @pre			uart must first be initialized with init_if_uart()
- * @return      EOK on success
- * @return      ENOACTION no action occurred
+ * @return      0 Success
  * @return 		EPROTONOSUPPORT command not supported
  * @return 		EACCES caller doesn't have access
  * @return 		EMSGSIZE message size too big

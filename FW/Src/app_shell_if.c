@@ -20,7 +20,7 @@
  ******************************************************************************
  */
 
-/* Includes ------------------------------------------------------------------*/
+/* Includes *******************************************************************/
 #include <errno.h>
 #include <stdio.h>
 #include <stdint.h>
@@ -31,14 +31,13 @@
 #include "PHiLIP_typedef.h"
 #include "PHiLIP_map.h"
 #include "app_access.h"
-#include "app_errno.h"
 #include "app_common.h"
 #include "app_reg.h"
 #include "map_if.h"
 
 #include "app_shell_if.h"
 
-/* Private defines -----------------------------------------------------------*/
+/* Private defines *************************************************************/
 /** @brief   The command to read application registers */
 #define READ_REG_CMD	"rr "
 
@@ -88,13 +87,14 @@
 /** @brief   Macro for max values of a byte */
 #define BYTE_MAX		((uint8_t)0xFF)
 
+/* Private macros *************************************************************/
 /** @brief   Is a ascii number */
 #define IS_NUM(x)		(x >= '0' && x <= '9')
 
 /** @brief   Macro to check if command string matches */
 #define IS_COMMAND(x)	(memcmp(str, x, strlen(x)) == 0)
 
-/* Private function prototypes -----------------------------------------------*/
+/* Private function prototypes ************************************************/
 static error_t _cmd_read_reg(char *str, uint16_t buf_size);
 static error_t _cmd_write_reg(char *str, uint16_t buf_size, uint8_t access);
 static error_t _cmd_read_key(char *str, uint16_t buf_size);
@@ -110,26 +110,9 @@ static uint32_t _fast_atou(char **str, char terminator);
 
 static void _json_result(char *str, error_t result);
 
-/* Functions -----------------------------------------------------------------*/
-/**
- * @brief Parses a string and executes commands.
- *
- * @param[in]	str			String with the command
- * @param[in]	buf_size	The max size of the string buffer
- * @param[in]	access		The callers access level
- *
- * @return 		EOK on success
- * @return 		EPROTONOSUPPORT command not supported
- * @return 		EACCES caller doesn't have access
- * @return 		EMSGSIZE message size too big
- * @return 		EINVAL Invalid value
- * @return 		EOVERFLOW invalid address
- * @return 		ERANGE invalid number range
- * @return 		ENODATA not enough data
- * @return 		EUNKNOWN
- *
- * @warning		May protect interrupts and cause jitter.
- */
+/******************************************************************************/
+/*           Functions                                                        */
+/******************************************************************************/
 error_t parse_command(char *str, uint16_t buf_size, uint8_t access) {
 	error_t err = EPROTONOSUPPORT;
 
@@ -149,7 +132,7 @@ error_t parse_command(char *str, uint16_t buf_size, uint8_t access) {
 		err = _cmd_mm_print(str, buf_size);
 	} else if (IS_COMMAND(MM_SIZE_CMD)) {
 		sprintf(str, "{\"data\":%u,\"result\":0}\n", MAP_T_NUM_OF_RECORDS);
-		err = EOK;
+		err = 0;
 	} else if (IS_COMMAND(HELP_CMD)) {
 		err = _cmd_print_help(str);
 	} else if (IS_COMMAND(VERSION_CMD) || IS_COMMAND(VERSION_CMD2) ||
@@ -172,13 +155,14 @@ error_t parse_command(char *str, uint16_t buf_size, uint8_t access) {
 		err = EMSGSIZE;
 	}
 
-	if (err != EOK) {
+	if (err != 0) {
 		_json_result(str, err);
 	}
 
 	return err;
 }
 
+/******************************************************************************/
 static error_t _cmd_read_reg(char *str, uint16_t buf_size) {
 	char *first_str = str;
 	char *arg_str = str + strlen(READ_REG_CMD);
@@ -213,10 +197,9 @@ static error_t _cmd_read_reg(char *str, uint16_t buf_size) {
 				}
 			}
 			sprintf(str, "], \"result\":0}\n");
-			return EOK;
 		}
 	}
-	return EUNKNOWN;
+	return 0;
 }
 
 static error_t _cmd_write_reg(char *str, uint16_t buf_size, uint8_t access) {
@@ -224,7 +207,7 @@ static error_t _cmd_write_reg(char *str, uint16_t buf_size, uint8_t access) {
 	error_t err;
 
 	err = _valid_args(str, &arg_count, buf_size);
-	if (err == EOK) {
+	if (err == 0) {
 		if (arg_count < 2) {
 			err = ENODATA;
 		} else {
@@ -240,7 +223,7 @@ static error_t _cmd_write_reg(char *str, uint16_t buf_size, uint8_t access) {
 					DIS_INT;
 					err = write_reg(index, val, access);
 					EN_INT;
-					if (err != EOK) {
+					if (err != 0) {
 						return err;
 					}
 					index++;
@@ -253,8 +236,8 @@ static error_t _cmd_write_reg(char *str, uint16_t buf_size, uint8_t access) {
 				DIS_INT;
 				err = write_reg(index, val, access);
 				EN_INT;
-				if (err == EOK) {
-					_json_result(str, EOK);
+				if (err == 0) {
+					_json_result(str, 0);
 				}
 			}
 		}
@@ -266,7 +249,7 @@ static error_t _cmd_read_key(char *str, uint16_t buf_size) {
 	char *arg_str = str + strlen(READ_KEY_CMD);
 	uint32_t array_index = 0;
 	uint32_t data = 0;
-	error_t err = EUNKNOWN;
+	error_t err;
 	for (; *arg_str != 0 && *arg_str != ' ' && *arg_str != RX_END_CHAR;
 			arg_str++)
 		;
@@ -290,7 +273,7 @@ static error_t _cmd_write_key(char *str, uint16_t buf_size, uint8_t access) {
 	char *arg_str = str + strlen(WRITE_KEY_CMD);
 	uint32_t array_index = 0;
 	uint32_t data = 0;
-	error_t err = EUNKNOWN;
+	error_t err;
 
 	for (; *arg_str != 0 && *arg_str != ' ' && *arg_str != RX_END_CHAR;
 			arg_str++)
@@ -314,7 +297,7 @@ static error_t _cmd_write_key(char *str, uint16_t buf_size, uint8_t access) {
 
 	err = set_mm_val(str + strlen(WRITE_KEY_CMD), array_index, data, access);
 	/* If error the print will be overwritten */
-	_json_result(str, EOK);
+	_json_result(str, 0);
 	return err;
 }
 
@@ -327,17 +310,16 @@ static error_t _cmd_mm_print(char *str, uint16_t buf_size) {
 
 static error_t _cmd_execute(char *str) {
 	error_t err = execute_reg_change();
-	if (err == EOK) {
-		_json_result(str, EOK);
+	if (err == 0) {
+		_json_result(str, 0);
 	}
 	return err;
 }
 
 static error_t _cmd_print_version(char *str) {
-	sprintf(str, "{\"version\":\"%u.%u.%u\",\"result\":0}\n", IF_VERSION_MAJOR, IF_VERSION_MINOR,
-			IF_VERSION_PATCH);
-
-	return EOK;
+	sprintf(str, "{\"version\":\"%u.%u.%u\",\"result\":0}\n", IF_VERSION_MAJOR,
+			IF_VERSION_MINOR, IF_VERSION_PATCH);
+	return 0;
 }
 
 static error_t _cmd_print_help(char *str) {
@@ -351,9 +333,10 @@ mcu_rst : Soft reset\n\
 mm <index> : Prints mem map record \n\
 mm_size : Amount of records in memory map\n\
 version : Interface version\n");
-	return EOK;
+	return 0;
 }
 
+/******************************************************************************/
 static error_t _valid_args(char *str, uint32_t *arg_count, uint16_t buf_size) {
 	char *arg_str = str + strlen(WRITE_REG_CMD);
 	uint32_t val;
@@ -370,7 +353,7 @@ static error_t _valid_args(char *str, uint32_t *arg_count, uint16_t buf_size) {
 				return EOVERFLOW;
 			} else {
 				(*arg_count)++;
-				return EOK;
+				return 0;
 			}
 		} else if (val > get_reg_size()) {
 			return EOVERFLOW;
@@ -384,7 +367,7 @@ static error_t _valid_args(char *str, uint32_t *arg_count, uint16_t buf_size) {
 
 static error_t _cmd_reset() {
 	SOFT_RESET;
-	return EUNKNOWN;
+	return __ELASTERROR;
 }
 
 uint32_t _fast_atou(char **str, char terminator) {
