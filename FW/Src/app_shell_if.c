@@ -97,11 +97,13 @@
 /* Private function prototypes ************************************************/
 static error_t _cmd_read_reg(char *str, uint16_t buf_size);
 static error_t _cmd_write_reg(char *str, uint16_t buf_size, uint8_t access);
+#ifdef USE_INTERNAL_MEMORY_MAP
 static error_t _cmd_read_key(char *str, uint16_t buf_size);
 static error_t _cmd_write_key(char *str, uint16_t buf_size, uint8_t access);
+static error_t _cmd_mm_print(char *str, uint16_t buf_size);
+#endif
 static error_t _cmd_execute(char *str);
 static error_t _cmd_reset();
-static error_t _cmd_mm_print(char *str, uint16_t buf_size);
 static error_t _cmd_print_help(char *str);
 static error_t _cmd_print_version(char *str);
 
@@ -124,15 +126,18 @@ error_t parse_command(char *str, uint16_t buf_size, uint8_t access) {
 		err = _cmd_read_reg(str, buf_size);
 	} else if (IS_COMMAND(WRITE_REG_CMD)) {
 		err = _cmd_write_reg(str, buf_size, access);
+#ifdef USE_INTERNAL_MEMORY_MAP
 	} else if (IS_COMMAND(READ_KEY_CMD)) {
 		err = _cmd_read_key(str, buf_size);
 	} else if (IS_COMMAND(WRITE_KEY_CMD)) {
 		err = _cmd_write_key(str, buf_size, access);
+
 	} else if (IS_COMMAND(MEMORY_MAP_CMD)) {
 		err = _cmd_mm_print(str, buf_size);
 	} else if (IS_COMMAND(MM_SIZE_CMD)) {
 		sprintf(str, "{\"data\":%u,\"result\":0}\n", MAP_T_NUM_OF_RECORDS);
 		err = 0;
+#endif
 	} else if (IS_COMMAND(HELP_CMD)) {
 		err = _cmd_print_help(str);
 	} else if (IS_COMMAND(VERSION_CMD) || IS_COMMAND(VERSION_CMD2) ||
@@ -244,7 +249,7 @@ static error_t _cmd_write_reg(char *str, uint16_t buf_size, uint8_t access) {
 	}
 	return err;
 }
-
+#ifdef USE_INTERNAL_MEMORY_MAP
 static error_t _cmd_read_key(char *str, uint16_t buf_size) {
 	char *arg_str = str + strlen(READ_KEY_CMD);
 	uint32_t array_index = 0;
@@ -307,6 +312,7 @@ static error_t _cmd_mm_print(char *str, uint16_t buf_size) {
 	return get_mm(index, str);
 
 }
+#endif
 
 static error_t _cmd_execute(char *str) {
 	error_t err = execute_reg_change();
@@ -323,6 +329,7 @@ static error_t _cmd_print_version(char *str) {
 }
 
 static error_t _cmd_print_help(char *str) {
+#ifdef USE_INTERNAL_MEMORY_MAP
 	sprintf(str,
 			"rr <reg_offset> <size> : Reads bytes\n\
 wr <reg_offest> <DATA0> [DATA1] ... [DATAn] : Writes bytes\n\
@@ -333,6 +340,14 @@ mcu_rst : Soft reset\n\
 mm <index> : Prints mem map record \n\
 mm_size : Amount of records in memory map\n\
 version : Interface version\n");
+#else
+	sprintf(str,
+			"rr <reg_offset> <size> : Reads bytes\n\
+wr <reg_offest> <DATA0> [DATA1] ... [DATAn] : Writes bytes\n\
+ex : Executes config changes\n\
+mcu_rst : Soft reset\n\
+version : Interface version\n");
+#endif
 	return 0;
 }
 
