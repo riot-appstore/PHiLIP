@@ -81,7 +81,7 @@ void init_dut_pwm_dac_msp() {
 }
 
 void postinit_dut_pwm_dac_msp() {
-	GPIO_InitTypeDef GPIO_InitStruct;
+	GPIO_InitTypeDef GPIO_InitStruct = {0};
 
 	GPIO_InitStruct.Pin = DUT_PWM_Pin;
 	GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
@@ -118,7 +118,7 @@ error_t commit_dut_pwm() {
 		}
 	}
 	else {
-		GPIO_InitTypeDef GPIO_InitStruct;
+		GPIO_InitTypeDef GPIO_InitStruct = {0};
 		GPIO_InitStruct.Pin = DUT_PWM_Pin;
 		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
 		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -169,7 +169,7 @@ error_t commit_dut_dac() {
 		dut_dac.hoc.OCMode = TIM_OCMODE_INACTIVE;
 	}
 	else {
-		GPIO_InitTypeDef GPIO_InitStruct;
+		GPIO_InitTypeDef GPIO_InitStruct = {0};
 		GPIO_InitStruct.Pin = DUT_DAC_Pin;
 		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
 		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;

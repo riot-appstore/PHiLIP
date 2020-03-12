@@ -92,7 +92,7 @@ void update_dut_uart_inputs();
 /**
  * @brief This function handles dut_cts event interrupt.
  */
-void dut_cts_int();
+void GPIO_CTS_INT();
 
 /**
  * @brief		Only for use with the STM32xxxx_HAL_Driver.

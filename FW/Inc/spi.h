@@ -62,7 +62,7 @@ void deinit_dut_spi_msp();
 /**
  * @brief Interrupt callback for the spi line raise or lower
  */
-void dut_nss_int();
+void GPIO_NSS_INT();
 
 #endif /* SPI_H_ */
 /** @} */

@@ -77,6 +77,8 @@ typedef struct {
 #define IS_RX_WAITING(x)	(HAL_IS_BIT_SET(x, USART_CR3_DMAR))
 
 /* Private function prototypes ************************************************/
+static void _init_gpio();
+
 static error_t _poll_uart(uart_dev_t *dev);
 static error_t _tx_str(uart_dev_t *port_uart);
 static error_t _rx_str(uart_dev_t *dev);
@@ -112,6 +114,8 @@ static DMA_HandleTypeDef hdma_usart_dut_rx;
 /******************************************************************************/
 void init_dut_uart(map_t *reg) {
 	uart_dev_t* uart_dev = &dut_uart;
+
+	_init_gpio();
 
 	uart_dev->tx_data_fxn = HAL_UART_Transmit_IT;
 	uart_dev->access = PERIPH_ACCESS;
@@ -180,6 +184,24 @@ void deinit_dut_uart_msp() {
 	HAL_NVIC_DisableIRQ(DUT_UART_IRQ);
 }
 
+/******************************************************************************/
+static void _init_gpio() {
+	GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_MEDIUM;
+	GPIO_InitStruct.Pin = DUT_RTS_Pin;
+	HAL_GPIO_Init(DUT_RTS_GPIO_Port, &GPIO_InitStruct);
+
+	GPIO_InitStruct.Pin = DUT_CTS_Pin;
+	GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+	GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+	HAL_GPIO_Init(DUT_CTS_GPIO_Port, &GPIO_InitStruct);
+
+	HAL_NVIC_SetPriority(GPIO_CTS_IRQ, DEFAULT_INT_PRIO, 0);
+	HAL_NVIC_EnableIRQ(GPIO_CTS_IRQ);
+}
 /******************************************************************************/
 error_t commit_dut_uart() {
 	UART_HandleTypeDef* huart = &dut_uart.huart;
@@ -549,6 +571,6 @@ void IF_UART_INT(void) {
 /**
  * @brief This function handles dut_cts event interrupt.
  */
-void dut_cts_int() {
+void GPIO_CTS_INT() {
 	dut_uart_reg->status.cts = 1;
 }

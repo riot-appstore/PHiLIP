@@ -61,69 +61,6 @@ static gpio_dev debug_gpio[3];
 /*           Initialization                                                   */
 /******************************************************************************/
 void init_gpio(map_t *reg) {
-	GPIO_InitTypeDef GPIO_InitStruct;
-	/* GPIO Ports Clock Enable */
-	__HAL_RCC_GPIOC_CLK_ENABLE();
-	__HAL_RCC_GPIOD_CLK_ENABLE();
-	__HAL_RCC_GPIOA_CLK_ENABLE();
-	__HAL_RCC_GPIOB_CLK_ENABLE();
-
-	/*Configure GPIO pin Output Level */
-	HAL_GPIO_WritePin(TEST_WARN, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(TEST_FAIL, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(TEST_PASS, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(LED0, LED_OFF);
-
-	/*Configure GPIO pin Output Level */
-	HAL_GPIO_WritePin(DUT_RST, GPIO_PIN_SET);
-
-	/*Configure GPIO pin : USER_BTN_Pin */
-	GPIO_InitStruct.Pin = USER_BTN_Pin;
-	GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-	GPIO_InitStruct.Pull = GPIO_PULLUP;
-	HAL_GPIO_Init(USER_BTN_GPIO_Port, &GPIO_InitStruct);
-
-	GPIO_InitStruct.Pin = TEST_WARN_Pin;
-	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-	GPIO_InitStruct.Pull = GPIO_NOPULL;
-	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-	HAL_GPIO_Init(TEST_WARN_GPIO_Port, &GPIO_InitStruct);
-
-	GPIO_InitStruct.Pin = TEST_FAIL_Pin;
-	HAL_GPIO_Init(TEST_FAIL_GPIO_Port, &GPIO_InitStruct);
-
-	GPIO_InitStruct.Pin = TEST_PASS_Pin;
-	HAL_GPIO_Init(TEST_PASS_GPIO_Port, &GPIO_InitStruct);
-
-	GPIO_InitStruct.Pin = LED0_Pin;
-	HAL_GPIO_Init(LED0_GPIO_Port, &GPIO_InitStruct);
-
-	GPIO_InitStruct.Pin = DUT_RTS_Pin;
-	HAL_GPIO_Init(DUT_RTS_GPIO_Port, &GPIO_InitStruct);
-
-	GPIO_InitStruct.Pin = DUT_RST_Pin;
-	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
-	GPIO_InitStruct.Pull = GPIO_PULLUP;
-	HAL_GPIO_Init(DUT_RST_GPIO_Port, &GPIO_InitStruct);
-
-	/*Configure GPIO pin : DUT_CTS_Pin */
-	GPIO_InitStruct.Pin = DUT_CTS_Pin;
-	GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-	GPIO_InitStruct.Pull = GPIO_PULLDOWN;
-	HAL_GPIO_Init(DUT_CTS_GPIO_Port, &GPIO_InitStruct);
-
-	/*Configure GPIO pin : DUT_NSS_Pin */
-	GPIO_InitStruct.Pin = DUT_NSS_Pin;
-	GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
-	GPIO_InitStruct.Pull = GPIO_PULLUP;
-	HAL_GPIO_Init(DUT_NSS_GPIO_Port, &GPIO_InitStruct);
-
-
-	HAL_NVIC_SetPriority(GPIO_NSS_CTS_IRQ, DEFAULT_INT_PRIO, 0);
-	HAL_NVIC_SetPriority(GPIO_DEBUG0_IRQ, DEFAULT_INT_PRIO, 0);
-	HAL_NVIC_SetPriority(GPIO_DEBUG1_IRQ, DEFAULT_INT_PRIO, 0);
-	HAL_NVIC_SetPriority(GPIO_DEBUG2_IRQ, DEFAULT_INT_PRIO, 0);
-
 	debug_gpio[0].port = DEBUG0_GPIO_Port;
 	debug_gpio[0].hgpio.Pin = DEBUG0_Pin;
 	debug_gpio[0].hgpio.Speed = GPIO_SPEED_FREQ_HIGH;
@@ -139,9 +76,10 @@ void init_gpio(map_t *reg) {
 	debug_gpio[2].hgpio.Speed = GPIO_SPEED_FREQ_HIGH;
 	debug_gpio[2].reg = &(reg->gpio[2]);
 
+	HAL_NVIC_SetPriority(GPIO_DEBUG0_IRQ, DEFAULT_INT_PRIO, 0);
+	HAL_NVIC_SetPriority(GPIO_DEBUG1_IRQ, DEFAULT_INT_PRIO, 0);
+	HAL_NVIC_SetPriority(GPIO_DEBUG2_IRQ, DEFAULT_INT_PRIO, 0);
 	commit_debug();
-	HAL_NVIC_EnableIRQ(GPIO_NSS_CTS_IRQ);
-
 }
 
 /******************************************************************************/
@@ -237,25 +175,6 @@ void update_debug_inputs() {
 /******************************************************************************/
 /*           Interrupt Handling                                               */
 /******************************************************************************/
-/**
- * @brief 	Interrupt for NSS and CTS triggering
- * @note 	This is a shared interrupt, both functions being used at the same
- * 			time should be avoided.
- */
-void GPIO_NSS_CTS_INT() {
-	uint32_t int_pins = EXTI->PR;
-	if (DUT_NSS_Pin & int_pins) {
-		dut_nss_int();
-		EXTI->PR = DUT_NSS_Pin | DUT_CTS_Pin;
-		/* Exit quickly since spi response must be ASAP */
-		return;
-	} else if (DUT_CTS_Pin & int_pins) {
-		dut_cts_int();
-	}
-	/* clear interrupts */
-	EXTI->PR = int_pins;
-}
-
 /**
  * @brief 	Interrupt for the DEBUG0 triggering when interrupt mode set
  */

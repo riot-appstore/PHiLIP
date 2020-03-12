@@ -65,6 +65,8 @@ typedef struct {
 #define SPI_ADDR_MASK	(0x80)
 
 /* Private function prototypes ************************************************/
+static void _init_gpio();
+
 static void _spi_echo_int();
 static void _spi_hs_int();
 static void _spi_reg_int();
@@ -78,6 +80,8 @@ static spi_dev dut_spi;
 /******************************************************************************/
 void init_dut_spi(map_t *reg) {
 	SPI_HandleTypeDef *hspi = &dut_spi.hspi;
+
+	_init_gpio();
 
 	hspi->Instance = DUT_SPI_INST;
 	hspi->Init.Mode = SPI_MODE_SLAVE;
@@ -132,6 +136,18 @@ void deinit_dut_spi_msp() {
 	HAL_NVIC_DisableIRQ(DUT_SPI_IRQ);
 }
 
+/******************************************************************************/
+static void _init_gpio() {
+	GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+	GPIO_InitStruct.Pin = DUT_NSS_Pin;
+	GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
+	GPIO_InitStruct.Pull = GPIO_PULLUP;
+	HAL_GPIO_Init(DUT_NSS_GPIO_Port, &GPIO_InitStruct);
+
+	HAL_NVIC_SetPriority(GPIO_NSS_IRQ, DEFAULT_INT_PRIO, 0);
+	HAL_NVIC_EnableIRQ(GPIO_NSS_IRQ);
+}
 /******************************************************************************/
 error_t commit_dut_spi() {
 	SPI_HandleTypeDef *hspi = &dut_spi.hspi;
@@ -304,7 +320,7 @@ static void _spi_const_int() {
  */
 #pragma GCC push_options
 #pragma GCC optimize ("O3")
-void dut_nss_int() {
+void GPIO_NSS_INT() {
 	if (HAL_GPIO_ReadPin(DUT_NSS)) {
 		/* Finished frame */
 		uint32_t itflag = dut_spi.hspi.Instance->SR;

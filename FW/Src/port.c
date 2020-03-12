@@ -235,10 +235,34 @@ void _Error_Handler(char *file, int line) {
 }
 
 void init_periphs() {
+	__HAL_RCC_GPIOA_CLK_ENABLE();
+	__HAL_RCC_GPIOB_CLK_ENABLE();
+	__HAL_RCC_GPIOC_CLK_ENABLE();
+	__HAL_RCC_GPIOD_CLK_ENABLE();
+	__HAL_RCC_DMA1_CLK_ENABLE();
+
 	/* Prevents i2c clk from toggling at init */
 	__HAL_RCC_I2C1_CLK_ENABLE();
 
-	__HAL_RCC_DMA1_CLK_ENABLE();
+}
+
+/******************************************************************************/
+/*           Interrupt Handling                                               */
+/******************************************************************************/
+/**
+ * @brief 	Interrupt for NSS and CTS triggering
+ * @note 	This is a shared interrupt, both functions being used at the same
+ * 			time should be avoided.
+ */
+void GPIO_NSS_CTS_INT() {
+	uint32_t int_pins = EXTI->PR;
+	if (DUT_NSS_Pin & int_pins) {
+		GPIO_NSS_INT();
+	} else if (DUT_CTS_Pin & int_pins) {
+		GPIO_CTS_INT();
+	}
+	/* clear interrupts */
+	EXTI->PR = int_pins;
 }
 
 /**

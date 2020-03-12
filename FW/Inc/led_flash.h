@@ -20,7 +20,12 @@
 #ifndef LED_FLASH_H_
 #define LED_FLASH_H_
 
-/* Function prototypes -------------------------------------------------------*/
+/* Function prototypes ********************************************************/
+/**
+ * @brief		Initialize LED0 gpio.
+ */
+void init_led_flash();
+
 /**
  * @brief		Flashes the firmware major, minor, and patch version (+1) on
  * 				on the led.

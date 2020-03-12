@@ -35,6 +35,9 @@
 
 #include "sys.h"
 
+/* Private function prototypes ************************************************/
+static void _init_gpio();
+
 /* Private variables **********************************************************/
 static sys_t *sys_reg;
 
@@ -43,6 +46,8 @@ static sys_t *sys_reg;
 /******************************************************************************/
 void init_sys(map_t *reg) {
 	sys_reg = &(reg->sys);
+
+	_init_gpio();
 
 	uint32_t tmp[3];
 	tmp[0] = HAL_GetUIDw0();
@@ -88,6 +93,17 @@ error_t commit_sys() {
 	sys_inst->status.update = 0;
 
 	return 0;
+}
+
+/******************************************************************************/
+static void _init_gpio() {
+	GPIO_InitTypeDef GPIO_InitStruct = {0};
+	HAL_GPIO_WritePin(DUT_RST, GPIO_PIN_SET);
+
+	GPIO_InitStruct.Pin = DUT_RST_Pin;
+	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
+	GPIO_InitStruct.Pull = GPIO_PULLUP;
+	HAL_GPIO_Init(DUT_RST_GPIO_Port, &GPIO_InitStruct);
 }
 
 /******************************************************************************/

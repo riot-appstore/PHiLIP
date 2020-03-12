@@ -125,11 +125,16 @@
 #define GPIO_DEBUG0_IRQ		EXTI0_IRQn
 #define GPIO_DEBUG1_IRQ		EXTI1_IRQn
 #define GPIO_DEBUG2_IRQ		EXTI2_IRQn
+
 #define GPIO_DEBUG0_INT		EXTI0_IRQHandler
 #define GPIO_DEBUG1_INT		EXTI1_IRQHandler
 #define GPIO_DEBUG2_INT		EXTI2_IRQHandler
-#define GPIO_NSS_CTS_IRQ		EXTI15_10_IRQn
-#define GPIO_NSS_CTS_INT		EXTI15_10_IRQHandler
+
+#define GPIO_NSS_CTS_IRQ	EXTI15_10_IRQn
+#define GPIO_NSS_CTS_INT	EXTI15_10_IRQHandler
+
+#define GPIO_CTS_IRQ		GPIO_NSS_CTS_IRQ
+#define GPIO_NSS_IRQ		GPIO_NSS_CTS_IRQ
 
 #define RCC_HSE_STATE		RCC_HSE_ON
 
@@ -330,14 +335,20 @@
 #define LED_OFF 			GPIO_PIN_RESET
 
 /******************************************************************************/
-#define GPIO_NSS_CTS_IRQ	EXTI15_10_IRQn
+
 #define GPIO_DEBUG0_IRQ		EXTI3_IRQn
 #define GPIO_DEBUG1_IRQ		EXTI4_IRQn
 #define GPIO_DEBUG2_IRQ		EXTI2_IRQn
-#define GPIO_NSS_CTS_INT	EXTI15_10_IRQHandler
+
 #define GPIO_DEBUG0_INT		EXTI3_IRQHandler
 #define GPIO_DEBUG1_INT		EXTI4_IRQHandler
 #define GPIO_DEBUG2_INT		EXTI2_IRQHandler
+
+#define GPIO_NSS_CTS_IRQ	EXTI15_10_IRQn
+#define GPIO_NSS_CTS_INT	EXTI15_10_IRQHandler
+
+#define GPIO_CTS_IRQ		GPIO_NSS_CTS_IRQ
+#define GPIO_NSS_IRQ		GPIO_NSS_CTS_IRQ
 
 #define RCC_HSE_STATE		RCC_HSE_BYPASS
 
