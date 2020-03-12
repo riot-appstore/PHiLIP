@@ -19,7 +19,7 @@
 #ifndef RTC_H_
 #define RTC_H_
 
-/* Function prototypes -------------------------------------------------------*/
+/* Function prototypes ********************************************************/
 /**
  * @brief		Initializes rtc registers.
  *
@@ -33,10 +33,9 @@ void init_rtc(map_t *reg);
  * @brief		Commits the rtc registers and executes operations.
  *
  * @pre			rtc must first be initialized with init_rtc()
- * @return      EOK if init occurred
- * @return      ENOACTION if no init was triggered
+ * @return      0 on success
  *
- * @note		Only executes actions if the rtc.mode.init is set.
+ * @note		Only executes actions if the rtc.mode.init is clear.
  */
 error_t commit_rtc();
 
