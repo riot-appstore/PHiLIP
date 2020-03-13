@@ -64,7 +64,7 @@ uint64_t get_tick() {
 		sys_tick = SysTick->VAL;
 		tick = HAL_GetTick();
 	} while (SysTick->VAL > sys_tick);
-	return (tick << TICK_BIT_OFFSET) + (SysTick->LOAD - sys_tick);
+	return ((uint64_t)tick << TICK_BIT_OFFSET) + (SysTick->LOAD - sys_tick);
 }
 
 uint32_t get_tick32() {
@@ -74,8 +74,7 @@ uint32_t get_tick32() {
 		sys_tick = SysTick->VAL;
 		tick = HAL_GetTick();
 	} while (SysTick->VAL > sys_tick);
-	return (uint32_t) (((uint32_t) tick << TICK_BIT_OFFSET)
-			+ (SysTick->LOAD - sys_tick));
+	return (( tick << TICK_BIT_OFFSET) + (SysTick->LOAD - sys_tick));
 }
 
 
