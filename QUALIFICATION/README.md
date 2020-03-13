@@ -101,4 +101,10 @@ The trace tests should be verified with a scope or precision timing.  Connect to
 
 Evaluate the following:
 - Connect the each pin and toggle the following and verify
-- Evaluate the timing at different tick div up to 16 (+-15%)
+
+| Module | Mode | Min Holdoff Time (ns) | Jitter (ns) |Events At Max Speed | Min Pause Time (us) |
+|-|-|-| -|-|-|
+| `tmr`  |  Both Edges | 1000  | 200  |  128 | 100
+| `tmr`  |  Rising | 200  | 28  |  128 | 100
+| `tmr`  |  Falling | 200  | 28  |  128 | 100
+| `gpio`  | Both Edges |  10000 | 600  | n/a  |  n/a |

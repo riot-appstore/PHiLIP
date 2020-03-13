@@ -16,6 +16,9 @@
  * @brief			GPIO management.
  * @details			Controls all basic GPIO functions such as interrupts and
  * 					initialization.
+ * 					The interrupt mode of the GPIO can log ticks at a rate of
+ * 					100kHz, any faster and logs will be missed.
+ *
  ******************************************************************************
  */
 
