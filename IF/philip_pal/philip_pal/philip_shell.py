@@ -39,9 +39,10 @@ import logging
 import argparse
 try:
     import readline
-
 except ImportError:
     readline = None
+from tabulate import tabulate
+import statistics as sta
 import serial.tools.list_ports
 try:
     from .philip_if import PhilipExtIf
@@ -249,7 +250,37 @@ class PhilipShell(cmd.Cmd):
         Usage:
             read_trace
         """
-        self._print_func_result(self.phil.read_trace, arg)
+        try:
+            results = self.phil.read_trace()
+        except KeyError as exc:
+            print('Could not parse argument {}'.format(exc))
+        except (TypeError, ValueError, SyntaxError) as exc:
+            print(exc)
+        else:
+            if len(results) == 0:
+                return
+            headers = ['time', 'diff', 'source_diff', 'source', 'event']
+            table_data = []
+            diffs = []
+            for event in results["data"]:
+                row_data = []
+                for key_name in headers:
+                    if key_name == 'diff':
+                        diffs.append(event[key_name])
+                    if isinstance(event[key_name], float):
+                        event[key_name] = "{:.8f}".format(event[key_name])
+                    row_data.append(event[key_name])
+                table_data.append(row_data)
+            print(tabulate(table_data, headers=headers))
+
+            diffs = diffs[1:]
+            print("\nDifference Stats")
+            print("     min: {:.9f}".format(min(diffs)))
+            print("     max: {:.9f}".format(max(diffs)))
+            print("    mean: {:.9f}".format(sta.mean(diffs)))
+            print("  median: {:.9f}".format(sta.median(diffs)))
+            print("   stdev: {:.9f}".format(sta.stdev(diffs)))
+            print("variance: {:.9f}".format(sta.variance(diffs)))
 
     def do_data_filter(self, arg):
         """Select or toggle filtering for data
