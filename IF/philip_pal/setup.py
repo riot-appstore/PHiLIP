@@ -36,7 +36,7 @@ setup(
     ],
     setup_requires=["pytest-runner"],
     tests_require=["pytest", "pytest-regtest"],
-    install_requires=['pyserial'],
+    install_requires=['pyserial', 'tabulate'],
     entry_points={
         'console_scripts': ['philip_shell=philip_pal.philip_shell:main'],
     }
