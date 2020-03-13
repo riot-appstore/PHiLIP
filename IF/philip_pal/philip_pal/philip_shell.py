@@ -32,19 +32,24 @@ optional arguments:
 ```
 """
 import os
+import glob
 import cmd
 from json import dumps
 import logging
 import argparse
-import serial.tools.list_ports
 try:
     import readline
+
 except ImportError:
     readline = None
+import serial.tools.list_ports
 try:
     from .philip_if import PhilipExtIf
 except ImportError:
     from philip_pal.philip_if import PhilipExtIf
+
+
+_HISTFILE = os.path.join(os.path.expanduser("~"), ".philip_history")
 
 
 class PhilipShell(cmd.Cmd):
@@ -53,18 +58,19 @@ class PhilipShell(cmd.Cmd):
     Args:
         port - Serial port for the PHiLIP, if None connection wizard tries to
                connent
-        data_only - If true only data prints from command an not the whole
-                    response struct
     """
     prompt = 'PHiLIP: '
 
-    def __init__(self, port=None, data_only=True, use_dev_map=False):
+    def __init__(self, port=None, use_dev_map=False):
         if port is None:
             self.phil = self._connect_wizard(use_dev_map=use_dev_map)
+        elif port == "ignore":
+            cmd.Cmd.__init__(self)
+            return
         else:
             self.phil = PhilipExtIf(port, use_dev_map=use_dev_map)
         print("Interface Version: {}".format(self.phil.if_version))
-        self.data_only = data_only
+        self.data_only = True
         cmd.Cmd.__init__(self)
 
     @staticmethod
@@ -88,7 +94,7 @@ class PhilipShell(cmd.Cmd):
     def preloop(self):
         if readline:
             try:
-                readline.read_history_file()
+                readline.read_history_file(_HISTFILE)
             except IOError:
                 pass
 
@@ -441,6 +447,26 @@ PM_LO_ADC -18- PM_HI_ADC          IF_TX -18-
         except (FileNotFoundError) as exc:
             print(exc)
 
+    def complete_run_script(self, text, line, start_idx, end_idx):
+        """Autocomplete file search"""
+        text = text
+        before_arg = line.rfind(" ", 0, start_idx)
+        if before_arg == -1:
+            return
+
+        fixed = line[before_arg+1:start_idx]
+        arg = line[before_arg+1:end_idx]
+        pattern = arg + '*'
+
+        completions = []
+        for path in glob.glob(pattern):
+            if path and os.path.isdir(path) and path[-1] != os.sep:
+                path = path + os.sep
+            else:
+                path = path
+            completions.append(path.replace(fixed, "", 1))
+        return completions
+
     def do_exit(self, arg):
         """I mean it should be obvious
 
@@ -493,9 +519,6 @@ PARSER.add_argument('--loglevel', choices=LOG_LEVELS, default='info',
                     help='Python logger log level')
 PARSER.add_argument('--port', '-p', help='Specifies the serial port',
                     default=None)
-PARSER.add_argument('--data_filter_off', '-do', default=True,
-                    action='store_false',
-                    help='Filters data from philip responses')
 PARSER.add_argument('--use_dev_map', '-dm', default=False,
                     action='store_true',
                     help='Uses the memory map from device')
@@ -504,7 +527,7 @@ PARSER.add_argument('--use_dev_map', '-dm', default=False,
 def _exit_cmd_loop():
     if readline:
         try:
-            readline.write_history_file()
+            readline.write_history_file(_HISTFILE)
         except IOError:
             pass
 
@@ -512,16 +535,15 @@ def _exit_cmd_loop():
 def main():
     """Main program"""
     pargs = PARSER.parse_args()
-
     if pargs.loglevel:
         loglevel = logging.getLevelName(pargs.loglevel.upper())
         logging.basicConfig(level=loglevel)
     try:
-        PhilipShell(port=pargs.port, data_only=pargs.data_filter_off,
-                    use_dev_map=pargs.use_dev_map).cmdloop()
+        PhilipShell(port=pargs.port, use_dev_map=pargs.use_dev_map).cmdloop()
         _exit_cmd_loop()
     except KeyboardInterrupt:
         _exit_cmd_loop()
+        print("")
 
 
 if __name__ == '__main__':

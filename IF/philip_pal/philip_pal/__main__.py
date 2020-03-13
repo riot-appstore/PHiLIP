@@ -10,6 +10,7 @@ import argparse
 import logging
 
 from .philip_if import PhilipExtIf as Phil
+from .philip_shell import PhilipShell
 
 
 def main():
@@ -21,6 +22,8 @@ def main():
                         help='Enable more output')
     parser.add_argument('--dut_reset', action='store_true',
                         help='Reset device-under-test (DUT)')
+    parser.add_argument('--show_pinout', default=None,
+                        help='Shows the pinout 1=bluepill, 0=nucleo')
     parser.add_argument('--reset', action='store_true',
                         help='Reset PHiLIP MCU')
     parser.add_argument('--fw', '-f', action='store_true',
@@ -48,6 +51,9 @@ def main():
     if args.dut_reset:
         logging.info(". dut reset")
         philip.dut_reset()
+    if args.show_pinout is not None:
+        cmd = "show_pinout {}".format(args.show_pinout)
+        PhilipShell(port='ignore').onecmd(cmd)
 
 
 main()
