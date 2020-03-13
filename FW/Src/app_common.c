@@ -81,10 +81,19 @@ uint32_t get_tick32() {
 uint32_t get_tick32_div(uint8_t div) {
 	uint32_t sys_tick;
 	uint32_t tick;
+	int runs = 0;
 	do {
+		runs++;
 		sys_tick = SysTick->VAL;
 		tick = HAL_GetTick();
 	} while (SysTick->VAL > sys_tick);
+	if (runs > 1) {
+		/* Overflow occurred */
+		/* Since this is the same priority as the systick interrupt we know
+		 * an increment should have occurred but didn't.
+		 */
+		tick++;
+	}
 	return (uint32_t) (((uint32_t) (tick << (TICK_BIT_OFFSET - div))
 			+ ((SysTick->LOAD - sys_tick) >> div)));
 }

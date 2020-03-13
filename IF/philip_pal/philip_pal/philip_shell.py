@@ -273,14 +273,18 @@ class PhilipShell(cmd.Cmd):
                 table_data.append(row_data)
             print(tabulate(table_data, headers=headers))
 
-            diffs = diffs[1:]
-            print("\nDifference Stats")
-            print("     min: {:.9f}".format(min(diffs)))
-            print("     max: {:.9f}".format(max(diffs)))
-            print("    mean: {:.9f}".format(sta.mean(diffs)))
-            print("  median: {:.9f}".format(sta.median(diffs)))
-            print("   stdev: {:.9f}".format(sta.stdev(diffs)))
-            print("variance: {:.9f}".format(sta.variance(diffs)))
+            try:
+                if len(diffs) > 1:
+                    diffs = diffs[1:]
+                    print("\nDifference Stats")
+                    print("     min: {:.9f}".format(min(diffs)))
+                    print("     max: {:.9f}".format(max(diffs)))
+                    print("    mean: {:.9f}".format(sta.mean(diffs)))
+                    print("  median: {:.9f}".format(sta.median(diffs)))
+                    print("   stdev: {:.9f}".format(sta.stdev(diffs)))
+                    print("variance: {:.9f}".format(sta.variance(diffs)))
+            except ValueError:
+                pass
 
     def do_data_filter(self, arg):
         """Select or toggle filtering for data
