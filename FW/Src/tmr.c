@@ -133,7 +133,7 @@ void init_dut_ic_msp() {
 	GPIO_InitStruct.Pull = GPIO_PULLUP;
 	HAL_GPIO_Init(DUT_IC_GPIO_Port, &GPIO_InitStruct);
 
-	htmr_dma->Instance = DUT_IC_DMA_CHANNEL;
+	htmr_dma->Instance = DUT_IC_DMA_INST;
 	htmr_dma->Init.Direction = DMA_PERIPH_TO_MEMORY;
 	htmr_dma->Init.PeriphInc = DMA_PINC_DISABLE;
 	htmr_dma->Init.MemInc = DMA_MINC_ENABLE;
@@ -160,7 +160,7 @@ void deinit_dut_ic_msp() {
 	TIM_HandleTypeDef *htmr = &(dut_ic.htmr);
 
 	DUT_IC_CLK_DIS();
-	HAL_GPIO_DeInit(DUT_IC_GPIO_Port, DUT_IC_Pin);
+	HAL_GPIO_DeInit(DUT_IC);
 	HAL_DMA_DeInit(htmr->hdma[DUT_IC_DMA_ID]);
 
     HAL_NVIC_DisableIRQ(DUT_IC_DMA_IRQ);

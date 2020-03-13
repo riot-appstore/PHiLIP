@@ -17,7 +17,7 @@
  ******************************************************************************
  */
 
-/* Includes ------------------------------------------------------------------*/
+/* Includes *******************************************************************/
 #include <string.h>
 #include <errno.h>
 
@@ -25,7 +25,6 @@
 
 #include "PHiLIP_typedef.h"
 #include "port.h"
-#include "app_errno.h"
 #include "app_access.h"
 #include "app_common.h"
 #include "app_defaults.h"
@@ -35,138 +34,157 @@
 
 #include "i2c.h"
 
-/* Private enums/structs -----------------------------------------------------*/
+/* Private enums/structs ******************************************************/
 /** @brief  							The state settings of the I2C */
 enum I2C_STATE {
-	I2C_INITIALIZED, /**< i2c has been initialized */
-	I2C_READING_DATA, /**< i2c currently reading data */
-	I2C_WRITE_ADDRESS_RECEIVED, /**< i2c received write address */
-	I2C_WRITE_1ST_REG_BYTE_RECEIVED, /**< i2c waiting for next addr byte */
-	I2C_WRITING_DATA, /**< i2c currently writing data */
-	I2C_ADDR_NACK, /**< i2c has nacked */
-	I2C_STOPPED /**< i2c stopped successfully */
+	I2C_INITIALIZED, /**< reg has been initialized */
+	I2C_READING_DATA, /**< reg currently reading data */
+	I2C_WRITE_ADDRESS_RECEIVED, /**< reg received write address */
+	I2C_WRITE_1ST_REG_BYTE_RECEIVED, /**< reg waiting for next addr byte */
+	I2C_WRITING_DATA, /**< reg currently writing data */
+	I2C_ADDR_NACK, /**< reg has nacked */
+	I2C_STOPPED /**< reg stopped successfully */
 };
 
-/** @brief					The parameters for i2c control */
+/** @brief					The parameters for reg control */
 typedef struct {
-	I2C_HandleTypeDef hi2c; /**< Handle for the i2c device */
-	i2c_t *reg; /**< i2c live application registers */
-	i2c_t *saved_reg; /**< i2c saved application registers */
+	I2C_HandleTypeDef hi2c; /**< Handle for the reg device */
+	i2c_t *reg; /**< reg live application registers */
+	i2c_mode_t mode; /**< Committed mode */
+	uint16_t clk_stretch_delay; /**< Committed clock stretch delay in us */
 } i2c_dev;
 /** @} */
 
-/* Private defines -----------------------------------------------------------*/
-/** @brief	convert 7 but i2c address */
+/* Private macros *************************************************************/
+/** @brief	convert 7 but reg address */
 #define CONVERT_7ADDR(x)		((x<<1)&0xFF)
 
-/** @brief	convert 10 but i2c address */
+/** @brief	convert 10 but reg address */
 #define CONVERT_10ADDR(x)		((x<<1)&0x07FF)
 
-/** @brief	Check all i2c writing states */
+/** @brief	Check all reg writing states */
 #define IS_STATE_WRITING(x)	 	(x == I2C_WRITE_ADDRESS_RECEIVED || \
 								x == I2C_WRITE_1ST_REG_BYTE_RECEIVED || \
 								x == I2C_WRITING_DATA)
 
-/* Private function prototypes -----------------------------------------------*/
-static inline error_t _commit_i2c(i2c_dev *dev);
+/* Private function prototypes ************************************************/
 static inline void _i2c_slave_addr(i2c_dev *dev);
 static void _i2c_it(i2c_dev *dev);
 static void _i2c_err(i2c_dev *dev);
 
-/* Private variables ---------------------------------------------------------*/
+/* Private variables **********************************************************/
 static i2c_dev dut_i2c;
 
-/* Functions -----------------------------------------------------------------*/
-/**
- * @brief		Initializes i2c registers.
- *
- * @param[in]	reg			Pointer to live register memory map
- * @param[in]	saved_reg	Pointer to saved register memory map
- * @note		Populates i2c defaults registers and assigns i2c register
- * 				pointers.
- */
-void init_dut_i2c(map_t *reg, map_t *saved_reg) {
-
-	dut_i2c.hi2c.Instance = DUT_I2C;
-	dut_i2c.hi2c.Init.DualAddressMode = I2C_DUALADDRESS_ENABLE;
-	dut_i2c.hi2c.Init.ClockSpeed = 400000;
-	dut_i2c.hi2c.Init.DutyCycle = I2C_DUTYCYCLE_2;
-
+/******************************************************************************/
+/*           Initialization                                                   */
+/******************************************************************************/
+void init_dut_i2c(map_t *reg) {
 	dut_i2c.reg = &(reg->i2c);
-	dut_i2c.saved_reg = &(saved_reg->i2c);
 
+	dut_i2c.hi2c.Instance = DUT_I2C_INST;
+	dut_i2c.hi2c.Init.DualAddressMode = I2C_DUALADDRESS_ENABLE;
+	dut_i2c.hi2c.Init.ClockSpeed = 400000; /* Not needed because its slave */
+	dut_i2c.hi2c.Init.DutyCycle = I2C_DUTYCYCLE_2;
 
 	commit_dut_i2c();
 }
 
-/**
- * @brief		Commits the i2c registers and executes operations.
- *
- * @pre			i2c must first be initialized with init_dut_i2c()
- * @return      EOK if init occurred
- * @return      ENOACTION if no init was triggered
- *
- * @note		Only executes actions if the i2c.mode.init is set.
- */
+/******************************************************************************/
+void init_dut_i2c_msp() {
+	GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+	DUT_I2C_GPIO_AF_REMAP();
+
+	GPIO_InitStruct.Pin = DUT_SCL_Pin;
+	GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_MEDIUM;
+	HAL_GPIO_Init(DUT_SCL_GPIO_Port, &GPIO_InitStruct);
+
+	GPIO_InitStruct.Pin = DUT_SDA_Pin;
+	HAL_GPIO_Init(DUT_SDA_GPIO_Port, &GPIO_InitStruct);
+
+	DUT_I2C_CLK_EN();
+
+	HAL_NVIC_SetPriority(DUT_I2C_EV_IRQ, DEFAULT_INT_PRIO, 0);
+	HAL_NVIC_EnableIRQ(DUT_I2C_EV_IRQ);
+	HAL_NVIC_SetPriority(DUT_I2C_ERR_IRQ, DEFAULT_INT_PRIO, 0);
+	HAL_NVIC_EnableIRQ(DUT_I2C_ERR_IRQ);
+}
+
+void deinit_dut_i2c_msp() {
+	HAL_GPIO_DeInit(DUT_SCL);
+	HAL_GPIO_DeInit(DUT_SDA);
+
+	HAL_NVIC_DisableIRQ(DUT_I2C_EV_IRQ);
+	HAL_NVIC_DisableIRQ(DUT_I2C_ERR_IRQ);
+}
+
+/******************************************************************************/
 error_t commit_dut_i2c() {
-	return _commit_i2c(&dut_i2c);
-}
+	I2C_HandleTypeDef *hi2c = &dut_i2c.hi2c;
+	i2c_t *reg = dut_i2c.reg;
 
-static inline error_t _commit_i2c(i2c_dev *dev) {
-	I2C_HandleTypeDef *hi2c_inst = &dev->hi2c;
-	i2c_t *i2c = dev->reg;
-	if (!i2c->mode.init) {
-		__HAL_I2C_DISABLE_IT(hi2c_inst, I2C_IT_EVT | I2C_IT_ERR);
-
-		if (dev->reg->mode.addr_10_bit == 0) {
-			hi2c_inst->Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
-			hi2c_inst->Init.OwnAddress1 = CONVERT_7ADDR(i2c->slave_addr_1);
-			hi2c_inst->Init.OwnAddress2 = CONVERT_7ADDR(i2c->slave_addr_2);
-		} else {
-			hi2c_inst->Init.AddressingMode = I2C_ADDRESSINGMODE_10BIT;
-			hi2c_inst->Init.OwnAddress1 = CONVERT_10ADDR(i2c->slave_addr_1);
-			hi2c_inst->Init.OwnAddress2 = CONVERT_7ADDR(i2c->slave_addr_2);
-		}
-
-		if (i2c->mode.no_clk_stretch == 0) {
-			hi2c_inst->Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
-		} else {
-			hi2c_inst->Init.NoStretchMode = I2C_NOSTRETCH_ENABLE;
-		}
-
-		if (i2c->mode.general_call == 0) {
-			hi2c_inst->Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
-		} else {
-			hi2c_inst->Init.GeneralCallMode = I2C_GENERALCALL_ENABLE;
-		}
-
-		if (dev->reg->mode.disable) {
-			HAL_I2C_DeInit(hi2c_inst);
-			if (init_basic_gpio(dev->reg->dut_sda, DUT_SDA) != EOK) {
-				return EINVAL;
-			}
-			if (init_basic_gpio(dev->reg->dut_scl, DUT_SCL) != EOK) {
-				return EINVAL;
-			}
-		}
-		else {
-			HAL_I2C_Init(hi2c_inst);
-		}
-
-		hi2c_inst->Instance->CR1 |= I2C_CR1_ACK;
-		__HAL_I2C_ENABLE_IT(hi2c_inst, I2C_IT_EVT | I2C_IT_BUF | I2C_IT_ERR);
-		i2c->mode.init = 1;
-		copy_until_same(dev->saved_reg, dev->reg, sizeof(*(dev->saved_reg)));
-		return EOK;
+	if (reg->mode.init) {
+		return 0;
 	}
-	return ENOACTION;
+	__HAL_I2C_DISABLE_IT(hi2c, I2C_IT_EVT | I2C_IT_ERR);
+
+	if (reg->mode.addr_10_bit == 0) {
+		hi2c->Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+		hi2c->Init.OwnAddress1 = CONVERT_7ADDR(reg->slave_addr_1);
+		hi2c->Init.OwnAddress2 = CONVERT_7ADDR(reg->slave_addr_2);
+	} else {
+		hi2c->Init.AddressingMode = I2C_ADDRESSINGMODE_10BIT;
+		hi2c->Init.OwnAddress1 = CONVERT_10ADDR(reg->slave_addr_1);
+		hi2c->Init.OwnAddress2 = CONVERT_7ADDR(reg->slave_addr_2);
+	}
+
+	if (reg->mode.no_clk_stretch == 0) {
+		hi2c->Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+	} else {
+		hi2c->Init.NoStretchMode = I2C_NOSTRETCH_ENABLE;
+	}
+
+	if (reg->mode.general_call == 0) {
+		hi2c->Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+	} else {
+		hi2c->Init.GeneralCallMode = I2C_GENERALCALL_ENABLE;
+	}
+
+	if (reg->mode.disable) {
+		HAL_I2C_DeInit(hi2c);
+		if (init_basic_gpio(reg->dut_sda, DUT_SDA) != 0) {
+			return EINVAL;
+		}
+		if (init_basic_gpio(reg->dut_scl, DUT_SCL) != 0) {
+			return EINVAL;
+		}
+	}
+	else {
+		HAL_I2C_Init(hi2c);
+	}
+
+	hi2c->Instance->CR1 |= I2C_CR1_ACK;
+	__HAL_I2C_ENABLE_IT(hi2c, I2C_IT_EVT | I2C_IT_BUF | I2C_IT_ERR);
+	reg->mode.init = 1;
+	dut_i2c.mode.nack_data = reg->mode.nack_data;
+	dut_i2c.mode.reg_16_big_endian = reg->mode.reg_16_big_endian;
+	dut_i2c.mode.reg_16_bit = reg->mode.reg_16_bit;
+	dut_i2c.clk_stretch_delay = reg->clk_stretch_delay;
+	return 0;
 }
 
+/******************************************************************************/
+/*           Functions                                                        */
+/******************************************************************************/
 void update_dut_i2c_inputs() {
 	dut_i2c.reg->dut_sda.level = HAL_GPIO_ReadPin(DUT_SDA);
 	dut_i2c.reg->dut_scl.level = HAL_GPIO_ReadPin(DUT_SCL);
 }
-/* Interrupts ----------------------------------------------------------------*/
+
+/******************************************************************************/
+/*           Interrupt Handling                                               */
+/******************************************************************************/
 /**
  * @brief This function handles i2c_dut event interrupt.
  */
@@ -181,48 +199,48 @@ void DUT_I2C_ERR_INT(void) {
 	_i2c_err(&dut_i2c);
 }
 
+/******************************************************************************/
 static void _i2c_slave_addr(i2c_dev *dev) {
 	I2C_HandleTypeDef *hi2c = &(dev->hi2c);
-	i2c_t *i2c = dev->reg;
+	i2c_t *reg = dev->reg;
 	/* Transfer Direction requested by Master */
 	if (__HAL_I2C_GET_FLAG(hi2c, I2C_FLAG_TRA) == RESET) {
-		i2c->f_w_ticks = get_tick32();
-		i2c->state = I2C_WRITE_ADDRESS_RECEIVED;
-		i2c->w_count = 0;
-		if (i2c->mode.nack_data) {
+		reg->f_w_ticks = get_tick32();
+		reg->state = I2C_WRITE_ADDRESS_RECEIVED;
+		reg->w_count = 0;
+		if (dev->mode.nack_data) {
 			hi2c->Instance->CR1 &= ~I2C_CR1_ACK;
 		}
 	} else {
-		i2c->reg_index = i2c->start_reg_index;
-		if (i2c->clk_stretch_delay != 0) {
-			delay_us(i2c->clk_stretch_delay);
+		reg->reg_index = reg->start_reg_index;
+		if (dev->clk_stretch_delay != 0) {
+			delay_us(reg->clk_stretch_delay);
 		}
-		unprotected_read_uint8(i2c->reg_index, (uint8_t*) &hi2c->Instance->DR);
-		add_index(&i2c->reg_index);
-		if (IS_STATE_WRITING(i2c->state)) {
-			i2c->f_w_ticks = get_tick32() - i2c->s_ticks;
+		unprotected_read_uint8(reg->reg_index, (uint8_t*) &hi2c->Instance->DR);
+		add_index(&reg->reg_index);
+		if (IS_STATE_WRITING(reg->state)) {
+			reg->f_w_ticks = get_tick32() - reg->s_ticks;
 		}
-		i2c->f_r_ticks = get_tick32();
-		i2c->state = I2C_READING_DATA;
-		i2c->r_count = 0;
+		reg->f_r_ticks = get_tick32();
+		reg->state = I2C_READING_DATA;
+		reg->r_count = 0;
 	}
-	i2c->s_ticks = get_tick32();
+	reg->s_ticks = get_tick32();
 	if (READ_REG(hi2c->Instance->SR2) & I2C_FLAG_GENCALL) {
-		i2c->status.gencall = 1;
+		reg->status.gencall = 1;
 	} else {
-		i2c->status.gencall = 0;
+		reg->status.gencall = 0;
 	}
-	if (i2c->status.busy) {
-		i2c->status.rsr = 1;
+	if (reg->status.busy) {
+		reg->status.rsr = 1;
 	} else {
-		i2c->status.rsr = 0;
+		reg->status.rsr = 0;
 	}
 }
 
 static void _i2c_it(i2c_dev *dev) {
 	I2C_HandleTypeDef *hi2c = &dev->hi2c;
-	i2c_t *i2c = dev->reg;
-	//i2c_t *saved_i2c = dev->saved_reg;
+	i2c_t *reg = dev->reg;
 	uint32_t sr2itflags = READ_REG(hi2c->Instance->SR2);
 	uint32_t sr1itflags = READ_REG(hi2c->Instance->SR1);
 	uint32_t itsources = READ_REG(hi2c->Instance->CR2);
@@ -233,22 +251,22 @@ static void _i2c_it(i2c_dev *dev) {
 	} else if (((sr1itflags & I2C_FLAG_STOPF) != RESET)
 			&& ((itsources & I2C_IT_EVT) != RESET)) {
 		__HAL_I2C_CLEAR_STOPFLAG(hi2c);
-		if (IS_STATE_WRITING(i2c->state)){
-			i2c->f_w_ticks = get_tick32() - i2c->s_ticks;
+		if (IS_STATE_WRITING(reg->state)){
+			reg->f_w_ticks = get_tick32() - reg->s_ticks;
 		}
-		else if(i2c->state == I2C_READING_DATA) {
-			i2c->f_r_ticks = get_tick32() - i2c->s_ticks;
+		else if(reg->state == I2C_READING_DATA) {
+			reg->f_r_ticks = get_tick32() - reg->s_ticks;
 		}
-		i2c->state = I2C_STOPPED;
+		reg->state = I2C_STOPPED;
 	} else if ((sr2itflags & I2C_FLAG_TRA) != RESET) {
 		if (((sr1itflags & I2C_FLAG_TXE) != RESET)
 				&& ((itsources & I2C_IT_BUF) != RESET)
 				&& ((sr1itflags & I2C_FLAG_BTF) == RESET)) {
-			unprotected_read_uint8(i2c->reg_index, (uint8_t*) &hi2c->Instance->DR);
-			add_index(&(i2c->reg_index));
-			i2c->r_count++;
-			i2c->r_ticks = get_tick32() - i2c->f_r_ticks ;
-			i2c->f_r_ticks = get_tick32();
+			unprotected_read_uint8(reg->reg_index, (uint8_t*) &hi2c->Instance->DR);
+			add_index(&(reg->reg_index));
+			reg->r_count++;
+			reg->r_ticks = get_tick32() - reg->f_r_ticks ;
+			reg->f_r_ticks = get_tick32();
 		} else if (((sr1itflags & I2C_FLAG_BTF) != RESET)
 				&& ((itsources & I2C_IT_EVT) != RESET)) {
 		}
@@ -257,84 +275,83 @@ static void _i2c_it(i2c_dev *dev) {
 			&& ((sr1itflags & I2C_FLAG_BTF) == RESET)))
 			|| (((sr1itflags & I2C_FLAG_BTF) != RESET)
 					&& ((itsources & I2C_IT_EVT) != RESET))) {
-		i2c->w_ticks = get_tick32() - i2c->f_w_ticks ;
-		i2c->f_w_ticks = get_tick32();
-		if (i2c->state == I2C_WRITE_ADDRESS_RECEIVED) {
-			if (i2c->mode.reg_16_bit) {
-				i2c->state = I2C_WRITE_1ST_REG_BYTE_RECEIVED;
-				if (i2c->mode.reg_16_big_endian) {
-					i2c->start_reg_index = (hi2c->Instance->DR << 8);
+		reg->w_ticks = get_tick32() - reg->f_w_ticks ;
+		reg->f_w_ticks = get_tick32();
+		if (reg->state == I2C_WRITE_ADDRESS_RECEIVED) {
+			if (dev->mode.reg_16_bit) {
+				reg->state = I2C_WRITE_1ST_REG_BYTE_RECEIVED;
+				if (dev->mode.reg_16_big_endian) {
+					reg->start_reg_index = (hi2c->Instance->DR << 8);
 				} else {
-					i2c->start_reg_index = hi2c->Instance->DR;
+					reg->start_reg_index = hi2c->Instance->DR;
 				}
 			} else {
-				i2c->start_reg_index = hi2c->Instance->DR;
-				i2c->reg_index = i2c->start_reg_index;
-				i2c->state = I2C_WRITING_DATA;
+				reg->start_reg_index = hi2c->Instance->DR;
+				reg->reg_index = reg->start_reg_index;
+				reg->state = I2C_WRITING_DATA;
 			}
-			i2c->w_count++;
+			reg->w_count++;
 		}
-		else if (i2c->state == I2C_WRITE_1ST_REG_BYTE_RECEIVED) {
-			if (i2c->mode.reg_16_big_endian) {
-				i2c->start_reg_index |= hi2c->Instance->DR;
+		else if (reg->state == I2C_WRITE_1ST_REG_BYTE_RECEIVED) {
+			if (dev->mode.reg_16_big_endian) {
+				reg->start_reg_index |= hi2c->Instance->DR;
 			} else {
-				i2c->start_reg_index |= (hi2c->Instance->DR << 8);
+				reg->start_reg_index |= (hi2c->Instance->DR << 8);
 			}
-			i2c->reg_index = i2c->start_reg_index;
-			i2c->state = I2C_WRITING_DATA;
-			i2c->w_count++;
+			reg->reg_index = reg->start_reg_index;
+			reg->state = I2C_WRITING_DATA;
+			reg->w_count++;
 
 		}
 		else {
-			write_reg(i2c->reg_index, hi2c->Instance->DR, PERIPH_ACCESS);
-			i2c->w_count++;
-			add_index(&(i2c->reg_index));
+			write_reg(reg->reg_index, hi2c->Instance->DR, PERIPH_ACCESS);
+			reg->w_count++;
+			add_index(&(reg->reg_index));
 		}
 	}
 	if (READ_REG(hi2c->Instance->SR2) & I2C_FLAG_BUSY) {
-		i2c->status.busy = 1;
+		reg->status.busy = 1;
 	} else {
-		i2c->status.busy = 0;
+		reg->status.busy = 0;
 	}
 }
 
 static void _i2c_err(i2c_dev *dev) {
 	I2C_HandleTypeDef *hi2c = &dev->hi2c;
-	i2c_t *i2c = dev->reg;
-	//i2c_t *saved_i2c = dev->saved_reg;
+	i2c_t *reg = dev->reg;
 
 	uint32_t sr1itflags = READ_REG(hi2c->Instance->SR1);
 	uint32_t itsources = READ_REG(hi2c->Instance->CR2);
 
-	if(i2c->state == I2C_READING_DATA) {
-		i2c->f_r_ticks = get_tick32() - i2c->s_ticks;
+	if(reg->state == I2C_READING_DATA) {
+		reg->f_r_ticks = get_tick32() - reg->s_ticks;
 	}
-	else if (IS_STATE_WRITING(i2c->state)){
-		i2c->f_w_ticks = get_tick32() - i2c->s_ticks;
+	else if (IS_STATE_WRITING(reg->state)){
+		reg->f_w_ticks = get_tick32() - reg->s_ticks;
 	}
 
 	if (((sr1itflags & I2C_FLAG_AF) != RESET)
 			&& ((itsources & I2C_IT_ERR) != RESET)) {
-		sub_index(&i2c->reg_index);
-		i2c->status.af = 1;
-		i2c->status.busy = 0;
-		i2c->state = I2C_ADDR_NACK;
+		sub_index(&reg->reg_index);
+		reg->status.af = 1;
+		reg->status.busy = 0;
+		reg->state = I2C_ADDR_NACK;
 
 	} else if ((itsources & I2C_IT_ERR) != RESET) {
 		if (((sr1itflags & I2C_FLAG_BERR) != RESET)) {
-			i2c->status.berr = 1;
+			reg->status.berr = 1;
 			/* Clear BERR flag */
 			__HAL_I2C_CLEAR_FLAG(hi2c, I2C_FLAG_BERR);
 		}
-		/* I2C Arbitration Loss error interrupt occurred ---------------------------*/
+		/* I2C Arbitration Loss error interrupt occurred ---------------------*/
 		if ((sr1itflags & I2C_FLAG_ARLO) != RESET) {
 			/* Clear ARLO flag */
 			__HAL_I2C_CLEAR_FLAG(hi2c, I2C_FLAG_ARLO);
 		}
 
-		/* I2C Over-Run/Under-Run interrupt occurred -------------------------------*/
+		/* I2C Over-Run/Under-Run interrupt occurred -------------------------*/
 		if ((sr1itflags & I2C_FLAG_OVR) != RESET) {
-			i2c->status.ovr = 1;
+			reg->status.ovr = 1;
 			/* Clear OVR flag */
 			__HAL_I2C_CLEAR_FLAG(hi2c, I2C_FLAG_OVR);
 		}
@@ -345,11 +362,11 @@ static void _i2c_err(i2c_dev *dev) {
 		hi2c_inst->Instance->CR1 |= I2C_CR1_ACK;
 		__HAL_I2C_ENABLE_IT(hi2c_inst, I2C_IT_EVT | I2C_IT_BUF | I2C_IT_ERR);
 #endif
-		i2c->state = I2C_STOPPED;
+		reg->state = I2C_STOPPED;
 		if (READ_REG(hi2c->Instance->SR2) & I2C_FLAG_BUSY) {
-			i2c->status.busy = 1;
+			reg->status.busy = 1;
 		} else {
-			i2c->status.busy = 0;
+			reg->status.busy = 0;
 		}
 	}
 	__HAL_I2C_CLEAR_FLAG(hi2c, I2C_FLAG_AF);

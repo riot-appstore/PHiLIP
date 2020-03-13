@@ -397,7 +397,7 @@ CN6
 |CN8|                                          |CN9|
 
           -1 -                  DUT_DAC -1 - DUT_PWM
-          -2 - DEBUG1           DUT_SCL -2 -
+          -2 - DEBUG2           DUT_SCL -2 -
           -3 -                  DUT_SDA -3 -
           -4 -                          -4 -
           -5 -                          -5 -
@@ -409,8 +409,8 @@ CN6
           -11-                   DUT_TX -11- DUT_RST
  USER_BTN -12-                   DUT_IC -12-
           -13-                          -13- DUT_MOSI
-          -14- TEST_WARN                -14- DUT_MISO
-          -15- TEST_FAIL         DEBUG2 -15- DUT_SCK
+          -14- TEST_WARN         DEBUG1 -14- DUT_MISO
+          -15- TEST_FAIL                -15- DUT_SCK
           -16- TEST_PASS         DEBUG0 -16-
           -17- DUT_ADC           DUT_RX -17-
 PM_LO_ADC -18- PM_HI_ADC          IF_TX -18-

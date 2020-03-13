@@ -7,10 +7,12 @@
  */
 
 /*
- * port.c
- *
- *  Created on: Jul 18, 2018
- *      Author: kevinweiss
+ ******************************************************************************
+ * @file			port.c
+ * @author			Kevin Weiss
+ * @date			20.03.2019
+ * @brief			Board/cpu specific porting.
+ ******************************************************************************
  */
 #include <errno.h>
 
@@ -22,228 +24,50 @@
 
 #include "adc.h"
 #include "tmr.h"
+#include "uart.h"
+#include "i2c.h"
+#include "spi.h"
+#include "pwm_dac.h"
 
 #include "port.h"
 
 extern void _Error_Handler(char *, int);
 
-I2C_HandleTypeDef hi2c_dut;
-
-TIM_HandleTypeDef htim_ic;
-TIM_HandleTypeDef htim_pwm;
-
-#ifdef BLUEPILL
-
-/* TIM1 init function */
-static void MX_TIM1_Init(void) {
-
-	TIM_MasterConfigTypeDef sMasterConfig;
-	TIM_IC_InitTypeDef sConfigIC;
-
-	htim_ic.Instance = TIM1;
-	htim_ic.Init.Prescaler = 0;
-	htim_ic.Init.CounterMode = TIM_COUNTERMODE_UP;
-	htim_ic.Init.Period = 0;
-	htim_ic.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-	htim_ic.Init.RepetitionCounter = 0;
-	htim_ic.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-	if (HAL_TIM_IC_Init(&htim_ic) != HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-	sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-	sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-	if (HAL_TIMEx_MasterConfigSynchronization(&htim_ic, &sMasterConfig)
-			!= HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-	sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
-	sConfigIC.ICSelection = TIM_ICSELECTION_DIRECTTI;
-	sConfigIC.ICPrescaler = TIM_ICPSC_DIV1;
-	sConfigIC.ICFilter = 0;
-	if (HAL_TIM_IC_ConfigChannel(&htim_ic, &sConfigIC, TIM_CHANNEL_1) != HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-}
-
 /**
- * Enable DMA controller clock
+ * Initializes the Global MSP.
  */
-static void MX_DMA_Init(void) {
-	/* DMA controller clock enable */
-	__HAL_RCC_DMA1_CLK_ENABLE();
+void HAL_MspInit(void) {
+	__HAL_RCC_AFIO_CLK_ENABLE();
+	HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_4);
 
-	/* DMA interrupt init */
-	/* DMA1_Channel1_IRQn interrupt configuration */
-	HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, DEFAULT_INT_PRIO, 0);
-	HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
-	/* DMA1_Channel2_IRQn interrupt configuration */
-	HAL_NVIC_SetPriority(DMA1_Channel2_IRQn, DEFAULT_INT_PRIO, 0);
-	HAL_NVIC_EnableIRQ(DMA1_Channel2_IRQn);
-	/* DMA1_Channel3_IRQn interrupt configuration */
-	HAL_NVIC_SetPriority(DMA1_Channel3_IRQn, DEFAULT_INT_PRIO, 0);
-	HAL_NVIC_EnableIRQ(DMA1_Channel3_IRQn);
-	/* DMA1_Channel4_IRQn interrupt configuration */
-	HAL_NVIC_SetPriority(DMA1_Channel4_IRQn, DEFAULT_INT_PRIO, 0);
-	HAL_NVIC_EnableIRQ(DMA1_Channel4_IRQn);
-	/* DMA1_Channel5_IRQn interrupt configuration */
-	HAL_NVIC_SetPriority(DMA1_Channel5_IRQn, DEFAULT_INT_PRIO, 0);
-	HAL_NVIC_EnableIRQ(DMA1_Channel5_IRQn);
-
-}
-
-/**
- * @brief System Clock Configuration
- * @retval None
- */
-void SystemClock_Config(void) {
-
-	RCC_OscInitTypeDef RCC_OscInitStruct;
-	RCC_ClkInitTypeDef RCC_ClkInitStruct;
-	RCC_PeriphCLKInitTypeDef PeriphClkInit;
-
-	/**Initializes the CPU, AHB and APB buses clocks
-	 */
-	RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI
-	| RCC_OSCILLATORTYPE_HSE | RCC_OSCILLATORTYPE_LSE;
-	RCC_OscInitStruct.HSEState = RCC_HSE_ON;
-	RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
-	RCC_OscInitStruct.LSEState = RCC_LSE_ON;
-	RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-	RCC_OscInitStruct.LSIState = RCC_LSI_ON;
-	RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-	RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-	RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9;
-	if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-	/**Initializes the CPU, AHB and APB buses clocks
-	 */
-	RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK
-	| RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
-	RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-	RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-	RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
-	RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
-
-	if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-	PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_RTC | RCC_PERIPHCLK_ADC
-	| RCC_PERIPHCLK_USB;
-	PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
-	PeriphClkInit.AdcClockSelection = RCC_ADCPCLK2_DIV6;
-	PeriphClkInit.UsbClockSelection = RCC_USBCLKSOURCE_PLL_DIV1_5;
-	if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-	/**Configure the Systick interrupt time
-	 */
-	HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq() / 1000);
-
-	/**Configure the Systick
-	 */
-	HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
-
+	/* MemoryManagement_IRQn interrupt configuration */
+	HAL_NVIC_SetPriority(MemoryManagement_IRQn, 0, 0);
+	/* BusFault_IRQn interrupt configuration */
+	HAL_NVIC_SetPriority(BusFault_IRQn, 0, 0);
+	/* UsageFault_IRQn interrupt configuration */
+	HAL_NVIC_SetPriority(UsageFault_IRQn, 0, 0);
+	/* SVCall_IRQn interrupt configuration */
+	HAL_NVIC_SetPriority(SVCall_IRQn, 0, 0);
+	/* DebugMonitor_IRQn interrupt configuration */
+	HAL_NVIC_SetPriority(DebugMonitor_IRQn, 0, 0);
+	/* PendSV_IRQn interrupt configuration */
+	HAL_NVIC_SetPriority(PendSV_IRQn, 0, 0);
 	/* SysTick_IRQn interrupt configuration */
 	HAL_NVIC_SetPriority(SysTick_IRQn, DEFAULT_INT_PRIO, 0);
-}
-#endif
 
-#ifdef NUCLEOF103RB
-
-/* TIM1 init function */
-static void MX_TIM1_Init(void) {
-
-	TIM_ClockConfigTypeDef sClockSourceConfig;
-	TIM_MasterConfigTypeDef sMasterConfig;
-	TIM_IC_InitTypeDef sConfigIC;
-
-	htim_ic.Instance = TIM1;
-	htim_ic.Init.Prescaler = 0;
-	htim_ic.Init.CounterMode = TIM_COUNTERMODE_UP;
-	htim_ic.Init.Period = 0;
-	htim_ic.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-	htim_ic.Init.RepetitionCounter = 0;
-	htim_ic.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-	if (HAL_TIM_Base_Init(&htim_ic) != HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-	sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-	if (HAL_TIM_ConfigClockSource(&htim_ic, &sClockSourceConfig) != HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-	if (HAL_TIM_IC_Init(&htim_ic) != HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-	sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-	sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-	if (HAL_TIMEx_MasterConfigSynchronization(&htim_ic, &sMasterConfig)
-			!= HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
-	sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
-	sConfigIC.ICSelection = TIM_ICSELECTION_DIRECTTI;
-	sConfigIC.ICPrescaler = TIM_ICPSC_DIV1;
-	sConfigIC.ICFilter = 0;
-	if (HAL_TIM_IC_ConfigChannel(&htim_ic, &sConfigIC, TIM_CHANNEL_1)
-			!= HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-
+	__HAL_AFIO_REMAP_SWJ_NOJTAG();
 }
 
-/**
- * Enable DMA controller clock
- */
-static void MX_DMA_Init(void) {
-	/* DMA controller clock enable */
-	__HAL_RCC_DMA1_CLK_ENABLE()
-	;
-
-	/* DMA interrupt init */
-	/* DMA1_Channel1_IRQn interrupt configuration */
-	HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, DEFAULT_INT_PRIO, 0);
-	HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
-	/* DMA1_Channel4_IRQn interrupt configuration */
-	HAL_NVIC_SetPriority(DMA1_Channel4_IRQn, DEFAULT_INT_PRIO, 0);
-	HAL_NVIC_EnableIRQ(DMA1_Channel4_IRQn);
-	/* DMA1_Channel5_IRQn interrupt configuration */
-	HAL_NVIC_SetPriority(DMA1_Channel5_IRQn, DEFAULT_INT_PRIO, 0);
-	HAL_NVIC_EnableIRQ(DMA1_Channel5_IRQn);
-	/* DMA1_Channel6_IRQn interrupt configuration */
-	HAL_NVIC_SetPriority(DMA1_Channel6_IRQn, DEFAULT_INT_PRIO, 0);
-	HAL_NVIC_EnableIRQ(DMA1_Channel6_IRQn);
-	/* DMA1_Channel7_IRQn interrupt configuration */
-	HAL_NVIC_SetPriority(DMA1_Channel7_IRQn, DEFAULT_INT_PRIO, 0);
-	HAL_NVIC_EnableIRQ(DMA1_Channel7_IRQn);
-
-}
-
-/**
- * @brief System Clock Configuration
- * @retval None
- */
-void SystemClock_Config(void) {
+void init_clock(void) {
 
 	RCC_OscInitTypeDef RCC_OscInitStruct;
 	RCC_ClkInitTypeDef RCC_ClkInitStruct;
 	RCC_PeriphCLKInitTypeDef PeriphClkInit;
 
-	/**Initializes the CPU, AHB and APB buses clocks
-	 */
+	/* Initializes the CPU, AHB and APB buses clocks */
 	RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI
 			| RCC_OSCILLATORTYPE_HSE | RCC_OSCILLATORTYPE_LSE;
-	RCC_OscInitStruct.HSEState = RCC_HSE_BYPASS;
+	RCC_OscInitStruct.HSEState = RCC_HSE_STATE;
 	RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
 	RCC_OscInitStruct.LSEState = RCC_LSE_ON;
 	RCC_OscInitStruct.HSIState = RCC_HSI_ON;
@@ -255,8 +79,7 @@ void SystemClock_Config(void) {
 		_Error_Handler(__FILE__, __LINE__);
 	}
 
-	/**Initializes the CPU, AHB and APB buses clocks
-	 */
+	/*Initializes the CPU, AHB and APB buses clocks */
 	RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK
 			| RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
 	RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
@@ -275,8 +98,7 @@ void SystemClock_Config(void) {
 		_Error_Handler(__FILE__, __LINE__);
 	}
 
-	/**Configure the Systick interrupt time
-	 */
+	/* Configure the Systick interrupt time */
 	HAL_SYSTICK_Config((1UL) << TICK_BIT_OFFSET);
 
 	/**Configure the Systick
@@ -286,7 +108,6 @@ void SystemClock_Config(void) {
 	/* SysTick_IRQn interrupt configuration */
 	HAL_NVIC_SetPriority(SysTick_IRQn, DEFAULT_INT_PRIO, 0);
 }
-#endif
 /******************************************************************************/
 /*           MSP Calls                                                        */
 /******************************************************************************/
@@ -308,72 +129,25 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base) {
 	if (htim_base->Instance == DUT_IC_INST) {
 		init_dut_ic_msp();
 	}
-#ifdef BLUEPILL
-	else if(htim_base->Instance==TIM4)
-	{
-		/* Peripheral clock enable */
-		__HAL_RCC_TIM4_CLK_ENABLE();
+	else if (htim_base->Instance == DUT_PWM_DAC_INST) {
+		init_dut_pwm_dac_msp();
 	}
-#endif
-#ifdef NUCLEOF103RB
-	else if (htim_base->Instance == TIM3) {
-		/* Peripheral clock enable */
-		__HAL_RCC_TIM3_CLK_ENABLE();
-	}
-#endif
 }
 
+void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim_base) {
+	if (htim_base->Instance == DUT_IC_INST) {
+		deinit_dut_ic_msp();
+	}
+	else if (htim_base->Instance == DUT_PWM_DAC_INST) {
+		deinit_dut_pwm_dac_msp();
+	}
+}
+
+/******************************************************************************/
 void HAL_TIM_IC_MspInit(TIM_HandleTypeDef* htim) {
 	if (htim->Instance == DUT_IC_INST) {
 			init_dut_ic_msp();
 	}
-}
-
-void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef* htim) {
-#ifdef BLUEPILL
-	if (htim->Instance == TIM4) {
-		/* Peripheral clock enable */
-		__HAL_RCC_TIM4_CLK_ENABLE();
-	}
-#endif
-#ifdef NUCLEOF103RB
-	if (htim->Instance == TIM3) {
-		/* Peripheral clock enable */
-		__HAL_RCC_TIM3_CLK_ENABLE();
-	}
-#endif
-}
-
-void HAL_TIM_MspPostInit(TIM_HandleTypeDef* htim) {
-
-	GPIO_InitTypeDef GPIO_InitStruct;
-#ifdef BLUEPILL
-	if (htim->Instance == TIM4) {
-
-		/**TIM4 GPIO Configuration
-		 PB8     ------> TIM4_CH3
-		 PB9     ------> TIM4_CH4
-		 */
-		GPIO_InitStruct.Pin = DUT_DAC_Pin | DUT_PWM_Pin;
-		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-		HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-	}
-#endif
-#ifdef NUCLEOF103RB
-	if (htim->Instance == TIM3) {
-
-		/**TIM3 GPIO Configuration
-		 PC8     ------> TIM3_CH3
-		 PC9     ------> TIM3_CH4
-		 */
-		GPIO_InitStruct.Pin = DUT_PWM_Pin | DUT_DAC_Pin;
-		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-		HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-		__HAL_AFIO_REMAP_TIM3_ENABLE();
-	}
-#endif
 }
 
 void HAL_TIM_IC_MspDeInit(TIM_HandleTypeDef* htim) {
@@ -382,44 +156,121 @@ void HAL_TIM_IC_MspDeInit(TIM_HandleTypeDef* htim) {
 	}
 }
 
-void HAL_TIM_PWM_MspDeInit(TIM_HandleTypeDef* htim) {
-#ifdef BLUEPILL
-	if (htim->Instance == TIM4) {
-		/* Peripheral clock disable */
-		__HAL_RCC_TIM4_CLK_DISABLE();
+/******************************************************************************/
+void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef* htim) {
+	if (htim->Instance == DUT_PWM_DAC_INST) {
+		init_dut_pwm_dac_msp();
 	}
-#endif
-#ifdef NUCLEOF103RB
-	if (htim->Instance == TIM3) {
-		/* Peripheral clock disable */
-		__HAL_RCC_TIM3_CLK_DISABLE();
-	}
-#endif
 }
 
+void HAL_TIM_MspPostInit(TIM_HandleTypeDef* htim) {
+	if (htim->Instance == DUT_PWM_DAC_INST) {
+		postinit_dut_pwm_dac_msp();
+	}
+}
+
+void HAL_TIM_PWM_MspDeInit(TIM_HandleTypeDef* htim) {
+	if (htim->Instance == DUT_PWM_DAC_INST) {
+		deinit_dut_pwm_dac_msp();
+	}
+}
+
+/******************************************************************************/
+void HAL_UART_MspInit(UART_HandleTypeDef* huart) {
+	if (huart->Instance == IF_UART_INST) {
+		init_if_uart_msp();
+	}
+	else if (huart->Instance == DUT_UART_INST) {
+		init_dut_uart_msp();
+	}
+}
+
+void HAL_UART_MspDeInit(UART_HandleTypeDef* huart) {
+	if (huart->Instance == IF_UART_INST) {
+		deinit_if_uart_msp();
+	}
+	else if (huart->Instance == DUT_UART_INST) {
+		deinit_dut_uart_msp();
+	}
+}
+
+/******************************************************************************/
+void HAL_I2C_MspInit(I2C_HandleTypeDef* hi2c) {
+	if (hi2c->Instance == DUT_I2C_INST) {
+		init_dut_i2c_msp();
+	}
+
+}
+
+void HAL_I2C_MspDeInit(I2C_HandleTypeDef* hi2c) {
+	if (hi2c->Instance == DUT_I2C_INST) {
+		deinit_dut_i2c_msp();
+	}
+
+}
+
+/******************************************************************************/
+void HAL_SPI_MspInit(SPI_HandleTypeDef* hspi) {
+	if (hspi->Instance == DUT_SPI_INST) {
+		init_dut_spi_msp();
+	}
+}
+
+void HAL_SPI_MspDeInit(SPI_HandleTypeDef* hspi) {
+	if (hspi->Instance == DUT_SPI_INST) {
+		deinit_dut_spi_msp();
+	}
+}
+
+/******************************************************************************/
 /**
  * @brief  This function is executed in case of error occurrence.
  * @param  file: The file name as string.
  * @param  line: The line in file as a number.
- * @retval None
  */
 void _Error_Handler(char *file, int line) {
-	/* USER CODE BEGIN Error_Handler_Debug */
-	/* User can add his own implementation to report the HAL error return state */
 	while (1) {
+
 	}
-	/* USER CODE END Error_Handler_Debug */
 }
 
-void init_periphs(void) {
+void init_periphs() {
+	__HAL_RCC_GPIOA_CLK_ENABLE();
+	__HAL_RCC_GPIOB_CLK_ENABLE();
+	__HAL_RCC_GPIOC_CLK_ENABLE();
+	__HAL_RCC_GPIOD_CLK_ENABLE();
+	__HAL_RCC_DMA1_CLK_ENABLE();
+
 	/* Prevents i2c clk from toggling at init */
 	__HAL_RCC_I2C1_CLK_ENABLE();
 
-	MX_DMA_Init();
-	MX_TIM1_Init();
 }
 
-void init_clock(void) {
-	SystemClock_Config();
+/******************************************************************************/
+/*           Interrupt Handling                                               */
+/******************************************************************************/
+/**
+ * @brief 	Interrupt for NSS and CTS triggering
+ * @note 	This is a shared interrupt, both functions being used at the same
+ * 			time should be avoided.
+ */
+void GPIO_NSS_CTS_INT() {
+	uint32_t int_pins = EXTI->PR;
+	if (DUT_NSS_Pin & int_pins) {
+		GPIO_NSS_INT();
+	} else if (DUT_CTS_Pin & int_pins) {
+		GPIO_CTS_INT();
+	}
+	/* clear interrupts */
+	EXTI->PR = int_pins;
 }
 
+/**
+ * @brief This function handles System tick timer.
+ */
+void SysTick_Handler(void) {
+
+	HAL_IncTick();
+	HAL_SYSTICK_IRQHandler();
+
+}

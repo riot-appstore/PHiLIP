@@ -21,7 +21,7 @@
 #ifndef UART_H_
 #define UART_H_
 
-/* Defines -------------------------------------------------------------------*/
+/* Defines ********************************************************************/
 /** @brief	Size allocated for if uart buffer */
 #define UART_IF_BUF_SIZE	(1024)
 
@@ -29,21 +29,18 @@
 #define UART_DUT_BUF_SIZE	(128)
 
 
-/* Function prototypes -------------------------------------------------------*/
+/* Function prototypes ********************************************************/
 /**
  * @brief		Initializes dut uart registers.
  *
  * @param[in]	reg			Pointer to live register memory map
- * @param[in]	saved_reg	Pointer to saved register memory map
  * @note		Populates dut uart defaults registers and assigns uart register
  * 				pointers.
  */
-void init_dut_uart(map_t *reg, map_t *saved_reg);
+void init_dut_uart(map_t *reg);
 
 /**
  * @brief		Initializes interface uart registers.
- *
- * @note		Populates dut uart defaults registers, uart register are NULL.
  */
 void init_if_uart();
 
@@ -51,8 +48,7 @@ void init_if_uart();
  * @brief		Commits the dut uart registers and executes operations.
  *
  * @pre			uart must first be initialized with init_dut_uart()
- * @return      EOK if init occurred
- * @return      ENOACTION if no init was triggered
+ * @return      0 Success
  *
  * @note		Only executes actions if the uart.mode.init is set.
  */
@@ -62,8 +58,7 @@ error_t commit_dut_uart();
  * @brief		Polls for any commands from the dut uart.
  *
  * @pre			uart must first be initialized with init_dut_uart()
- * @return      EOK on success
- * @return      ENOACTION no action occurred
+ * @return      0 Success
  * @return 		EPROTONOSUPPORT command not supported
  * @return 		EACCES caller doesn't have access
  * @return 		EMSGSIZE message size too big
@@ -71,7 +66,6 @@ error_t commit_dut_uart();
  * @return 		EOVERFLOW invalid address
  * @return 		ERANGE invalid number range
  * @return 		ENODATA not enough data
- * @return 		EUNKNOWN
  */
 error_t poll_dut_uart();
 
@@ -79,8 +73,7 @@ error_t poll_dut_uart();
  * @brief		Polls for any commands from the interface uart.
  *
  * @pre			uart must first be initialized with init_if_uart()
- * @return      EOK on success
- * @return      ENOACTION no action occurred
+ * @return      0 Success
  * @return 		EPROTONOSUPPORT command not supported
  * @return 		EACCES caller doesn't have access
  * @return 		EMSGSIZE message size too big
@@ -88,7 +81,6 @@ error_t poll_dut_uart();
  * @return 		EOVERFLOW invalid address
  * @return 		ERANGE invalid number range
  * @return 		ENODATA not enough data
- * @return 		EUNKNOWN
  */
 error_t poll_if_uart();
 
@@ -96,10 +88,31 @@ error_t poll_if_uart();
  * @brief		Updates the uart input levels.
  */
 void update_dut_uart_inputs();
+
 /**
  * @brief This function handles dut_cts event interrupt.
  */
-void dut_cts_int();
+void GPIO_CTS_INT();
+
+/**
+ * @brief		Only for use with the STM32xxxx_HAL_Driver.
+ */
+void init_dut_uart_msp();
+
+/**
+ * @brief		Only for use with the STM32xxxx_HAL_Driver.
+ */
+void deinit_dut_uart_msp();
+
+/**
+ * @brief		Only for use with the STM32xxxx_HAL_Driver.
+ */
+void init_if_uart_msp();
+
+/**
+ * @brief		Only for use with the STM32xxxx_HAL_Driver.
+ */
+void deinit_if_uart_msp();
 
 #endif /* UART_H_ */
 /** @} */

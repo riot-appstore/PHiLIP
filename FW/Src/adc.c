@@ -33,18 +33,19 @@
 /** @brief					The parameters for adc control */
 typedef struct {
 	ADC_HandleTypeDef hadc; /**< Handle for the adc device */
-	adc_t *reg; /**< adc live application registers */
+	adc_t *reg; /**< adc application registers */
 	adc_mode_t mode; /**< current mode settings */
 	uint32_t num_of_samples; /**< current number of adc samples in sum */
 
 } adc_dev_t;
-
-static adc_dev_t dut_adc; /**< DUT ADC module instance */
 /** @} */
 
 /* Private function prototypes ************************************************/
 static void _init_periph_adc();
 static void _init_dut_adc_reg(map_t *map);
+
+/* Private variables **********************************************************/
+static adc_dev_t dut_adc; /**< DUT ADC module instance */
 
 /******************************************************************************/
 /*           Initialization                                                   */
@@ -96,8 +97,6 @@ static void _init_dut_adc_reg(map_t *map) {
 	dut_adc.reg = &(map->adc);
 }
 
-/******************************************************************************/
-/*           Functions                                                        */
 /******************************************************************************/
 error_t commit_dut_adc() {
 	ADC_HandleTypeDef *hadc = &(dut_adc.hadc);
@@ -151,6 +150,8 @@ error_t commit_dut_adc() {
 	return 0;
 }
 
+/******************************************************************************/
+/*           Functions                                                        */
 /******************************************************************************/
 void poll_dut_adc() {
 	adc_t *reg = dut_adc.reg;

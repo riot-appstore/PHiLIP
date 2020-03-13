@@ -23,14 +23,14 @@
 #ifndef APP_SHELL_IF_H_
 #define APP_SHELL_IF_H_
 
-/* Defines -------------------------------------------------------------------*/
+/* Defines ********************************************************************/
 /** @brief   Parse on newline */
 #define RX_END_CHAR		'\n'
 
 /** @brief   Send newline at end of transmission */
 #define TX_END_STR		"\n"
 
-/* Function prototypes -------------------------------------------------------*/
+/* Function prototypes ********************************************************/
 /**
  * @brief Parses a string and executes commands.
  *
@@ -38,7 +38,7 @@
  * @param[in]	buf_size	The max size of the string buffer
  * @param[in]	access		The callers access level
  *
- * @return 		EOK on success
+ * @return 		0 on success
  * @return 		EPROTONOSUPPORT command not supported
  * @return 		EACCES caller doesn't have access
  * @return 		EMSGSIZE message size too big
@@ -46,7 +46,6 @@
  * @return 		EOVERFLOW invalid address
  * @return 		ERANGE invalid number range
  * @return 		ENODATA not enough data
- * @return 		EUNKNOWN
  *
  * @warning		May protect interrupts and cause jitter.
  */

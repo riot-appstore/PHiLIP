@@ -22,24 +22,20 @@
 #ifndef APP_REG_H_
 #define APP_REG_H_
 
-/* Includes ------------------------------------------------------------------*/
-#include <stdint.h>
-#include <errno.h>
-
-/* Function prototypes -------------------------------------------------------*/
+/* Function prototypes ********************************************************/
 /**
  * @brief		Initializes application registers.
  *
- * @param[in]	reg			Pointer to live register memory map
- * @param[in]	saved_reg	Pointer to saved register memory map
+ * @param[in]	reg			Pointer to register memory map
  * @note		Populates system user registers and assigns register pointers.
  */
-void init_app_reg(map_t *reg, map_t *saved_reg);
+void init_app_reg(map_t *reg);
 
 /**
  * @brief		Executes or commits all register changes on the periphs.
  *
  * @pre			All initializations must be called first.
+ * @return      0 if success
  * @return      ERRNO error code
  */
 error_t execute_reg_change();
@@ -57,7 +53,7 @@ uint32_t get_reg_size();
  * @param[in]	index 	The index of the register map to start to read
  * @param[out]	data	Pointer to data that was read
  *
- * @return      EOK on success
+ * @return      0 on success
  * @return      EOVERFLOW if trying to read out of range
  *
  * @details		This is a direct read from the register without any protection,
@@ -74,7 +70,7 @@ void unprotected_read_uint8(uint32_t index, uint8_t *data);
  * @param[in]	index 	The index of the register map to start to read
  * @param[out]	data	Pointer to data that was read
  *
- * @return      EOK on success
+ * @return      0 on success
  * @return      EOVERFLOW if trying to read out of range
  *
  */
@@ -87,7 +83,7 @@ error_t read_reg(uint32_t index, uint8_t *data);
  * @param[out]	data	Pointer to data that was read
  * @param[in]	size 	The amount of bytes to read
  *
- * @return      EOK on success
+ * @return      0 on success
  * @return      EOVERFLOW if trying to read out of range
  *
  * @warning		Multiple writes to data may occur so don't pass hardware
@@ -102,7 +98,7 @@ error_t read_regs(uint32_t index, uint8_t *data, uint16_t size);
  * @param[out]	data	Pointer to data that was write
  * @param[in]	access 	The access level of the caller
  *
- * @return      EOK on success
+ * @return      0 on success
  * @return      EOVERFLOW if trying to read out of range
  * @return      EACCESS caller does not have write access
  *
@@ -118,7 +114,7 @@ error_t write_reg(uint32_t index, uint8_t data, uint8_t access);
  * @param[in]	size 	The amount of bytes to write
  * @param[in]	access 	The access level of the caller
  *
- * @return      EOK on success
+ * @return      0 on success
  * @return      EOVERFLOW if trying to read out of range
  * @return      EACCESS caller does not have write access
  *

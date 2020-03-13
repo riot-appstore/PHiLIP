@@ -17,13 +17,13 @@
  ******************************************************************************
  */
 
-/* Includes ------------------------------------------------------------------*/
+/* Includes *******************************************************************/
 #include "stm32f1xx_hal.h"
 
 #include "app_defaults.h"
 #include "port.h"
 
-/* Private enums/structs -----------------------------------------------------*/
+/* Private enums/structs ******************************************************/
 /** @brief  		The states of flashing the led */
 enum FLASH_STATE {
 	FLASH_START, /**< Start flash waits longer than the normal waits */
@@ -34,8 +34,7 @@ enum FLASH_STATE {
 	FLASH_PATCH, /**< Flashes the patch version + 1 */
 };
 
-
-/* Private defines -----------------------------------------------------------*/
+/* Private defines ************************************************************/
 /** @brief  	How long it takes to indicate the start of led flashing */
 #define START_WAIT_FLASHES	(6 * 2)
 
@@ -55,13 +54,25 @@ enum FLASH_STATE {
 #define FLASH_TIME_MS	150
 /** @} */
 
-/* Functions -----------------------------------------------------------------*/
-/**
- * @brief		Flashes the firmware major, minor, and patch version (+1) on
- * 				on the led.
- *
- * @pre			Must be called within a tick context, 1 ms or so.
- */
+/******************************************************************************/
+/*           Initialization                                                   */
+/******************************************************************************/
+void init_led_flash() {
+	GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+	HAL_GPIO_WritePin(LED0, LED_OFF);
+
+	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+
+	GPIO_InitStruct.Pin = LED0_Pin;
+	HAL_GPIO_Init(LED0_GPIO_Port, &GPIO_InitStruct);
+}
+
+/******************************************************************************/
+/*           Functions                                                        */
+/******************************************************************************/
 void flash_fw_version() {
 	const uint8_t amount_of_flashes[] = {	START_WAIT_FLASHES,
 											MAJOR_FLASHES,

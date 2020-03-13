@@ -19,7 +19,7 @@
 #ifndef ADC_H_
 #define ADC_H_
 
-/* Function prototypes -------------------------------------------------------*/
+/* Function prototypes ********************************************************/
 /**
  * @brief		Initializes adc registers and peripheral.
  *

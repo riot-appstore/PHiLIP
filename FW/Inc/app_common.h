@@ -22,12 +22,12 @@
 #ifndef APP_COMMON_H_
 #define APP_COMMON_H_
 
-/* Macros --------------------------------------------------------------------*/
+/* Defines ********************************************************************/
 /** @brief	Disables interrupts. */
-#define DIS_INT disable_interrupt()
+#define DIS_INT __disable_irq();
 
 /** @brief	Enables interrupts. */
-#define EN_INT enable_interrupt()
+#define EN_INT __enable_irq();
 
 /**
  * @brief	Resets device.
@@ -39,7 +39,7 @@
 /** @brief	Bit shifting ticks. */
 #define TICK_BIT_OFFSET 16
 
-/* Function prototypes -------------------------------------------------------*/
+/* Function prototypes ********************************************************/
 /**
  * @brief  		Imprecise blocking delay in microseconds.
  *
@@ -56,12 +56,6 @@ void delay_us(uint16_t micros);
  * @note		Used for data concurrency issues without blocking interrupts.
  */
 void copy_until_same(void *dest, void *src, size_t size);
-
-/** @brief	Wrapper function to disable interrupts. */
-void disable_interrupt();
-
-/** @brief	Wrapper function to enable interrupts. */
-void enable_interrupt();
 
 /** @brief	Wrapper function to provide software reset. */
 void soft_reset();

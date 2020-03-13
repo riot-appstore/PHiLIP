@@ -20,29 +20,27 @@
 #ifndef SPI_H_
 #define SPI_H_
 
-/* Defines -------------------------------------------------------------------*/
+/* Defines ********************************************************************/
 /** @brief	SPI data not available byte */
 #define SPI_NO_DATA_BYTE	0xFE
 
-/* Function prototypes -------------------------------------------------------*/
+/* Function prototypes ********************************************************/
 /**
  * @brief		Initializes spi registers.
  *
  * @param[in]	reg			Pointer to live register memory map
- * @param[in]	saved_reg	Pointer to saved register memory map
  * @note		Populates spi defaults registers and assigns spi register
  * 				pointers.
  */
-void init_dut_spi(map_t *reg, map_t *saved_reg);
+void init_dut_spi(map_t *reg);
 
 /**
  * @brief		Commits the spi registers and executes operations.
  *
  * @pre			spi must first be initialized with init_dut_spi()
- * @return      EOK if init occurred
- * @return      ENOACTION if no init was triggered
+ * @return      0 if OK
  *
- * @note		Only executes actions if the spi.mode.init is set.
+ * @note		Only executes actions if the spi.mode.init is clear.
  */
 error_t commit_dut_spi();
 
@@ -51,11 +49,20 @@ error_t commit_dut_spi();
  */
 void update_dut_spi_inputs();
 
+/**
+ * @brief		Only for use with the STM32xxxx_HAL_Driver.
+ */
+void init_dut_spi_msp();
+
+/**
+ * @brief		Only for use with the STM32xxxx_HAL_Driver.
+ */
+void deinit_dut_spi_msp();
 /* Interrupts ----------------------------------------------------------------*/
 /**
- * @brief Interrupt for the spi line raise or lower
+ * @brief Interrupt callback for the spi line raise or lower
  */
-void dut_nss_int();
+void GPIO_NSS_INT();
 
 #endif /* SPI_H_ */
 /** @} */

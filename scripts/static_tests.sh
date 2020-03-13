@@ -59,12 +59,10 @@ if [[ $LANG == "c,py" ]] || [[ $LANG == "c" ]]; then
   run_test "DOC_CHECK" "make doc"
 
   make clean
-  CMD_OUTPUT=$(make)
   run_test "DEFAULT_MAKE" "make"
   make clean
 
   BOARD=BLUEPILL make clean
-  CMD_OUTPUT=$(BOARD=BLUEPILL make)
   run_test "BLUEPILL_MAKE" "BOARD=BLUEPILL make"
   BOARD=BLUEPILL make clean
 

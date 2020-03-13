@@ -19,7 +19,7 @@
 #ifndef WDT_H_
 #define WDT_H_
 
-/* Function prototypes -------------------------------------------------------*/
+/* Function prototypes ********************************************************/
 /**
  * @brief		Initializes the watchdog timer.
  */

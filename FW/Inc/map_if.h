@@ -21,14 +21,14 @@
 #ifndef MAP_IF_H_
 #define MAP_IF_H_
 
-/* Function prototypes -------------------------------------------------------*/
+/* Function prototypes ********************************************************/
 /**
  * @brief Gets parameters of a record in the memory map.
  *
  * @param[in]	index		index of the record to get
  * @param[out]	str			string to put the record information
  *
- * @return 		EOK on success
+ * @return 		0 on success
  * @return 		EOVERFLOW invalid record index
  */
 error_t get_mm(uint16_t index, char* str);
@@ -40,7 +40,7 @@ error_t get_mm(uint16_t index, char* str);
  * @param[in]	array_index	index if the record is an array
  * @param[out]	data		data from the record
  *
- * @return 		EOK on success
+ * @return 		0 on success
  * @return 		EINVAL Invalid value
  * @return 		ERANGE invalid number range of array
  */
@@ -54,7 +54,7 @@ error_t get_mm_val(char* mm_name, uint32_t array_index, uint32_t *data);
  * @param[in]	data		data for the record
  * @param[in]	access		access level of the calling function
  *
- * @return 		EOK on success
+ * @return 		0 on success
  * @return 		EINVAL Invalid value
  * @return 		ERANGE invalid number range of array
  */
