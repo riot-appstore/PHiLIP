@@ -338,7 +338,9 @@ class PhilipShell(cmd.Cmd):
     def _complete_map(self, text, line):
         mline = line.partition(' ')[2]
         offs = len(mline) - len(text)
-        map_records = [*self.phil.mem_map]
+# pylint: disable=W0141
+        map_records = filter(lambda x: not x.endswith(".res"),
+                             [*self.phil.mem_map])
         return [s[offs:] for s in map_records if s.startswith(mline)]
 
     def do_info_record_type(self, arg):

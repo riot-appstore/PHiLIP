@@ -5,8 +5,8 @@
  * @file      PHiLIP_typedef.h
  * @author    Kevin Weiss
  * @version   1.0.2
- * @date      2020-03-05
- * @details   Generated from the memory map manager version 0.0.9
+ * @date      2020-03-18
+ * @details   Generated from the memory map manager version 0.0.10
  ******************************************************************************
  */
 
@@ -21,12 +21,14 @@
 typedef struct {
 	uint8_t init : 1; /**< 0:periph will initialize on execute - 1:periph initialized */
 	uint8_t dut_rst : 1; /**< 1:put DUT in reset mode - 0:run DUT */
+	uint8_t res : 6; /**< Reserved bits */
 } sys_mode_t;
 
 /** @brief  System status */
 typedef struct {
 	uint8_t update : 1; /**< 1:register configuration requires execution for changes - 0:nothing to update */
 	uint8_t board : 1; /**< 1:board is a bluepill - 0:board is a nucleo-f103rb */
+	uint8_t res : 6; /**< Reserved bits */
 } sys_status_t;
 
 /** @brief  I2C mode settings */
@@ -49,6 +51,7 @@ typedef struct {
 	uint8_t gencall : 1; /**< General call address received */
 	uint8_t busy : 1; /**< i2c bus is BUSY */
 	uint8_t rsr : 1; /**< Repeated start detected */
+	uint8_t res : 2; /**< Reserved bits */
 } i2c_status_t;
 
 /** @brief  SPI mode settings */
@@ -83,6 +86,7 @@ typedef struct {
 	uint16_t parity : 2; /**< 0:no parity - 1:even parity - 2:odd parity */
 	uint16_t rts : 1; /**< RTS pin state */
 	uint16_t data_bits : 1; /**< 0:8 data bits - 1:7 data bits */
+	uint16_t res : 7; /**< Reserved bits */
 } uart_mode_t;
 
 /** @brief  UART status */
@@ -92,6 +96,7 @@ typedef struct {
 	uint8_t fe : 1; /**< Framing error */
 	uint8_t nf : 1; /**< Noise detected flag */
 	uint8_t ore : 1; /**< Overrun error */
+	uint8_t res : 3; /**< Reserved bits */
 } uart_status_t;
 
 /** @brief  IO pin mode control */
@@ -101,6 +106,7 @@ typedef struct {
 	uint16_t level : 1; /**< If output sets gpio level - 0:low - 1:high */
 	uint16_t pull : 2; /**< pull of the resistor - 0:none - 1:pullup - 2:pulldown */
 	uint16_t tick_div : 5; /**< for trace tick divisor - max should be 16 for interface */
+	uint16_t res : 5; /**< Reserved bits */
 } gpio_mode_t;
 
 /** @brief  Simplified GPIO for periph GPIO control */
@@ -109,11 +115,13 @@ typedef struct {
 	uint8_t pull : 2; /**< pull of the resistor - 0:none - 1:pullup - 2:pulldown */
 	uint8_t set_level : 1; /**< If output sets gpio level - 0:low - 1:high */
 	uint8_t level : 1; /**< Current value of gpio - 0:low - 1:high */
+	uint8_t res : 2; /**< Reserved bits */
 } basic_gpio_t;
 
 /** @brief  IO pin status */
 typedef struct {
 	uint8_t level : 1; /**< The io level of the pin - 0:low - 1:high */
+	uint8_t res : 7; /**< Reserved bits */
 } gpio_status_t;
 
 /** @brief  ADC mode settings */
@@ -121,6 +129,7 @@ typedef struct {
 	uint8_t init : 1; /**< 0:periph will initialize on execute - 1:periph initialized */
 	uint8_t disable : 1; /**< 0:periph is enabled - 1:periph is disabled */
 	uint8_t fast_sample : 1; /**< 0:slow sample rate - 1:fast sample rate */
+	uint8_t res : 5; /**< Reserved bits */
 } adc_mode_t;
 
 /** @brief  Timer mode settings */
@@ -128,12 +137,14 @@ typedef struct {
 	uint8_t init : 1; /**< 0:periph will initialize on execute - 1:periph initialized */
 	uint8_t disable : 1; /**< 0:periph is enabled - 1:periph is disabled */
 	uint8_t trig_edge : 2; /**< 0:both - 1:rising - 2:falling */
+	uint8_t res : 4; /**< Reserved bits */
 } tmr_mode_t;
 
 /** @brief  Basic mode settings */
 typedef struct {
 	uint8_t init : 1; /**< 0:periph will initialize on execute - 1:periph initialized */
 	uint8_t disable : 1; /**< 0:periph is enabled - 1:periph is disabled */
+	uint8_t res : 6; /**< Reserved bits */
 } basic_mode_t;
 
 /** @brief  Time and date */
