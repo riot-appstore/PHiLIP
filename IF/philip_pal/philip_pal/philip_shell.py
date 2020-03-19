@@ -77,7 +77,7 @@ class PhilipShell(cmd.Cmd):
     @staticmethod
     def _connect_wizard(use_dev_map=False):
         print("Starting PHiLIP shell")
-        serial_devices = serial.tools.list_ports.comports()
+        serial_devices = sorted(serial.tools.list_ports.comports())
         if len(serial_devices) == 0:
             raise ConnectionError("Could not find any available devices")
         elif len(serial_devices) == 1:
