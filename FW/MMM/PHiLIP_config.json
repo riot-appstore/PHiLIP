@@ -652,6 +652,19 @@
                 },
                 {
                     "access": 1,
+                    "bit_offset": 2,
+                    "bits": 6,
+                    "description": "Reserved bits",
+                    "name": [
+                        "sys",
+                        "status",
+                        "res"
+                    ],
+                    "offset": 300,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
                     "description": "Control register for device",
                     "name": [
                         "sys",
@@ -683,6 +696,19 @@
                         "sys",
                         "mode",
                         "dut_rst"
+                    ],
+                    "offset": 301,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 2,
+                    "bits": 6,
+                    "description": "Reserved bits",
+                    "name": [
+                        "sys",
+                        "mode",
+                        "res"
                     ],
                     "offset": 301,
                     "type_size": 1
@@ -906,6 +932,19 @@
                 },
                 {
                     "access": 1,
+                    "bit_offset": 6,
+                    "bits": 2,
+                    "description": "Reserved bits",
+                    "name": [
+                        "i2c",
+                        "status",
+                        "res"
+                    ],
+                    "offset": 321,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
                     "name": [
                         "i2c",
                         "dut_sda"
@@ -968,6 +1007,19 @@
                 },
                 {
                     "access": 1,
+                    "bit_offset": 6,
+                    "bits": 2,
+                    "description": "Reserved bits",
+                    "name": [
+                        "i2c",
+                        "dut_sda",
+                        "res"
+                    ],
+                    "offset": 322,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
                     "name": [
                         "i2c",
                         "dut_scl"
@@ -1024,6 +1076,19 @@
                         "i2c",
                         "dut_scl",
                         "level"
+                    ],
+                    "offset": 323,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 6,
+                    "bits": 2,
+                    "description": "Reserved bits",
+                    "name": [
+                        "i2c",
+                        "dut_scl",
+                        "res"
                     ],
                     "offset": 323,
                     "type_size": 1
@@ -1473,6 +1538,19 @@
                 },
                 {
                     "access": 1,
+                    "bit_offset": 6,
+                    "bits": 2,
+                    "description": "Reserved bits",
+                    "name": [
+                        "spi",
+                        "dut_mosi",
+                        "res"
+                    ],
+                    "offset": 386,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
                     "name": [
                         "spi",
                         "dut_miso"
@@ -1529,6 +1607,19 @@
                         "spi",
                         "dut_miso",
                         "level"
+                    ],
+                    "offset": 387,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 6,
+                    "bits": 2,
+                    "description": "Reserved bits",
+                    "name": [
+                        "spi",
+                        "dut_miso",
+                        "res"
                     ],
                     "offset": 387,
                     "type_size": 1
@@ -1597,6 +1688,19 @@
                 },
                 {
                     "access": 1,
+                    "bit_offset": 6,
+                    "bits": 2,
+                    "description": "Reserved bits",
+                    "name": [
+                        "spi",
+                        "dut_sck",
+                        "res"
+                    ],
+                    "offset": 388,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
                     "name": [
                         "spi",
                         "dut_nss"
@@ -1653,6 +1757,19 @@
                         "spi",
                         "dut_nss",
                         "level"
+                    ],
+                    "offset": 389,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 6,
+                    "bits": 2,
+                    "description": "Reserved bits",
+                    "name": [
+                        "spi",
+                        "dut_nss",
+                        "res"
                     ],
                     "offset": 389,
                     "type_size": 1
@@ -1873,6 +1990,19 @@
                 },
                 {
                     "access": 1,
+                    "bit_offset": 9,
+                    "bits": 7,
+                    "description": "Reserved bits",
+                    "name": [
+                        "uart",
+                        "mode",
+                        "res"
+                    ],
+                    "offset": 416,
+                    "type_size": 2
+                },
+                {
+                    "access": 1,
                     "name": [
                         "uart",
                         "dut_rx"
@@ -1935,6 +2065,19 @@
                 },
                 {
                     "access": 1,
+                    "bit_offset": 6,
+                    "bits": 2,
+                    "description": "Reserved bits",
+                    "name": [
+                        "uart",
+                        "dut_rx",
+                        "res"
+                    ],
+                    "offset": 418,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
                     "name": [
                         "uart",
                         "dut_tx"
@@ -1991,6 +2134,19 @@
                         "uart",
                         "dut_tx",
                         "level"
+                    ],
+                    "offset": 419,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 6,
+                    "bits": 2,
+                    "description": "Reserved bits",
+                    "name": [
+                        "uart",
+                        "dut_tx",
+                        "res"
                     ],
                     "offset": 419,
                     "type_size": 1
@@ -2061,6 +2217,19 @@
                 },
                 {
                     "access": 1,
+                    "bit_offset": 6,
+                    "bits": 2,
+                    "description": "Reserved bits",
+                    "name": [
+                        "uart",
+                        "dut_cts",
+                        "res"
+                    ],
+                    "offset": 420,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
                     "flag": "VOLATILE",
                     "name": [
                         "uart",
@@ -2119,6 +2288,19 @@
                         "uart",
                         "dut_rts",
                         "level"
+                    ],
+                    "offset": 421,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 6,
+                    "bits": 2,
+                    "description": "Reserved bits",
+                    "name": [
+                        "uart",
+                        "dut_rts",
+                        "res"
                     ],
                     "offset": 421,
                     "type_size": 1
@@ -2245,6 +2427,19 @@
                 },
                 {
                     "access": 1,
+                    "bit_offset": 5,
+                    "bits": 3,
+                    "description": "Reserved bits",
+                    "name": [
+                        "uart",
+                        "status",
+                        "res"
+                    ],
+                    "offset": 431,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
                     "description": "basic mode for rtc settings",
                     "name": [
                         "rtc",
@@ -2276,6 +2471,19 @@
                         "rtc",
                         "mode",
                         "disable"
+                    ],
+                    "offset": 432,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 2,
+                    "bits": 6,
+                    "description": "Reserved bits",
+                    "name": [
+                        "rtc",
+                        "mode",
+                        "res"
                     ],
                     "offset": 432,
                     "type_size": 1
@@ -2449,6 +2657,19 @@
                 },
                 {
                     "access": 1,
+                    "bit_offset": 3,
+                    "bits": 5,
+                    "description": "Reserved bits",
+                    "name": [
+                        "adc",
+                        "mode",
+                        "res"
+                    ],
+                    "offset": 448,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
                     "name": [
                         "adc",
                         "dut_adc"
@@ -2505,6 +2726,19 @@
                         "adc",
                         "dut_adc",
                         "level"
+                    ],
+                    "offset": 449,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 6,
+                    "bits": 2,
+                    "description": "Reserved bits",
+                    "name": [
+                        "adc",
+                        "dut_adc",
+                        "res"
                     ],
                     "offset": 449,
                     "type_size": 1
@@ -2635,6 +2869,19 @@
                 },
                 {
                     "access": 1,
+                    "bit_offset": 2,
+                    "bits": 6,
+                    "description": "Reserved bits",
+                    "name": [
+                        "pwm",
+                        "mode",
+                        "res"
+                    ],
+                    "offset": 480,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
                     "flag": "VOLATILE",
                     "name": [
                         "pwm",
@@ -2693,6 +2940,19 @@
                         "pwm",
                         "dut_pwm",
                         "level"
+                    ],
+                    "offset": 481,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 6,
+                    "bits": 2,
+                    "description": "Reserved bits",
+                    "name": [
+                        "pwm",
+                        "dut_pwm",
+                        "res"
                     ],
                     "offset": 481,
                     "type_size": 1
@@ -2795,6 +3055,19 @@
                 },
                 {
                     "access": 1,
+                    "bit_offset": 2,
+                    "bits": 6,
+                    "description": "Reserved bits",
+                    "name": [
+                        "dac",
+                        "mode",
+                        "res"
+                    ],
+                    "offset": 512,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
                     "flag": "VOLATILE",
                     "name": [
                         "dac",
@@ -2853,6 +3126,19 @@
                         "dac",
                         "dut_dac",
                         "level"
+                    ],
+                    "offset": 513,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 6,
+                    "bits": 2,
+                    "description": "Reserved bits",
+                    "name": [
+                        "dac",
+                        "dut_dac",
+                        "res"
                     ],
                     "offset": 513,
                     "type_size": 1
@@ -2934,6 +3220,19 @@
                 },
                 {
                     "access": 1,
+                    "bit_offset": 4,
+                    "bits": 4,
+                    "description": "Reserved bits",
+                    "name": [
+                        "tmr",
+                        "mode",
+                        "res"
+                    ],
+                    "offset": 528,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
                     "name": [
                         "tmr",
                         "dut_ic"
@@ -2990,6 +3289,19 @@
                         "tmr",
                         "dut_ic",
                         "level"
+                    ],
+                    "offset": 529,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 6,
+                    "bits": 2,
+                    "description": "Reserved bits",
+                    "name": [
+                        "tmr",
+                        "dut_ic",
+                        "res"
                     ],
                     "offset": 529,
                     "type_size": 1
@@ -3111,6 +3423,20 @@
                     "type_size": 2
                 },
                 {
+                    "access": 1,
+                    "bit_offset": 11,
+                    "bits": 5,
+                    "description": "Reserved bits",
+                    "name": [
+                        "gpio",
+                        "0",
+                        "mode",
+                        "res"
+                    ],
+                    "offset": 540,
+                    "type_size": 2
+                },
+                {
                     "access": 0,
                     "description": "The status of the GPIO",
                     "flag": "VOLATILE",
@@ -3134,6 +3460,20 @@
                         "0",
                         "status",
                         "level"
+                    ],
+                    "offset": 542,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 1,
+                    "bits": 7,
+                    "description": "Reserved bits",
+                    "name": [
+                        "gpio",
+                        "0",
+                        "status",
+                        "res"
                     ],
                     "offset": 542,
                     "type_size": 1
@@ -3235,6 +3575,20 @@
                     "type_size": 2
                 },
                 {
+                    "access": 1,
+                    "bit_offset": 11,
+                    "bits": 5,
+                    "description": "Reserved bits",
+                    "name": [
+                        "gpio",
+                        "1",
+                        "mode",
+                        "res"
+                    ],
+                    "offset": 544,
+                    "type_size": 2
+                },
+                {
                     "access": 0,
                     "description": "The status of the GPIO",
                     "flag": "VOLATILE",
@@ -3258,6 +3612,20 @@
                         "1",
                         "status",
                         "level"
+                    ],
+                    "offset": 546,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 1,
+                    "bits": 7,
+                    "description": "Reserved bits",
+                    "name": [
+                        "gpio",
+                        "1",
+                        "status",
+                        "res"
                     ],
                     "offset": 546,
                     "type_size": 1
@@ -3359,6 +3727,20 @@
                     "type_size": 2
                 },
                 {
+                    "access": 1,
+                    "bit_offset": 11,
+                    "bits": 5,
+                    "description": "Reserved bits",
+                    "name": [
+                        "gpio",
+                        "2",
+                        "mode",
+                        "res"
+                    ],
+                    "offset": 548,
+                    "type_size": 2
+                },
+                {
                     "access": 0,
                     "description": "The status of the GPIO",
                     "flag": "VOLATILE",
@@ -3382,6 +3764,20 @@
                         "2",
                         "status",
                         "level"
+                    ],
+                    "offset": 550,
+                    "type_size": 1
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 1,
+                    "bits": 7,
+                    "description": "Reserved bits",
+                    "name": [
+                        "gpio",
+                        "2",
+                        "status",
+                        "res"
                     ],
                     "offset": 550,
                     "type_size": 1
