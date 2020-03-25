@@ -146,12 +146,12 @@ void init_dut_uart_msp() {
 	GPIO_InitStruct.Pin = DUT_TX_Pin;
 	GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_MEDIUM;
-	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+	HAL_GPIO_Init(DUT_TX_GPIO_Port, &GPIO_InitStruct);
 
 	GPIO_InitStruct.Pin = DUT_RX_Pin;
-	//GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
 	GPIO_InitStruct.Pull = GPIO_PULLUP;
-	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+	GPIO_InitStruct.Mode = GPIO_MODE_AF_INPUT;
+	HAL_GPIO_Init(DUT_RX_GPIO_Port, &GPIO_InitStruct);
 
 	hdma_usart_dut_rx.Instance = DUT_UART_RX_DMA_INST;
 	hdma_usart_dut_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
@@ -216,6 +216,7 @@ error_t commit_dut_uart() {
 	if (reg->mode.data_bits == APP_UART_DATABITS_7 && !reg->mode.parity) {
 		return EINVAL;
 	}
+	dut_uart.mode.if_type = reg->mode.if_type;
 	dut_uart.mask_msb = 0xFF;
 	huart->Init.BaudRate = reg->baud;
 	huart->Init.StopBits = reg->mode.stop_bits ? UART_STOPBITS_2 : UART_STOPBITS_1;
@@ -323,8 +324,8 @@ void init_if_uart_msp() {
 	HAL_GPIO_Init(IF_TX_GPIO_Port, &GPIO_InitStruct);
 
 	GPIO_InitStruct.Pin = IF_RX_Pin;
-	//GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
 	GPIO_InitStruct.Pull = GPIO_PULLUP;
+	GPIO_InitStruct.Mode = GPIO_MODE_AF_INPUT;
 	HAL_GPIO_Init(IF_RX_GPIO_Port, &GPIO_InitStruct);
 
 	huart_rx_dma->Instance = IF_UART_DMA_RX_INST;
