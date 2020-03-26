@@ -5,6 +5,7 @@ Declares fixtures and common functions
 import pytest
 import serial
 from philip_pal import Phil
+from digilent_device import DigilentAnalogDiscovery2
 
 
 def pytest_addoption(parser):
@@ -36,6 +37,7 @@ def phil(phil_init):
             break
     assert result == phil_init.RESULT_SUCCESS
     yield phil_init
+    phil_init.reset_mcu()
 
 
 @pytest.fixture(scope="function")
@@ -45,3 +47,12 @@ def tester(request):
                         baudrate=115200, timeout=0.3, write_timeout=1)
     yield dev
     dev.close()
+
+
+@pytest.fixture(scope="function")
+def tester_dad2():
+    """Instance for Digilent Analog Discover 2"""
+    dad2 = DigilentAnalogDiscovery2()
+    yield dad2
+    dad2.driver.pins_reset()
+    dad2.driver.__del__()

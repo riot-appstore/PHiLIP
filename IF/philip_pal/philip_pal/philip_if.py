@@ -302,6 +302,8 @@ class PhilipExtIf(PhilipBaseIf):
         else:
             self.mem_map = self.mm_from_version(self.if_version)
 
+        self._sys_clock = None
+
     def scan_dev_map(self):
         """Scans the device for memory map information
 
@@ -542,24 +544,63 @@ class PhilipExtIf(PhilipBaseIf):
             see send_and_parse_cmd()
             formatted to return the time sorted events
         """
-        clock_speed = self.read_reg('sys.sys_clk')['data']
+        if not self._sys_clock:
+            self._sys_clock = self.read_reg('sys.sys_clk')['data']
         trace = []
         response = {"cmd": "read_trace()", "result": self.RESULT_SUCCESS}
+        total_size = int(self.mem_map['trace.tick']['array_size'])
+        # must have a chunk that will not cause buffer overflow
+        chunk_size = 32 + 16
+        index = 0
+        while index + chunk_size < total_size:
+            self._get_trace_events(trace, index, chunk_size, to_ns)
+            index += chunk_size
+        chunk_size = total_size - index
+        if chunk_size:
+            self._get_trace_events(trace, index, chunk_size, to_ns)
 
-        for i in range(0, self.mem_map['trace.tick']['array_size']):
+        sorted_events = sorted(trace, key=lambda x: x['time'])
+        any_diff = 0
+        ev_diff = {"DEBUG0": 0, "DEBUG1": 0, "DEBUG2": 0, "DUT_IC": 0}
+
+        for event in sorted_events:
+            event["diff"] = 0
+            event["source_diff"] = 0
+            if any_diff != 0:
+                event["diff"] = event["time"] - any_diff
+            if ev_diff[event['source']] != 0:
+                event["source_diff"] = event["time"] - ev_diff[event['source']]
+            ev_diff[event['source']] = event["time"]
+            any_diff = event["time"]
+
+        response['data'] = sorted(trace, key=lambda x: x['time'])
+        return response
+
+    def _get_trace_events(self, trace, index, chunk_size, to_ns):
+        logging.debug("_get_trace_events(trace=?, index=%r, "
+                      "chunk_size=%r, to_ns=%r)",
+                      index, chunk_size, to_ns)
+        # should be time in seconds
+        trace_tick_divs = self.read_reg('trace.tick_div',
+                                        index, chunk_size)['data']
+        trace_sources = self.read_reg('trace.source',
+                                      index, chunk_size)['data']
+        trace_ticks = self.read_reg('trace.tick',
+                                    index, chunk_size)['data']
+        trace_values = self.read_reg('trace.value',
+                                     index, chunk_size)['data']
+        for _ in range(len(trace_ticks)):
             trace_event = {}
-            # should be time in seconds
-            # read only one at a time since the buffer can overflow
-            trace_tick_div = self.read_reg('trace.tick_div', i, 1)['data'][0]
-            trace_source = self.read_reg('trace.source', i, 1)['data'][0]
-            trace_tick = self.read_reg('trace.tick', i, 1)['data'][0]
-            trace_value = self.read_reg('trace.value', i, 1)['data'][0]
+            trace_tick_div = trace_tick_divs[_]
+            trace_source = trace_sources[_]
+            trace_tick = trace_ticks[_]
+            trace_value = trace_values[_]
             total_tick = trace_tick << trace_tick_div
-            time_sec = float(total_tick) / clock_speed
+            time_sec = float(total_tick) / self._sys_clock
             if to_ns:
                 trace_event['time'] = int(time_sec * 10000000000)
             else:
-                trace_event['time'] = round(time_sec, 10)
+                trace_event['time'] = round(time_sec, 9)
             if trace_source == 1:
                 trace_event['source'] = 'DEBUG0'
             elif trace_source == 2:
@@ -579,20 +620,3 @@ class PhilipExtIf(PhilipBaseIf):
                 trace_event['event'] = trace_value
             if trace_source != 0:
                 trace.append(trace_event)
-
-        sorted_events = sorted(trace, key=lambda x: x['time'])
-        any_diff = 0
-        ev_diff = {"DEBUG0": 0, "DEBUG1": 0, "DEBUG2": 0, "DUT_IC": 0}
-
-        for event in sorted_events:
-            event["diff"] = 0
-            event["source_diff"] = 0
-            if any_diff != 0:
-                event["diff"] = event["time"] - any_diff
-            if ev_diff[event['source']] != 0:
-                event["source_diff"] = event["time"] - ev_diff[event['source']]
-            ev_diff[event['source']] = event["time"]
-            any_diff = event["time"]
-
-        response['data'] = sorted(trace, key=lambda x: x['time'])
-        return response

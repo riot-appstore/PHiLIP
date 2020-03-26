@@ -267,11 +267,9 @@ class PhilipShell(cmd.Cmd):
                 for key_name in headers:
                     if key_name == 'diff':
                         diffs.append(event[key_name])
-                    if isinstance(event[key_name], float):
-                        event[key_name] = "{:.8f}".format(event[key_name])
                     row_data.append(event[key_name])
                 table_data.append(row_data)
-            print(tabulate(table_data, headers=headers))
+            print(tabulate(table_data, headers=headers, floatfmt=".9f"))
 
             try:
                 if len(diffs) > 1:
@@ -422,7 +420,7 @@ CN6
                             DUT_SDA = PB9 = SDA/D14 -
                                                AVDD -
                                                 GND -
--                               LED0 = PA5 =SCK/D13 -
+-                              LED0 = PA5 = SCK/D13 -
 - IOREF                                    MISO/D12 -
 - NRST                                 PWM/MOSI/D11 -
 - 3V3                                    PWM/CS/D10 -
