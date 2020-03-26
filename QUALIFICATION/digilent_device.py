@@ -29,6 +29,7 @@ class DigilentDriver():
         else:
             self.inst = cdll.LoadLibrary("libdwf.so")
 
+        self.inst.FDwfDeviceCloseAll()
         version = create_string_buffer(16)
         self.version = self.inst.FDwfGetVersion(version)
 
@@ -87,9 +88,10 @@ class DigilentDriver():
     def pins_reset(self):
         self.inst.FDwfDigitalOutReset(self.handle)
 
-    def i2c_setup(self, scl_pin, sda_pin, speed=100000):
+    def i2c_setup(self, scl_pin, sda_pin, speed=100000, clk_str=1):
         self.logger.debug("i2c_setup(scl_pin=%r, sda_pin=%r, speed=%r)",
                           scl_pin, sda_pin, speed)
+        self.inst.FDwfDigitalI2cStretchSet(self.handle, c_int(clk_str))
         self.inst.FDwfDigitalI2cRateSet(self.handle, c_double(speed))
         self.inst.FDwfDigitalI2cSclSet(self.handle, c_int(scl_pin))
         self.inst.FDwfDigitalI2cSdaSet(self.handle, c_int(sda_pin))
@@ -104,9 +106,6 @@ class DigilentDriver():
 
     def i2c_reset(self):
         self.inst.FDwfDigitalI2cReset(self.handle)
-
-    def i2c_clock_stretch_en(self, enable):
-        self.inst.FDwfDigitalI2cStretchSet(self.handle, c_int(enable))
 
     def i2c_read_nack_en(self, enable):
         self.inst.FDwfDigitalI2cReadNakSet(self.handle, c_int(enable))
@@ -220,31 +219,34 @@ class DigilentAnalogDiscovery2():
     def __init__(self, *args, **kwargs):
         """Driver for Digilent Analog Discover 2"""
         self.logger = logging.getLogger(self.__class__.__name__)
-        if "driver" in kwargs:
-            self.driver = kwargs["driver"]
-        else:
-            self.driver = DigilentDriver(*args, **kwargs)
+
         self.pins = self.get_pinout()
         self.mode = None
-        self.default_spi_cs = kwargs.get('default_spi_cs',
+        self.default_spi_cs = kwargs.pop('default_spi_cs',
                                          self.pins['DUT_NSS'])
-        self.default_i2c_addr = kwargs.get('default_i2c_addr', 0x55)
+        self.default_i2c_addr = kwargs.pop('default_i2c_addr', 0x55)
 
-        mosi_pin = kwargs.get('mosi_pin', self.pins['DUT_MOSI'])
-        miso_pin = kwargs.get('miso_pin', self.pins['DUT_MISO'])
-        sck_pin = kwargs.get('sck_pin', self.pins['DUT_SCK'])
-        spi_speed = kwargs.get('spi_speed', 100000)
-        clk_pol = kwargs.get('clk_pol', 0)
-        clk_pha = kwargs.get('clk_pha', 0)
+        mosi_pin = kwargs.pop('mosi_pin', self.pins['DUT_MOSI'])
+        miso_pin = kwargs.pop('miso_pin', self.pins['DUT_MISO'])
+        sck_pin = kwargs.pop('sck_pin', self.pins['DUT_SCK'])
+        spi_speed = kwargs.pop('spi_speed', 100000)
+        clk_pol = kwargs.pop('clk_pol', 0)
+        clk_pha = kwargs.pop('clk_pha', 0)
         self.spi_kwargs = {'mosi_pin': mosi_pin, 'miso_pin': miso_pin,
                            'sck_pin': sck_pin, 'speed': spi_speed,
                            'clk_pol': clk_pol, 'clk_pha': clk_pha}
 
-        scl_pin = kwargs.get('scl_pin', self.pins['DUT_SCL'])
-        sda_pin = kwargs.get('sda_pin', self.pins['DUT_SDA'])
-        i2c_speed = kwargs.get('i2c_speed', 100000)
+        scl_pin = kwargs.pop('scl_pin', self.pins['DUT_SCL'])
+        sda_pin = kwargs.pop('sda_pin', self.pins['DUT_SDA'])
+        i2c_speed = kwargs.pop('i2c_speed', 100000)
+        clk_str = kwargs.pop('clk_str', 1)
         self.i2c_kwargs = {'scl_pin': scl_pin, 'sda_pin': sda_pin,
-                           'speed': i2c_speed}
+                           'speed': i2c_speed, 'clk_str': clk_str}
+
+        if "driver" in kwargs:
+            self.driver = kwargs["driver"]
+        else:
+            self.driver = DigilentDriver(*args, **kwargs)
 
     @staticmethod
     def get_pinout():
@@ -296,22 +298,22 @@ class DigilentAnalogDiscovery2():
         addr = addr or self.default_i2c_addr
         self.driver.i2c_write_bytes(addr, data)
 
-    def i2c_write_regs(self, reg, data, addr=None):
+    def i2c_write_regs(self, reg, data, addr=None, reg16=False):
         self._i2c_mode()
         if not isinstance(data, list):
             data = [data]
         addr = addr or self.default_i2c_addr
-        self.driver.i2c_write_regs(addr, reg, data)
+        self.driver.i2c_write_regs(addr, reg, data, reg16=reg16)
 
     def i2c_read_bytes(self, size=1, addr=None):
         self._i2c_mode()
         addr = addr or self.default_i2c_addr
         return self.driver.i2c_read_bytes(addr, size)
 
-    def i2c_read_regs(self, reg, size=1, addr=None):
+    def i2c_read_regs(self, reg, size=1, addr=None, reg16=False):
         self._i2c_mode()
         addr = addr or self.default_i2c_addr
-        return self.driver.i2c_read_regs(addr, reg, size)
+        return self.driver.i2c_read_regs(addr, reg, size, reg16=reg16)
 
     def spi_write_bytes(self, data, cs=None):
         self._spi_mode()

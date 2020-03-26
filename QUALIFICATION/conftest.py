@@ -55,4 +55,3 @@ def tester_dad2():
     dad2 = DigilentAnalogDiscovery2()
     yield dad2
     dad2.driver.pins_reset()
-    dad2.driver.__del__()
