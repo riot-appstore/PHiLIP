@@ -3,7 +3,7 @@
 Python wrapper for the Digilent Waveforms software for devices such as Digilent
 Analog Discovery 2.
 """
-from ctypes import c_uint, c_int, c_double, byref, c_uint8
+from ctypes import c_uint, c_int, c_double, byref, c_uint8, c_bool
 from ctypes import create_string_buffer, cdll
 from time import sleep
 import sys
@@ -214,6 +214,21 @@ class DigilentDriver():
         self.logger.debug("ret=%r", list(read_data))
         return list(read_data)
 
+    def anal_setup(self):
+        self.inst.FDwfAnalogOutNodeEnableSet(self.handle, c_int(-1), c_int(0),
+                                             c_bool(True))
+
+    def anal_reset(self):
+        self.inst.FDwfAnalogOutReset(self.handle, c_int(-1))
+
+    def anal_set_dc(self, channel, level):
+        chan = c_int(channel)
+        self.inst.FDwfAnalogOutNodeFunctionSet(self.handle, chan,
+                                               c_int(0), c_int(0))
+        self.inst.FDwfAnalogOutNodeOffsetSet(self.handle, chan,
+                                             c_int(0), c_double(level))
+        self.inst.FDwfAnalogOutConfigure(self.handle, chan, c_bool(True))
+
 
 class DigilentAnalogDiscovery2():
     def __init__(self, *args, **kwargs):
@@ -261,6 +276,8 @@ class DigilentAnalogDiscovery2():
         pins["DUT_MISO"] = 7
         pins["DUT_SCK"] = 8
         pins["DUT_NSS"] = 9
+        # DUT_ADC os connected to waveform channel 0 labeled W1
+        pins["DUT_ADC"] = 0
         return pins
 
     def _spi_mode(self):
@@ -282,7 +299,14 @@ class DigilentAnalogDiscovery2():
     def _pulse_mode(self):
         if self.mode != 'pulse':
             self.driver.pins_reset()
+            self.driver.pins_reset()
             self.mode = 'pulse'
+
+    def _anal_mode(self):
+        if self.mode != 'anal':
+            self.driver.pins_reset()
+            self.driver.anal_setup()
+            self.mode = 'anal'
 
     def pulse(self, pin, time_l, time_h=None, count=1):
         self._pulse_mode()
@@ -331,7 +355,7 @@ class DigilentAnalogDiscovery2():
         write_data.insert(0, reg)
         self.driver.spi_write(cs, write_data)
 
-    def spi_read_bytes(self, cs, size=1):
+    def spi_read_bytes(self, cs=None, size=1):
         self._spi_mode()
         cs = cs or self.default_spi_cs
         return self.driver.spi_read(cs, size)
@@ -351,11 +375,17 @@ class DigilentAnalogDiscovery2():
         cs = cs or self.default_spi_cs
         return self.driver.spi_xfer(cs, write_data)
 
+    def anal_output_volts(self, volts, channel=None):
+        self._anal_mode()
+        channel = channel or self.pins['DUT_ADC']
+        self.driver.anal_set_dc(channel, volts)
+
 
 def main():
     """Main program example with PHiLIP"""
     # logging.basicConfig(level="DEBUG")
     dad2 = DigilentAnalogDiscovery2()
+    dad2.anal_output_volts(1.0)
     dad2.pulse("DUT_IC", 0.000001, count=128)
     dad2.pulse("DEBUG0", 0.0001, count=256)
     print("first available i2c byte:{}".format(dad2.i2c_read_bytes()))

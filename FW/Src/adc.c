@@ -68,7 +68,9 @@ static void _init_periph_adc() {
 	hadc->Init.ExternalTrigConv = ADC_SOFTWARE_START;
 	hadc->Init.DataAlign = ADC_DATAALIGN_RIGHT;
 	hadc->Init.NbrOfConversion = 1;
-
+	if (HAL_ADC_Init(hadc) != HAL_OK) {
+		_Error_Handler(__FILE__, __LINE__);
+	}
 }
 
 void init_dut_adc_msp() {
@@ -109,6 +111,7 @@ error_t commit_dut_adc() {
 		return 0;
 	}
 
+	HAL_ADC_Stop(hadc);
 	dut_adc.mode.disable = reg->mode.disable;
 	if (dut_adc.reg->mode.disable) {
 		if (HAL_ADC_DeInit(hadc) != HAL_OK) {
@@ -122,8 +125,12 @@ error_t commit_dut_adc() {
 	if (HAL_ADC_Init(hadc) != HAL_OK) {
 		_Error_Handler(__FILE__, __LINE__);
 	}
+
 	if (calibrate_adc) {
-		HAL_ADCEx_Calibration_Start(hadc);
+		/* Calibration seems to add a 50mV offset and doesn't keep a stable
+		 * initial value.
+		 */
+		//while (HAL_ADCEx_Calibration_Start(hadc) != HAL_OK);
 		calibrate_adc = 0;
 	}
 
@@ -138,6 +145,8 @@ error_t commit_dut_adc() {
 	if (HAL_ADC_ConfigChannel(hadc, &sConfig) != HAL_OK) {
 		_Error_Handler(__FILE__, __LINE__);
 	}
+
+
 
 	reg->mode.init = 1;
 	reg->current_sum = 0;
