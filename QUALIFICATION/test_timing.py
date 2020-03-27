@@ -1,13 +1,13 @@
-"""UART qualification tests
+"""Timing Tests
 
-Note: The pins must be connected for the uart test to work
-The tester is a UART to Serial converter (probably FTDI)
+Note: The pins must be connected for the test to work
+The tester is a Digilent Analog Discovery 2
 Pinout:
-PHiLIP      USB to Serial Converter
-DUT_RX ------------ TX
-DUT_TX ------------ RX
-DUT_CTS ----------- RTS
-DUT_RTS ----------- CTS
+PHiLIP      Digilent Analog Discovery 2
+DUT_IC ------------ 0
+DEBUG0 ------------ 1
+DEBUG1 ------------ 2
+DEBUG2 ------------ 3
 """
 from time import sleep
 import statistics as sta
