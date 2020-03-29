@@ -2981,7 +2981,7 @@
                 },
                 {
                     "access": 1,
-                    "default": 10000,
+                    "default": 256,
                     "description": "Settable high time in sys clock ticks",
                     "name": [
                         "pwm",
@@ -2993,7 +2993,7 @@
                 },
                 {
                     "access": 1,
-                    "default": 10000,
+                    "default": 256,
                     "description": "Settable low time in sys clock ticks",
                     "name": [
                         "pwm",
@@ -4310,13 +4310,13 @@
                     "type": "uint32_t"
                 },
                 {
-                    "default": 10000,
+                    "default": 256,
                     "description": "Settable high time in sys clock ticks",
                     "name": "h_ticks",
                     "type": "uint32_t"
                 },
                 {
-                    "default": 10000,
+                    "default": 256,
                     "description": "Settable low time in sys clock ticks",
                     "name": "l_ticks",
                     "type": "uint32_t"

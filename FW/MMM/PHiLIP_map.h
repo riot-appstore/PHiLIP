@@ -5,7 +5,7 @@
  * @file      PHiLIP_map.h
  * @author    Kevin Weiss
  * @version   1.0.2
- * @date      2020-03-18
+ * @date      2020-03-29
  * @details   Generated from the memory map manager version 0.0.10
  ******************************************************************************
  */
