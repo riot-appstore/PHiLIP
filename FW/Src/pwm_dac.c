@@ -66,10 +66,19 @@ void init_dut_pwm_dac(map_t *reg) {
 
 	DUT_PWM_DAC_CLK_EN();
 
-	dut_pwm.htmr->Instance = DUT_PWM_TMR;
-	dut_pwm.htmr->Init.CounterMode = TIM_COUNTERMODE_UP;
-	dut_pwm.htmr->Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-	dut_pwm.htmr->Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+	htmr.Instance = DUT_PWM_TMR;
+	htmr.Init.CounterMode = TIM_COUNTERMODE_UP;
+	htmr.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+	htmr.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+
+	HAL_TIM_Base_Init(&htmr);
+	TIM_ClockConfigTypeDef sClockSourceConfig = {.ClockSource = TIM_CLOCKSOURCE_INTERNAL};
+	HAL_TIM_ConfigClockSource(&htmr, &sClockSourceConfig);
+
+	TIM_MasterConfigTypeDef sMasterConfig = {.MasterOutputTrigger = TIM_TRGO_RESET,
+											 .MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE};
+	HAL_TIMEx_MasterConfigSynchronization(&htmr, &sMasterConfig);
+	HAL_TIM_PWM_Init(&htmr);
 
 	commit_dut_pwm();
 	commit_dut_dac();
@@ -107,6 +116,7 @@ error_t commit_dut_pwm() {
 	if (dut_pwm.reg->mode.init) {
 		return 0;
 	}
+	dut_pwm.reg->mode.init = 1;
 
 	HAL_TIM_PWM_Stop(dut_pwm.htmr, TIM_CHANNEL_3);
 
@@ -129,7 +139,6 @@ error_t commit_dut_pwm() {
 		dut_pwm.hoc.OCMode = TIM_OCMODE_PWM1;
 		if ((dut_pwm.reg->h_ticks > dut_pwm.reg->period) ||
 			(dut_pwm.reg->l_ticks > dut_pwm.reg->period)) {
-			dut_pwm.reg->mode.init = 1;
 			return EOVERFLOW;
 		}
 		for (div = 0; (dut_pwm.reg->period >> div) >= (uint32_t)0xFFFF; div++);
@@ -140,7 +149,6 @@ error_t commit_dut_pwm() {
 			dut_pwm.reg->duty_cycle = ((uint64_t)dut_pwm.reg->h_ticks * 10000) / dut_pwm.reg->period;
 		}
 	}
-	dut_pwm.reg->mode.init = 1;
 
 	TIM_Base_SetConfig(dut_pwm.htmr->Instance, &dut_pwm.htmr->Init);
 	HAL_TIM_PWM_ConfigChannel(dut_pwm.htmr, &dut_pwm.hoc, TIM_CHANNEL_3);
