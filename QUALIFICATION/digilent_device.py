@@ -214,20 +214,38 @@ class DigilentDriver():
         self.logger.debug("ret=%r", list(read_data))
         return list(read_data)
 
-    def anal_setup(self):
+    def analout_setup(self):
         self.inst.FDwfAnalogOutNodeEnableSet(self.handle, c_int(-1), c_int(0),
                                              c_bool(True))
 
-    def anal_reset(self):
+    def analout_reset(self):
         self.inst.FDwfAnalogOutReset(self.handle, c_int(-1))
 
-    def anal_set_dc(self, channel, level):
+    def analout_set_dc(self, channel, level):
         chan = c_int(channel)
         self.inst.FDwfAnalogOutNodeFunctionSet(self.handle, chan,
                                                c_int(0), c_int(0))
         self.inst.FDwfAnalogOutNodeOffsetSet(self.handle, chan,
                                              c_int(0), c_double(level))
         self.inst.FDwfAnalogOutConfigure(self.handle, chan, c_bool(True))
+
+    def analin_setup(self):
+        chan = c_int(0)
+        self.inst.FDwfAnalogInChannelEnableSet(self.handle, chan, c_bool(True))
+        self.inst.FDwfAnalogInChannelOffsetSet(self.handle, chan, c_double(0))
+        self.inst.FDwfAnalogInChannelRangeSet(self.handle, chan, c_double(10))
+        self.inst.FDwfAnalogInConfigure(self.handle, c_bool(False),
+                                        c_bool(False))
+
+    def analin_reset(self):
+        self.inst.FDwfAnalogInReset(self.handle)
+
+    def analin_sample(self, channel):
+        voltage = c_double()
+        self.inst.FDwfAnalogInStatus(self.handle, False, None)
+        self.inst.FDwfAnalogInStatusSample(self.handle, c_int(channel),
+                                           byref(voltage))
+        return float(voltage.value)
 
 
 class DigilentAnalogDiscovery2():
@@ -278,6 +296,8 @@ class DigilentAnalogDiscovery2():
         pins["DUT_NSS"] = 9
         # DUT_ADC os connected to waveform channel 0 labeled W1
         pins["DUT_ADC"] = 0
+        # DUT_ADC os connected to scope channel 0 labeled 1+
+        pins["DUT_DAC"] = 0
         return pins
 
     def _spi_mode(self):
@@ -302,11 +322,17 @@ class DigilentAnalogDiscovery2():
             self.driver.pins_reset()
             self.mode = 'pulse'
 
-    def _anal_mode(self):
-        if self.mode != 'anal':
+    def _analout_mode(self):
+        if self.mode != 'analout':
             self.driver.pins_reset()
-            self.driver.anal_setup()
-            self.mode = 'anal'
+            self.driver.analout_setup()
+            self.mode = 'analout'
+
+    def _analin_mode(self):
+        if self.mode != 'analin':
+            self.driver.pins_reset()
+            self.driver.analin_setup()
+            self.mode = 'analin'
 
     def pulse(self, pin, time_l, time_h=None, count=1):
         self._pulse_mode()
@@ -376,15 +402,21 @@ class DigilentAnalogDiscovery2():
         return self.driver.spi_xfer(cs, write_data)
 
     def anal_output_volts(self, volts, channel=None):
-        self._anal_mode()
+        self._analout_mode()
         channel = channel or self.pins['DUT_ADC']
-        self.driver.anal_set_dc(channel, volts)
+        self.driver.analout_set_dc(channel, volts)
+
+    def anal_sample(self, channel=None):
+        self._analin_mode()
+        channel = channel or self.pins['DUT_DAC']
+        return self.driver.analin_sample(channel)
 
 
 def main():
     """Main program example with PHiLIP"""
     # logging.basicConfig(level="DEBUG")
     dad2 = DigilentAnalogDiscovery2()
+    print("scope 0 = {}V".format(dad2.anal_sample()))
     dad2.anal_output_volts(1.0)
     dad2.pulse("DUT_IC", 0.000001, count=128)
     dad2.pulse("DEBUG0", 0.0001, count=256)

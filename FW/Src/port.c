@@ -131,6 +131,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base) {
 	}
 	else if (htim_base->Instance == DUT_PWM_DAC_INST) {
 		init_dut_pwm_dac_msp();
+		postinit_dut_pwm_dac_msp();
 	}
 }
 
