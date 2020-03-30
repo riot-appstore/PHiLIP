@@ -412,6 +412,87 @@ class DigilentAnalogDiscovery2():
         return self.driver.analin_sample(channel)
 
 
+class DigilentDigitalDiscovery():
+    def __init__(self, *args, **kwargs):
+        """Driver for Digilent Digital Discovery"""
+        self.logger = logging.getLogger(self.__class__.__name__)
+
+        self.pins = self.get_pinout()
+        self.mode = None
+        self.default_spi_cs = kwargs.pop('default_spi_cs',
+                                         self.pins['DUT_NSS'])
+
+        mosi_pin = kwargs.pop('mosi_pin', self.pins['DUT_MOSI'])
+        miso_pin = kwargs.pop('miso_pin', self.pins['DUT_MISO'])
+        sck_pin = kwargs.pop('sck_pin', self.pins['DUT_SCK'])
+        spi_speed = kwargs.pop('spi_speed', 100000)
+        clk_pol = kwargs.pop('clk_pol', 0)
+        clk_pha = kwargs.pop('clk_pha', 0)
+        self.spi_kwargs = {'mosi_pin': mosi_pin, 'miso_pin': miso_pin,
+                           'sck_pin': sck_pin, 'speed': spi_speed,
+                           'clk_pol': clk_pol, 'clk_pha': clk_pha}
+
+        if "driver" in kwargs:
+            self.driver = kwargs["driver"]
+        else:
+            self.driver = DigilentDriver(*args, **kwargs)
+
+    @staticmethod
+    def get_pinout():
+        pins = {}
+        pins["DEBUG0"]   = 24-24    #DIO 24
+        pins["DEBUG1"]   = 25-24    #DIO 25
+        pins["DEBUG2"]   = 26-24    #DIO 26
+        pins["DUT_MOSI"] = 27-24    #DIO 27
+        pins["DUT_MISO"] = 28-24    #DIO 28
+        pins["DUT_SCK"]  = 29-24    #DIO 29
+        pins["DUT_NSS"]  = 30-24    #DIO 30
+        return pins
+
+    def _spi_mode(self):
+        if self.mode != 'spi':
+            self.driver.pins_reset()
+            self.driver.spi_setup(**self.spi_kwargs)
+            self.mode = 'spi'
+
+    def spi_write_bytes(self, data, cs=None):
+        self._spi_mode()
+        if not isinstance(data, list):
+            data = [data]
+        cs = cs or self.default_spi_cs
+        self.driver.spi_write(cs, data)
+
+    def spi_write_regs(self, reg, data, cs=None):
+        self._spi_mode()
+        cs = cs or self.default_spi_cs
+        if not isinstance(data, list):
+            data = [data]
+        write_data = data.copy()
+        write_data.insert(0, reg)
+        self.driver.spi_write(cs, write_data)
+
+    def spi_read_bytes(self, size=1, cs=None):
+        self._spi_mode()
+        cs = cs or self.default_spi_cs
+        return self.driver.spi_read(cs, size)
+
+    def spi_read_regs(self, reg, size=1, cs=None):
+        self._spi_mode()
+        cs = cs or self.default_spi_cs
+        data = [reg | 0x80]
+        data.extend([0]*size)
+        return self.driver.spi_xfer(cs, data)[1:]
+
+    def spi_xfer(self, data, cs=None):
+        self._spi_mode()
+        if not isinstance(data, list):
+            data = [data]
+        write_data = data.copy()
+        cs = cs or self.default_spi_cs
+        return self.driver.spi_xfer(cs, write_data)
+
+
+
 def main():
     """Main program example with PHiLIP"""
     # logging.basicConfig(level="DEBUG")
@@ -432,5 +513,7 @@ def main():
     print("spi reading 14 bytes starting a reg 22:{}".format(res))
 
 
+
 if __name__ == '__main__':
     main()
+
