@@ -71,7 +71,7 @@ def test_write_byte_arg_to_string(regtest):
                                                                result))
 
 
-@pytest.mark.parametrize("version_str", ['1.0.0'])
+@pytest.mark.parametrize("version_str", ['1.0.2'])
 def test_mm_from_version(regtest, version_str):
     """Regression tests for all version of mem maps"""
     regtest.write(pformat(PhilipExtIf().mm_from_version(version_str)))
