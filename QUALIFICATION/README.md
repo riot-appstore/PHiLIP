@@ -7,64 +7,62 @@ All tests must be performed on both PHiLIP-N and PHiLIP-B unless specified.
 The released firmware is available in the [releases](https://github.com/riot-appstore/PHiLIP/releases) section.
 
 # Tools and setup
-The following are all the tools and packages needed to run the tests
+The following are all the tools and packages needed to run the tests.
 
 ### Packages
 - `sudo pip3 install philip_pal pytest`
+- [Digilent Waveforms](https://reference.digilentinc.com/reference/software/waveforms/waveforms-3/start)
 
 ### Tools
-- Oscilloscope or logic analyzer with protocol decoder
-- Device that can do master SPI and I2C
+- Digilent Analog Discovery 2
+- FTDI USB to UART converter with flow control
 - Bluepill
 - Nucleo-f103rb
 
 
-## 1. Interface Tests
-The interface tests check how philip uart protocol, memory map allocation, and the actual python interface for philip.
+## Static Tests
+Even though any merges should have passed the static tests, the static tests should be run.
+
+Go to the base directory and run `./scripts/static_tests.py`.
+Everything should pass without any errors.
+
+## Interface Tests
+The interface tests check how philip uart interface protocol, memory map allocation, and the actual python interface for philip.
 Since this test has regression for the memory maps it should be executed and updated first.
-Remember to connect `DUT_RST` to `DEBUG0` pin and pullup the to 3.3V.
+This can be done on any PHiLIP board as it only confirms the host is up to date
 
+1. Go to the `IF/philip_pal` directory
 1. Connect PHiLIP to the computer
-2. Run tests located in `IF/philip_pal` with `python3 setup.py test`
-3. Evaluate any changes in regression testing
-4. If everything looks good then accept the changes with `python3 setup.py test --addopts --regtest-reset`
+1. Flash the binary to the PHiLIP
+1. Run tests with `./setup.py test`
+1. Evaluate any changes in regression testing
+1. If everything looks good then accept the changes with `./setup.py test --addopts --regtest-reset`
 
-## 2. Build Tests
+## Build Tests
 PHiLIP must be able to build in all configurations with both Eclipse and Makefiles.
-The CI performs the build tests on the Makefiles which are release versions of PHiLIP (O3 optimization), however, manual verification should be used for all configurations.
+The CI performs the build tests on the Makefiles which are release versions of PHiLIP (O3 optimization).
 
 1. Connect PHiLIP-n
-2. Run `./build_test-n.sh`
-3. Evaluate test results to make sure everything passes
-4. Run debug mode eclipse for the `NUCLEO-F103RB_DEBUG`
-5. While running, run tests located in `IF/philip_pal/philip_pal` with `python3 setup.py test`
-6. Evaluate test results to make sure everything passes
-7. Connect PHiLIP-b with a nucleo header that has clear memory _(this ensures the tx line is not being held by the nucleo)_
-8. Run `FLASH_PORT=<FLASH_PORT> ./build_test-b.sh` where `FLASH_PORT` is the name of the nucleo header, for example `NODE_F103RB` for the nucleo-f103rb
-9. Evaluate test results to make sure everything passes
-10. Run debug mode eclipse for the `BLUEPILL_DEBUG`
-11. While running, run tests located in `IF/philip_pal/philip_pal` with `python3 setup.py test`
-12. Evaluate test results to make sure everything passes
+1. Run `./build_test-n.sh`
+1. Evaluate test results to make sure everything passes
+1. Run debug mode eclipse for the `NUCLEO-F103RB_DEBUG`
+1. While running, run tests located in `IF/philip_pal/` with `./setup.py test`
+1. Evaluate test results to make sure everything passes
+1. Connect PHiLIP-b with a nucleo header that has clear memory _(this ensures the tx line is not being held by the nucleo)_
+1. Run `FLASH_PORT=<FLASH_PORT> ./build_test-b.sh` where `FLASH_PORT` is the name of the nucleo header, for example `NODE_F103RB` for the nucleo-f103rb
+1. Evaluate test results to make sure everything passes
+1. Run debug mode eclipse for the `BLUEPILL_DEBUG`
+1. While running, run tests located in `IF/philip_pal/` with `./setup.py test`
+1. Evaluate test results to make sure everything passes
 
-## 3. UART Peripheral Tests
-Tests functional of the UART.  The pinout must be correctly set up and a usb to serial converter should be used.
+##  UART Peripheral Tests
+This test should be run for both the PHiLIP_b and PHiLIP_n.
 
-PHiLIP |     USB to Serial Converter
---------|-----------------------------
-DUT_RX  | TX
-DUT_TX | RX
-DUT_CTS | RTS
-DUT_RTS | CTS
-
-1. Connect pins as per the table to the PHiLIP-b
-2. Run `pytest test_uart.py`
-3. Connect pins as per the table to the PHiLIP-n
-4. Run `pytest test_uart.py`
-
-## 4. I2C Peripheral Tests
-The i2c tests should be done with a scope or logic analyzer and another i2c master device. Connect the i2c master, probes and PHiLIP `DUT_SCL` and `DUT_SDA` pins.  Use strong pullup resistors to eliminate hardware faults.
+1. Connect pins shown when running `./test_uart.py`
+1. Run `pytest test_uart.py`
 
 
+## I2C Peripheral Tests
 Evaluate the following:
 - 1/2/3/10 byte read
 - 1/2/3/10 byte write
@@ -78,12 +76,15 @@ Evaluate the following:
 - check status flags behave
 - disable stops everything and re-enable doesn't cause timeouts
 
-Not tested:
-- general call
-- 10 bit address
+To run automated tests:
+1. Connect pins shown when running `./test_i2c.py`
+1. Run `pytest test_i2c.py`
 
-## 5. SPI Peripheral Tests
-The spi tests should be done with a scope or logic analyzer and another spi master device. Connect the spi master, probes and PHiLIP `DUT_MOSI`, `DUT_MISO`, `DUT_SCK` and `DUT_NSS` pins.  _NOTE: The SCLK pin can sometimes wring depending on cable lengths, a resistor or capacitor or even a extra wire._
+
+## SPI Peripheral Tests
+
+The spi tests should be done with a scope or logic analyzer and another spi master device.
+Connect the spi master, probes and PHiLIP `DUT_MOSI`, `DUT_MISO`, `DUT_SCK` and `DUT_NSS` pins.
 
 Evaluate the following:
 - 16 bit modes and endianness
@@ -93,11 +94,15 @@ Evaluate the following:
 - counts and ticks (tick reading +- 12 us)
 - register options
 
+or
+
+In the qualification folder run: `pytest test_spi.py` with Digilent device connected.
+
 Not tested:
 - status flags
 
-## 6. Trace Tests
-The trace tests should be verified with a scope or precision timing.  Connect to the `DEBUG0`, `DEBUG1` and `DEBUG2` pins.
+
+## Timing Tests
 
 Evaluate the following:
 - Connect the each pin and toggle the following and verify
@@ -108,3 +113,27 @@ Evaluate the following:
 | `tmr`  |  Rising | 200  | 28  |  128 | 100
 | `tmr`  |  Falling | 200  | 28  |  128 | 100
 | `gpio`  | Both Edges |  10000 | 600  | n/a  |  n/a |
+
+To run automated tests:
+1. Connect pins shown when running `./test_timing.py`
+1. Run `pytest test_timing.py`
+
+## ADC Tests
+
+Evaluating the following:
+- Measure ADC samples at different voltages
+- Measure ADC samples after PHiLIP resets
+
+To run automated tests:
+1. Connect pins shown when running `./test_adc.py`
+1. Run `pytest test_adc.py`
+
+## DAC Tests
+
+Evaluating the following:
+- Verify output accuracy
+- Verify jitter
+
+To run automated tests:
+1. Connect pins shown when running `./test_dac.py`
+1. Run `pytest test_dac.py`

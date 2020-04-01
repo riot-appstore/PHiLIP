@@ -1,7 +1,8 @@
+#! /usr/bin/env python3
 """UART qualification tests
 
-Note: The pins must be connected for the uart test to work
-The tester is a UART to Serial converter (probably FTDI)
+The tester is a UART to Serial converter such as FTDI.
+
 Pinout:
 PHiLIP      USB to Serial Converter
 DUT_RX ------------ TX
@@ -163,3 +164,12 @@ def test_reg(phil, tester):
     assert tester.readline() == b'{"result":0}\n'
     tester.write(test_str_rr.encode('utf-8'))
     assert tester.readline() == b'{"data":[42], "result":0}\n'
+
+
+def main():
+    """Main program"""
+    print(__doc__)
+
+
+if __name__ == '__main__':
+    main()

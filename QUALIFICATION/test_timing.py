@@ -1,7 +1,8 @@
+#! /usr/bin/env python3
 """Timing Tests
 
-Note: The pins must be connected for the test to work
 The tester is a Digilent Analog Discovery 2
+
 Pinout:
 PHiLIP      Digilent Analog Discovery 2
 DUT_IC ------------ 0
@@ -118,3 +119,12 @@ def _dut_ic_jitter_check(phil, tester_dad2, pulse_time, trig_edge):
         phil.reset_mcu()
 
     return max(jitter)
+
+
+def main():
+    """Main program"""
+    print(__doc__)
+
+
+if __name__ == '__main__':
+    main()
