@@ -844,6 +844,7 @@
                 {
                     "access": 0,
                     "description": "Specific modes for I2C",
+                    "flag": "VOLATILE",
                     "name": [
                         "i2c",
                         "status"
@@ -883,6 +884,7 @@
                     "bit_offset": 2,
                     "bits": 1,
                     "description": "Bus error:  Non-valid position during a byte transfer",
+                    "flag": "VOLATILE",
                     "name": [
                         "i2c",
                         "status",
@@ -909,6 +911,7 @@
                     "bit_offset": 4,
                     "bits": 1,
                     "description": "i2c bus is BUSY",
+                    "flag": "VOLATILE",
                     "name": [
                         "i2c",
                         "status",
@@ -997,6 +1000,7 @@
                     "bit_offset": 5,
                     "bits": 1,
                     "description": "Current value of gpio - 0:low - 1:high",
+                    "flag": "VOLATILE",
                     "name": [
                         "i2c",
                         "dut_sda",
@@ -1072,6 +1076,7 @@
                     "bit_offset": 5,
                     "bits": 1,
                     "description": "Current value of gpio - 0:low - 1:high",
+                    "flag": "VOLATILE",
                     "name": [
                         "i2c",
                         "dut_scl",
@@ -1137,6 +1142,7 @@
                 {
                     "access": 0,
                     "description": "Current state of i2c frame - 0:initialized - 1:reading data - 2-write address received - 3-1st reg byte received - 4-writing data - 5-NACK - 6-stopped",
+                    "flag": "VOLATILE",
                     "name": [
                         "i2c",
                         "state"
@@ -3877,7 +3883,7 @@
     "metadata": {
         "app_name": "PHiLIP",
         "author": "Kevin Weiss",
-        "version": "1.0.2"
+        "version": "1.2.0"
     },
     "typedefs": [
         {
