@@ -130,7 +130,7 @@ error_t commit_dut_adc() {
 		/* Calibration seems to add a 50mV offset and doesn't keep a stable
 		 * initial value.
 		 */
-		//while (HAL_ADCEx_Calibration_Start(hadc) != HAL_OK);
+		while (HAL_ADCEx_Calibration_Start(hadc) != HAL_OK);
 		calibrate_adc = 0;
 	}
 
