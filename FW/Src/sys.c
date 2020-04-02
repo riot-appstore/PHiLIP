@@ -82,15 +82,16 @@ void init_sys(map_t *reg) {
 error_t commit_sys() {
 	sys_t *sys_inst = sys_reg;
 
-	if (!sys_inst->mode.init) {
-		if (sys_inst->mode.dut_rst) {
-			HAL_GPIO_WritePin(DUT_RST_GPIO_Port, DUT_RST_Pin, GPIO_PIN_RESET);
-		} else {
-			HAL_GPIO_WritePin(DUT_RST_GPIO_Port, DUT_RST_Pin, GPIO_PIN_SET);
-		}
-		sys_inst->mode.init = 1;
-	}
 	sys_inst->status.update = 0;
+	if (sys_inst->mode.init) {
+		return 0;
+	}
+	if (sys_inst->mode.dut_rst) {
+		HAL_GPIO_WritePin(DUT_RST_GPIO_Port, DUT_RST_Pin, GPIO_PIN_RESET);
+	} else {
+		HAL_GPIO_WritePin(DUT_RST_GPIO_Port, DUT_RST_Pin, GPIO_PIN_SET);
+	}
+	sys_inst->mode.init = 1;
 
 	return 0;
 }
@@ -103,6 +104,7 @@ static void _init_gpio() {
 	GPIO_InitStruct.Pin = DUT_RST_Pin;
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
 	GPIO_InitStruct.Pull = GPIO_PULLUP;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_MEDIUM;
 	HAL_GPIO_Init(DUT_RST_GPIO_Port, &GPIO_InitStruct);
 }
 
