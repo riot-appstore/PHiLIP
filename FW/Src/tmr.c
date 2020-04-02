@@ -178,6 +178,7 @@ error_t commit_dut_ic() {
 	if (reg->mode.init) {
 		return 0;
 	}
+	reg->mode.init = 1;
 
 	HAL_TIM_IC_Stop_DMA(htmr, DUT_IC_CHANNEL);
 	dut_ic.mode.disable = reg->mode.disable;
