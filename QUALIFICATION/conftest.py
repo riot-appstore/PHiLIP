@@ -6,6 +6,7 @@ import pytest
 import serial
 from philip_pal import Phil
 from digilent_device import DigilentAnalogDiscovery2
+from digilent_device import DigilentDigitalDiscovery
 
 
 def pytest_addoption(parser):
@@ -55,3 +56,11 @@ def tester_dad2():
     dad2 = DigilentAnalogDiscovery2()
     yield dad2
     dad2.driver.pins_reset()
+
+
+@pytest.fixture(scope="function")
+def tester_dd():
+    """Instance for Digilent Digital Discovery"""
+    dd = DigilentDigitalDiscovery()
+    yield dd
+    dd.driver.pins_reset()
