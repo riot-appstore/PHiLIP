@@ -15,7 +15,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="philip_pal",
-    version="1.1.1",
+    version="1.2.0",
     author="Kevin Weiss, Sebastian Meiling",
     author_email="weiss.kevin604@gmail.com, s@mlng.net",
     license="MIT",
