@@ -118,11 +118,6 @@ void init_dut_ic_msp() {
 	DUT_IC_CLK_EN();
 	DUT_IC_GPIO_CLK_EN();
 
-	GPIO_InitStruct.Pin = GPIO_PIN_5;
-	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
 	GPIO_InitStruct.Pin = DUT_IC_Pin;
 	if (dut_ic.reg->mode.trig_edge == DUT_IC_EDGE_BOTH) {
 		GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;

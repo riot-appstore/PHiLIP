@@ -15,13 +15,14 @@ from digilent_device import DigilentAnalogDiscovery2
 
 """
     ATTENTION!
-    user_reg has 256 entries but start adresses bigger
-    than 127 are not useable.
+    user_reg has 256 entries but start addresses bigger
+    than 127 are not usable.
     When writing from an index bigger 127 nothing happens.
     When reading from an index bigger 127 then 127=0, 128=1,...
     It's still possible to read and write beyond 127 if startadress
     is 127 or lower.
 """
+
 
 @pytest.mark.parametrize("reg", [0, 1, 42, 127])
 @pytest.mark.parametrize("size", [1, 3, 16, 128])
