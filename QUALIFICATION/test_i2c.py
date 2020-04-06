@@ -1,7 +1,9 @@
+#! /usr/bin/env python3
 """I2C Tests
 
-Note: The pins must be connected for the test to work
-The tester is a Digilent Analog Discovery 2
+The tester is a Digilent Analog Discovery 2.
+Pullup pins must be connected to VCC.
+
 Pinout:
 PHiLIP      Digilent Analog Discovery 2
 DUT_SCL ------------ 4
@@ -157,3 +159,12 @@ def test_i2c_addr(phil, tester_dad2, cmd, addr):
 
     with pytest.raises(OSError):
         tester_dad2.i2c_read_bytes(addr=0x7F)
+
+
+def main():
+    """Main program"""
+    print(__doc__)
+
+
+if __name__ == '__main__':
+    main()

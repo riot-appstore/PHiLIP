@@ -92,5 +92,3 @@ def test_base_functions(phil_base):
     assert phil_base.execute_changes()['result'] == phil_base.RESULT_SUCCESS
     assert phil_base.reset_mcu()['result'] == phil_base.RESULT_SUCCESS
     assert phil_base.get_version()['version']
-    assert phil_base.get_mem_map(0)['result'] == phil_base.RESULT_SUCCESS
-    assert phil_base.get_mem_map_size()['result'] == phil_base.RESULT_SUCCESS

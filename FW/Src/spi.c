@@ -104,8 +104,9 @@ void init_dut_spi_msp() {
 	DUT_SPI_CLK_EN();
 
 	GPIO_InitStruct.Pin = DUT_NSS_Pin;
-	GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+	GPIO_InitStruct.Mode = GPIO_MODE_AF_INPUT;
 	GPIO_InitStruct.Pull = GPIO_PULLUP;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_MEDIUM;
 	HAL_GPIO_Init(DUT_NSS_GPIO_Port, &GPIO_InitStruct);
 
 	GPIO_InitStruct.Pin = DUT_SCK_Pin;
@@ -116,7 +117,7 @@ void init_dut_spi_msp() {
 
 	GPIO_InitStruct.Pin = DUT_MISO_Pin;
 	GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+
 	HAL_GPIO_Init(DUT_MISO_GPIO_Port, &GPIO_InitStruct);
 
 	DUT_SPI_GPIO_AF_REMAP();

@@ -1,7 +1,8 @@
+#! /usr/bin/env python3
 """Timing Tests
 
-Note: The pins must be connected for the test to work
 The tester is a Digilent Analog Discovery 2
+
 Pinout:
 PHiLIP      Digilent Analog Discovery 2
 DUT_IC ------------ 0
@@ -36,7 +37,8 @@ def test_pulse_dut_ic_rise_fall_acc(phil, tester_dad2, pulse_time,
     avg_time = _dut_ic_acc_check(phil, tester_dad2, pulse_time/2,
                                  trig_edge, events)
     error = abs(avg_time - pulse_time)
-    assert error < 0.000000028, "accuracy error: {}".format(error)
+    assert error < max([pulse_time/5000, 0.000000028]), \
+        "accuracy error: {}".format(error)
 
 
 @pytest.mark.parametrize("pulse_time", [0.0000002, 0.000001, 0.00001])
@@ -118,3 +120,12 @@ def _dut_ic_jitter_check(phil, tester_dad2, pulse_time, trig_edge):
         phil.reset_mcu()
 
     return max(jitter)
+
+
+def main():
+    """Main program"""
+    print(__doc__)
+
+
+if __name__ == '__main__':
+    main()

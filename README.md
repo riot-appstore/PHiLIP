@@ -103,72 +103,78 @@ dut_reset        get_version  philip_reset      read_struct  write_and_execute
 execute_changes  help         print_map         read_trace   write_reg
 ```
 
-2. Check the description of the memory map.
+1. Check the description of the memory map.
 This should help explain what each register is responsible for.
 The registers or memory map records are the primary way to configure and get data.
 ```
 info_record_type description
 ```
 
-3. Check the pinout of the philip.
+1. Check the pinout of the philip.
 This give an idea on where the connect pins on the board.
 ```
 show_pinout
 ```
 
-4. Connect the `DUT_RST` to the `DEBUG0` pin.
-5. Check what the `gpio[0].mode.io_type` register does.
+1. Connect the `DUT_RST` to the `DEBUG0` pin.
+1. Check what the `gpio[0].mode.io_type` register does.
 This shows the functionality of the register, in this case allowing us to set the type of GPIO pin mode.
 ```
 print_map gpio[0].mode.io_type
 ```
-6. Enable the `DEBUG0` or gpio0 pin to interrupt mode so traces can be collected.
+1. Prepare the `DEBUG0` pin to be called from an interrupt with the `DUT_RST` pin connected.
+Since the `DUT_RST` pin is open drain we must configure the `DEBUG0` pin to be a pullup.
+```
+write_reg gpio[0].mode.pull 1
+```
+
+1. Enable the `DEBUG0` or gpio0 pin to interrupt mode so traces can be collected.
 Since traces can capture events from the interrupt we must enable the interrupt.
 ```
 write_and_execute gpio[0].mode.io_type 3
 ```
-7. Use the `DUT_RST` pin to toggle events on the `DEBUG0` pin.
+1. Use the `DUT_RST` pin to toggle events on the `DEBUG0` pin.
 By toggling the `DUT_RST` pin the trace events get logged.
 ```
 dut_reset
 ```
 
-8. Verify the events are logged in a human-readable way.
+1. Verify the events are logged in a human-readable way.
 ```
 read_trace
 ```
 
-9. Read the basic tick registers of the trace.
+1. Read the basic tick registers of the trace.
 The is the basic register information without any processing.
 Many register values can be interrogated in this way.
 ```
 read_reg trace.tick
 ```
 
-10. Only read the first two elements of the array.
+1. Only read the first two elements of the array.
 This shows how read registers with arrays.
 ```
 read_reg trace.tick 0 2
 ```
 
-11. Now read the whole trace structure.
+1. Now read the whole trace structure.
 ```
 read_struct trace
 ```
 
-12. Toggle the data filter off to see very verbose details of the tick traces
+1. Toggle the data filter off to see very verbose details of the tick traces
 ```
 data_filter
 read_struct trace
 ```
 
-13. Now reset philip back to the default state.
+1. Now reset philip back to the default state.
 ```
 data_filter on
 philip_reset
 ```
 
-14. Manually prepare the rtc time.
+1. Manually prepare the rtc time.
 This shows how to prepare the data that must be executed at the same time.
 ```
 write_reg rtc.set_minute 4
@@ -176,23 +182,23 @@ write_reg rtc.set_hour 14
 write_reg rtc.set_day 100
 ```
 
-15. Clear the rtc.mode.init bit to reinitialize and set rtc values on execute.
+1. Clear the rtc.mode.init bit to reinitialize and set rtc values on execute.
 ```
 write_reg rtc.mode.init 0
 ```
 
-16. Execute the changes.
+1. Execute the changes.
 The first checks to see if the module needs to be reinitialized then performs the initialization when executed.
 ```
 execute_changes
 ```
 
-17. Read the new RTC time and confirm changes propagated.
+1. Read the new RTC time and confirm changes propagated.
 ```
 read_struct rtc
 ```
 
-18. Notice that the second was reset to 0 because that is the default time.
+1. Notice that the second was reset to 0 because that is the default time.
 
 #### 2. The Process of Updating the Runtime Configuration of PHiLIP
 
@@ -201,7 +207,13 @@ To actually change the PHiLIP configuration, a number of steps must occur:
 2. Set the module init bit to 0
 3. Execute changes
 
-or use the `write_and_execute` command that does all of the listed steps.
+or
+
+use the `write_and_execute` command that does all of the listed steps.
+
+This processed is used since multiple changes may need to be done at one time or the changes must be done in a specific order.
+The `.mode.init` bit prevents reinitialization of other modules which reduces response time and prevents spurious IO changes when reinitializing.
+The execution of changes (or commit changes) allows PHiLIP to only check changes once rather than have to check every time some information is written.
 
 <a name="gs_ci"></a>
 ## [Getting Started with CI Scripts](#c_gs_ci)
@@ -224,6 +236,7 @@ print("interface version: {}".format(phil.if_version))
 assert phil.reset_mcu()['result'] == phil.RESULT_SUCCESS
 
 # Setup DEBUG0 pin to log trace events with interrupt
+phil.write_and_execute('gpio[0].mode.pull', 1)
 for result in phil.write_and_execute('gpio[0].mode.io_type', 3):
     # Check each result for success
     assert result['result'] == phil.RESULT_SUCCESS
@@ -234,7 +247,7 @@ phil.dut_reset()
 # Toggle the DUT_RST pin for 1 second
 phil.dut_reset(1.0)
 
-trace = phil.read_trace()
+trace = phil.read_trace()['data']
 
 # Assert the second toggle was in fact about 1 second
 elapse_time = trace[3]['time'] - trace[2]['time']
@@ -552,6 +565,11 @@ _Example of memory map_
 ### Why not use a Raspberry Pi?
 - RPi does not support low level testing
 - RPi's drivers are not well certified
+
+### Why not use a FPGA?
+- Lack of experience programming FPGA
+- Less available and more expensive
+- The audience of PHiLIP is more used to microcontrollers
 
 ### Why not use Arduino?
 - Standard Arduino extensions don't support all configurable features well
