@@ -576,6 +576,63 @@ class PhilipExtIf(PhilipBaseIf):
         response['data'] = sorted(trace, key=lambda x: x['time'])
         return response
 
+    def filter_trace(self, trace,
+                     data_keys=["time", "source", "event", "diff", "source_diff"],
+                     mintime=None, maxtime=None, event=None, source=None):
+        """Filter the given data from a trace
+
+        >>> PhilipBaseIf.filter_trace([{"time": 0.1}, {"time": 0.2}, {"time": 0.3}], mintime=0.2)
+        [{"time": 0.2}, {"time": 0.3}]
+        >>> PhilipBaseIf.filter_trace([{"time": 0.1}, {"time": 0.2}, {"time": 0.3}], maxtime=0.1)
+        [{"time": 0.1}]
+        >>> PhilipBaseIf.filter_trace([{"event"="RAISING"}, {"event"="FALLING"}, {"event"="RAISING"}], event="RAISING")
+        [{"event"="RAISING"}, {"event"="RAISING"}]
+        >>> PhilipBaseIf.filter_trace([{"event"="RAISING"}, {"event"="FALLING"}, {"event"="RAISING"}], event="FALLING")
+        [{"event": "FALLING"}]
+        >>> PhilipBaseIf.filter_trace([{"source": "DUT_IC"}, {"source": "DEBUG0"}], source="DEBUG0")
+        [{"source": "DEBUG0}]
+        >>> PhilipBaseIf.filter_trace([{"source": 5}, {"source": "DEBUG0"}], source=5)
+        [{"source": 5}]
+        >>> PhilipBaseIf.filter_trace([{"time": 0.1, "source": "DEBUG0", "event": "FALLING"}], data_keys=["time", "source_diff"])
+        [{"time": 0.1}]
+        >>> PhilipBaseIf.filter_trace([], event="RAISING")
+        []
+
+        Args:
+            data_keys: List of keys to be included in result
+            mintime: Minimum value for time
+            maxtime: Maximum value for time
+            event: Filter for specific event
+            source: Filter for specific source
+
+        Returns:
+            A list of dictionaries containing the filtered data
+        """
+        if event != "RISING" and event != "FALLING":
+            ValueError("Event must be either 'RISING' or 'FALLING'")
+        # taken from _get_trace_events()
+        valid_source = ["DEBUG0", "DEBUG1", "DEBUG2", "DUT_IC"]
+        min_valid_int_source = 5
+        if source not in valid_source or source > min_valid_int_source:
+            ValueError(
+                f"""Source must be one of {valid_source} or a value equal
+                    or greater than {min_valid_int_source}"""
+            )
+
+        filtered_events = []
+        for event in trace:
+            if mintime and event["time"] < mintime:
+                continue
+            if maxtime and event["time"] > maxtime:
+                continue
+            if event and event["event"] != event:
+                continue
+            if source and event["source"] != source:
+                continue
+            # include only keys in data_keys
+            filtered_events.append({k: v for k, v in event.items() if k in data_keys})
+        return filtered_events
+
     def _get_trace_events(self, trace, index, chunk_size, to_ns):
         logging.debug("_get_trace_events(trace=?, index=%r, "
                       "chunk_size=%r, to_ns=%r)",
