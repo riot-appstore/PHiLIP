@@ -3215,7 +3215,7 @@
                     "access": 1,
                     "bit_offset": 2,
                     "bits": 2,
-                    "description": "0:both - 1:rising - 1:falling",
+                    "description": "0:both - 1:rising - 2:falling",
                     "name": [
                         "tmr",
                         "mode",
