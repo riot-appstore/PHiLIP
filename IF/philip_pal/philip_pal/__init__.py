@@ -6,6 +6,10 @@
 """packet init for PHiLIP PAL
 This exposes useful modules in the PHiLIP PAL packet
 """
-from .philip_if import PhilipExtIf as Phil
+from mm_pal import RESULT_ERROR, RESULT_SUCCESS, RESULT_TIMEOUT
+from .philip_if import PhilipIf as Phil
 
 __all__ = ['Phil']
+__author__ = "Kevin Weiss"
+__email__ = "kevin.weiss@gmail.com"
+__version__ = "2.0.0"
