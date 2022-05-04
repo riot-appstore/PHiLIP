@@ -1,28 +1,26 @@
 /**
- ******************************************************************************
+ *****************************************************************************"
  * @addtogroup PHiLIP_MMM
  * @{
  * @file      PHiLIP_map.h
  * @author    Kevin Weiss
- * @version   1.2.0
- * @date      2020-04-03
- * @details   Generated from the memory map manager version 0.0.10
- ******************************************************************************
+ * @version   1.3.0
+ * @details   Generated from the memory map manager version 1.0.0
+ *****************************************************************************"
  */
-
 #ifndef PHILIP_MAP_H
 #define PHILIP_MAP_H
 
-/* Defines -----------------------------------------------------------------*/
+/* Defines ----------------------------------------------------------------- */
 #define IF_VERSION_MAJOR 1 /**< Major version of interface */
-#define IF_VERSION_MINOR 2 /**< Minor version of interface */
+#define IF_VERSION_MINOR 3 /**< Minor version of interface */
 #define IF_VERSION_PATCH 0 /**< Patch version of interface */
 
-/* Global variables --------------------------------------------------------*/
+/* Global variables -------------------------------------------------------- */
 extern const char* const PHILIP_TYPE_NAME[]; /** < type_name enum */
 extern const uint8_t  PHILIP_TYPE_SIZE[]; /** <  type_size const array */
 
-#define MAP_T_NUM_OF_RECORDS 273 /**< Number of records in the map */
+#define MAP_T_NUM_OF_RECORDS 274 /**< Number of records in the map */
 
 extern const char* const MAP_T_NAME[]; /** < name const array */
 extern const uint16_t MAP_T_OFFSET[]; /** < offset const array */

@@ -1,15 +1,13 @@
 /**
- ******************************************************************************
+ *****************************************************************************"
  * @addtogroup PHiLIP_MMM
  * @{
  * @file      PHiLIP_defaults.h
  * @author    Kevin Weiss
- * @version   1.2.0
- * @date      2020-04-03
- * @details   Generated from the memory map manager version 0.0.10
- ******************************************************************************
+ * @version   1.3.0
+ * @details   Generated from the memory map manager version 1.0.0
+ *****************************************************************************"
  */
-
 #ifndef PHILIP_DEFAULTS_H
 #define PHILIP_DEFAULTS_H
 

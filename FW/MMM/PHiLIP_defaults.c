@@ -1,21 +1,18 @@
 /**
- ******************************************************************************
+ *****************************************************************************"
  * @addtogroup PHiLIP_MMM
  * @{
  * @file      PHiLIP_defaults.c
  * @author    Kevin Weiss
- * @version   1.2.0
- * @date      2020-04-03
+ * @version   1.3.0
  * @}
- * @details   Generated from the memory map manager version 0.0.10
- ******************************************************************************
+ * @details   Generated from the memory map manager version 1.0.0
+ *****************************************************************************"
  */
-
 /* Includes ------------------------------------------------------------------*/
 #include <stdint.h>
 
 #include "PHiLIP_typedef.h"
-
 #include "PHiLIP_defaults.h"
 
 /* Functions -----------------------------------------------------------------*/
