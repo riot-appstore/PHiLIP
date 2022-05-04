@@ -429,30 +429,30 @@ CN6
 - GND                                           |CN5|
 - VIN                             DUT_IC = PA8 = D7 -
 |CN6|                                        PWM/D6 -
-- A0 = PA0 = TEST_WARN        DEBUG1 = PB4 = PWM/D5 -
-- A1 = PA1 = TEST_FAIL            DEBUG2 = PB5 = D4 -
-- A2 = PA4 = TEST_PASS        DEBUG0 = PB3 = PWM/D3 -
+- A0 = PA0 = TEST_WARN      DUT_MISO = PB4 = PWM/D5 -
+- A1 = PA1 = TEST_FAIL          DUT_MOSI = PB5 = D4 -
+- A2 = PA4 = TEST_PASS       DUT_SCK = PB3 = PWM/D3 -
 - A3 = PB0 = DUT_ADC             DUT_RX = PA10 = D2 -
 - A4 = PC1 = PM_HI_ADC          IF_TX = PA2 = TX/D1 -
 - A5 = PC0 = PM_V_ADC           IF_RX = PA3 = RX/D0 -
 |CN8|                                          |CN9|
 
           -1 -                  DUT_DAC -1 - DUT_PWM
-          -2 - DEBUG2           DUT_SCL -2 -
+          -2 -                  DUT_SCL -2 -
           -3 -                  DUT_SDA -3 -
           -4 -                          -4 -
           -5 -                          -5 -
           -6 -                     LED0 -6 - DUT_RTS
           -7 -                          -7 - DUT_CTS
-          -8 -                          -8 - DUT_NSS
-          -9 -                          -9 -
+          -8 -                          -8 -
+  DUT_NSS -9 -                          -9 -
           -10-                          -10-
           -11-                   DUT_TX -11- DUT_RST
  USER_BTN -12-                   DUT_IC -12-
-          -13-                          -13- DUT_MOSI
-          -14- TEST_WARN         DEBUG1 -14- DUT_MISO
-          -15- TEST_FAIL                -15- DUT_SCK
-          -16- TEST_PASS         DEBUG0 -16-
+          -13-                          -13- DEBUG2
+          -14- TEST_WARN       DUT_MISO -14- DEBUG1
+          -15- TEST_FAIL       DUT_MOSI -15- DEBUG0
+          -16- TEST_PASS        DUT_SCK -16-
           -17- DUT_ADC           DUT_RX -17-
 PM_LO_ADC -18- PM_HI_ADC          IF_TX -18-
           -19- PM_V_ADC           IF_RX -19-
