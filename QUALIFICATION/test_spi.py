@@ -90,7 +90,10 @@ def test_spi_if_type_0_all_modes(phil, reg, size, pol, pha):
 
 
 def speed_tolerance(speed):
-    tolerance = speed * 0.1
+    if (speed <= 1000000):
+        tolerance = speed * 0.03
+    else:
+        tolerance = speed * 0.1
     border = {}
     border['low'] = speed - tolerance
     border['high'] = speed + tolerance
@@ -166,22 +169,28 @@ def test_spi_specific_byte(phil: Phil, tester_dad2):
     phil.write_and_execute("spi.mode.if_type", measurement_if_type)
 
     speed1 = 100000
+    tolerances1 = speed_tolerance(speed1)
     time_step1 = (1/speed1)/2
     tester_dad2.pulse(pin=dut_sck_pin, time_l=time_step1, time_h=time_step1,
                       count=pulses_per_byte, init_value=0)
 
     speed2 = 400000
+    tolerances2 = speed_tolerance(speed2)
     time_step2 = (1/speed2)/2
     tester_dad2.pulse(pin=dut_sck_pin, time_l=time_step2, time_h=time_step2,
                       count=pulses_per_byte, init_value=0)
 
     byte_stats1 = phil.get_spi_clk_byte_stats(byte=0)
     assert len(byte_stats1['values']) == pulses_per_byte - 1
-    assert byte_stats1['mean'] == speed1
+    mean_freq = byte_stats1['mean']
+    assert ((mean_freq < tolerances1['high']) &
+            (mean_freq > tolerances1['low']))
 
     byte_stats2 = phil.get_spi_clk_byte_stats(byte=1)
     assert len(byte_stats2['values']) == pulses_per_byte - 1
-    assert byte_stats2['mean'] == speed2
+    mean_freq = byte_stats2['mean']
+    assert ((mean_freq < tolerances2['high']) &
+            (mean_freq > tolerances2['low']))
 
 
 def test_spi_deadtime(phil: Phil, tester_dad2):
