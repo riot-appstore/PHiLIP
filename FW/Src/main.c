@@ -121,7 +121,8 @@ static void _super_loop() {
 		update_dut_ic_inputs,
 		update_rtc };
 	void (* const fxn_to_ex[])(void) = {poll_dut_adc,
-										poll_dut_ic};
+										poll_dut_ic,
+										poll_dut_spi_ic};
 	static uint32_t fxn_index_tick = 0;
 	static uint32_t fxn_index = 0;
 	if (_is_tick()) {

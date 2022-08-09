@@ -58,6 +58,22 @@ void init_dut_spi_msp();
  * @brief		Only for use with the STM32xxxx_HAL_Driver.
  */
 void deinit_dut_spi_msp();
+
+/**
+ * @brief		Only for use with the STM32xxxx_HAL_Driver.
+ */
+void init_dut_spi_ic_msp();
+
+/**
+ * @brief		Only for use with the STM32xxxx_HAL_Driver.
+ */
+void deinit_dut_spi_ic_msp();
+
+/**
+ * @brief       Poll for transfers captured by the IC to put them into the buffer
+ */
+void poll_dut_spi_ic();
+
 /* Interrupts ----------------------------------------------------------------*/
 /**
  * @brief Interrupt callback for the spi line raise or lower

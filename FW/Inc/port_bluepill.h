@@ -134,6 +134,19 @@
 
 #define GPIO_NSS_IRQ			GPIO_NSS_CTS_IRQ
 
+#define DUT_SPI_IC_CLK_EN()			__HAL_RCC_TIM2_CLK_ENABLE()
+#define DUT_SPI_IC_GPIO_CLK_EN()	__HAL_RCC_GPIOB_CLK_ENABLE()
+#define DUT_SPI_IC_CLK_DIS()		__HAL_RCC_TIM2_CLK_DISABLE()
+#define DUT_SPI_IC_AFIO_REMAP()		__HAL_AFIO_REMAP_TIM2_PARTIAL_1()
+
+#define DUT_SPI_IC_INST			TIM2
+#define DUT_SPI_IC_CHANNEL		TIM_CHANNEL_2
+#define DUT_SPI_IC_INT			TIM2_IRQn
+#define DUT_SPI_IC_DMA_INST		DMA1_Channel7
+#define DUT_SPI_IC_DMA_ID		TIM_DMA_ID_CC2
+#define DUT_SPI_IC_DMA_INT		DMA1_Channel7_IRQHandler
+#define DUT_SPI_IC_DMA_IRQ		DMA1_Channel7_IRQn
+
 /******************************************************************************/
 /* I2C defines ****************************************************************/
 /******************************************************************************/

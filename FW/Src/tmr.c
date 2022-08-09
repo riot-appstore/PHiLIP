@@ -263,8 +263,8 @@ static uint8_t _get_current_index() {
 	else {
 		uint32_t dma_bytes_to_go;
 		do {
-			dma_bytes_to_go = DUT_IC_REMAINING_BUF(dut_ic.htmr_dma);
-		} while (dma_bytes_to_go != DUT_IC_REMAINING_BUF(dut_ic.htmr_dma));
+			dma_bytes_to_go = TIMER_REMAINING_BUF(dut_ic.htmr_dma);
+		} while (dma_bytes_to_go != TIMER_REMAINING_BUF(dut_ic.htmr_dma));
 		dma_index = sizeof(dut_ic.buf)/sizeof(dut_ic.buf[0]) - dma_bytes_to_go;
 	}
 

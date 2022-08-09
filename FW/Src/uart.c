@@ -103,9 +103,6 @@ static uart_t* dut_uart_reg;
 /** @brief	dma handle for interface receive */
 static DMA_HandleTypeDef hdma_usart_if_rx;
 
-/** @brief	dma handle for interface transmit */
-static DMA_HandleTypeDef hdma_usart_if_tx;
-
 /** @brief	dma handle for dut receive */
 static DMA_HandleTypeDef hdma_usart_dut_rx;
 
@@ -283,7 +280,7 @@ error_t commit_dut_uart() {
 /******************************************************************************/
 void init_if_uart() {
 	uart_dev_t* uart_dev = &if_uart;
-	uart_dev->tx_data_fxn = HAL_UART_Transmit_DMA;
+	uart_dev->tx_data_fxn = HAL_UART_Transmit_IT;
 
 	uart_dev->access = IF_ACCESS;
 	uart_dev->str = if_str_buf;
@@ -314,7 +311,6 @@ void init_if_uart_msp() {
 	GPIO_InitTypeDef GPIO_InitStruct = {0};
 	UART_HandleTypeDef* huart = &if_uart.huart;
 	DMA_HandleTypeDef* huart_rx_dma = &hdma_usart_if_rx;
-	DMA_HandleTypeDef* huart_tx_dma = &hdma_usart_if_tx;
 
 	IF_UART_CLK_EN();
 
@@ -341,26 +337,11 @@ void init_if_uart_msp() {
 	}
 	__HAL_LINKDMA(huart, hdmarx, (*huart_rx_dma));
 
-	huart_tx_dma->Instance = IF_UART_DMA_TX_INST;
-	huart_tx_dma->Init.Direction = DMA_MEMORY_TO_PERIPH;
-	huart_tx_dma->Init.PeriphInc = DMA_PINC_DISABLE;
-	huart_tx_dma->Init.MemInc = DMA_MINC_ENABLE;
-	huart_tx_dma->Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
-	huart_tx_dma->Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
-	huart_tx_dma->Init.Mode = DMA_NORMAL;
-	huart_tx_dma->Init.Priority = DMA_PRIORITY_LOW;
-	if (HAL_DMA_Init(huart_tx_dma) != HAL_OK) {
-		_Error_Handler(__FILE__, __LINE__);
-	}
-	__HAL_LINKDMA(huart, hdmatx, (*huart_tx_dma));
-
 	HAL_NVIC_SetPriority(IF_UART_IRQ, DEFAULT_INT_PRIO, 0);
 	HAL_NVIC_EnableIRQ(IF_UART_IRQ);
 
 	HAL_NVIC_SetPriority(IF_UART_DMA_RX_IRQ, DEFAULT_INT_PRIO, 0);
 	HAL_NVIC_EnableIRQ(IF_UART_DMA_RX_IRQ);
-	HAL_NVIC_SetPriority(IF_UART_DMA_TX_IRQ, DEFAULT_INT_PRIO, 0);
-	HAL_NVIC_EnableIRQ(IF_UART_DMA_TX_IRQ);
 }
 
 void deinit_if_uart_msp() {
@@ -536,13 +517,6 @@ void DUT_UART_DMA_RX_INT(void) {
  */
 void IF_UART_DMA_RX_INT(void) {
 	HAL_DMA_IRQHandler(&hdma_usart_if_rx);
-}
-
-/**
- * @brief This function handles if_dma_tx event interrupt.
- */
-void IF_UART_DMA_TX_INT(void) {
-	HAL_DMA_IRQHandler(&hdma_usart_if_tx);
 }
 
 /**

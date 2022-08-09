@@ -48,21 +48,29 @@ enum SPI_IF_TYPE {
 	SPI_IF_TYPE_REG, /**< Access registers with spi */
 	SPI_IF_TYPE_HS, /**< Preloads reg address to 0 for high speed tests */
 	SPI_IF_TYPE_ECHO, /**< Echos SPI bytes */
-	SPI_IF_TYPE_CONST /**< Always output user reg 0 */
+	SPI_IF_TYPE_CONST, /**< Always output user reg 0 */
+	SPI_IF_TYPE_SM /**< Use timer input capture to measure spi clock speed */
 };
 
 /** @brief	The parameters for spi control */
 typedef struct {
 	SPI_HandleTypeDef hspi; /**< Handle for the spi device */
+	TIM_HandleTypeDef htmr; /**< Handle for the tmr device */
+	DMA_HandleTypeDef htmr_dma; /**< Handle for the tmr dma */
+	TIM_IC_InitTypeDef ctmr_ic; /**< Initialization for timer */
 	spi_t *reg; /**< spi live application registers */
+	uint16_t buf[64]; /**< Buffer for DMA */
+	int8_t poll_index; /**< Buffer index when polling */
 	void (*if_mode_int)(void); /**< Interrupt function pointer */
 	uint8_t initial_byte; /**< The byte that is output first */
+	uint8_t sm_active;
 } spi_dev;
 /** @} */
 
 /* Private defines ************************************************************/
 /** @brief	Checks the write direction */
 #define SPI_ADDR_MASK	(0x80)
+#define BITS_PER_BYTE	8
 
 /* Private function prototypes ************************************************/
 static void _init_gpio();
@@ -71,6 +79,8 @@ static void _spi_echo_int();
 static void _spi_hs_int();
 static void _spi_reg_int();
 static void _spi_const_int();
+static void _init_periph_spi_ic();
+static void _deinit_periph_spi_ic(TIM_HandleTypeDef *htmr);
 
 /* Private variables **********************************************************/
 static spi_dev dut_spi;
@@ -102,6 +112,7 @@ void init_dut_spi(map_t *reg) {
 void init_dut_spi_msp() {
 	GPIO_InitTypeDef GPIO_InitStruct = {0};
 	DUT_SPI_CLK_EN();
+	DUT_SPI_GPIO_CLK_EN();
 
 	GPIO_InitStruct.Pin = DUT_NSS_Pin;
 	GPIO_InitStruct.Mode = GPIO_MODE_AF_INPUT;
@@ -138,6 +149,104 @@ void deinit_dut_spi_msp() {
 }
 
 /******************************************************************************/
+/**
+ * @brief Init timer and DMA peripherals used for the time measurements
+ */
+static void _init_periph_spi_ic() {
+	TIM_HandleTypeDef *htmr = &(dut_spi.htmr);
+	TIM_IC_InitTypeDef* ctmr_ic = &(dut_spi.ctmr_ic);
+	TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+	TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+	HAL_NVIC_SetPriority(DUT_SPI_IC_DMA_IRQ, 0, 0);
+	HAL_NVIC_EnableIRQ(DUT_SPI_IC_DMA_IRQ);
+
+	htmr->Instance = DUT_SPI_IC_INST;
+	htmr->Init.Prescaler = 0;
+	htmr->Init.CounterMode = TIM_COUNTERMODE_UP;
+	htmr->Init.Period = 0xFFFF;
+	htmr->Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+	htmr->Init.RepetitionCounter = 0;
+	htmr->Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+	if (HAL_TIM_Base_Init(htmr) != HAL_OK)
+	{
+		_Error_Handler(__FILE__, __LINE__);
+	}
+	sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+	if (HAL_TIM_ConfigClockSource(htmr, &sClockSourceConfig) != HAL_OK)
+	{
+		_Error_Handler(__FILE__, __LINE__);
+	}
+	if (HAL_TIM_IC_Init(htmr) != HAL_OK)
+	{
+		_Error_Handler(__FILE__, __LINE__);
+	}
+	sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+	sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+	if (HAL_TIMEx_MasterConfigSynchronization(htmr, &sMasterConfig) != HAL_OK)
+	{
+		_Error_Handler(__FILE__, __LINE__);
+	}
+	ctmr_ic->ICSelection = TIM_ICSELECTION_DIRECTTI;
+	ctmr_ic->ICPrescaler = TIM_ICPSC_DIV1;
+	ctmr_ic->ICFilter = 0;
+}
+
+static void _deinit_periph_spi_ic(TIM_HandleTypeDef *htmr){
+	if(dut_spi.sm_active){
+		HAL_TIM_IC_Stop_DMA(htmr, DUT_SPI_IC_CHANNEL);
+		if (HAL_TIM_Base_DeInit(htmr) != HAL_OK) {
+			_Error_Handler(__FILE__, __LINE__);
+		}
+		_init_gpio();
+		dut_spi.sm_active = 0;
+	}
+}
+
+void init_dut_spi_ic_msp() {
+	GPIO_InitTypeDef GPIO_InitStruct = {0};
+	TIM_HandleTypeDef *htmr = &(dut_spi.htmr);
+	DMA_HandleTypeDef *htmr_dma = &(dut_spi.htmr_dma);
+
+	/* Peripheral clock enable */
+	DUT_SPI_IC_CLK_EN();
+	DUT_SPI_IC_GPIO_CLK_EN();
+
+	GPIO_InitStruct.Pin = DUT_SCK_Pin;
+	GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+	GPIO_InitStruct.Pull = GPIO_PULLUP;
+	HAL_GPIO_Init(DUT_SCK_GPIO_Port, &GPIO_InitStruct);
+
+	DUT_SPI_IC_AFIO_REMAP();
+
+	htmr_dma->Instance = DUT_SPI_IC_DMA_INST;
+	htmr_dma->Init.Direction = DMA_PERIPH_TO_MEMORY;
+	htmr_dma->Init.PeriphInc = DMA_PINC_DISABLE;
+	htmr_dma->Init.MemInc = DMA_MINC_ENABLE;
+	htmr_dma->Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
+	htmr_dma->Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
+	htmr_dma->Init.Mode = DMA_NORMAL;
+	htmr_dma->Init.Priority = DMA_PRIORITY_LOW;
+	if (HAL_DMA_Init(htmr_dma) != HAL_OK) {
+		_Error_Handler(__FILE__, __LINE__);
+	}
+
+	__HAL_LINKDMA(htmr,hdma[DUT_SPI_IC_DMA_ID],*htmr_dma);
+	HAL_NVIC_SetPriority(DUT_SPI_IC_INT, DEFAULT_INT_PRIO, 0);
+	HAL_NVIC_EnableIRQ(DUT_SPI_IC_INT);
+}
+
+void deinit_dut_spi_ic_msp() {
+	TIM_HandleTypeDef *htmr = &(dut_spi.htmr);
+
+	DUT_SPI_IC_CLK_DIS();
+	HAL_GPIO_DeInit(DUT_SCK);
+	HAL_DMA_DeInit(htmr->hdma[DUT_SPI_IC_DMA_ID]);
+
+	HAL_NVIC_DisableIRQ(DUT_SPI_IC_INT);
+}
+
+/******************************************************************************/
 static void _init_gpio() {
 	GPIO_InitTypeDef GPIO_InitStruct = {0};
 
@@ -152,6 +261,8 @@ static void _init_gpio() {
 /******************************************************************************/
 error_t commit_dut_spi() {
 	SPI_HandleTypeDef *hspi = &dut_spi.hspi;
+	TIM_HandleTypeDef *htmr = &(dut_spi.htmr);
+	TIM_IC_InitTypeDef* ctmr_ic = &(dut_spi.ctmr_ic);
 	spi_t *reg = dut_spi.reg;
 
 	if (reg->mode.init) {
@@ -172,13 +283,21 @@ error_t commit_dut_spi() {
 	reg->prev_ticks = 0;
 	reg->w_count = 0;
 	reg->r_count = 0;
+	reg->transfer_count = 0;
 	dut_spi.initial_byte = SPI_NO_DATA_BYTE;
+	memset(dut_spi.reg->sm_buf, 0, sizeof(dut_spi.reg->sm_buf));
+	memset(dut_spi.buf, 0, sizeof(dut_spi.buf));
+	dut_spi.poll_index = 0;
+
 	if (reg->mode.if_type == SPI_IF_TYPE_REG) {
 		dut_spi.if_mode_int = _spi_reg_int;
 	} else if (reg->mode.if_type == SPI_IF_TYPE_HS) {
 		dut_spi.if_mode_int = _spi_hs_int;
 	} else if (reg->mode.if_type == SPI_IF_TYPE_ECHO) {
 		dut_spi.if_mode_int = _spi_echo_int;
+	} else if (reg->mode.if_type == SPI_IF_TYPE_SM) {
+		dut_spi.if_mode_int = NULL;
+		dut_spi.sm_active = 1;
 	} else {
 		read_reg(0, &(dut_spi.initial_byte));
 		dut_spi.if_mode_int = _spi_const_int;
@@ -188,13 +307,34 @@ error_t commit_dut_spi() {
 
 	__HAL_SPI_DISABLE(hspi);
 	if (!reg->mode.disable) {
-		HAL_SPI_Init(hspi);
-		__HAL_SPI_ENABLE(hspi);
-		hspi->Instance->DR = dut_spi.initial_byte;
-		__HAL_SPI_ENABLE_IT(hspi, SPI_IT_RXNE | SPI_CR2_ERRIE | SPI_CR2_TXEIE);
+		if(reg->mode.if_type == SPI_IF_TYPE_SM){
+			HAL_SPI_DeInit(hspi);
+			_init_periph_spi_ic();
+			if(hspi->Init.CLKPolarity == SPI_POLARITY_LOW) {
+				ctmr_ic->ICPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
+			}
+			else {
+				ctmr_ic->ICPolarity = TIM_INPUTCHANNELPOLARITY_FALLING;
+			}
+
+			if (HAL_TIM_IC_ConfigChannel(htmr, ctmr_ic, DUT_SPI_IC_CHANNEL) != HAL_OK) {
+				_Error_Handler(__FILE__, __LINE__);
+			}
+			if (HAL_TIM_IC_Start_DMA(htmr, DUT_SPI_IC_CHANNEL, (uint32_t*)dut_spi.buf, sizeof(dut_spi.buf)/sizeof(dut_spi.buf[0])) != HAL_OK) {
+				_Error_Handler(__FILE__, __LINE__);
+			}
+		}
+		else {
+			_deinit_periph_spi_ic(htmr);
+			HAL_SPI_Init(hspi);
+			__HAL_SPI_ENABLE(hspi);
+			hspi->Instance->DR = dut_spi.initial_byte;
+			__HAL_SPI_ENABLE_IT(hspi, SPI_IT_RXNE | SPI_CR2_ERRIE | SPI_CR2_TXEIE);
+		}
 	}
 	else {
 		HAL_SPI_DeInit(hspi);
+		_deinit_periph_spi_ic(htmr);
 		if (init_basic_gpio(reg->dut_miso, DUT_MISO) != 0) {
 			return EINVAL;
 		}
@@ -373,3 +513,24 @@ void GPIO_NSS_INT() {
 	}
 }
 #pragma GCC pop_options
+
+/******************************************************************************/
+/*           Clock speed measurement                                          */
+/******************************************************************************/
+void poll_dut_spi_ic(){
+	if (dut_spi.sm_active){
+		uint16_t current_index = sizeof(dut_spi.buf)/sizeof(dut_spi.buf[0]) - TIMER_REMAINING_BUF(dut_spi.htmr_dma);
+		while (dut_spi.poll_index < current_index){
+			dut_spi.reg->sm_buf[dut_spi.poll_index] = dut_spi.buf[dut_spi.poll_index];
+			dut_spi.poll_index++;
+			dut_spi.reg->transfer_count = (int)(dut_spi.poll_index);
+		}
+	}
+}
+
+/**
+ * @brief This function handles spi_ic_dma event interrupt.
+ */
+void DUT_SPI_IC_DMA_INT(void) {
+	HAL_DMA_IRQHandler(&dut_spi.htmr_dma);
+}
