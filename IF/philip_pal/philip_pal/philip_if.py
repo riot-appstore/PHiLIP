@@ -684,9 +684,10 @@ class PhilipExtIf(PhilipBaseIf):
             dif_ticks = sm_buf[idx] - sm_buf[idx - 1]
             if (dif_ticks < 0):
                 dif_ticks += timer_max
-            elif (dif_ticks == 0):
+            if (dif_ticks == 0):
                 freqs.append(0)
-            freqs.append(self.sys_clk() / dif_ticks)
+            else:
+                freqs.append(self.sys_clk() / dif_ticks)
         return freqs
 
     def get_spi_clk_stats(self) -> list:
