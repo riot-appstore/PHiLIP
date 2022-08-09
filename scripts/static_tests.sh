@@ -51,7 +51,7 @@ if [[ $LANG == "c,py" ]] || [[ $LANG == "py" ]]; then
   run_test "FLAKE8" "flake8"
 fi
 
-run_test "CODESPELL" "codespell FW/Src/ FW/MMM/ FW/Inc IF/philip_pal/philip_pal QUALIFICATION/ --skip=\"*.csv,*.pyc,*stm32f1xx*\""
+run_test "CODESPELL" "codespell FW/Src/ FW/MMM/ FW/Inc IF/philip_pal/philip_pal QUALIFICATION/ --skip=\"*.csv,*.pyc,*stm32f1xx*,*.html\""
 
 if [[ $LANG == "c,py" ]] || [[ $LANG == "c" ]]; then
   cd FW
