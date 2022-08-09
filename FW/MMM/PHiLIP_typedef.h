@@ -1,13 +1,12 @@
 /**
- ******************************************************************************
+ *****************************************************************************"
  * @addtogroup PHiLIP_MMM
  * @{
  * @file      PHiLIP_typedef.h
  * @author    Kevin Weiss
- * @version   1.2.0
- * @date      2020-04-03
- * @details   Generated from the memory map manager version 0.0.10
- ******************************************************************************
+ * @version   1.3.0
+ * @details   Generated from the memory map manager version 1.0.0
+ *****************************************************************************"
  */
 
 #ifndef PHILIP_TYPEDEF_H
@@ -56,13 +55,14 @@ typedef struct {
 
 /** @brief  SPI mode settings */
 typedef struct {
-	uint8_t init : 1; /**< 0:periph will initialize on execute - 1:periph initialized */
-	uint8_t disable : 1; /**< 0:periph is enabled - 1:periph is disabled */
-	uint8_t cpha : 1; /**< 0:CK to 0 when idle - 1:CK to 1 when idle */
-	uint8_t cpol : 1; /**< 0:the first clock transition is the first data capture edge - 1:the second clock transition is the first data capture edge */
-	uint8_t if_type : 2; /**< Sets spi modes since slave cannot repsond immediately - 0:access registers with spi - 1:preloads reg address to 0 for high speed tests - 2:echos SPI bytes - 3:always output user reg 0 (use for timing) */
-	uint8_t reg_16_bit : 1; /**< 0:8 bit register access - 1:16 bit register access mode */
-	uint8_t reg_16_big_endian : 1; /**< 0:little endian for 16 bit mode - 1:big endian for 16 bit mode */
+	uint16_t init : 1; /**< 0:periph will initialize on execute - 1:periph initialized */
+	uint16_t disable : 1; /**< 0:periph is enabled - 1:periph is disabled */
+	uint16_t cpha : 1; /**< 0:CK to 0 when idle - 1:CK to 1 when idle */
+	uint16_t cpol : 1; /**< 0:the first clock transition is the first data capture edge - 1:the second clock transition is the first data capture edge */
+	uint16_t if_type : 3; /**< Sets spi modes since slave cannot repsond immediately - 0:access registers with spi - 1:preloads reg address to 0 for high speed tests - 2:echos SPI bytes - 3:always output user reg 0 (use for timing) - 4:use input capture to measure the clock speed */
+	uint16_t reg_16_bit : 1; /**< 0:8 bit register access - 1:16 bit register access mode */
+	uint16_t reg_16_big_endian : 1; /**< 0:little endian for 16 bit mode - 1:big endian for 16 bit mode */
+	uint16_t res : 7; /**< Reserved bits */
 } spi_mode_t;
 
 /** @brief  SPI status */
@@ -222,9 +222,9 @@ typedef union {
 		uint32_t frame_ticks; /**< Ticks per frame */
 		uint32_t byte_ticks; /**< Ticks per byte */
 		uint32_t prev_ticks; /**< Holder for previous byte ticks */
-		uint8_t res[5]; /**< Reserved bytes */
+		uint32_t sm_buf[64]; /**< Buffer for captured timestamps for speed measurement */
 	};
-	uint8_t data8[32];/**< array for padding */
+	uint8_t data8[284];/**< array for padding */
 } spi_t;
 
 /** @brief  Controls and provides information for the uart */
@@ -351,7 +351,7 @@ typedef union {
 		tmr_t tmr; /**< TMR configuration */
 		gpio_t gpio[3]; /**< GPIO pins available */
 		trace_t trace; /**< Saved timestamps and events */
-		uint8_t res[468]; /**< Reserved bytes */
+		uint8_t res[216]; /**< Reserved bytes */
 	};
 	uint8_t data8[2048];/**< array for padding */
 } map_t;

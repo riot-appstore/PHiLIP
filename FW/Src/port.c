@@ -133,6 +133,9 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base) {
 		init_dut_pwm_dac_msp();
 		postinit_dut_pwm_dac_msp();
 	}
+	else if (htim_base->Instance == DUT_SPI_IC_INST) {
+		init_dut_spi_ic_msp();
+	}
 }
 
 void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim_base) {
@@ -142,6 +145,9 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim_base) {
 	else if (htim_base->Instance == DUT_PWM_DAC_INST) {
 		deinit_dut_pwm_dac_msp();
 	}
+	else if (htim_base->Instance == DUT_SPI_IC_INST) {
+		deinit_dut_spi_ic_msp();
+	}
 }
 
 /******************************************************************************/
@@ -149,11 +155,17 @@ void HAL_TIM_IC_MspInit(TIM_HandleTypeDef* htim) {
 	if (htim->Instance == DUT_IC_INST) {
 			init_dut_ic_msp();
 	}
+	else if (htim->Instance == DUT_SPI_IC_INST) {
+		init_dut_spi_ic_msp();
+	}
 }
 
 void HAL_TIM_IC_MspDeInit(TIM_HandleTypeDef* htim) {
 	if (htim->Instance == DUT_IC_INST) {
 		deinit_dut_ic_msp();
+	}
+	else if (htim->Instance == DUT_SPI_IC_INST) {
+		deinit_dut_spi_ic_msp();
 	}
 }
 

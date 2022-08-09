@@ -24,12 +24,12 @@
 #define LED0_Pin GPIO_PIN_5
 #define LED0_GPIO_Port GPIOA
 
-#define DEBUG0_Pin GPIO_PIN_3
+#define DEBUG0_Pin GPIO_PIN_13
 #define DEBUG0_GPIO_Port GPIOB
-#define DEBUG1_Pin GPIO_PIN_4
+#define DEBUG1_Pin GPIO_PIN_14
 #define DEBUG1_GPIO_Port GPIOB
-#define DEBUG2_Pin GPIO_PIN_2
-#define DEBUG2_GPIO_Port GPIOD
+#define DEBUG2_Pin GPIO_PIN_15
+#define DEBUG2_GPIO_Port GPIOB
 
 /******************************************************************************/
 #define TEST_PASS_Pin GPIO_PIN_4
@@ -76,13 +76,13 @@
 #define IF_RX_GPIO_Port GPIOA
 
 /******************************************************************************/
-#define DUT_NSS_Pin GPIO_PIN_12
-#define DUT_NSS_GPIO_Port GPIOB
-#define DUT_SCK_Pin GPIO_PIN_13
+#define DUT_NSS_Pin GPIO_PIN_15
+#define DUT_NSS_GPIO_Port GPIOA
+#define DUT_SCK_Pin GPIO_PIN_3
 #define DUT_SCK_GPIO_Port GPIOB
-#define DUT_MISO_Pin GPIO_PIN_14
+#define DUT_MISO_Pin GPIO_PIN_4
 #define DUT_MISO_GPIO_Port GPIOB
-#define DUT_MOSI_Pin GPIO_PIN_15
+#define DUT_MOSI_Pin GPIO_PIN_5
 #define DUT_MOSI_GPIO_Port GPIOB
 
 /******************************************************************************/
@@ -122,18 +122,31 @@
 /******************************************************************************/
 /* SPI defines ****************************************************************/
 /******************************************************************************/
-#define DUT_SPI_INST			SPI2
+#define DUT_SPI_INST			SPI1
 
-#define DUT_SPI_CLK_EN()		__HAL_RCC_SPI2_CLK_ENABLE()
-#define DUT_SPI_CLK_DIS()		__HAL_RCC_SPI2_CLK_DISABLE()
-#define DUT_SPI_GPIO_CLK_EN()	__HAL_RCC_GPIOB_CLK_ENABLE()
+#define DUT_SPI_CLK_EN()		__HAL_RCC_SPI1_CLK_ENABLE()
+#define DUT_SPI_CLK_DIS()		__HAL_RCC_SPI1_CLK_DISABLE()
+#define DUT_SPI_GPIO_CLK_EN()	__HAL_RCC_GPIOA_CLK_ENABLE();__HAL_RCC_GPIOB_CLK_ENABLE()
 
-#define DUT_SPI_GPIO_AF_REMAP()
+#define DUT_SPI_GPIO_AF_REMAP() __HAL_AFIO_REMAP_SPI1_ENABLE()
 
-#define DUT_SPI_INT				SPI2_IRQHandler
-#define DUT_SPI_IRQ				SPI2_IRQn
+#define DUT_SPI_INT				SPI1_IRQHandler
+#define DUT_SPI_IRQ				SPI1_IRQn
 
 #define GPIO_NSS_IRQ			GPIO_NSS_CTS_IRQ
+
+#define DUT_SPI_IC_CLK_EN()			__HAL_RCC_TIM2_CLK_ENABLE()
+#define DUT_SPI_IC_GPIO_CLK_EN()	__HAL_RCC_GPIOB_CLK_ENABLE()
+#define DUT_SPI_IC_CLK_DIS()		__HAL_RCC_TIM2_CLK_DISABLE()
+#define DUT_SPI_IC_AFIO_REMAP()		__HAL_AFIO_REMAP_TIM2_PARTIAL_1()
+
+#define DUT_SPI_IC_INST			TIM2
+#define DUT_SPI_IC_CHANNEL		TIM_CHANNEL_2
+#define DUT_SPI_IC_INT			TIM2_IRQn
+#define DUT_SPI_IC_DMA_INST		DMA1_Channel7
+#define DUT_SPI_IC_DMA_ID		TIM_DMA_ID_CC2
+#define DUT_SPI_IC_DMA_INT		DMA1_Channel7_IRQHandler
+#define DUT_SPI_IC_DMA_IRQ		DMA1_Channel7_IRQn
 
 /******************************************************************************/
 /* I2C defines ****************************************************************/
@@ -182,10 +195,6 @@
 #define IF_UART_DMA_RX_INST		DMA1_Channel6
 #define IF_UART_DMA_RX_INT		DMA1_Channel6_IRQHandler
 #define IF_UART_DMA_RX_IRQ		DMA1_Channel6_IRQn
-
-#define IF_UART_DMA_TX_INST		DMA1_Channel7
-#define IF_UART_DMA_TX_INT		DMA1_Channel7_IRQHandler
-#define IF_UART_DMA_TX_IRQ		DMA1_Channel7_IRQn
 
 /******************************************************************************/
 /* PWM_DAC defines ************************************************************/

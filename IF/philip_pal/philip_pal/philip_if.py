@@ -17,6 +17,7 @@ from ctypes import c_uint8, c_uint16, c_uint32, c_int8, c_int16, c_int32
 from ast import literal_eval
 from pathlib import Path
 from .base_device import BaseDevice
+from statistics import mean, stdev
 
 
 class PhilipBaseIf():
@@ -620,3 +621,125 @@ class PhilipExtIf(PhilipBaseIf):
                 trace_event['event'] = trace_value
             if trace_source != 0:
                 trace.append(trace_event)
+
+    def _get_stats(self, vals: list):
+        """Calculate stats of a list of values.
+
+        Args:
+            vals: The values to run stats on.
+
+        Returns:
+            dict containing stats.
+        """
+        if len(vals) == 1:
+            return {
+                'values': vals,
+                'num_values': len(vals),
+                'mean': vals[0],
+                'min': vals[0],
+                'max': vals[0],
+                'e_minus': 0,
+                'e_plus': 0,
+                'stdev': 0
+            }
+        return {
+            'values': vals,
+            'num_values': len(vals),
+            'mean': mean(vals),
+            'min': min(vals),
+            'max': max(vals),
+            'e_minus': mean(vals) - min(vals),
+            'e_plus': max(vals) - mean(vals),
+            'stdev': stdev(vals)
+            
+        }
+
+    def get_spi_transfer_count(self) -> int:
+        """Get the amount of captured transfers."""
+        return self.read_reg("spi.transfer_count")['data']
+
+    def get_spi_clk_frames(self) -> int:
+        """Get the amount of bytes in the spi clk buffer."""
+        return int(self.get_spi_transfer_count() / 8)
+
+    def sys_clk(self) -> int:
+        """Get PHiLIP system clock frequency."""
+        if not self._sys_clock:
+            self._sys_clock = self.read_reg('sys.sys_clk')['data']
+        return self._sys_clock
+    
+    def get_spi_clk_freqs(self) -> list:
+        """Calculate frequency of captured timestamps.
+        Returns:
+            List of frequencies
+        """
+        sm_buf = self.get_spi_sm_buf()
+        timer_max = 0x10000
+        pulses_per_byte = 8
+        freqs = []
+        for idx in range(1, len(sm_buf)):
+            if (idx) % pulses_per_byte == 0:
+                # filter deadtimes
+                continue
+            dif_ticks = sm_buf[idx] - sm_buf[idx - 1]
+            if (dif_ticks < 0):
+                dif_ticks += timer_max
+            elif (dif_ticks == 0):
+                freqs.append(0)
+            freqs.append(self.sys_clk() / dif_ticks)
+        return freqs
+
+    def get_spi_clk_stats(self) -> list:
+        """Get stats of captured frequencies."""
+        return self._get_stats(self.get_spi_clk_freqs())
+
+    def get_spi_sm_buf(self):
+        """Get buffer of captured timestamps."""
+        return self.read_reg("spi.sm_buf", size=self.get_spi_transfer_count())["data"]
+
+    def get_spi_clk_byte_stats(self, byte=None) -> dict:
+        """Get stats for each clock pulse of the spi clk.
+        Args:
+            byte (int, None): The byte in the 8 bit calculation to use, if None
+                then use all bytes. Starting with index 0.
+        Return:
+            dict containing stats.
+        """
+        num_bytes = self.get_spi_clk_frames()
+        bit_freqs = self.get_spi_clk_freqs()
+        if byte != None:
+            assert byte < num_bytes
+            freqs_per_byte = 7
+            start = byte * freqs_per_byte
+            end = start + freqs_per_byte
+            bit_freqs = bit_freqs[start:end]
+        return self._get_stats(bit_freqs)
+
+    def get_spi_clk_frame_stats(self) -> dict:
+        """Get stats for byte in the spi frame.
+        Return:
+            dict containing stats.
+        """
+        byte_freqs = []
+        for byte in range(self.get_spi_clk_frames()):
+            byte_freqs.append(self.get_spi_clk_byte_stats(byte)['mean'])
+        return self._get_stats(byte_freqs)
+
+    def get_spi_clk_deadtime_stats(self) -> dict:
+        """Get stats for the time between spi bytes.
+        Return:
+            dict containing stats.
+        """
+        sm_buf = self.get_spi_sm_buf()
+        timer_max = 0x10000
+        pulses_per_byte = 8
+        deadtimes = []
+        for i in range(self.get_spi_clk_frames() - 1):
+            offset = i * pulses_per_byte + pulses_per_byte
+            deadtime_begin = offset - 1
+            deadtime_end = offset
+            deadtime = sm_buf[deadtime_end] - sm_buf[deadtime_begin]
+            if (deadtime < 0):
+                deadtime += timer_max
+            deadtimes.append(deadtime)
+        return self._get_stats(deadtimes)

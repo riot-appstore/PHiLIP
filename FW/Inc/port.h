@@ -92,7 +92,7 @@
 /******************************************************************************/
 /* CPU Macros *****************************************************************/
 /******************************************************************************/
-#define DUT_IC_REMAINING_BUF(x)	(x.Instance->CNDTR)
+#define TIMER_REMAINING_BUF(x)	(x.Instance->CNDTR)
 #define DUT_IC_OV_OCCURED(x)	(x->Instance->SR & TIM_SR_UIF)
 #define DUT_IC_OV_CLEAR(x)		x->Instance->SR &= ~(TIM_SR_UIF)
 

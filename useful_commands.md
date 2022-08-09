@@ -1,3 +1,4 @@
 To regenerate the memory map while in PHiLIP base directory:
 
-`generate_map -cfgp FW/MMM/PHiLIP_config.json -odir FW/MMM/ -ocsv IF/philip_pal/philip_pal/mem_map/ -ocfg FW/MMM/PHiLIP_config.json`
+
+`generate_map --config-path FW/MMM/PHiLIP_config.json --output-dir FW/MMM/ --output-csv IF/philip_pal/philip_pal/mem_map/ --output-config FW/MMM/PHiLIP_config.json`

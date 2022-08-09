@@ -142,8 +142,8 @@
                     "name": "cpol"
                 },
                 {
-                    "bits": 2,
-                    "description": "Sets spi modes since slave cannot repsond immediately - 0:access registers with spi - 1:preloads reg address to 0 for high speed tests - 2:echos SPI bytes - 3:always output user reg 0 (use for timing)",
+                    "bits": 3,
+                    "description": "Sets spi modes since slave cannot repsond immediately - 0:access registers with spi - 1:preloads reg address to 0 for high speed tests - 2:echos SPI bytes - 3:always output user reg 0 (use for timing) - 4:use input capture to measure the clock speed",
                     "name": "if_type"
                 },
                 {
@@ -157,7 +157,7 @@
                     "name": "reg_16_big_endian"
                 }
             ],
-            "type": "uint8_t",
+            "type": "uint16_t",
             "type_name": "spi_mode_t"
         },
         {
@@ -1272,7 +1272,7 @@
                     ],
                     "offset": 384,
                     "type": "spi_mode_t",
-                    "type_size": 1
+                    "type_size": 2
                 },
                 {
                     "access": 1,
@@ -1285,7 +1285,7 @@
                         "init"
                     ],
                     "offset": 384,
-                    "type_size": 1
+                    "type_size": 2
                 },
                 {
                     "access": 1,
@@ -1298,7 +1298,7 @@
                         "disable"
                     ],
                     "offset": 384,
-                    "type_size": 1
+                    "type_size": 2
                 },
                 {
                     "access": 1,
@@ -1311,7 +1311,7 @@
                         "cpha"
                     ],
                     "offset": 384,
-                    "type_size": 1
+                    "type_size": 2
                 },
                 {
                     "access": 1,
@@ -1324,24 +1324,24 @@
                         "cpol"
                     ],
                     "offset": 384,
-                    "type_size": 1
+                    "type_size": 2
                 },
                 {
                     "access": 1,
                     "bit_offset": 4,
-                    "bits": 2,
-                    "description": "Sets spi modes since slave cannot responds immediately - 0:access registers with spi - 1:preloads reg address to 0 for high speed tests - 2:echos SPI bytes - 3:always output user reg 0 (use for timing)",
+                    "bits": 3,
+                    "description": "Sets spi modes since slave cannot responds immediately - 0:access registers with spi - 1:preloads reg address to 0 for high speed tests - 2:echos SPI bytes - 3:always output user reg 0 (use for timing) - 4:use input capture to measure the clock speed",
                     "name": [
                         "spi",
                         "mode",
                         "if_type"
                     ],
                     "offset": 384,
-                    "type_size": 1
+                    "type_size": 2
                 },
                 {
                     "access": 1,
-                    "bit_offset": 6,
+                    "bit_offset": 7,
                     "bits": 1,
                     "description": "0:8 bit register access - 1:16 bit register access mode",
                     "name": [
@@ -1350,11 +1350,11 @@
                         "reg_16_bit"
                     ],
                     "offset": 384,
-                    "type_size": 1
+                    "type_size": 2
                 },
                 {
                     "access": 1,
-                    "bit_offset": 7,
+                    "bit_offset": 8,
                     "bits": 1,
                     "description": "0:little endian for 16 bit mode - 1:big endian for 16 bit mode",
                     "name": [
@@ -1363,7 +1363,20 @@
                         "reg_16_big_endian"
                     ],
                     "offset": 384,
-                    "type_size": 1
+                    "type_size": 2
+                },
+                {
+                    "access": 1,
+                    "bit_offset": 9,
+                    "bits": 7,
+                    "description": "Reserved bits",
+                    "name": [
+                        "spi",
+                        "mode",
+                        "res"
+                    ],
+                    "offset": 384,
+                    "type_size": 2
                 },
                 {
                     "access": 0,
@@ -1372,7 +1385,7 @@
                         "spi",
                         "status"
                     ],
-                    "offset": 385,
+                    "offset": 386,
                     "type": "spi_status_t",
                     "type_size": 1
                 },
@@ -1386,7 +1399,7 @@
                         "status",
                         "bsy"
                     ],
-                    "offset": 385,
+                    "offset": 386,
                     "type_size": 1
                 },
                 {
@@ -1399,7 +1412,7 @@
                         "status",
                         "ovr"
                     ],
-                    "offset": 385,
+                    "offset": 386,
                     "type_size": 1
                 },
                 {
@@ -1412,7 +1425,7 @@
                         "status",
                         "modf"
                     ],
-                    "offset": 385,
+                    "offset": 386,
                     "type_size": 1
                 },
                 {
@@ -1425,7 +1438,7 @@
                         "status",
                         "udr"
                     ],
-                    "offset": 385,
+                    "offset": 386,
                     "type_size": 1
                 },
                 {
@@ -1438,7 +1451,7 @@
                         "status",
                         "clk"
                     ],
-                    "offset": 385,
+                    "offset": 386,
                     "type_size": 1
                 },
                 {
@@ -1451,7 +1464,7 @@
                         "status",
                         "start_clk"
                     ],
-                    "offset": 385,
+                    "offset": 386,
                     "type_size": 1
                 },
                 {
@@ -1464,7 +1477,7 @@
                         "status",
                         "end_clk"
                     ],
-                    "offset": 385,
+                    "offset": 386,
                     "type_size": 1
                 },
                 {
@@ -1477,7 +1490,7 @@
                         "status",
                         "index_err"
                     ],
-                    "offset": 385,
+                    "offset": 386,
                     "type_size": 1
                 },
                 {
@@ -1486,7 +1499,7 @@
                         "spi",
                         "dut_mosi"
                     ],
-                    "offset": 386,
+                    "offset": 387,
                     "type": "basic_gpio_t",
                     "type_size": 1
                 },
@@ -1500,7 +1513,7 @@
                         "dut_mosi",
                         "io_type"
                     ],
-                    "offset": 386,
+                    "offset": 387,
                     "type_size": 1
                 },
                 {
@@ -1513,7 +1526,7 @@
                         "dut_mosi",
                         "pull"
                     ],
-                    "offset": 386,
+                    "offset": 387,
                     "type_size": 1
                 },
                 {
@@ -1526,7 +1539,7 @@
                         "dut_mosi",
                         "set_level"
                     ],
-                    "offset": 386,
+                    "offset": 387,
                     "type_size": 1
                 },
                 {
@@ -1539,7 +1552,7 @@
                         "dut_mosi",
                         "level"
                     ],
-                    "offset": 386,
+                    "offset": 387,
                     "type_size": 1
                 },
                 {
@@ -1552,7 +1565,7 @@
                         "dut_mosi",
                         "res"
                     ],
-                    "offset": 386,
+                    "offset": 387,
                     "type_size": 1
                 },
                 {
@@ -1561,7 +1574,7 @@
                         "spi",
                         "dut_miso"
                     ],
-                    "offset": 387,
+                    "offset": 388,
                     "type": "basic_gpio_t",
                     "type_size": 1
                 },
@@ -1575,7 +1588,7 @@
                         "dut_miso",
                         "io_type"
                     ],
-                    "offset": 387,
+                    "offset": 388,
                     "type_size": 1
                 },
                 {
@@ -1588,7 +1601,7 @@
                         "dut_miso",
                         "pull"
                     ],
-                    "offset": 387,
+                    "offset": 388,
                     "type_size": 1
                 },
                 {
@@ -1601,7 +1614,7 @@
                         "dut_miso",
                         "set_level"
                     ],
-                    "offset": 387,
+                    "offset": 388,
                     "type_size": 1
                 },
                 {
@@ -1614,7 +1627,7 @@
                         "dut_miso",
                         "level"
                     ],
-                    "offset": 387,
+                    "offset": 388,
                     "type_size": 1
                 },
                 {
@@ -1627,7 +1640,7 @@
                         "dut_miso",
                         "res"
                     ],
-                    "offset": 387,
+                    "offset": 388,
                     "type_size": 1
                 },
                 {
@@ -1636,7 +1649,7 @@
                         "spi",
                         "dut_sck"
                     ],
-                    "offset": 388,
+                    "offset": 389,
                     "type": "basic_gpio_t",
                     "type_size": 1
                 },
@@ -1650,7 +1663,7 @@
                         "dut_sck",
                         "io_type"
                     ],
-                    "offset": 388,
+                    "offset": 389,
                     "type_size": 1
                 },
                 {
@@ -1663,7 +1676,7 @@
                         "dut_sck",
                         "pull"
                     ],
-                    "offset": 388,
+                    "offset": 389,
                     "type_size": 1
                 },
                 {
@@ -1676,7 +1689,7 @@
                         "dut_sck",
                         "set_level"
                     ],
-                    "offset": 388,
+                    "offset": 389,
                     "type_size": 1
                 },
                 {
@@ -1689,7 +1702,7 @@
                         "dut_sck",
                         "level"
                     ],
-                    "offset": 388,
+                    "offset": 389,
                     "type_size": 1
                 },
                 {
@@ -1702,7 +1715,7 @@
                         "dut_sck",
                         "res"
                     ],
-                    "offset": 388,
+                    "offset": 389,
                     "type_size": 1
                 },
                 {
@@ -1711,7 +1724,7 @@
                         "spi",
                         "dut_nss"
                     ],
-                    "offset": 389,
+                    "offset": 390,
                     "type": "basic_gpio_t",
                     "type_size": 1
                 },
@@ -1725,7 +1738,7 @@
                         "dut_nss",
                         "io_type"
                     ],
-                    "offset": 389,
+                    "offset": 390,
                     "type_size": 1
                 },
                 {
@@ -1738,7 +1751,7 @@
                         "dut_nss",
                         "pull"
                     ],
-                    "offset": 389,
+                    "offset": 390,
                     "type_size": 1
                 },
                 {
@@ -1751,7 +1764,7 @@
                         "dut_nss",
                         "set_level"
                     ],
-                    "offset": 389,
+                    "offset": 390,
                     "type_size": 1
                 },
                 {
@@ -1764,7 +1777,7 @@
                         "dut_nss",
                         "level"
                     ],
-                    "offset": 389,
+                    "offset": 390,
                     "type_size": 1
                 },
                 {
@@ -1777,7 +1790,7 @@
                         "dut_nss",
                         "res"
                     ],
-                    "offset": 389,
+                    "offset": 390,
                     "type_size": 1
                 },
                 {
@@ -1787,7 +1800,7 @@
                         "spi",
                         "state"
                     ],
-                    "offset": 390,
+                    "offset": 391,
                     "type": "uint16_t",
                     "type_size": 2
                 },
@@ -1798,7 +1811,7 @@
                         "spi",
                         "reg_index"
                     ],
-                    "offset": 392,
+                    "offset": 393,
                     "type": "uint16_t",
                     "type_size": 2
                 },
@@ -1809,7 +1822,7 @@
                         "spi",
                         "start_reg_index"
                     ],
-                    "offset": 394,
+                    "offset": 395,
                     "type": "uint16_t",
                     "type_size": 2
                 },
@@ -1820,7 +1833,7 @@
                         "spi",
                         "r_count"
                     ],
-                    "offset": 396,
+                    "offset": 397,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -1831,7 +1844,7 @@
                         "spi",
                         "w_count"
                     ],
-                    "offset": 397,
+                    "offset": 398,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -1842,7 +1855,7 @@
                         "spi",
                         "transfer_count"
                     ],
-                    "offset": 398,
+                    "offset": 399,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -1853,7 +1866,7 @@
                         "spi",
                         "frame_ticks"
                     ],
-                    "offset": 399,
+                    "offset": 400,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -1864,7 +1877,7 @@
                         "spi",
                         "byte_ticks"
                     ],
-                    "offset": 403,
+                    "offset": 404,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -1875,22 +1888,22 @@
                         "spi",
                         "prev_ticks"
                     ],
-                    "offset": 407,
+                    "offset": 408,
                     "type": "uint32_t",
                     "type_size": 4
                 },
                 {
                     "access": 0,
-                    "array_size": 5,
-                    "description": "Reserved bytes",
+                    "array_size": 64,
+                    "description": "Buffer for captured timestamps for speed measurement",
                     "name": [
                         "spi",
-                        "res"
+                        "sm_buf"
                     ],
-                    "offset": 411,
-                    "total_size": 5,
-                    "type": "uint8_t",
-                    "type_size": 1
+                    "offset": 412,
+                    "total_size": 256,
+                    "type": "uint32_t",
+                    "type_size": 4
                 },
                 {
                     "access": 1,
@@ -1899,7 +1912,7 @@
                         "uart",
                         "mode"
                     ],
-                    "offset": 416,
+                    "offset": 668,
                     "type": "uart_mode_t",
                     "type_size": 2
                 },
@@ -1913,7 +1926,7 @@
                         "mode",
                         "init"
                     ],
-                    "offset": 416,
+                    "offset": 668,
                     "type_size": 2
                 },
                 {
@@ -1926,7 +1939,7 @@
                         "mode",
                         "disable"
                     ],
-                    "offset": 416,
+                    "offset": 668,
                     "type_size": 2
                 },
                 {
@@ -1939,7 +1952,7 @@
                         "mode",
                         "if_type"
                     ],
-                    "offset": 416,
+                    "offset": 668,
                     "type_size": 2
                 },
                 {
@@ -1952,7 +1965,7 @@
                         "mode",
                         "stop_bits"
                     ],
-                    "offset": 416,
+                    "offset": 668,
                     "type_size": 2
                 },
                 {
@@ -1965,7 +1978,7 @@
                         "mode",
                         "parity"
                     ],
-                    "offset": 416,
+                    "offset": 668,
                     "type_size": 2
                 },
                 {
@@ -1978,7 +1991,7 @@
                         "mode",
                         "rts"
                     ],
-                    "offset": 416,
+                    "offset": 668,
                     "type_size": 2
                 },
                 {
@@ -1991,7 +2004,7 @@
                         "mode",
                         "data_bits"
                     ],
-                    "offset": 416,
+                    "offset": 668,
                     "type_size": 2
                 },
                 {
@@ -2004,7 +2017,7 @@
                         "mode",
                         "res"
                     ],
-                    "offset": 416,
+                    "offset": 668,
                     "type_size": 2
                 },
                 {
@@ -2013,7 +2026,7 @@
                         "uart",
                         "dut_rx"
                     ],
-                    "offset": 418,
+                    "offset": 670,
                     "type": "basic_gpio_t",
                     "type_size": 1
                 },
@@ -2027,7 +2040,7 @@
                         "dut_rx",
                         "io_type"
                     ],
-                    "offset": 418,
+                    "offset": 670,
                     "type_size": 1
                 },
                 {
@@ -2040,7 +2053,7 @@
                         "dut_rx",
                         "pull"
                     ],
-                    "offset": 418,
+                    "offset": 670,
                     "type_size": 1
                 },
                 {
@@ -2053,7 +2066,7 @@
                         "dut_rx",
                         "set_level"
                     ],
-                    "offset": 418,
+                    "offset": 670,
                     "type_size": 1
                 },
                 {
@@ -2066,7 +2079,7 @@
                         "dut_rx",
                         "level"
                     ],
-                    "offset": 418,
+                    "offset": 670,
                     "type_size": 1
                 },
                 {
@@ -2079,7 +2092,7 @@
                         "dut_rx",
                         "res"
                     ],
-                    "offset": 418,
+                    "offset": 670,
                     "type_size": 1
                 },
                 {
@@ -2088,7 +2101,7 @@
                         "uart",
                         "dut_tx"
                     ],
-                    "offset": 419,
+                    "offset": 671,
                     "type": "basic_gpio_t",
                     "type_size": 1
                 },
@@ -2102,7 +2115,7 @@
                         "dut_tx",
                         "io_type"
                     ],
-                    "offset": 419,
+                    "offset": 671,
                     "type_size": 1
                 },
                 {
@@ -2115,7 +2128,7 @@
                         "dut_tx",
                         "pull"
                     ],
-                    "offset": 419,
+                    "offset": 671,
                     "type_size": 1
                 },
                 {
@@ -2128,7 +2141,7 @@
                         "dut_tx",
                         "set_level"
                     ],
-                    "offset": 419,
+                    "offset": 671,
                     "type_size": 1
                 },
                 {
@@ -2141,7 +2154,7 @@
                         "dut_tx",
                         "level"
                     ],
-                    "offset": 419,
+                    "offset": 671,
                     "type_size": 1
                 },
                 {
@@ -2154,7 +2167,7 @@
                         "dut_tx",
                         "res"
                     ],
-                    "offset": 419,
+                    "offset": 671,
                     "type_size": 1
                 },
                 {
@@ -2164,7 +2177,7 @@
                         "uart",
                         "dut_cts"
                     ],
-                    "offset": 420,
+                    "offset": 672,
                     "type": "basic_gpio_t",
                     "type_size": 1
                 },
@@ -2178,7 +2191,7 @@
                         "dut_cts",
                         "io_type"
                     ],
-                    "offset": 420,
+                    "offset": 672,
                     "type_size": 1
                 },
                 {
@@ -2191,7 +2204,7 @@
                         "dut_cts",
                         "pull"
                     ],
-                    "offset": 420,
+                    "offset": 672,
                     "type_size": 1
                 },
                 {
@@ -2204,7 +2217,7 @@
                         "dut_cts",
                         "set_level"
                     ],
-                    "offset": 420,
+                    "offset": 672,
                     "type_size": 1
                 },
                 {
@@ -2218,7 +2231,7 @@
                         "dut_cts",
                         "level"
                     ],
-                    "offset": 420,
+                    "offset": 672,
                     "type_size": 1
                 },
                 {
@@ -2231,7 +2244,7 @@
                         "dut_cts",
                         "res"
                     ],
-                    "offset": 420,
+                    "offset": 672,
                     "type_size": 1
                 },
                 {
@@ -2241,7 +2254,7 @@
                         "uart",
                         "dut_rts"
                     ],
-                    "offset": 421,
+                    "offset": 673,
                     "type": "basic_gpio_t",
                     "type_size": 1
                 },
@@ -2255,7 +2268,7 @@
                         "dut_rts",
                         "io_type"
                     ],
-                    "offset": 421,
+                    "offset": 673,
                     "type_size": 1
                 },
                 {
@@ -2268,7 +2281,7 @@
                         "dut_rts",
                         "pull"
                     ],
-                    "offset": 421,
+                    "offset": 673,
                     "type_size": 1
                 },
                 {
@@ -2281,7 +2294,7 @@
                         "dut_rts",
                         "set_level"
                     ],
-                    "offset": 421,
+                    "offset": 673,
                     "type_size": 1
                 },
                 {
@@ -2295,7 +2308,7 @@
                         "dut_rts",
                         "level"
                     ],
-                    "offset": 421,
+                    "offset": 673,
                     "type_size": 1
                 },
                 {
@@ -2308,7 +2321,7 @@
                         "dut_rts",
                         "res"
                     ],
-                    "offset": 421,
+                    "offset": 673,
                     "type_size": 1
                 },
                 {
@@ -2318,7 +2331,7 @@
                         "uart",
                         "baud"
                     ],
-                    "offset": 422,
+                    "offset": 674,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -2329,7 +2342,7 @@
                         "uart",
                         "mask_msb"
                     ],
-                    "offset": 426,
+                    "offset": 678,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -2340,7 +2353,7 @@
                         "uart",
                         "rx_count"
                     ],
-                    "offset": 427,
+                    "offset": 679,
                     "type": "uint16_t",
                     "type_size": 2
                 },
@@ -2351,7 +2364,7 @@
                         "uart",
                         "tx_count"
                     ],
-                    "offset": 429,
+                    "offset": 681,
                     "type": "uint16_t",
                     "type_size": 2
                 },
@@ -2362,7 +2375,7 @@
                         "uart",
                         "status"
                     ],
-                    "offset": 431,
+                    "offset": 683,
                     "type": "uart_status_t",
                     "type_size": 1
                 },
@@ -2376,7 +2389,7 @@
                         "status",
                         "cts"
                     ],
-                    "offset": 431,
+                    "offset": 683,
                     "type_size": 1
                 },
                 {
@@ -2389,7 +2402,7 @@
                         "status",
                         "pe"
                     ],
-                    "offset": 431,
+                    "offset": 683,
                     "type_size": 1
                 },
                 {
@@ -2402,7 +2415,7 @@
                         "status",
                         "fe"
                     ],
-                    "offset": 431,
+                    "offset": 683,
                     "type_size": 1
                 },
                 {
@@ -2415,7 +2428,7 @@
                         "status",
                         "nf"
                     ],
-                    "offset": 431,
+                    "offset": 683,
                     "type_size": 1
                 },
                 {
@@ -2428,7 +2441,7 @@
                         "status",
                         "ore"
                     ],
-                    "offset": 431,
+                    "offset": 683,
                     "type_size": 1
                 },
                 {
@@ -2441,7 +2454,7 @@
                         "status",
                         "res"
                     ],
-                    "offset": 431,
+                    "offset": 683,
                     "type_size": 1
                 },
                 {
@@ -2451,7 +2464,7 @@
                         "rtc",
                         "mode"
                     ],
-                    "offset": 432,
+                    "offset": 684,
                     "type": "basic_mode_t",
                     "type_size": 1
                 },
@@ -2465,7 +2478,7 @@
                         "mode",
                         "init"
                     ],
-                    "offset": 432,
+                    "offset": 684,
                     "type_size": 1
                 },
                 {
@@ -2478,7 +2491,7 @@
                         "mode",
                         "disable"
                     ],
-                    "offset": 432,
+                    "offset": 684,
                     "type_size": 1
                 },
                 {
@@ -2491,7 +2504,7 @@
                         "mode",
                         "res"
                     ],
-                    "offset": 432,
+                    "offset": 684,
                     "type_size": 1
                 },
                 {
@@ -2504,7 +2517,7 @@
                         "rtc",
                         "second"
                     ],
-                    "offset": 433,
+                    "offset": 685,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -2518,7 +2531,7 @@
                         "rtc",
                         "minute"
                     ],
-                    "offset": 434,
+                    "offset": 686,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -2532,7 +2545,7 @@
                         "rtc",
                         "hour"
                     ],
-                    "offset": 435,
+                    "offset": 687,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -2544,7 +2557,7 @@
                         "rtc",
                         "day"
                     ],
-                    "offset": 436,
+                    "offset": 688,
                     "type": "uint16_t",
                     "type_size": 2
                 },
@@ -2557,7 +2570,7 @@
                         "rtc",
                         "set_second"
                     ],
-                    "offset": 438,
+                    "offset": 690,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -2570,7 +2583,7 @@
                         "rtc",
                         "set_minute"
                     ],
-                    "offset": 439,
+                    "offset": 691,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -2583,7 +2596,7 @@
                         "rtc",
                         "set_hour"
                     ],
-                    "offset": 440,
+                    "offset": 692,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -2594,7 +2607,7 @@
                         "rtc",
                         "set_day"
                     ],
-                    "offset": 441,
+                    "offset": 693,
                     "type": "uint16_t",
                     "type_size": 2
                 },
@@ -2606,7 +2619,7 @@
                         "rtc",
                         "res"
                     ],
-                    "offset": 443,
+                    "offset": 695,
                     "total_size": 5,
                     "type": "uint8_t",
                     "type_size": 1
@@ -2618,7 +2631,7 @@
                         "adc",
                         "mode"
                     ],
-                    "offset": 448,
+                    "offset": 700,
                     "type": "adc_mode_t",
                     "type_size": 1
                 },
@@ -2632,7 +2645,7 @@
                         "mode",
                         "init"
                     ],
-                    "offset": 448,
+                    "offset": 700,
                     "type_size": 1
                 },
                 {
@@ -2645,7 +2658,7 @@
                         "mode",
                         "disable"
                     ],
-                    "offset": 448,
+                    "offset": 700,
                     "type_size": 1
                 },
                 {
@@ -2658,7 +2671,7 @@
                         "mode",
                         "fast_sample"
                     ],
-                    "offset": 448,
+                    "offset": 700,
                     "type_size": 1
                 },
                 {
@@ -2671,7 +2684,7 @@
                         "mode",
                         "res"
                     ],
-                    "offset": 448,
+                    "offset": 700,
                     "type_size": 1
                 },
                 {
@@ -2680,7 +2693,7 @@
                         "adc",
                         "dut_adc"
                     ],
-                    "offset": 449,
+                    "offset": 701,
                     "type": "basic_gpio_t",
                     "type_size": 1
                 },
@@ -2694,7 +2707,7 @@
                         "dut_adc",
                         "io_type"
                     ],
-                    "offset": 449,
+                    "offset": 701,
                     "type_size": 1
                 },
                 {
@@ -2707,7 +2720,7 @@
                         "dut_adc",
                         "pull"
                     ],
-                    "offset": 449,
+                    "offset": 701,
                     "type_size": 1
                 },
                 {
@@ -2720,7 +2733,7 @@
                         "dut_adc",
                         "set_level"
                     ],
-                    "offset": 449,
+                    "offset": 701,
                     "type_size": 1
                 },
                 {
@@ -2733,7 +2746,7 @@
                         "dut_adc",
                         "level"
                     ],
-                    "offset": 449,
+                    "offset": 701,
                     "type_size": 1
                 },
                 {
@@ -2746,7 +2759,7 @@
                         "dut_adc",
                         "res"
                     ],
-                    "offset": 449,
+                    "offset": 701,
                     "type_size": 1
                 },
                 {
@@ -2759,7 +2772,7 @@
                         "adc",
                         "num_of_samples"
                     ],
-                    "offset": 450,
+                    "offset": 702,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -2771,7 +2784,7 @@
                         "adc",
                         "index"
                     ],
-                    "offset": 454,
+                    "offset": 706,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -2783,7 +2796,7 @@
                         "adc",
                         "sample"
                     ],
-                    "offset": 458,
+                    "offset": 710,
                     "type": "uint16_t",
                     "type_size": 2
                 },
@@ -2795,7 +2808,7 @@
                         "adc",
                         "sum"
                     ],
-                    "offset": 460,
+                    "offset": 712,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -2807,7 +2820,7 @@
                         "adc",
                         "current_sum"
                     ],
-                    "offset": 464,
+                    "offset": 716,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -2819,7 +2832,7 @@
                         "adc",
                         "counter"
                     ],
-                    "offset": 468,
+                    "offset": 720,
                     "type": "uint8_t",
                     "type_size": 1
                 },
@@ -2831,7 +2844,7 @@
                         "adc",
                         "res"
                     ],
-                    "offset": 469,
+                    "offset": 721,
                     "total_size": 11,
                     "type": "uint8_t",
                     "type_size": 1
@@ -2843,7 +2856,7 @@
                         "pwm",
                         "mode"
                     ],
-                    "offset": 480,
+                    "offset": 732,
                     "type": "basic_mode_t",
                     "type_size": 1
                 },
@@ -2857,7 +2870,7 @@
                         "mode",
                         "init"
                     ],
-                    "offset": 480,
+                    "offset": 732,
                     "type_size": 1
                 },
                 {
@@ -2870,7 +2883,7 @@
                         "mode",
                         "disable"
                     ],
-                    "offset": 480,
+                    "offset": 732,
                     "type_size": 1
                 },
                 {
@@ -2883,7 +2896,7 @@
                         "mode",
                         "res"
                     ],
-                    "offset": 480,
+                    "offset": 732,
                     "type_size": 1
                 },
                 {
@@ -2893,7 +2906,7 @@
                         "pwm",
                         "dut_pwm"
                     ],
-                    "offset": 481,
+                    "offset": 733,
                     "type": "basic_gpio_t",
                     "type_size": 1
                 },
@@ -2907,7 +2920,7 @@
                         "dut_pwm",
                         "io_type"
                     ],
-                    "offset": 481,
+                    "offset": 733,
                     "type_size": 1
                 },
                 {
@@ -2920,7 +2933,7 @@
                         "dut_pwm",
                         "pull"
                     ],
-                    "offset": 481,
+                    "offset": 733,
                     "type_size": 1
                 },
                 {
@@ -2933,7 +2946,7 @@
                         "dut_pwm",
                         "set_level"
                     ],
-                    "offset": 481,
+                    "offset": 733,
                     "type_size": 1
                 },
                 {
@@ -2947,7 +2960,7 @@
                         "dut_pwm",
                         "level"
                     ],
-                    "offset": 481,
+                    "offset": 733,
                     "type_size": 1
                 },
                 {
@@ -2960,7 +2973,7 @@
                         "dut_pwm",
                         "res"
                     ],
-                    "offset": 481,
+                    "offset": 733,
                     "type_size": 1
                 },
                 {
@@ -2970,7 +2983,7 @@
                         "pwm",
                         "duty_cycle"
                     ],
-                    "offset": 482,
+                    "offset": 734,
                     "type": "uint16_t",
                     "type_size": 2
                 },
@@ -2981,7 +2994,7 @@
                         "pwm",
                         "period"
                     ],
-                    "offset": 484,
+                    "offset": 736,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -2993,7 +3006,7 @@
                         "pwm",
                         "h_ticks"
                     ],
-                    "offset": 488,
+                    "offset": 740,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -3005,7 +3018,7 @@
                         "pwm",
                         "l_ticks"
                     ],
-                    "offset": 492,
+                    "offset": 744,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -3017,7 +3030,7 @@
                         "pwm",
                         "res"
                     ],
-                    "offset": 496,
+                    "offset": 748,
                     "total_size": 16,
                     "type": "uint8_t",
                     "type_size": 1
@@ -3029,7 +3042,7 @@
                         "dac",
                         "mode"
                     ],
-                    "offset": 512,
+                    "offset": 764,
                     "type": "basic_mode_t",
                     "type_size": 1
                 },
@@ -3043,7 +3056,7 @@
                         "mode",
                         "init"
                     ],
-                    "offset": 512,
+                    "offset": 764,
                     "type_size": 1
                 },
                 {
@@ -3056,7 +3069,7 @@
                         "mode",
                         "disable"
                     ],
-                    "offset": 512,
+                    "offset": 764,
                     "type_size": 1
                 },
                 {
@@ -3069,7 +3082,7 @@
                         "mode",
                         "res"
                     ],
-                    "offset": 512,
+                    "offset": 764,
                     "type_size": 1
                 },
                 {
@@ -3079,7 +3092,7 @@
                         "dac",
                         "dut_dac"
                     ],
-                    "offset": 513,
+                    "offset": 765,
                     "type": "basic_gpio_t",
                     "type_size": 1
                 },
@@ -3093,7 +3106,7 @@
                         "dut_dac",
                         "io_type"
                     ],
-                    "offset": 513,
+                    "offset": 765,
                     "type_size": 1
                 },
                 {
@@ -3106,7 +3119,7 @@
                         "dut_dac",
                         "pull"
                     ],
-                    "offset": 513,
+                    "offset": 765,
                     "type_size": 1
                 },
                 {
@@ -3119,7 +3132,7 @@
                         "dut_dac",
                         "set_level"
                     ],
-                    "offset": 513,
+                    "offset": 765,
                     "type_size": 1
                 },
                 {
@@ -3133,7 +3146,7 @@
                         "dut_dac",
                         "level"
                     ],
-                    "offset": 513,
+                    "offset": 765,
                     "type_size": 1
                 },
                 {
@@ -3146,7 +3159,7 @@
                         "dut_dac",
                         "res"
                     ],
-                    "offset": 513,
+                    "offset": 765,
                     "type_size": 1
                 },
                 {
@@ -3157,7 +3170,7 @@
                         "dac",
                         "level"
                     ],
-                    "offset": 514,
+                    "offset": 766,
                     "type": "uint16_t",
                     "type_size": 2
                 },
@@ -3169,7 +3182,7 @@
                         "dac",
                         "res"
                     ],
-                    "offset": 516,
+                    "offset": 768,
                     "total_size": 12,
                     "type": "uint8_t",
                     "type_size": 1
@@ -3181,7 +3194,7 @@
                         "tmr",
                         "mode"
                     ],
-                    "offset": 528,
+                    "offset": 780,
                     "type": "tmr_mode_t",
                     "type_size": 1
                 },
@@ -3195,7 +3208,7 @@
                         "mode",
                         "init"
                     ],
-                    "offset": 528,
+                    "offset": 780,
                     "type_size": 1
                 },
                 {
@@ -3208,7 +3221,7 @@
                         "mode",
                         "disable"
                     ],
-                    "offset": 528,
+                    "offset": 780,
                     "type_size": 1
                 },
                 {
@@ -3221,7 +3234,7 @@
                         "mode",
                         "trig_edge"
                     ],
-                    "offset": 528,
+                    "offset": 780,
                     "type_size": 1
                 },
                 {
@@ -3234,7 +3247,7 @@
                         "mode",
                         "res"
                     ],
-                    "offset": 528,
+                    "offset": 780,
                     "type_size": 1
                 },
                 {
@@ -3243,7 +3256,7 @@
                         "tmr",
                         "dut_ic"
                     ],
-                    "offset": 529,
+                    "offset": 781,
                     "type": "basic_gpio_t",
                     "type_size": 1
                 },
@@ -3257,7 +3270,7 @@
                         "dut_ic",
                         "io_type"
                     ],
-                    "offset": 529,
+                    "offset": 781,
                     "type_size": 1
                 },
                 {
@@ -3270,7 +3283,7 @@
                         "dut_ic",
                         "pull"
                     ],
-                    "offset": 529,
+                    "offset": 781,
                     "type_size": 1
                 },
                 {
@@ -3283,7 +3296,7 @@
                         "dut_ic",
                         "set_level"
                     ],
-                    "offset": 529,
+                    "offset": 781,
                     "type_size": 1
                 },
                 {
@@ -3296,7 +3309,7 @@
                         "dut_ic",
                         "level"
                     ],
-                    "offset": 529,
+                    "offset": 781,
                     "type_size": 1
                 },
                 {
@@ -3309,7 +3322,7 @@
                         "dut_ic",
                         "res"
                     ],
-                    "offset": 529,
+                    "offset": 781,
                     "type_size": 1
                 },
                 {
@@ -3319,7 +3332,7 @@
                         "tmr",
                         "min_holdoff"
                     ],
-                    "offset": 530,
+                    "offset": 782,
                     "type": "uint16_t",
                     "type_size": 2
                 },
@@ -3331,7 +3344,7 @@
                         "tmr",
                         "min_tick"
                     ],
-                    "offset": 532,
+                    "offset": 784,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -3342,7 +3355,7 @@
                         "tmr",
                         "max_tick"
                     ],
-                    "offset": 536,
+                    "offset": 788,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -3354,7 +3367,7 @@
                         "0",
                         "mode"
                     ],
-                    "offset": 540,
+                    "offset": 792,
                     "type": "gpio_mode_t",
                     "type_size": 2
                 },
@@ -3369,7 +3382,7 @@
                         "mode",
                         "init"
                     ],
-                    "offset": 540,
+                    "offset": 792,
                     "type_size": 2
                 },
                 {
@@ -3383,7 +3396,7 @@
                         "mode",
                         "io_type"
                     ],
-                    "offset": 540,
+                    "offset": 792,
                     "type_size": 2
                 },
                 {
@@ -3397,7 +3410,7 @@
                         "mode",
                         "level"
                     ],
-                    "offset": 540,
+                    "offset": 792,
                     "type_size": 2
                 },
                 {
@@ -3411,7 +3424,7 @@
                         "mode",
                         "pull"
                     ],
-                    "offset": 540,
+                    "offset": 792,
                     "type_size": 2
                 },
                 {
@@ -3425,7 +3438,7 @@
                         "mode",
                         "tick_div"
                     ],
-                    "offset": 540,
+                    "offset": 792,
                     "type_size": 2
                 },
                 {
@@ -3439,7 +3452,7 @@
                         "mode",
                         "res"
                     ],
-                    "offset": 540,
+                    "offset": 792,
                     "type_size": 2
                 },
                 {
@@ -3451,7 +3464,7 @@
                         "0",
                         "status"
                     ],
-                    "offset": 542,
+                    "offset": 794,
                     "type": "gpio_status_t",
                     "type_size": 1
                 },
@@ -3467,7 +3480,7 @@
                         "status",
                         "level"
                     ],
-                    "offset": 542,
+                    "offset": 794,
                     "type_size": 1
                 },
                 {
@@ -3481,7 +3494,7 @@
                         "status",
                         "res"
                     ],
-                    "offset": 542,
+                    "offset": 794,
                     "type_size": 1
                 },
                 {
@@ -3493,7 +3506,7 @@
                         "0",
                         "res"
                     ],
-                    "offset": 543,
+                    "offset": 795,
                     "total_size": 1,
                     "type": "uint8_t",
                     "type_size": 1
@@ -3506,7 +3519,7 @@
                         "1",
                         "mode"
                     ],
-                    "offset": 544,
+                    "offset": 796,
                     "type": "gpio_mode_t",
                     "type_size": 2
                 },
@@ -3521,7 +3534,7 @@
                         "mode",
                         "init"
                     ],
-                    "offset": 544,
+                    "offset": 796,
                     "type_size": 2
                 },
                 {
@@ -3535,7 +3548,7 @@
                         "mode",
                         "io_type"
                     ],
-                    "offset": 544,
+                    "offset": 796,
                     "type_size": 2
                 },
                 {
@@ -3549,7 +3562,7 @@
                         "mode",
                         "level"
                     ],
-                    "offset": 544,
+                    "offset": 796,
                     "type_size": 2
                 },
                 {
@@ -3563,7 +3576,7 @@
                         "mode",
                         "pull"
                     ],
-                    "offset": 544,
+                    "offset": 796,
                     "type_size": 2
                 },
                 {
@@ -3577,7 +3590,7 @@
                         "mode",
                         "tick_div"
                     ],
-                    "offset": 544,
+                    "offset": 796,
                     "type_size": 2
                 },
                 {
@@ -3591,7 +3604,7 @@
                         "mode",
                         "res"
                     ],
-                    "offset": 544,
+                    "offset": 796,
                     "type_size": 2
                 },
                 {
@@ -3603,7 +3616,7 @@
                         "1",
                         "status"
                     ],
-                    "offset": 546,
+                    "offset": 798,
                     "type": "gpio_status_t",
                     "type_size": 1
                 },
@@ -3619,7 +3632,7 @@
                         "status",
                         "level"
                     ],
-                    "offset": 546,
+                    "offset": 798,
                     "type_size": 1
                 },
                 {
@@ -3633,7 +3646,7 @@
                         "status",
                         "res"
                     ],
-                    "offset": 546,
+                    "offset": 798,
                     "type_size": 1
                 },
                 {
@@ -3645,7 +3658,7 @@
                         "1",
                         "res"
                     ],
-                    "offset": 547,
+                    "offset": 799,
                     "total_size": 1,
                     "type": "uint8_t",
                     "type_size": 1
@@ -3658,7 +3671,7 @@
                         "2",
                         "mode"
                     ],
-                    "offset": 548,
+                    "offset": 800,
                     "type": "gpio_mode_t",
                     "type_size": 2
                 },
@@ -3673,7 +3686,7 @@
                         "mode",
                         "init"
                     ],
-                    "offset": 548,
+                    "offset": 800,
                     "type_size": 2
                 },
                 {
@@ -3687,7 +3700,7 @@
                         "mode",
                         "io_type"
                     ],
-                    "offset": 548,
+                    "offset": 800,
                     "type_size": 2
                 },
                 {
@@ -3701,7 +3714,7 @@
                         "mode",
                         "level"
                     ],
-                    "offset": 548,
+                    "offset": 800,
                     "type_size": 2
                 },
                 {
@@ -3715,7 +3728,7 @@
                         "mode",
                         "pull"
                     ],
-                    "offset": 548,
+                    "offset": 800,
                     "type_size": 2
                 },
                 {
@@ -3729,7 +3742,7 @@
                         "mode",
                         "tick_div"
                     ],
-                    "offset": 548,
+                    "offset": 800,
                     "type_size": 2
                 },
                 {
@@ -3743,7 +3756,7 @@
                         "mode",
                         "res"
                     ],
-                    "offset": 548,
+                    "offset": 800,
                     "type_size": 2
                 },
                 {
@@ -3755,7 +3768,7 @@
                         "2",
                         "status"
                     ],
-                    "offset": 550,
+                    "offset": 802,
                     "type": "gpio_status_t",
                     "type_size": 1
                 },
@@ -3771,7 +3784,7 @@
                         "status",
                         "level"
                     ],
-                    "offset": 550,
+                    "offset": 802,
                     "type_size": 1
                 },
                 {
@@ -3785,7 +3798,7 @@
                         "status",
                         "res"
                     ],
-                    "offset": 550,
+                    "offset": 802,
                     "type_size": 1
                 },
                 {
@@ -3797,7 +3810,7 @@
                         "2",
                         "res"
                     ],
-                    "offset": 551,
+                    "offset": 803,
                     "total_size": 1,
                     "type": "uint8_t",
                     "type_size": 1
@@ -3809,7 +3822,7 @@
                         "trace",
                         "index"
                     ],
-                    "offset": 552,
+                    "offset": 804,
                     "type": "uint32_t",
                     "type_size": 4
                 },
@@ -3821,7 +3834,7 @@
                         "trace",
                         "tick_div"
                     ],
-                    "offset": 556,
+                    "offset": 808,
                     "total_size": 128,
                     "type": "uint8_t",
                     "type_size": 1
@@ -3834,7 +3847,7 @@
                         "trace",
                         "source"
                     ],
-                    "offset": 684,
+                    "offset": 936,
                     "total_size": 128,
                     "type": "uint8_t",
                     "type_size": 1
@@ -3847,7 +3860,7 @@
                         "trace",
                         "value"
                     ],
-                    "offset": 812,
+                    "offset": 1064,
                     "total_size": 256,
                     "type": "uint16_t",
                     "type_size": 2
@@ -3860,20 +3873,20 @@
                         "trace",
                         "tick"
                     ],
-                    "offset": 1068,
+                    "offset": 1320,
                     "total_size": 512,
                     "type": "uint32_t",
                     "type_size": 4
                 },
                 {
                     "access": 0,
-                    "array_size": 468,
+                    "array_size": 216,
                     "description": "Reserved bytes",
                     "name": [
                         "res"
                     ],
-                    "offset": 1580,
-                    "total_size": 468,
+                    "offset": 1832,
+                    "total_size": 216,
                     "type": "uint8_t",
                     "type_size": 1
                 }
@@ -3883,7 +3896,7 @@
     "metadata": {
         "app_name": "PHiLIP",
         "author": "Kevin Weiss",
-        "version": "1.2.0"
+        "version": "1.3.0"
     },
     "typedefs": [
         {
@@ -4175,10 +4188,16 @@
                     "description": "Holder for previous byte ticks",
                     "name": "prev_ticks",
                     "type": "uint32_t"
+                },
+                {
+                    "access": 0,
+                    "array_size": 64,
+                    "description": "Buffer for captured timestamps for speed measurement",
+                    "name": "sm_buf",
+                    "type": "uint32_t"
                 }
             ],
-            "type_name": "spi_t",
-            "type_size": 32
+            "type_name": "spi_t"
         },
         {
             "description": "Controls and provides information for the uart",
