@@ -13,7 +13,7 @@ import pytest
 
 
 @pytest.mark.parametrize("fast_sample", [0, 1])
-@pytest.mark.parametrize("voltage", [0, 0.02, 0.1, 1, 2, 2.5, 3, 3.2, 3.3])
+@pytest.mark.parametrize("voltage", [0.0001, 0.02, 0.1, 1, 2, 2.5, 3, 3.2, 3.3])
 def test_anal_acc(phil, tester_dad2, fast_sample, voltage):
     smp_cnt = phil.read_reg("adc.num_of_samples")["data"]
     max_voltage = 3.3
@@ -29,8 +29,9 @@ def test_anal_acc(phil, tester_dad2, fast_sample, voltage):
         phil.reset_mcu()
     cal_jitter = max(samples) - min(samples)
     val_error = abs(sta.mean(samples) - voltage)
+    per_error = abs(val_error / voltage) * 100
 
-    assert val_error < 0.015, "error={}, meas={}".format(val_error,
+    assert (val_error < 0.025 or per_error < 5), "error={}, meas={}".format(val_error,
                                                          sta.mean(samples))
     assert cal_jitter < 0.025
 

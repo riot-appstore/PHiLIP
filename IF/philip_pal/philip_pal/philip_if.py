@@ -651,7 +651,6 @@ class PhilipExtIf(PhilipBaseIf):
             'e_minus': mean(vals) - min(vals),
             'e_plus': max(vals) - mean(vals),
             'stdev': stdev(vals)
-            
         }
 
     def get_spi_transfer_count(self) -> int:
@@ -667,7 +666,7 @@ class PhilipExtIf(PhilipBaseIf):
         if not self._sys_clock:
             self._sys_clock = self.read_reg('sys.sys_clk')['data']
         return self._sys_clock
-    
+
     def get_spi_clk_freqs(self) -> list:
         """Calculate frequency of captured timestamps.
         Returns:
@@ -684,9 +683,10 @@ class PhilipExtIf(PhilipBaseIf):
             dif_ticks = sm_buf[idx] - sm_buf[idx - 1]
             if (dif_ticks < 0):
                 dif_ticks += timer_max
-            elif (dif_ticks == 0):
+            if (dif_ticks == 0):
                 freqs.append(0)
-            freqs.append(self.sys_clk() / dif_ticks)
+            else:
+                freqs.append(self.sys_clk() / dif_ticks)
         return freqs
 
     def get_spi_clk_stats(self) -> list:
@@ -695,7 +695,8 @@ class PhilipExtIf(PhilipBaseIf):
 
     def get_spi_sm_buf(self):
         """Get buffer of captured timestamps."""
-        return self.read_reg("spi.sm_buf", size=self.get_spi_transfer_count())["data"]
+        return self.read_reg("spi.sm_buf",
+                             size=self.get_spi_transfer_count())["data"]
 
     def get_spi_clk_byte_stats(self, byte=None) -> dict:
         """Get stats for each clock pulse of the spi clk.
@@ -707,7 +708,7 @@ class PhilipExtIf(PhilipBaseIf):
         """
         num_bytes = self.get_spi_clk_frames()
         bit_freqs = self.get_spi_clk_freqs()
-        if byte != None:
+        if byte is not None:
             assert byte < num_bytes
             freqs_per_byte = 7
             start = byte * freqs_per_byte

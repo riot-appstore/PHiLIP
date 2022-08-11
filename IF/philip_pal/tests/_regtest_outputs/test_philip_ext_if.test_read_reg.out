@@ -318,196 +318,55 @@
           0,
           0,
           0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
+          0],
+ 'name': 'res',
+ 'result': 'Success'}
+{'name': 'rtc.day', 'result': 'Success'}
+{'name': 'rtc.hour', 'result': 'Success'}
+{'name': 'rtc.minute', 'result': 'Success'}
+{'data': 0, 'name': 'rtc.mode.disable', 'result': 'Success'}
+{'data': 1, 'name': 'rtc.mode.init', 'result': 'Success'}
+{'name': 'rtc.mode.res', 'result': 'Success'}
+{'name': 'rtc.res', 'result': 'Success'}
+{'name': 'rtc.second', 'result': 'Success'}
+{'data': 0, 'name': 'rtc.set_day', 'result': 'Success'}
+{'data': 0, 'name': 'rtc.set_hour', 'result': 'Success'}
+{'data': 0, 'name': 'rtc.set_minute', 'result': 'Success'}
+{'data': 0, 'name': 'rtc.set_second', 'result': 'Success'}
+{'data': 0, 'name': 'spi.byte_ticks', 'result': 'Success'}
+{'data': 0, 'name': 'spi.dut_miso.io_type', 'result': 'Success'}
+{'data': 0, 'name': 'spi.dut_miso.level', 'result': 'Success'}
+{'data': 0, 'name': 'spi.dut_miso.pull', 'result': 'Success'}
+{'name': 'spi.dut_miso.res', 'result': 'Success'}
+{'data': 0, 'name': 'spi.dut_miso.set_level', 'result': 'Success'}
+{'data': 0, 'name': 'spi.dut_mosi.io_type', 'result': 'Success'}
+{'data': 1, 'name': 'spi.dut_mosi.level', 'result': 'Success'}
+{'data': 0, 'name': 'spi.dut_mosi.pull', 'result': 'Success'}
+{'name': 'spi.dut_mosi.res', 'result': 'Success'}
+{'data': 0, 'name': 'spi.dut_mosi.set_level', 'result': 'Success'}
+{'data': 0, 'name': 'spi.dut_nss.io_type', 'result': 'Success'}
+{'data': 1, 'name': 'spi.dut_nss.level', 'result': 'Success'}
+{'data': 0, 'name': 'spi.dut_nss.pull', 'result': 'Success'}
+{'name': 'spi.dut_nss.res', 'result': 'Success'}
+{'data': 0, 'name': 'spi.dut_nss.set_level', 'result': 'Success'}
+{'data': 0, 'name': 'spi.dut_sck.io_type', 'result': 'Success'}
+{'data': 1, 'name': 'spi.dut_sck.level', 'result': 'Success'}
+{'data': 0, 'name': 'spi.dut_sck.pull', 'result': 'Success'}
+{'name': 'spi.dut_sck.res', 'result': 'Success'}
+{'data': 0, 'name': 'spi.dut_sck.set_level', 'result': 'Success'}
+{'data': 0, 'name': 'spi.frame_ticks', 'result': 'Success'}
+{'data': 0, 'name': 'spi.mode.cpha', 'result': 'Success'}
+{'data': 0, 'name': 'spi.mode.cpol', 'result': 'Success'}
+{'data': 0, 'name': 'spi.mode.disable', 'result': 'Success'}
+{'data': 0, 'name': 'spi.mode.if_type', 'result': 'Success'}
+{'data': 1, 'name': 'spi.mode.init', 'result': 'Success'}
+{'data': 0, 'name': 'spi.mode.reg_16_big_endian', 'result': 'Success'}
+{'data': 0, 'name': 'spi.mode.reg_16_bit', 'result': 'Success'}
+{'name': 'spi.mode.res', 'result': 'Success'}
+{'data': 0, 'name': 'spi.prev_ticks', 'result': 'Success'}
+{'data': 0, 'name': 'spi.r_count', 'result': 'Success'}
+{'data': 0, 'name': 'spi.reg_index', 'result': 'Success'}
+{'data': [0,
           0,
           0,
           0,
@@ -571,53 +430,8 @@
           0,
           0,
           0],
- 'name': 'res',
+ 'name': 'spi.sm_buf',
  'result': 'Success'}
-{'name': 'rtc.day', 'result': 'Success'}
-{'name': 'rtc.hour', 'result': 'Success'}
-{'name': 'rtc.minute', 'result': 'Success'}
-{'data': 0, 'name': 'rtc.mode.disable', 'result': 'Success'}
-{'data': 1, 'name': 'rtc.mode.init', 'result': 'Success'}
-{'name': 'rtc.mode.res', 'result': 'Success'}
-{'name': 'rtc.res', 'result': 'Success'}
-{'name': 'rtc.second', 'result': 'Success'}
-{'data': 0, 'name': 'rtc.set_day', 'result': 'Success'}
-{'data': 0, 'name': 'rtc.set_hour', 'result': 'Success'}
-{'data': 0, 'name': 'rtc.set_minute', 'result': 'Success'}
-{'data': 0, 'name': 'rtc.set_second', 'result': 'Success'}
-{'data': 0, 'name': 'spi.byte_ticks', 'result': 'Success'}
-{'data': 0, 'name': 'spi.dut_miso.io_type', 'result': 'Success'}
-{'data': 1, 'name': 'spi.dut_miso.level', 'result': 'Success'}
-{'data': 0, 'name': 'spi.dut_miso.pull', 'result': 'Success'}
-{'name': 'spi.dut_miso.res', 'result': 'Success'}
-{'data': 0, 'name': 'spi.dut_miso.set_level', 'result': 'Success'}
-{'data': 0, 'name': 'spi.dut_mosi.io_type', 'result': 'Success'}
-{'data': 1, 'name': 'spi.dut_mosi.level', 'result': 'Success'}
-{'data': 0, 'name': 'spi.dut_mosi.pull', 'result': 'Success'}
-{'name': 'spi.dut_mosi.res', 'result': 'Success'}
-{'data': 0, 'name': 'spi.dut_mosi.set_level', 'result': 'Success'}
-{'data': 0, 'name': 'spi.dut_nss.io_type', 'result': 'Success'}
-{'data': 1, 'name': 'spi.dut_nss.level', 'result': 'Success'}
-{'data': 0, 'name': 'spi.dut_nss.pull', 'result': 'Success'}
-{'name': 'spi.dut_nss.res', 'result': 'Success'}
-{'data': 0, 'name': 'spi.dut_nss.set_level', 'result': 'Success'}
-{'data': 0, 'name': 'spi.dut_sck.io_type', 'result': 'Success'}
-{'data': 1, 'name': 'spi.dut_sck.level', 'result': 'Success'}
-{'data': 0, 'name': 'spi.dut_sck.pull', 'result': 'Success'}
-{'name': 'spi.dut_sck.res', 'result': 'Success'}
-{'data': 0, 'name': 'spi.dut_sck.set_level', 'result': 'Success'}
-{'data': 0, 'name': 'spi.frame_ticks', 'result': 'Success'}
-{'data': 0, 'name': 'spi.mode.cpha', 'result': 'Success'}
-{'data': 0, 'name': 'spi.mode.cpol', 'result': 'Success'}
-{'data': 0, 'name': 'spi.mode.disable', 'result': 'Success'}
-{'data': 0, 'name': 'spi.mode.if_type', 'result': 'Success'}
-{'data': 1, 'name': 'spi.mode.init', 'result': 'Success'}
-{'data': 0, 'name': 'spi.mode.reg_16_big_endian', 'result': 'Success'}
-{'data': 0, 'name': 'spi.mode.reg_16_bit', 'result': 'Success'}
-{'data': 0, 'name': 'spi.prev_ticks', 'result': 'Success'}
-{'data': 0, 'name': 'spi.r_count', 'result': 'Success'}
-{'data': 0, 'name': 'spi.reg_index', 'result': 'Success'}
-{'name': 'spi.res', 'result': 'Success'}
 {'data': 0, 'name': 'spi.start_reg_index', 'result': 'Success'}
 {'data': 0, 'name': 'spi.state', 'result': 'Success'}
 {'data': 0, 'name': 'spi.status.bsy', 'result': 'Success'}
@@ -639,8 +453,8 @@
 {'name': 'sys.build_time.second', 'result': 'Success'}
 {'name': 'sys.build_time.year', 'result': 'Success'}
 {'data': 17061, 'name': 'sys.device_num', 'result': 'Success'}
-{'data': [0, 0, 2, 1], 'name': 'sys.fw_rev', 'result': 'Success'}
-{'data': [0, 0, 2, 1], 'name': 'sys.if_rev', 'result': 'Success'}
+{'data': [0, 0, 3, 1], 'name': 'sys.fw_rev', 'result': 'Success'}
+{'data': [0, 0, 3, 1], 'name': 'sys.if_rev', 'result': 'Success'}
 {'data': 0, 'name': 'sys.mode.dut_rst', 'result': 'Success'}
 {'data': 1, 'name': 'sys.mode.init', 'result': 'Success'}
 {'name': 'sys.mode.res', 'result': 'Success'}

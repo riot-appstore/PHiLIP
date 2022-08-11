@@ -339,7 +339,8 @@ class DigilentAnalogDiscovery2():
         time_h = time_h or time_l
         if not isinstance(pin, int):
             pin = self.pins[pin]
-        self.driver.pulse_pin(pin, time_l, time_h, count=count, run=True, init_value=init_value)
+        self.driver.pulse_pin(pin, time_l, time_h, count=count, run=True,
+                              init_value=init_value)
 
     def i2c_write_bytes(self, data, addr=None):
         self._i2c_mode()

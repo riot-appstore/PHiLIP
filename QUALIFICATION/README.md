@@ -10,7 +10,7 @@ The released firmware is available in the [releases](https://github.com/riot-app
 The following are all the tools and packages needed to run the tests.
 
 ### Packages
-- `sudo pip3 install philip_pal pytest`
+- `pip install philip_pal pytest flake8 codespell`
 - [Digilent Waveforms](https://reference.digilentinc.com/reference/software/waveforms/waveforms-3/start)
 
 ### Tools
@@ -23,7 +23,7 @@ The following are all the tools and packages needed to run the tests.
 ## Static Tests
 Even though any merges should have passed the static tests, the static tests should be run.
 
-Go to the base directory and run `./scripts/static_tests.py`.
+Go to the base directory and run `./scripts/static_tests.sh`.
 Everything should pass without any errors.
 
 ## Interface Tests
@@ -34,6 +34,7 @@ This can be done on any PHiLIP board as it only confirms the host is up to date
 1. Go to the `IF/philip_pal` directory
 1. Connect PHiLIP to the computer
 1. Flash the binary to the PHiLIP
+1. Ensure no pins are connected or floating
 1. Run tests with `./setup.py test`
 1. Evaluate any changes in regression testing
 1. If everything looks good then accept the changes with `./setup.py test --addopts --regtest-reset`
@@ -93,6 +94,9 @@ Evaluate the following:
 - different modes (4)
 - counts and ticks (tick reading +- 12 us)
 - register options
+- SPI clk tolerance for frequencies up to 1MHz is 3%
+- SPI clk tolerance for frequencies between 1MHz and 5MHz is 10%
+- Frequencies above 5MHz cannot be supported
 
 or
 
@@ -104,6 +108,7 @@ Not tested:
 
 ## Timing Tests
 
+Intermittent failures do sometimes occur. This is a known bug.
 Evaluate the following:
 - Connect the each pin and toggle the following and verify
 
@@ -119,6 +124,7 @@ To run automated tests:
 1. Run `pytest test_timing.py`
 
 ## ADC Tests
+Error must be less than 25mV
 
 Evaluating the following:
 - Measure ADC samples at different voltages

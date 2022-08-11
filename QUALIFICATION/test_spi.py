@@ -10,7 +10,6 @@ DUT_SCK  ------------ 8
 DUT_NSS  ------------ 9
 """
 import random
-from time import sleep
 import pytest
 from digilent_device import DigilentAnalogDiscovery2
 from philip_pal import Phil
@@ -91,26 +90,30 @@ def test_spi_if_type_0_all_modes(phil, reg, size, pol, pha):
 
 
 def speed_tolerance(speed):
-    tolerance = speed * 0.1
+    if (speed <= 1000000):
+        tolerance = speed * 0.03
+    else:
+        tolerance = speed * 0.1
     border = {}
     border['low'] = speed - tolerance
     border['high'] = speed + tolerance
     return border
 
+
 def test_spi_freq(phil: Phil, tester_dad2):
     measurement_if_type = 4
     dut_sck_pin = tester_dad2.get_pinout()["DUT_SCK"]
     input_freq = 10000
-    freqs = []
     plot_results = []
     error_freq_flag = False
     while input_freq < 5500000:
         time_step = (1/input_freq)/2
         for run in range(8):
-            #change if_type to any other type to reset measurement
+            # change if_type to any other type to reset measurement
             phil.write_and_execute("spi.mode.if_type", 0)
             phil.write_and_execute("spi.mode.if_type", measurement_if_type)
-            tester_dad2.pulse(pin=dut_sck_pin, time_l=time_step, time_h=time_step, count=64)
+            tester_dad2.pulse(pin=dut_sck_pin, time_l=time_step,
+                              time_h=time_step, count=64)
             results = phil.get_spi_clk_stats()
             results['input_freq'] = input_freq
             results['run'] = str(run)
@@ -124,16 +127,21 @@ def test_spi_freq(phil: Phil, tester_dad2):
         input_freq *= 1.05
 
     df = pd.DataFrame(plot_results)
-    fig = px.scatter(df, x="input_freq", y="mean", color="run", error_x="stdev", error_y_minus="e_minus", 
-                     error_y="e_plus", log_x=True, log_y=True, hover_data=['values'])
+    fig = px.scatter(df, x="input_freq", y="mean", color="run",
+                     error_x="stdev", error_y_minus="e_minus",
+                     error_y="e_plus", log_x=True, log_y=True,
+                     hover_data=['values'])
     fig.show()
-    fig = px.scatter(df, x="input_freq", y="error", color="run", 
+    fig.write_html("fig_stats.html")
+    fig = px.scatter(df, x="input_freq", y="error", color="run",
                      log_x=True, hover_data=['error_per'])
+    fig.write_html("fig_error.html")
     fig.show()
 
     assert not error_freq_flag
 
-#speed measure is only usable for frequencies up to 5MHz
+
+# speed measure is only usable for frequencies up to 5MHz
 @pytest.mark.parametrize("speed", [100000, 400000, 1000000, 5000000])
 def test_spi_clock_speed(phil: Phil, tester_dad2, speed):
     measurement_if_type = 4
@@ -141,15 +149,18 @@ def test_spi_clock_speed(phil: Phil, tester_dad2, speed):
     time_step = (1/speed)/2
     speed_tolerances = speed_tolerance(speed)
     for pulses in [8, 16, 64]:
-        #change if_type to any other type to reset measurement
+        # change if_type to any other type to reset measurement
         phil.write_and_execute("spi.mode.if_type", 0)
         phil.write_and_execute("spi.mode.if_type", measurement_if_type)
-        tester_dad2.pulse(pin=dut_sck_pin, time_l=time_step, time_h=time_step, count=pulses, init_value=0)
+        tester_dad2.pulse(pin=dut_sck_pin, time_l=time_step, time_h=time_step,
+                          count=pulses, init_value=0)
         frame_stats = phil.get_spi_clk_frame_stats()
         mean_freq = (frame_stats['mean'])
         assert phil.read_reg("spi.transfer_count")['data'] == int(pulses)
-        assert (mean_freq < speed_tolerances['high']) & (mean_freq > speed_tolerances['low'])
+        assert ((mean_freq < speed_tolerances['high']) &
+                (mean_freq > speed_tolerances['low']))
         assert len(frame_stats['values']) == int(pulses / 8)
+
 
 def test_spi_specific_byte(phil: Phil, tester_dad2):
     dut_sck_pin = tester_dad2.get_pinout()["DUT_SCK"]
@@ -158,20 +169,29 @@ def test_spi_specific_byte(phil: Phil, tester_dad2):
     phil.write_and_execute("spi.mode.if_type", measurement_if_type)
 
     speed1 = 100000
+    tolerances1 = speed_tolerance(speed1)
     time_step1 = (1/speed1)/2
-    tester_dad2.pulse(pin=dut_sck_pin, time_l=time_step1, time_h=time_step1, count=pulses_per_byte, init_value=0)
+    tester_dad2.pulse(pin=dut_sck_pin, time_l=time_step1, time_h=time_step1,
+                      count=pulses_per_byte, init_value=0)
 
     speed2 = 400000
+    tolerances2 = speed_tolerance(speed2)
     time_step2 = (1/speed2)/2
-    tester_dad2.pulse(pin=dut_sck_pin, time_l=time_step2, time_h=time_step2, count=pulses_per_byte, init_value=0)
+    tester_dad2.pulse(pin=dut_sck_pin, time_l=time_step2, time_h=time_step2,
+                      count=pulses_per_byte, init_value=0)
 
     byte_stats1 = phil.get_spi_clk_byte_stats(byte=0)
     assert len(byte_stats1['values']) == pulses_per_byte - 1
-    assert byte_stats1['mean'] == speed1
+    mean_freq = byte_stats1['mean']
+    assert ((mean_freq < tolerances1['high']) &
+            (mean_freq > tolerances1['low']))
 
     byte_stats2 = phil.get_spi_clk_byte_stats(byte=1)
     assert len(byte_stats2['values']) == pulses_per_byte - 1
-    assert byte_stats2['mean'] == speed2
+    mean_freq = byte_stats2['mean']
+    assert ((mean_freq < tolerances2['high']) &
+            (mean_freq > tolerances2['low']))
+
 
 def test_spi_deadtime(phil: Phil, tester_dad2):
     measurement_if_type = 4
@@ -180,12 +200,15 @@ def test_spi_deadtime(phil: Phil, tester_dad2):
     time_step = (1/speed)/2
     pulses = 8
     phil.write_and_execute("spi.mode.if_type", measurement_if_type)
-    tester_dad2.pulse(pin=dut_sck_pin, time_l=time_step, time_h=time_step, count=pulses, init_value=0)
-    tester_dad2.pulse(pin=dut_sck_pin, time_l=time_step, time_h=time_step, count=pulses, init_value=0)
+    tester_dad2.pulse(pin=dut_sck_pin, time_l=time_step, time_h=time_step,
+                      count=pulses, init_value=0)
+    tester_dad2.pulse(pin=dut_sck_pin, time_l=time_step, time_h=time_step,
+                      count=pulses, init_value=0)
     assert phil.read_reg("spi.transfer_count")['data'] == 2 * pulses
     deadtime = phil.get_spi_clk_deadtime_stats()
     assert len(deadtime['values']) == 1
     assert deadtime['mean'] > int(phil.sys_clk() / speed)
+
 
 @pytest.mark.parametrize("bytes", [3, 4, 8])
 def test_spi_multiple_deadtimes(phil: Phil, tester_dad2, bytes):
@@ -196,14 +219,14 @@ def test_spi_multiple_deadtimes(phil: Phil, tester_dad2, bytes):
     time_step = (1/speed)/2
     phil.write_and_execute("spi.mode.if_type", measurement_if_type)
     for i in range(bytes):
-        tester_dad2.pulse(pin=dut_sck_pin, time_l=time_step, time_h=time_step, count=pulses_per_byte, init_value=0)
-    assert phil.read_reg("spi.transfer_count")['data'] == bytes * pulses_per_byte
+        tester_dad2.pulse(pin=dut_sck_pin, time_l=time_step, time_h=time_step,
+                          count=pulses_per_byte, init_value=0)
+    assert (phil.read_reg("spi.transfer_count")['data'] ==
+            bytes * pulses_per_byte)
     deadtime = phil.get_spi_clk_deadtime_stats()
     assert len(deadtime['values']) == bytes - 1
     for i in range(len(deadtime['values'])):
         assert deadtime['values'][i] > int(phil.sys_clk() / speed)
-
-
 
 
 def main():
