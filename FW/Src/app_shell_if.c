@@ -28,9 +28,9 @@
 
 #include "stm32f1xx_hal.h"
 
-#include "PHiLIP_typedef.h"
-#include "PHiLIP_map.h"
-#include "app_access.h"
+#include "mm_typedefs.h"
+#include "mm_meta.h"
+#include "mm_access_types.h"
 #include "app_common.h"
 #include "app_reg.h"
 #include "map_if.h"
@@ -97,11 +97,6 @@
 /* Private function prototypes ************************************************/
 static error_t _cmd_read_reg(char *str, uint16_t buf_size);
 static error_t _cmd_write_reg(char *str, uint16_t buf_size, uint8_t access);
-#ifdef USE_INTERNAL_MEMORY_MAP
-static error_t _cmd_read_key(char *str, uint16_t buf_size);
-static error_t _cmd_write_key(char *str, uint16_t buf_size, uint8_t access);
-static error_t _cmd_mm_print(char *str, uint16_t buf_size);
-#endif
 static error_t _cmd_execute(char *str);
 static error_t _cmd_reset();
 static error_t _cmd_print_help(char *str);
@@ -126,31 +121,19 @@ error_t parse_command(char *str, uint16_t buf_size, uint8_t access) {
 		err = _cmd_read_reg(str, buf_size);
 	} else if (IS_COMMAND(WRITE_REG_CMD)) {
 		err = _cmd_write_reg(str, buf_size, access);
-#ifdef USE_INTERNAL_MEMORY_MAP
-	} else if (IS_COMMAND(READ_KEY_CMD)) {
-		err = _cmd_read_key(str, buf_size);
-	} else if (IS_COMMAND(WRITE_KEY_CMD)) {
-		err = _cmd_write_key(str, buf_size, access);
-
-	} else if (IS_COMMAND(MEMORY_MAP_CMD)) {
-		err = _cmd_mm_print(str, buf_size);
-	} else if (IS_COMMAND(MM_SIZE_CMD)) {
-		sprintf(str, "{\"data\":%u,\"result\":0}\n", MAP_T_NUM_OF_RECORDS);
-		err = 0;
-#endif
 	} else if (IS_COMMAND(HELP_CMD)) {
 		err = _cmd_print_help(str);
 	} else if (IS_COMMAND(VERSION_CMD) || IS_COMMAND(VERSION_CMD2) ||
 	IS_COMMAND(VERSION_CMD3) || IS_COMMAND(VERSION_CMD4)) {
 		err = _cmd_print_version(str);
 	} else if (IS_COMMAND(EXECUTE_CMD)) {
-		if (!(access & IF_ACCESS)) {
+		if (!(access & MM_ACCESS_INTERFACE)) {
 			err = EACCES;
 		} else {
 			err = _cmd_execute(str);
 		}
 	} else if (IS_COMMAND(RESET_CMD)) {
-		if (!(access & IF_ACCESS)) {
+		if (!(access & MM_ACCESS_INTERFACE)) {
 			err = EACCES;
 		} else {
 			err = _cmd_reset();
@@ -249,70 +232,6 @@ static error_t _cmd_write_reg(char *str, uint16_t buf_size, uint8_t access) {
 	}
 	return err;
 }
-#ifdef USE_INTERNAL_MEMORY_MAP
-static error_t _cmd_read_key(char *str, uint16_t buf_size) {
-	char *arg_str = str + strlen(READ_KEY_CMD);
-	uint32_t array_index = 0;
-	uint32_t data = 0;
-	error_t err;
-	for (; *arg_str != 0 && *arg_str != ' ' && *arg_str != RX_END_CHAR;
-			arg_str++)
-		;
-	if (*arg_str == ' ') {
-		*arg_str = 0;
-		arg_str++;
-		array_index = _fast_atou(&(arg_str), RX_END_CHAR);
-		if (array_index == ATOU_ERROR) {
-			return EINVAL;
-		}
-	}
-	*arg_str = 0;
-	err = get_mm_val(str + strlen(READ_KEY_CMD), array_index, &data);
-	/* If error the print will be overwritten */
-	sprintf(str, "{\"data\":%lu,\"hex_data\":\"0x%lX\",\"result\":0}\n", data,
-			data);
-	return err;
-}
-
-static error_t _cmd_write_key(char *str, uint16_t buf_size, uint8_t access) {
-	char *arg_str = str + strlen(WRITE_KEY_CMD);
-	uint32_t array_index = 0;
-	uint32_t data = 0;
-	error_t err;
-
-	for (; *arg_str != 0 && *arg_str != ' ' && *arg_str != RX_END_CHAR;
-			arg_str++)
-		;
-	if (*arg_str != ' ') {
-		return EINVAL;
-	}
-	*arg_str = 0;
-	arg_str++;
-	char *end_check_str = arg_str;
-	array_index = _fast_atou(&end_check_str, ' ');
-	if (array_index == ATOU_ERROR) {
-		array_index = 0;
-	} else {
-		arg_str = end_check_str;
-	}
-	data = _fast_atou(&arg_str, '\n');
-	if (data == ATOU_ERROR) {
-		return EINVAL;
-	}
-
-	err = set_mm_val(str + strlen(WRITE_KEY_CMD), array_index, data, access);
-	/* If error the print will be overwritten */
-	_json_result(str, 0);
-	return err;
-}
-
-static error_t _cmd_mm_print(char *str, uint16_t buf_size) {
-	char *arg_str = str + strlen(MEMORY_MAP_CMD);
-	uint32_t index = _fast_atou(&arg_str, '\n');
-	return get_mm(index, str);
-
-}
-#endif
 
 static error_t _cmd_execute(char *str) {
 	error_t err = execute_reg_change();
@@ -323,31 +242,18 @@ static error_t _cmd_execute(char *str) {
 }
 
 static error_t _cmd_print_version(char *str) {
-	sprintf(str, "{\"version\":\"%u.%u.%u\",\"result\":0}\n", IF_VERSION_MAJOR,
-			IF_VERSION_MINOR, IF_VERSION_PATCH);
+	sprintf(str, "{\"version\":\"%u.%u.%u\",\"result\":0}\n", MM_MAJOR_VERSION,
+			MM_MINOR_VERSION, MM_PATCH_VERSION);
 	return 0;
 }
 
 static error_t _cmd_print_help(char *str) {
-#ifdef USE_INTERNAL_MEMORY_MAP
-	sprintf(str,
-			"rr <reg_offset> <size> : Reads bytes\n\
-wr <reg_offest> <DATA0> [DATA1] ... [DATAn] : Writes bytes\n\
-r <reg_key> [array_index]: Reads register\n\
-w <reg_key> [array_index] <DATA> : Writes register\n\
-ex : Executes config changes\n\
-mcu_rst : Soft reset\n\
-mm <index> : Prints mem map record \n\
-mm_size : Amount of records in memory map\n\
-version : Interface version\n");
-#else
 	sprintf(str,
 			"rr <reg_offset> <size> : Reads bytes\n\
 wr <reg_offest> <DATA0> [DATA1] ... [DATAn] : Writes bytes\n\
 ex : Executes config changes\n\
 mcu_rst : Soft reset\n\
 version : Interface version\n");
-#endif
 	return 0;
 }
 

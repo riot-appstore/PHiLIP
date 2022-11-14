@@ -26,9 +26,9 @@
 
 #include "stm32f1xx_hal.h"
 
-#include "PHiLIP_typedef.h"
+#include "mm_typedefs.h"
+#include "mm_access.h"
 #include "app_common.h"
-#include "app_access.h"
 #include "app_reg.h"
 
 #include "gpio.h"
@@ -79,7 +79,7 @@ uint32_t get_reg_size() {
 }
 
 void unprotected_read_uint8(uint32_t index, uint8_t *data) {
-	*data = app_reg->data8[index];
+	*data = app_reg->data[index];
 }
 
 error_t read_reg(uint32_t index, uint8_t *data) {
@@ -90,7 +90,7 @@ error_t read_regs(uint32_t index, uint8_t *data, uint16_t size) {
 	if (index + size > get_reg_size()) {
 		return EOVERFLOW;
 	}
-	copy_until_same(data, &app_reg->data8[index], size);
+	copy_until_same(data, &app_reg->data[index], size);
 
 	return 0;
 }
@@ -106,13 +106,13 @@ error_t write_regs(uint32_t index, uint8_t *data, uint16_t size, uint8_t access)
 		return EOVERFLOW;
 	}
 	for (int i = 0; i < size; i++) {
-		if (!(MAP_T_ACCESS[index + i] & access)) {
+		if (!(mm_access_philip_map(index + i).write_permission & access)) {
 			return EACCES;
 		}
 	}
 	for (int i = 0; i < size; i++) {
 		DIS_INT;
-		app_reg->data8[index + i] = data[i];
+		app_reg->data[index + i] = data[i];
 		EN_INT;
 	}
 	return 0;

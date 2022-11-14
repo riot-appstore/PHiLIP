@@ -22,7 +22,7 @@
 #include <string.h>
 #include <stdint.h>
 
-#include "PHiLIP_typedef.h"
+#include "mm_typedefs.h"
 #include "app_common.h"
 
 #include "trace.h"

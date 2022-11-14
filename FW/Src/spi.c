@@ -23,9 +23,9 @@
 
 #include "stm32f1xx_hal.h"
 
-#include "PHiLIP_typedef.h"
+#include "mm_typedefs.h"
 #include "port.h"
-#include "app_access.h"
+#include "mm_access_types.h"
 #include "app_common.h"
 #include "app_reg.h"
 #include "gpio.h"
@@ -400,7 +400,7 @@ static void _spi_reg_int() {
 		if (itflag & SPI_FLAG_RXNE) {
 			uint8_t data = hspi->Instance->DR;
 			if (spi->state == SPI_WRITING) {
-				if (write_reg(spi->reg_index, data, PERIPH_ACCESS)) {
+				if (write_reg(spi->reg_index, data, MM_ACCESS_PERIPHERAL)) {
 					spi->status.index_err = 1;
 				}
 				spi->w_count++;
@@ -425,7 +425,7 @@ static void _spi_hs_int() {
 	}
 	if (itflag & SPI_FLAG_RXNE) {
 		if (write_reg(spi->reg_index, (uint8_t) (hspi->Instance->DR),
-		PERIPH_ACCESS)) {
+		MM_ACCESS_PERIPHERAL)) {
 			spi->status.index_err = 1;
 		}
 		add_index(&dut_spi.reg->reg_index);
