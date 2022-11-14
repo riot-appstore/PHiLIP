@@ -1,0 +1,35 @@
+bitfields:
+  tmr_mode_t:
+    description: Timer mode settings
+    elements:
+      - description: 0:periph will initialize on execute - 1:periph initialized
+        name: init
+      - description: 0:periph is enabled - 1:periph is disabled
+        name: disable
+      - bits: 2
+        description: 0:both - 1:rising - 2:falling
+        name: trig_edge
+
+typedefs:
+  tmr_t:
+    description: Controls timer input capture values
+    elements:
+      - description: basic mode for dac settings
+        name: mode
+        type: tmr_mode_t
+      - name: dut_ic
+        type: basic_gpio_t
+      - write_permission: null
+        description: The minimum amount of time to wait before triggering another event
+          in ns
+        name: min_holdoff
+        type: uint16_t
+      - write_permission: null
+        default: 4294967295
+        description: Minimum tick difference
+        name: min_tick
+        type: uint32_t
+      - write_permission: null
+        description: Maximum tick difference
+        name: max_tick
+        type: uint32_t

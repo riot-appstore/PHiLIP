@@ -1,0 +1,122 @@
+bitfields:
+  i2c_mode_t:
+    description: I2C mode settings
+    elements:
+      - description: 0:periph will initialize on execute - 1:periph initialized
+        name: init
+      - description: 0:periph is enabled - 1:periph is disabled
+        name: disable
+      - description: 0:i2c address is 7 bit mode - 1:10 i2c address is 10 bit mode
+        name: addr_10_bit
+      - description: 0:disable general call - 1:enable general call
+        name: general_call
+      - description: 0:slave can clock stretch - 1:disables clock stretch
+        name: no_clk_stretch
+      - description: 0:8 bit register access - 1:16 bit register access mode
+        name: reg_16_bit
+      - description: 0:little endian if 16 bit register access - 1:big endian if 16 bit
+          register access
+        name: reg_16_big_endian
+      - description: 0:all data will ACK - 1:all data will NACK
+        name: nack_data
+
+  i2c_status_t:
+    description: I2C status
+    write_permission: null
+    elements:
+      - description: 'Overrun/Underrun: Request for new byte when not ready'
+        name: ovr
+      - description: Acknowledge failure
+        name: af
+      - description: 'Bus error:  Non-valid position during a byte transfer'
+        name: berr
+        flag: VOLATILE
+      - description: General call address received
+        name: gencall
+      - description: i2c bus is BUSY
+        name: busy
+        flag: VOLATILE
+
+      - description: Repeated start detected
+        name: rsr
+
+typedefs:
+  i2c_t:
+    description: System settings for the device
+    total_size: 64
+    elements:
+      - description: Specific modes for I2C
+        name: mode
+        type: i2c_mode_t
+      - description: Specific status for I2C
+        name: status
+        flag: VOLATILE
+        type: i2c_status_t
+      - name: dut_sda
+        type: basic_gpio_t
+      - name: dut_scl
+        type: basic_gpio_t
+      - description: Clock stretch the first byte in us
+        name: clk_stretch_delay
+        type: uint16_t
+      - description: Primary slave address
+        name: slave_addr_1
+        type: uint16_t
+        default: 85
+        invalid: 125
+        max: 124
+        min: 8
+      - description: Secondary slave address
+        name: slave_addr_2
+        type: uint16_t
+        default: 66
+        invalid: 125
+        max: 124
+        min: 8
+      - write_permission: null
+        description: Current state of i2c frame - 0:initialized - 1:reading data - 2-write address received - 3-1st reg byte received - 4-writing data - 5-NACK - 6-stopped
+        name: state
+        flag: VOLATILE
+        type: uint16_t
+      - write_permission: null
+        description: Current index of reg pointer
+        name: reg_index
+        type: uint16_t
+      - write_permission: null
+        description: Start index of reg pointer
+        name: start_reg_index
+        type: uint16_t
+      - write_permission: null
+        description: Last read frame byte count - only in reg if_type 0
+        name: r_count
+        type: uint8_t
+      - write_permission: null
+        description: Last write frame byte count - only in reg if_type 0
+        name: w_count
+        type: uint8_t
+      - write_permission: null
+        description: Ticks for read byte - only in reg if_type 0
+        name: r_ticks
+        type: uint32_t
+      - write_permission: null
+        description: Ticks for write byte
+        name: w_ticks
+        type: uint32_t
+      - write_permission: null
+        description: Holder when the start occurred
+        name: s_ticks
+        type: uint32_t
+      - write_permission: null
+        description: Ticks for full read frame after the address is acked
+        name: f_r_ticks
+        type: uint32_t
+      - write_permission: null
+        description: Ticks for full write frame
+        name: f_w_ticks
+        type: uint32_t
+
+overrides:
+  i2c.dut_sda.level:
+    flag: VOLATILE
+  i2c.dut_scl.level:
+    flag: VOLATILE

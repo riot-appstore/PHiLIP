@@ -1,0 +1,30 @@
+typedefs:
+  pwm_t:
+    description: Controls and calculates PWM values
+    total_size: 32
+    elements:
+      - description: basic mode for pwm settings
+        name: mode
+        type: basic_mode_t
+      - name: dut_pwm
+        type: basic_gpio_t
+      - access: 'read-only'
+        description: The calculated duty cycle in percent/100
+        name: duty_cycle
+        type: uint16_t
+      - access: 'read-only'
+        description: The calculated period in us
+        name: period
+        type: uint32_t
+      - default: 256
+        description: Settable high time in sys clock ticks
+        name: h_ticks
+        type: uint32_t
+      - default: 256
+        description: Settable low time in sys clock ticks
+        name: l_ticks
+        type: uint32_t
+
+overrides:
+  pwm.dut_pwm.level:
+    flag: VOLATILE

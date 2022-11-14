@@ -1,0 +1,18 @@
+typedefs:
+  dac_t:
+    description: Controls DAC values
+    elements:
+      - description: basic mode for dac settings
+        name: mode
+        type: basic_mode_t
+      - name: dut_dac
+        type: basic_gpio_t
+      - default: 5000
+        description: The percent/100 of output level
+        name: level
+        type: uint16_t
+    total_size: 16
+
+overrides:
+  dac.dut_dac.level:
+    flag: VOLATILE

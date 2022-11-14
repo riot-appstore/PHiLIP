@@ -1,0 +1,703 @@
+bitfields:
+  adc_mode_t:
+    description: ADC mode settings
+    elements:
+    - description: 0:periph will initialize on execute - 1:periph initialized
+      name: init
+    - description: 0:periph is enabled - 1:periph is disabled
+      name: disable
+    - description: 0:slow sample rate - 1:fast sample rate
+      name: fast_sample
+  basic_gpio_t:
+    description: Simplified GPIO for periph GPIO control
+    elements:
+    - bits: 2
+      description: 0:high impedance input - 1:push pull output - 2:open drain output
+      name: io_type
+    - bits: 2
+      description: pull of the resistor - 0:none - 1:pullup - 2:pulldown
+      name: pull
+    - description: If output sets gpio level - 0:low - 1:high
+      name: set_level
+    - description: Current value of gpio - 0:low - 1:high
+      name: level
+  basic_mode_t:
+    description: Basic mode settings
+    elements:
+    - description: 0:periph will initialize on execute - 1:periph initialized
+      name: init
+    - description: 0:periph is enabled - 1:periph is disabled
+      name: disable
+  gpio_mode_t:
+    description: IO pin mode control
+    elements:
+    - description: 0:periph will initialize on execute - 1:periph initialized
+      name: init
+    - bits: 2
+      description: 0:high impedance input - 1:push pull output - 2:open drain output
+        - 3:interrupts and saves event
+      name: io_type
+    - description: If output sets gpio level - 0:low - 1:high
+      name: level
+    - bits: 2
+      description: pull of the resistor - 0:none - 1:pullup - 2:pulldown
+      name: pull
+    - bits: 5
+      description: for trace tick divisor - max should be 16 for interface
+      name: tick_div
+  gpio_status_t:
+    description: IO pin status
+    elements:
+    - description: The io level of the pin - 0:low - 1:high
+      name: level
+    flag: VOLATILE
+    write_permission: null
+  i2c_mode_t:
+    description: I2C mode settings
+    elements:
+    - description: 0:periph will initialize on execute - 1:periph initialized
+      name: init
+    - description: 0:periph is enabled - 1:periph is disabled
+      name: disable
+    - description: 0:i2c address is 7 bit mode - 1:10 i2c address is 10 bit mode
+      name: addr_10_bit
+    - description: 0:disable general call - 1:enable general call
+      name: general_call
+    - description: 0:slave can clock stretch - 1:disables clock stretch
+      name: no_clk_stretch
+    - description: 0:8 bit register access - 1:16 bit register access mode
+      name: reg_16_bit
+    - description: 0:little endian if 16 bit register access - 1:big endian if 16
+        bit register access
+      name: reg_16_big_endian
+    - description: 0:all data will ACK - 1:all data will NACK
+      name: nack_data
+  i2c_status_t:
+    description: I2C status
+    elements:
+    - description: 'Overrun/Underrun: Request for new byte when not ready'
+      name: ovr
+    - description: Acknowledge failure
+      name: af
+    - description: 'Bus error:  Non-valid position during a byte transfer'
+      flag: VOLATILE
+      name: berr
+    - description: General call address received
+      name: gencall
+    - description: i2c bus is BUSY
+      flag: VOLATILE
+      name: busy
+    - description: Repeated start detected
+      name: rsr
+    write_permission: null
+  spi_mode_t:
+    description: SPI mode settings
+    elements:
+    - description: 0:periph will initialize on execute - 1:periph initialized
+      name: init
+    - description: 0:periph is enabled - 1:periph is disabled
+      name: disable
+    - description: 0:CK to 0 when idle - 1:CK to 1 when idle
+      name: cpha
+    - description: 0:the first clock transition is the first data capture edge - 1:the
+        second clock transition is the first data capture edge
+      name: cpol
+    - bits: 2
+      description: Sets spi modes since slave cannot responds immediately - 0:access
+        registers with spi - 1:preloads reg address to 0 for high speed tests - 2:echos
+        SPI bytes - 3:always output user reg 0 (use for timing)
+      name: if_type
+    - description: 0:8 bit register access - 1:16 bit register access mode
+      name: reg_16_bit
+    - description: 0:little endian for 16 bit mode - 1:big endian for 16 bit mode
+      name: reg_16_big_endian
+  spi_status_t:
+    description: SPI status
+    elements:
+    - description: Busy flag
+      name: bsy
+    - description: Overrun flag
+      name: ovr
+    - description: Mode fault
+      name: modf
+    - description: Underrun flag
+      name: udr
+    - description: 0:sclk line low - 1:sclk line high
+      name: clk
+    - description: SCLK reading at start of frame - 0:sclk line low - 1:sclk line
+        high
+      name: start_clk
+    - description: SCLK reading at end of frame - 0:sclk line low - 1:sclk line high
+      name: end_clk
+    - description: Register index error
+      name: index_err
+    write_permission: null
+  sys_mode_t:
+    description: System mode settings
+    elements:
+    - description: 0:periph will initialize on execute - 1:periph initialized
+      name: init
+    - description: 1:put DUT in reset mode - 0:run DUT
+      name: dut_rst
+  sys_status_t:
+    description: System status
+    elements:
+    - description: 1:register configuration requires execution for changes - 0:nothing
+        to update
+      name: update
+    - description: 1:board is a bluepill - 0:board is a nucleo-f103rb
+      flag: DEVICE_SPECIFIC
+      name: board
+  tmr_mode_t:
+    description: Timer mode settings
+    elements:
+    - description: 0:periph will initialize on execute - 1:periph initialized
+      name: init
+    - description: 0:periph is enabled - 1:periph is disabled
+      name: disable
+    - bits: 2
+      description: 0:both - 1:rising - 2:falling
+      name: trig_edge
+  uart_mode_t:
+    description: UART mode settings
+    elements:
+    - description: 0:periph will initialize on execute - 1:periph initialized
+      name: init
+    - description: 0:periph is enabled - 1:periph is disabled
+      name: disable
+    - bits: 2
+      description: 0:echos - 1:echos and adds one - 2:reads application registers
+        - 3:constantly transmits
+      name: if_type
+    - description: 0:1 stop bit - 1:2 stop bits
+      name: stop_bits
+    - bits: 2
+      description: 0:no parity - 1:even parity - 2:odd parity
+      name: parity
+    - description: RTS pin state
+      name: rts
+    - description: 0:8 data bits - 1:7 data bits
+      name: data_bits
+  uart_status_t:
+    description: UART status
+    elements:
+    - description: CTS pin state
+      name: cts
+    - description: Parity error
+      name: pe
+    - description: Framing error
+      name: fe
+    - description: Noise detected flag
+      name: nf
+    - description: Overrun error
+      name: ore
+    write_permission: null
+generated_maps:
+  philip_map:
+    type: map_t
+metadata:
+  app_name: PHiLIP
+  author: Kevin Weiss
+  permission_users:
+  - interface
+  - peripheral
+  version: 2.0.0
+overrides:
+  dac.dut_dac.level:
+    flag: VOLATILE
+  i2c.dut_scl.level:
+    flag: VOLATILE
+  i2c.dut_sda.level:
+    flag: VOLATILE
+  pwm.dut_pwm.level:
+    flag: VOLATILE
+  sys.build_time.day_of_month:
+    description: The build time day of month
+  sys.build_time.day_of_week:
+    description: Not used
+  sys.build_time.hour:
+    description: The build time hours
+  sys.build_time.minute:
+    description: The build time minutes
+  sys.build_time.second:
+    description: The build time seconds
+  sys.build_time.year:
+    description: The build time year (20XX)
+  uart.dut_cts.level:
+    flag: VOLATILE
+  uart.dut_rts.level:
+    flag: VOLATILE
+typedefs:
+  adc_t:
+    description: Controls and reads the ADC
+    elements:
+    - description: Mode settings for the ADC
+      name: mode
+      type: adc_mode_t
+    - name: dut_adc
+      type: basic_gpio_t
+    - default: 1024
+      description: Number of sample in the sum
+      max: 1048575
+      min: 0
+      name: num_of_samples
+      type: uint32_t
+    - description: Sample index increases when new sample read
+      flag: VOLATILE
+      name: index
+      type: uint32_t
+      write_permission: null
+    - description: Current 12 bit sample value
+      flag: VOLATILE
+      name: sample
+      type: uint16_t
+      write_permission: null
+    - description: Sum of the last num_of_samples
+      flag: VOLATILE
+      name: sum
+      type: uint32_t
+      write_permission: null
+    - description: Current collection of the sums
+      flag: VOLATILE
+      name: current_sum
+      type: uint32_t
+      write_permission: null
+    - description: Sum counter increases when available
+      flag: VOLATILE
+      name: counter
+      type: uint8_t
+      write_permission: null
+    total_size: 32
+  dac_t:
+    description: Controls DAC values
+    elements:
+    - description: basic mode for dac settings
+      name: mode
+      type: basic_mode_t
+    - name: dut_dac
+      type: basic_gpio_t
+    - default: 5000
+      description: The percent/100 of output level
+      name: level
+      type: uint16_t
+    total_size: 16
+  gpio_t:
+    description: Controls GPIO settings
+    elements:
+    - description: The selected GPIO mode
+      name: mode
+      type: gpio_mode_t
+    - description: The status of the GPIO
+      name: status
+      type: gpio_status_t
+    total_size: 4
+  i2c_t:
+    description: System settings for the device
+    elements:
+    - description: Specific modes for I2C
+      name: mode
+      type: i2c_mode_t
+    - description: Specific status for I2C
+      flag: VOLATILE
+      name: status
+      type: i2c_status_t
+    - name: dut_sda
+      type: basic_gpio_t
+    - name: dut_scl
+      type: basic_gpio_t
+    - description: Clock stretch the first byte in us
+      name: clk_stretch_delay
+      type: uint16_t
+    - default: 85
+      description: Primary slave address
+      invalid: 125
+      max: 124
+      min: 8
+      name: slave_addr_1
+      type: uint16_t
+    - default: 66
+      description: Secondary slave address
+      invalid: 125
+      max: 124
+      min: 8
+      name: slave_addr_2
+      type: uint16_t
+    - description: Current state of i2c frame - 0:initialized - 1:reading data - 2-write
+        address received - 3-1st reg byte received - 4-writing data - 5-NACK - 6-stopped
+      flag: VOLATILE
+      name: state
+      type: uint16_t
+      write_permission: null
+    - description: Current index of reg pointer
+      name: reg_index
+      type: uint16_t
+      write_permission: null
+    - description: Start index of reg pointer
+      name: start_reg_index
+      type: uint16_t
+      write_permission: null
+    - description: Last read frame byte count - only in reg if_type 0
+      name: r_count
+      type: uint8_t
+      write_permission: null
+    - description: Last write frame byte count - only in reg if_type 0
+      name: w_count
+      type: uint8_t
+      write_permission: null
+    - description: Ticks for read byte - only in reg if_type 0
+      name: r_ticks
+      type: uint32_t
+      write_permission: null
+    - description: Ticks for write byte
+      name: w_ticks
+      type: uint32_t
+      write_permission: null
+    - description: Holder when the start occurred
+      name: s_ticks
+      type: uint32_t
+      write_permission: null
+    - description: Ticks for full read frame after the address is acked
+      name: f_r_ticks
+      type: uint32_t
+      write_permission: null
+    - description: Ticks for full write frame
+      name: f_w_ticks
+      type: uint32_t
+      write_permission: null
+    total_size: 64
+  map_t:
+    access: read-write
+    description: The memory map
+    elements:
+    - array_size: 256
+      description: Writable registers for user testing - Starts at 0 and increases
+        1 each register by default
+      name: user_reg
+      type: uint8_t
+      write_permission:
+      - interface
+      - peripheral
+    - description: System configuration (protected)
+      name: sys
+      type: sys_t
+    - description: I2C configuration
+      name: i2c
+      type: i2c_t
+    - description: SPI configuration
+      name: spi
+      type: spi_t
+    - name: uart
+      type: uart_t
+    - description: RTC configuration
+      name: rtc
+      type: rtc_t
+    - description: ADC configuration
+      name: adc
+      type: adc_t
+    - description: PWM configuration
+      name: pwm
+      type: pwm_t
+    - description: DAC configuration
+      name: dac
+      type: dac_t
+    - description: TMR configuration
+      name: tmr
+      type: tmr_t
+    - array_size: 3
+      description: GPIO pins available
+      name: gpio
+      type: gpio_t
+    - description: Saved timestamps and events
+      name: trace
+      type: trace_t
+    permission: interface
+    write_permission:
+    - interface
+  pwm_t:
+    description: Controls and calculates PWM values
+    elements:
+    - description: basic mode for pwm settings
+      name: mode
+      type: basic_mode_t
+    - name: dut_pwm
+      type: basic_gpio_t
+    - access: read-only
+      description: The calculated duty cycle in percent/100
+      name: duty_cycle
+      type: uint16_t
+    - access: read-only
+      description: The calculated period in us
+      name: period
+      type: uint32_t
+    - default: 256
+      description: Settable high time in sys clock ticks
+      name: h_ticks
+      type: uint32_t
+    - default: 256
+      description: Settable low time in sys clock ticks
+      name: l_ticks
+      type: uint32_t
+    total_size: 32
+  rtc_t:
+    description: Controls the RTC
+    elements:
+    - description: basic mode for rtc settings
+      name: mode
+      type: basic_mode_t
+    - description: Seconds of rtc
+      flag: VOLATILE
+      max: 59
+      min: 0
+      name: second
+      type: uint8_t
+      write_permission: null
+    - description: Minutes of rtc
+      flag: VOLATILE
+      max: 59
+      min: 0
+      name: minute
+      type: uint8_t
+      write_permission: null
+    - description: Hours of rtc
+      flag: VOLATILE
+      max: 23
+      min: 0
+      name: hour
+      type: uint8_t
+      write_permission: null
+    - description: Days of rtc
+      flag: VOLATILE
+      name: day
+      type: uint16_t
+      write_permission: null
+    - description: Seconds to set of rtc
+      max: 59
+      min: 0
+      name: set_second
+      type: uint8_t
+    - description: Minutes to set of rtc
+      max: 59
+      min: 0
+      name: set_minute
+      type: uint8_t
+    - description: Hours to set of rtc
+      max: 23
+      min: 0
+      name: set_hour
+      type: uint8_t
+    - description: Days to set of rtc
+      name: set_day
+      type: uint16_t
+    total_size: 16
+  spi_t:
+    description: Controls and provides information for the spi
+    elements:
+    - description: Specific spi modes
+      name: mode
+      type: spi_mode_t
+    - description: Spi status register
+      name: status
+      type: spi_status_t
+    - name: dut_mosi
+      type: basic_gpio_t
+    - name: dut_miso
+      type: basic_gpio_t
+    - name: dut_sck
+      type: basic_gpio_t
+    - name: dut_nss
+      type: basic_gpio_t
+    - description: Current state of the spi bus - 0:initialized - 1:NSS pin just lowered
+        - 2:writing to reg - 3:reading reg - 4:transferring data - 5:NSS up and finished
+      name: state
+      type: uint16_t
+      write_permission: null
+    - description: current index of reg pointer
+      name: reg_index
+      type: uint16_t
+      write_permission: null
+    - description: start index of reg pointer
+      name: start_reg_index
+      type: uint16_t
+      write_permission: null
+    - description: Last read frame byte count
+      name: r_count
+      type: uint8_t
+      write_permission: null
+    - description: Last write frame byte count
+      name: w_count
+      type: uint8_t
+      write_permission: null
+    - description: 'The amount of bytes in the last transfer '
+      name: transfer_count
+      type: uint8_t
+      write_permission: null
+    - description: Ticks per frame
+      name: frame_ticks
+      type: uint32_t
+      write_permission: null
+    - description: Ticks per byte
+      name: byte_ticks
+      type: uint32_t
+      write_permission: null
+    - description: Holder for previous byte ticks
+      name: prev_ticks
+      type: uint32_t
+      write_permission: null
+    - array_size: 64
+      description: Buffer for captured timestamps for speed measurement
+      name: sm_buf
+      type: uint32_t
+  sys_t:
+    description: System settings for PHiLIP
+    elements:
+    - array_size: 12
+      description: Unique ID of the device
+      flag: DEVICE_SPECIFIC
+      name: sn
+      type: uint8_t
+      write_permission: null
+    - array_size: 4
+      description: Firmware revision
+      invalid: 0
+      name: fw_rev
+      type: uint8_t
+      write_permission: null
+    - array_size: 4
+      description: Interface revision - This correlates to the version of the memory
+        map
+      name: if_rev
+      type: uint8_t
+      write_permission: null
+    - description: Tick in ms - Updates with the sys tick register every few ms
+      flag: VOLATILE
+      name: tick
+      type: uint64_t
+      write_permission: null
+    - description: time of build
+      flag: DEVICE_SPECIFIC
+      name: build_time
+      type: timestamp_t
+      write_permission: null
+    - default: 17061
+      description: The frequency of the system clock in Hz
+      name: device_num
+      type: uint32_t
+      write_permission: null
+    - name: sys_clk
+      type: uint32_t
+      write_permission: null
+    - description: Status of system
+      flag: DEVICE_SPECIFIC
+      name: status
+      type: sys_status_t
+      write_permission: null
+    - description: Control register for device
+      name: mode
+      type: sys_mode_t
+  timestamp_t:
+    description: Time and date
+    elements:
+    - description: The seconds in decimal
+      name: second
+      type: uint8_t
+    - description: The minutes in decimal
+      name: minute
+      type: uint8_t
+    - description: The hours in decimal
+      name: hour
+      type: uint8_t
+    - description: The months in decimal
+      name: day_of_month
+      type: uint8_t
+    - description: The week in decimal
+      name: day_of_week
+      type: uint8_t
+    - description: The month in decimal
+      name: month
+      type: uint8_t
+    - description: The last two digits of the year in decimal (20xx)
+      name: year
+      type: uint8_t
+    total_size: 8
+    write_permission: null
+  tmr_t:
+    description: Controls timer input capture values
+    elements:
+    - description: basic mode for dac settings
+      name: mode
+      type: tmr_mode_t
+    - name: dut_ic
+      type: basic_gpio_t
+    - description: The minimum amount of time to wait before triggering another event
+        in ns
+      name: min_holdoff
+      type: uint16_t
+      write_permission: null
+    - default: 4294967295
+      description: Minimum tick difference
+      name: min_tick
+      type: uint32_t
+      write_permission: null
+    - description: Maximum tick difference
+      name: max_tick
+      type: uint32_t
+      write_permission: null
+  trace_t:
+    description: Saved timestamps and events
+    elements:
+    - description: Index of the current trace
+      name: index
+      type: uint32_t
+    - array_size: 128
+      description: The tick divisor of the event - max should be 16 for interface
+      name: tick_div
+      type: uint8_t
+    - array_size: 128
+      description: The event source of the event - 0:no source selected - 1:DEBUG0
+        pin - 2:DEBUG1 pin - 3:DEBUG2 pin - 4:DUT_IC
+      name: source
+      type: uint8_t
+    - array_size: 128
+      description: The value of the event - 0:falling edge interrupt - 1:rising edge
+        interrupt
+      name: value
+      type: uint16_t
+    - array_size: 128
+      description: The tick when the event occurred
+      name: tick
+      type: uint32_t
+    write_permission: null
+  uart_t:
+    description: Controls and provides information for the uart
+    elements:
+    - description: UART mode register
+      name: mode
+      type: uart_mode_t
+    - name: dut_rx
+      type: basic_gpio_t
+    - name: dut_tx
+      type: basic_gpio_t
+    - name: dut_cts
+      type: basic_gpio_t
+    - name: dut_rts
+      type: basic_gpio_t
+    - description: Baudrate
+      name: baud
+      type: uint32_t
+    - description: Masks the data coming in if 7 bit mode
+      name: mask_msb
+      type: uint8_t
+      write_permission: null
+    - description: Number of received bytes
+      name: rx_count
+      type: uint16_t
+      write_permission: null
+    - description: Number of transmitted bytes
+      name: tx_count
+      type: uint16_t
+      write_permission: null
+    - description: UART status register
+      flag: VOLATILE
+      name: status
+      type: uart_status_t
+    total_size: 16

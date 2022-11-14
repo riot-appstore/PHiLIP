@@ -1,0 +1,20 @@
+files:
+  - tools/mmm/adc.yaml
+  - tools/mmm/dac.yaml
+  - tools/mmm/gpio.yaml
+  - tools/mmm/i2c.yaml
+  - tools/mmm/map.yaml
+  - tools/mmm/pwm.yaml
+  - tools/mmm/rtc.yaml
+  - tools/mmm/spi.yaml
+  - tools/mmm/sys.yaml
+  - tools/mmm/tmr.yaml
+  - tools/mmm/uart.yaml
+
+base_dir: ../../
+
+c_dir: FW/MMM
+
+csv_dir: IF/philip_pal/philip_pal/mem_map
+
+cfg_dir: tools/mmm/output

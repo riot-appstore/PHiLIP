@@ -1,0 +1,146 @@
+---
+metadata:
+  app_name: PHiLIP
+  author: Kevin Weiss
+  version: "2.0.0"
+  permission_users:
+    - interface
+    - peripheral
+
+bitfields:
+
+  basic_mode_t:
+    description: Basic mode settings
+    elements:
+      - description: 0:periph will initialize on execute - 1:periph initialized
+        name: init
+      - description: 0:periph is enabled - 1:periph is disabled
+        name: disable
+
+
+typedefs:
+
+  timestamp_t:
+    description: Time and date
+    write_permission: null
+    total_size: 8
+    elements:
+      - description: The seconds in decimal
+        name: second
+        type: uint8_t
+      - description: The minutes in decimal
+        name: minute
+        type: uint8_t
+      - description: The hours in decimal
+        name: hour
+        type: uint8_t
+      - description: The months in decimal
+        name: day_of_month
+        type: uint8_t
+      - description: The week in decimal
+        name: day_of_week
+        type: uint8_t
+      - description: The month in decimal
+        name: month
+        type: uint8_t
+      - description: The last two digits of the year in decimal (20xx)
+        name: year
+        type: uint8_t
+
+  trace_t:
+    description: Saved timestamps and events
+    write_permission: null
+    elements:
+      - description: Index of the current trace
+        name: index
+        type: uint32_t
+      - array_size: 128
+        description: The tick divisor of the event - max should be 16 for interface
+        name: tick_div
+        type: uint8_t
+      - array_size: 128
+        description: The event source of the event - 0:no source selected - 1:DEBUG0 pin
+          - 2:DEBUG1 pin - 3:DEBUG2 pin - 4:DUT_IC
+        name: source
+        type: uint8_t
+      - array_size: 128
+        description: The value of the event - 0:falling edge interrupt - 1:rising edge
+          interrupt
+        name: value
+        type: uint16_t
+      - array_size: 128
+        description: The tick when the event occurred
+        name: tick
+        type: uint32_t
+
+  map_t:
+    description: The memory map
+    write_permission:
+      - interface
+    elements:
+      - write_permission:
+        - interface
+        - peripheral
+        array_size: 256
+        description: Writable registers for user testing - Starts at 0 and increases 1 each register by default
+        name: user_reg
+        type: uint8_t
+      - description: System configuration (protected)
+        name: sys
+        type: sys_t
+      - description: I2C configuration
+        name: i2c
+        type: i2c_t
+      - description: SPI configuration
+        name: spi
+        type: spi_t
+      - name: uart
+        type: uart_t
+      - description: RTC configuration
+        name: rtc
+        type: rtc_t
+      - description: ADC configuration
+        name: adc
+        type: adc_t
+      - description: PWM configuration
+        name: pwm
+        type: pwm_t
+      - description: DAC configuration
+        name: dac
+        type: dac_t
+      - description: TMR configuration
+        name: tmr
+        type: tmr_t
+      - array_size: 3
+        description: GPIO pins available
+        name: gpio
+        type: gpio_t
+      - description: Saved timestamps and events
+        name: trace
+        type: trace_t
+    access: read-write
+    permission: interface
+
+
+overrides:
+# If not default map then there should be a special map keyword that is used to trigger it
+  sys.build_time.second:
+    description: The build time seconds
+  sys.build_time.minute:
+    description: The build time minutes
+  sys.build_time.hour:
+    description: The build time hours
+  sys.build_time.day_of_month:
+    description: The build time day of month
+  sys.build_time.day_of_week:
+    description: Not used
+  sys.build_time.year:
+    description: The build time year (20XX)
+
+
+generated_maps:
+  philip_map:
+    type: map_t
+
+
+

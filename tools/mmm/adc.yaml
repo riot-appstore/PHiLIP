@@ -1,0 +1,52 @@
+bitfields:
+  adc_mode_t:
+    description: ADC mode settings
+    elements:
+      - description: 0:periph will initialize on execute - 1:periph initialized
+        name: init
+      - description: 0:periph is enabled - 1:periph is disabled
+        name: disable
+      - description: 0:slow sample rate - 1:fast sample rate
+        name: fast_sample
+
+typedefs:
+  adc_t:
+    description: Controls and reads the ADC
+    total_size: 32
+    elements:
+      - description: Mode settings for the ADC
+        name: mode
+        type: adc_mode_t
+      - name: dut_adc
+        type: basic_gpio_t
+      - default: 1024
+        description: Number of sample in the sum
+        max: 1048575
+        min: 0
+        name: num_of_samples
+        type: uint32_t
+      - write_permission: null
+        description: Sample index increases when new sample read
+        name: index
+        type: uint32_t
+        flag: VOLATILE
+      - write_permission: null
+        description: Current 12 bit sample value
+        name: sample
+        type: uint16_t
+        flag: VOLATILE
+      - write_permission: null
+        description: Sum of the last num_of_samples
+        name: sum
+        type: uint32_t
+        flag: VOLATILE
+      - write_permission: null
+        description: Current collection of the sums
+        name: current_sum
+        type: uint32_t
+        flag: VOLATILE
+      - write_permission: null
+        description: Sum counter increases when available
+        name: counter
+        type: uint8_t
+        flag: VOLATILE
