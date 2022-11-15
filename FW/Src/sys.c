@@ -27,8 +27,8 @@
 #include "stm32f1xx_hal.h"
 #include "build_defs.h"
 
-#include "PHiLIP_typedef.h"
-#include "PHiLIP_map.h"
+#include "mm_typedefs.h"
+#include "mm_meta.h"
 #include "app_common.h"
 #include "app_defaults.h"
 #include "port.h"
@@ -60,9 +60,9 @@ void init_sys(map_t *reg) {
 	sys_reg->fw_rev[3] = FW_REV_MAJOR;
     sys_reg->fw_rev[0] = 0;
 
-	sys_reg->if_rev[1] = IF_VERSION_PATCH;
-	sys_reg->if_rev[2] = IF_VERSION_MINOR;
-	sys_reg->if_rev[3] = IF_VERSION_MAJOR;
+	sys_reg->if_rev[1] = MM_PATCH_VERSION;
+	sys_reg->if_rev[2] = MM_MINOR_VERSION;
+	sys_reg->if_rev[3] = MM_MAJOR_VERSION;
     sys_reg->if_rev[0] = 0;
 
 	sys_reg->build_time.second = BUILD_SEC;

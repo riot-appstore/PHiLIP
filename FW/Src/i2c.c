@@ -23,9 +23,9 @@
 
 #include "stm32f1xx_hal.h"
 
-#include "PHiLIP_typedef.h"
+#include "mm_typedefs.h"
 #include "port.h"
-#include "app_access.h"
+#include "mm_access_types.h"
 #include "app_common.h"
 #include "app_defaults.h"
 #include "app_reg.h"
@@ -304,7 +304,7 @@ static void _i2c_it(i2c_dev *dev) {
 
 		}
 		else {
-			write_reg(reg->reg_index, hi2c->Instance->DR, PERIPH_ACCESS);
+			write_reg(reg->reg_index, hi2c->Instance->DR, MM_ACCESS_PERIPHERAL);
 			reg->w_count++;
 			add_index(&(reg->reg_index));
 		}

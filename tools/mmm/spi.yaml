@@ -1,0 +1,100 @@
+bitfields:
+  spi_status_t:
+    write_permission: null
+    description: SPI status
+    elements:
+      - description: Busy flag
+        name: bsy
+      - description: Overrun flag
+        name: ovr
+      - description: Mode fault
+        name: modf
+      - description: Underrun flag
+        name: udr
+      - description: 0:sclk line low - 1:sclk line high
+        name: clk
+      - description: SCLK reading at start of frame - 0:sclk line low - 1:sclk line high
+        name: start_clk
+      - description: SCLK reading at end of frame - 0:sclk line low - 1:sclk line high
+        name: end_clk
+      - description: Register index error
+        name: index_err
+
+  spi_mode_t:
+    description: SPI mode settings
+    elements:
+      - description: 0:periph will initialize on execute - 1:periph initialized
+        name: init
+      - description: 0:periph is enabled - 1:periph is disabled
+        name: disable
+      - description: 0:CK to 0 when idle - 1:CK to 1 when idle
+        name: cpha
+      - description: 0:the first clock transition is the first data capture edge - 1:the
+          second clock transition is the first data capture edge
+        name: cpol
+      - bits: 2
+        description: Sets spi modes since slave cannot responds immediately - 0:access registers with spi - 1:preloads reg address to 0 for high speed tests - 2:echos SPI bytes - 3:always output user reg 0 (use for timing)
+        name: if_type
+      - description: 0:8 bit register access - 1:16 bit register access mode
+        name: reg_16_bit
+      - description: 0:little endian for 16 bit mode - 1:big endian for 16 bit mode
+        name: reg_16_big_endian
+
+typedefs:
+  spi_t:
+    description: Controls and provides information for the spi
+    elements:
+      - description: Specific spi modes
+        name: mode
+        type: spi_mode_t
+      - description: Spi status register
+        name: status
+        type: spi_status_t
+      - name: dut_mosi
+        type: basic_gpio_t
+      - name: dut_miso
+        type: basic_gpio_t
+      - name: dut_sck
+        type: basic_gpio_t
+      - name: dut_nss
+        type: basic_gpio_t
+      - write_permission: null
+        description: Current state of the spi bus - 0:initialized - 1:NSS pin just lowered - 2:writing to reg - 3:reading reg - 4:transferring data - 5:NSS up and finished
+        name: state
+        type: uint16_t
+      - write_permission: null
+        description: current index of reg pointer
+        name: reg_index
+        type: uint16_t
+      - write_permission: null
+        description: start index of reg pointer
+        name: start_reg_index
+        type: uint16_t
+      - write_permission: null
+        description: Last read frame byte count
+        name: r_count
+        type: uint8_t
+      - write_permission: null
+        description: Last write frame byte count
+        name: w_count
+        type: uint8_t
+      - write_permission: null
+        description: 'The amount of bytes in the last transfer '
+        name: transfer_count
+        type: uint8_t
+      - write_permission: null
+        description: Ticks per frame
+        name: frame_ticks
+        type: uint32_t
+      - write_permission: null
+        description: Ticks per byte
+        name: byte_ticks
+        type: uint32_t
+      - write_permission: null
+        description: Holder for previous byte ticks
+        name: prev_ticks
+        type: uint32_t
+      - name: sm_buf
+        description: Buffer for captured timestamps for speed measurement
+        type: uint32_t
+        array_size: 64

@@ -1,0 +1,52 @@
+typedefs:
+  rtc_t:
+    description: Controls the RTC
+    elements:
+      - description: basic mode for rtc settings
+        name: mode
+        type: basic_mode_t
+      - write_permission: null
+        description: Seconds of rtc
+        flag: VOLATILE
+        max: 59
+        min: 0
+        name: second
+        type: uint8_t
+      - write_permission: null
+        description: Minutes of rtc
+        flag: VOLATILE
+        max: 59
+        min: 0
+        name: minute
+        type: uint8_t
+      - write_permission: null
+        description: Hours of rtc
+        flag: VOLATILE
+        max: 23
+        min: 0
+        name: hour
+        type: uint8_t
+      - write_permission: null
+        description: Days of rtc
+        flag: VOLATILE
+        name: day
+        type: uint16_t
+      - description: Seconds to set of rtc
+        max: 59
+        min: 0
+        name: set_second
+        type: uint8_t
+      - description: Minutes to set of rtc
+        max: 59
+        min: 0
+        name: set_minute
+        type: uint8_t
+      - description: Hours to set of rtc
+        max: 23
+        min: 0
+        name: set_hour
+        type: uint8_t
+      - description: Days to set of rtc
+        name: set_day
+        type: uint16_t
+    total_size: 16

@@ -1,0 +1,78 @@
+bitfields:
+  uart_mode_t:
+    description: UART mode settings
+    elements:
+      - description: 0:periph will initialize on execute - 1:periph initialized
+        name: init
+      - description: 0:periph is enabled - 1:periph is disabled
+        name: disable
+      - bits: 2
+        description: 0:echos - 1:echos and adds one - 2:reads application registers -
+          3:constantly transmits
+        name: if_type
+      - description: 0:1 stop bit - 1:2 stop bits
+        name: stop_bits
+      - bits: 2
+        description: 0:no parity - 1:even parity - 2:odd parity
+        name: parity
+      - description: RTS pin state
+        name: rts
+      - description: 0:8 data bits - 1:7 data bits
+        name: data_bits
+
+  uart_status_t:
+    description: UART status
+    write_permission: null
+    elements:
+      - description: CTS pin state
+        name: cts
+      - description: Parity error
+        name: pe
+      - description: Framing error
+        name: fe
+      - description: Noise detected flag
+        name: nf
+      - description: Overrun error
+        name: ore
+
+typedefs:
+  uart_t:
+    description: Controls and provides information for the uart
+    total_size: 16
+    elements:
+      - description: UART mode register
+        name: mode
+        type: uart_mode_t
+      - name: dut_rx
+        type: basic_gpio_t
+      - name: dut_tx
+        type: basic_gpio_t
+      - name: dut_cts
+        type: basic_gpio_t
+      - name: dut_rts
+        type: basic_gpio_t
+      - description: Baudrate
+        name: baud
+        type: uint32_t
+      - write_permission: null
+        description: Masks the data coming in if 7 bit mode
+        name: mask_msb
+        type: uint8_t
+      - write_permission: null
+        description: Number of received bytes
+        name: rx_count
+        type: uint16_t
+      - write_permission: null
+        description: Number of transmitted bytes
+        name: tx_count
+        type: uint16_t
+      - description: UART status register
+        name: status
+        type: uart_status_t
+        flag: VOLATILE
+
+overrides:
+  uart.dut_cts.level:
+    flag: VOLATILE
+  uart.dut_rts.level:
+    flag: VOLATILE

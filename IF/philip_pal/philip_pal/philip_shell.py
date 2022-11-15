@@ -337,7 +337,7 @@ class PhilipShell(cmd.Cmd):
         mline = line.partition(' ')[2]
         offs = len(mline) - len(text)
 # pylint: disable=W0141
-        map_records = filter(lambda x: not x.endswith(".res"),
+        map_records = filter(lambda x: not x.endswith(".res") and not x.endswith(".padding"),
                              [*self.phil.mem_map])
         return [s[offs:] for s in map_records if s.startswith(mline)]
 

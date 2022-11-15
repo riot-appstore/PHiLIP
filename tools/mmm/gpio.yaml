@@ -1,0 +1,52 @@
+bitfields:
+  gpio_mode_t:
+    description: IO pin mode control
+    elements:
+      - description: 0:periph will initialize on execute - 1:periph initialized
+        name: init
+      - bits: 2
+        description: 0:high impedance input - 1:push pull output - 2:open drain output
+          - 3:interrupts and saves event
+        name: io_type
+      - description: If output sets gpio level - 0:low - 1:high
+        name: level
+      - bits: 2
+        description: pull of the resistor - 0:none - 1:pullup - 2:pulldown
+        name: pull
+      - bits: 5
+        description: for trace tick divisor - max should be 16 for interface
+        name: tick_div
+
+  basic_gpio_t:
+    description: Simplified GPIO for periph GPIO control
+    elements:
+      - bits: 2
+        description: 0:high impedance input - 1:push pull output - 2:open drain output
+        name: io_type
+      - bits: 2
+        description: pull of the resistor - 0:none - 1:pullup - 2:pulldown
+        name: pull
+      - description: If output sets gpio level - 0:low - 1:high
+        name: set_level
+      - description: Current value of gpio - 0:low - 1:high
+        name: level
+
+  gpio_status_t:
+    description: IO pin status
+    flag: VOLATILE
+    write_permission: null
+    elements:
+      - description: The io level of the pin - 0:low - 1:high
+        name: level
+
+typedefs:
+  gpio_t:
+    description: Controls GPIO settings
+    elements:
+      - description: The selected GPIO mode
+        name: mode
+        type: gpio_mode_t
+      - description: The status of the GPIO
+        name: status
+        type: gpio_status_t
+    total_size: 4

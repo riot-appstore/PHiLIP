@@ -47,8 +47,8 @@
 
 #include "stm32f1xx_hal.h"
 
-#include "PHiLIP_typedef.h"
-#include "PHiLIP_defaults.h"
+#include "mm_typedefs.h"
+#include "mm_default_philip_map.h"
 #include "app_common.h"
 
 #include "app_reg.h"
@@ -83,7 +83,7 @@ int main(void) {
 	/* Configure the system clock */
 	init_clock();
 
-	init_defaults_map_t(&reg);
+	mm_defaults_init_philip_map(&reg);
 	/* Initialize all configured peripherals */
 	DIS_INT;
 	init_periphs();

@@ -18,7 +18,7 @@
 
 #include "stm32f1xx_hal.h"
 
-#include "PHiLIP_typedef.h"
+#include "mm_typedefs.h"
 
 #include "app_common.h"
 

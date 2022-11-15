@@ -12,6 +12,7 @@ def test_read_reg(phil_ex, regtest):
         read_val['name'] = cmd
         if 'DEVICE_SPECIFIC' in phil_ex.mem_map[cmd]['flag'] or \
                 cmd.endswith(".res") or \
+                cmd.endswith(".padding") or \
                 'VOLATILE' in phil_ex.mem_map[cmd]['flag']:
             read_val.pop('data', None)
         elif phil_ex.mem_map[cmd]['default']:

@@ -352,8 +352,13 @@ class PhilipExtIf(PhilipBaseIf):
             Versioned memory map
         """
         version_str = version_str.replace('.', '_')
-        rel_path = '/mem_map/PHiLIP_map_t_{}.csv'.format(version_str)
+
+        rel_path = '/mem_map/mm_PHiLIP_philip_map_{}.csv'.format(version_str)
         version_path = str(Path(__file__).parents[0]) + rel_path
+        # For backwards compatibility
+        if not os.path.exists(version_path):
+            rel_path = '/mem_map/PHiLIP_map_t_{}.csv'.format(version_str)
+            version_path = str(Path(__file__).parents[0]) + rel_path
         return PhilipExtIf.import_mm_from_csv(version_path)
 
     @staticmethod
@@ -430,7 +435,7 @@ class PhilipExtIf(PhilipBaseIf):
                                       cmd['bit_offset'],
                                       cmd['bits'],
                                       timeout=timeout)
-        elif cmd['total_size'] != '':
+        elif cmd.get('array_size', '') != '':
             offset = int(offset)
             offset *= int(cmd['type_size'])
             offset += int(cmd['offset'])

@@ -32,8 +32,8 @@
 
 #include "stm32f1xx_hal.h"
 
-#include "PHiLIP_typedef.h"
-#include "PHiLIP_defaults.h"
+#include "mm_typedefs.h"
+#include "mm_default_philip_map.h"
 #include "port.h"
 #include "gpio.h"
 #include "trace.h"
@@ -196,7 +196,7 @@ error_t commit_dut_ic() {
 	dut_ic.of_tick = 0;
 	dut_ic.mode.trig_edge = reg->mode.trig_edge;
 	reg->max_tick = 0;
-	reg->min_tick = DEFAULT_TMR_MIN_TICK;
+	reg->min_tick = MM_DEFAULT_PHILIP_MAP_TMR_MIN_TICK;
 	reg->min_holdoff = DMA_HOLDOFF_NS;
 	if (reg->mode.trig_edge == DUT_IC_EDGE_BOTH) {
 		reg->min_holdoff = INT_HOLDOFF_NS;

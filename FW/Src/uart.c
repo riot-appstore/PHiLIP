@@ -25,9 +25,9 @@
 
 #include "stm32f1xx_hal.h"
 
-#include "PHiLIP_typedef.h"
+#include "mm_typedefs.h"
 #include "port.h"
-#include "app_access.h"
+#include "mm_access_types.h"
 #include "app_common.h"
 #include "app_defaults.h"
 #include "app_shell_if.h"
@@ -115,7 +115,7 @@ void init_dut_uart(map_t *reg) {
 	_init_gpio();
 
 	uart_dev->tx_data_fxn = HAL_UART_Transmit_IT;
-	uart_dev->access = PERIPH_ACCESS;
+	uart_dev->access = MM_ACCESS_PERIPHERAL;
 	uart_dev->str = dut_str_buf;
 	uart_dev->buf_size = sizeof(dut_str_buf)/sizeof(dut_str_buf[0]);
 
@@ -282,7 +282,7 @@ void init_if_uart() {
 	uart_dev_t* uart_dev = &if_uart;
 	uart_dev->tx_data_fxn = HAL_UART_Transmit_IT;
 
-	uart_dev->access = IF_ACCESS;
+	uart_dev->access = MM_ACCESS_INTERFACE;
 	uart_dev->str = if_str_buf;
 	uart_dev->buf_size = sizeof(if_str_buf)/sizeof(if_str_buf[0]);
 	memset(if_uart.str, 0, if_uart.buf_size);
